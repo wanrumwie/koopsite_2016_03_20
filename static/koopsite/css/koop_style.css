@@ -97,8 +97,18 @@ li  {
     text-align:         left;
     margin-left:        10px;
     margin-right:       10px;
+    /* next lines are copied from "user agent stylesheet" in Chrome for ul, menu, dir, because Firefox shows li incorrectly */
+/*
+    list-style-type:        disc;
+    display:                block;
+    -webkit-margin-before:  1em;
+    -webkit-margin-after:   1em;
+    -webkit-margin-start:   0px;
+    -webkit-margin-end:     0px;
+    -webkit-padding-start:  40px;
+*/
     }
-
+    
 a:link      {color: blue; text-decoration: none}
 a:visited   {color: blue}
 a:hover     {color: #00008B; /* DarkBlue */ /*border-bottom: 2px dotted red*/ }

@@ -692,102 +692,102 @@ if __name__ == "__main__":
     потрібно запустити new_iconPath(). Буде надруковано
     список, який можна просто скопіювати в iconPath між {} .
     """
-iconlist = [
-        "aac.png"       ,
-        "ai.png"        ,
-        "aiff.png"      ,
-        "avi.png"       ,
-        "bmp.png"       ,
-        "c.png"     ,
-        "cpp.png"       ,
-        "css.png"       ,
-        "dat.png"       ,
-        "dmg.png"       ,
-        "doc.png"       ,
-        "dotx.png"      ,
-        "dwg.png"       ,
-        "dxf.png"       ,
-        "eps.png"       ,
-        "exe.png"       ,
-        "flv.png"       ,
-        "gif.png"       ,
-        "h.png"     ,
-        "hpp.png"       ,
-        "html.png"      ,
-        "ics.png"       ,
-        "iso.png"       ,
-        "java.png"      ,
-        "jpg.png"       ,
-        "js.png"        ,
-        "key.png"       ,
-        "less.png"      ,
-        "mid.png"       ,
-        "mp3.png"       ,
-        "mp4.png"       ,
-        "mpg.png"       ,
-        "odf.png"       ,
-        "ods.png"       ,
-        "odt.png"       ,
-        "otp.png"       ,
-        "ots.png"       ,
-        "ott.png"       ,
-        "pdf.png"       ,
-        "php.png"       ,
-        "png.png"       ,
-        "ppt.png"       ,
-        "psd.png"       ,
-        "py.png"        ,
-        "qt.png"        ,
-        "rar.png"       ,
-        "rb.png"        ,
-        "rtf.png"       ,
-        "sass.png"      ,
-        "scss.png"      ,
-        "sql.png"       ,
-        "tga.png"       ,
-        "tgz.png"       ,
-        "tiff.png"      ,
-        "txt.png"       ,
-        "wav.png"       ,
-        "xls.png"       ,
-        "xlsx.png"      ,
-        "xml.png"       ,
-        "yml.png"       ,
-        "zip.png"       ,
-        "_blank.png"        ,
-        "_page.png"     ,
-        ]
+    iconlist = [
+            "aac.png"       ,
+            "ai.png"        ,
+            "aiff.png"      ,
+            "avi.png"       ,
+            "bmp.png"       ,
+            "c.png"     ,
+            "cpp.png"       ,
+            "css.png"       ,
+            "dat.png"       ,
+            "dmg.png"       ,
+            "doc.png"       ,
+            "dotx.png"      ,
+            "dwg.png"       ,
+            "dxf.png"       ,
+            "eps.png"       ,
+            "exe.png"       ,
+            "flv.png"       ,
+            "gif.png"       ,
+            "h.png"     ,
+            "hpp.png"       ,
+            "html.png"      ,
+            "ics.png"       ,
+            "iso.png"       ,
+            "java.png"      ,
+            "jpg.png"       ,
+            "js.png"        ,
+            "key.png"       ,
+            "less.png"      ,
+            "mid.png"       ,
+            "mp3.png"       ,
+            "mp4.png"       ,
+            "mpg.png"       ,
+            "odf.png"       ,
+            "ods.png"       ,
+            "odt.png"       ,
+            "otp.png"       ,
+            "ots.png"       ,
+            "ott.png"       ,
+            "pdf.png"       ,
+            "php.png"       ,
+            "png.png"       ,
+            "ppt.png"       ,
+            "psd.png"       ,
+            "py.png"        ,
+            "qt.png"        ,
+            "rar.png"       ,
+            "rb.png"        ,
+            "rtf.png"       ,
+            "sass.png"      ,
+            "scss.png"      ,
+            "sql.png"       ,
+            "tga.png"       ,
+            "tgz.png"       ,
+            "tiff.png"      ,
+            "txt.png"       ,
+            "wav.png"       ,
+            "xls.png"       ,
+            "xlsx.png"      ,
+            "xml.png"       ,
+            "yml.png"       ,
+            "zip.png"       ,
+            "_blank.png"        ,
+            "_page.png"     ,
+            ]
 
 
-import os.path
+    import os.path
 
-def new_iconPath():
+    def new_iconPath():
 
-    unfounded = []
-    for fileName in iconlist:
-        (name, ext) = os.path.splitext(fileName)
-        dotname = '.' + name
-        print('%10s %-10s' % (fileName, dotname))
-        if dotname in iconPath:
-            iconPath[dotname] = fileName
-        else:
-            unfounded.append(fileName)
+        unfounded = []
+        for fileName in iconlist:
+            (name, ext) = os.path.splitext(fileName)
+            dotname = '.' + name
+            print('%10s %-10s' % (fileName, dotname))
+            if dotname in iconPath:
+                iconPath[dotname] = fileName
+            else:
+                unfounded.append(fileName)
 
-    print('New iconPath:----------------------------------------')
-    for k in sorted(iconPath):
-        print('%-10s %-10s' % (k, iconPath[k]))
-    print('Unfounded:----------------------------------------')
-    for f in unfounded:
-        print(f)
-    print('all icons:', len(iconlist))
-    print('unfounded:', len(unfounded))
+        print('New iconPath:----------------------------------------')
+        for k in sorted(iconPath):
+            print('%-10s %-10s' % (k, iconPath[k]))
+        print('Unfounded:----------------------------------------')
+        for f in unfounded:
+            print(f)
+        print('all icons:', len(iconlist))
+        print('unfounded:', len(unfounded))
 
-    def wrap(s):
-        w = '"%s"' % s
-        return w
-    pattern = '    %-20s : %-20s  ,'
-    print('New iconPath:----------------------------------------')
-    for k in sorted(iconPath):
-        print(pattern % (wrap(k), wrap(iconPath[k])))
+        def wrap(s):
+            w = '"%s"' % s
+            return w
+        pattern = '    %-20s : %-20s  ,'
+        print('New iconPath:----------------------------------------')
+        for k in sorted(iconPath):
+            print(pattern % (wrap(k), wrap(iconPath[k])))
 
-new_iconPath()
+    new_iconPath()
