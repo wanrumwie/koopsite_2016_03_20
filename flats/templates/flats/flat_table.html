@@ -1,0 +1,24 @@
+{% extends "flats/flat_base.html" %}
+
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+
+{% block body %}
+    <p>Характеристика квартир</p>
+    <table class="tabledetail max-width-4em">
+        <tr>
+            {% for k in field_name %}
+                <th>{{ k }}</th>
+            {% endfor %}
+        </tr>
+            {% for f in field_val %}
+                <tr>
+                    {% for v in f %}
+                        <td>{{ v }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+    </table>
+{% endblock %}
+
+{% block href-flat-table %}
+{% endblock %}

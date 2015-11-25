@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+{# Шаблон-каркас. Його блоки можуть перевизначатися дочірніми шаблонами #}
+
+<html xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    {% block load_style %}
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css"
+              href="{% static 'css/koop_style.css' %}" />
+        <link rel="icon"
+              type="image/x-icon"
+              href="{% static 'favicon/favicon.ico' %}"/>
+        <link rel="shortcut icon"
+              type="image/x-icon"
+              href="{% static 'favicon/favicon.ico' %}"/>
+    {% endblock %}
+
+    {% block style %}
+        {# У дочірньому шаблоні можна переозначити стилі #}
+    {% endblock %}
+
+</head>
+
+<body>
+ <div class="site-container">
+  <div class="site-header">
+    {% block title %}
+        {% include "block_title.html" %}
+    {% endblock %}
+  </div>
+
+  <div class="site-body">
+    <ul class="navigation">
+        {# У дочірньому шаблоні переознач тільки самопосилання #}
+        {% block href-index %}
+            <li><a href="/index/">Головна сторінка</a></li>
+        {% endblock %}
+        {% block href-adm-index %}
+            {% if user.is_staff or perms.koopsite.activate_account %}
+                <li><a href="/adm/index/">Адміністрування</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-adm-users-table %}
+            {% if user.is_staff or perms.koopsite.activate_account %}
+                <li><a href="/adm/users/table/">Список акаунтів</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-adm-users-perms-update %}
+            {% if user.is_staff %}
+                <li><a href="/adm/users/{{ one_id }}/perms/update/">Редагувати доступ</a></li>
+            {% else %}
+                <li><a href="/adm/users/{{ one_id }}/perms/activate/">Редагувати доступ</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-adm-users-profile %}
+                <li><a href="/adm/users/{{ one_id }}/profile/">Переглянути профіль</a></li>
+        {% endblock %}
+        {% block href-adm-users-profile-update %}
+                <li><a href="/adm/users/{{ one_id }}/profile/update/">Редагувати профіль</a></li>
+        {% endblock %}
+    {% comment %}
+        {% block href-adm-users-list %}
+            {% if user.is_staff or perms.koopsite.activate_account %}
+                <li><a href="/adm/users/list/">Профілі користувачів</a></li>
+            {% endif %}
+        {% endblock %}
+    {% endcomment %}
+        {% block href-admin %}
+            {% if user.is_staff %}
+                <li><a href="/admin/">Django Admin</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-back %}
+            <li><a href="javascript:history.back()">Назад</a></li>
+        {% endblock %}
+    </ul>
+
+    {% block body %}
+        {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
+    {% endblock %}
+
+    {% block paginator %}
+        {# Для CBV з вбудованим paginator'ом навігація: "?page=3" #}
+        {# Для view без вбудованого paginator'а навігація: "/.../page3/" #}
+        {% include "block_paginator.html" %}
+    {% endblock %}
+
+    {% block load_js %}
+        {# У дочірньому шаблоні можна переозначити script #}
+    {% endblock %}
+
+    {% block ajax_browtab %}
+        {# У дочірньому шаблоні можна переозначити код #}
+    {% endblock %}
+
+    {% block load_ajax %}
+        {# У дочірньому шаблоні можна переозначити script #}
+    {% endblock %}
+  </div>
+
+  <div class="site-footer">
+    {% block bottom %}
+        {% include "block_bottom.html" %}
+    {% endblock %}
+  </div>
+ </div>
+</body>
+</html>
+
+<!-------------------------------------->
+{% comment %}
+
+{% block href-index %}
+{% endblock %}
+{% block href-adm-index %}
+{% endblock %}
+{% block href-adm-users-table %}
+{% endblock %}
+
+{% block href-adm-users-perms-update %}
+{% endblock %}
+{% block href-adm-users-profile %}
+{% endblock %}
+{% block href-adm-users-profile-update %}
+{% endblock %}
+
+{% block href-adm-users-list %}
+{% endblock %}
+
+{% block href-admin %}
+{% endblock %}
+{% block href-back %}
+{% endblock %}
+
+{% endcomment %}
+<!-------------------------------------->
+{% comment %}
+    {% if user.is_staff %}
+        <a href="/adm/users/{{ row.0.id }}/perms/update/">{{ v }}</a>
+    {% else %}
+        <a href="/adm/users/{{ row.0.id }}/perms/activate/">{{ v }}</a>
+    {% endif %}
+{% endcomment %}

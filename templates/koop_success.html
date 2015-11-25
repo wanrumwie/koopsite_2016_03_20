@@ -1,0 +1,21 @@
+{% extends "koop_base.html" %}
+
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+
+{% block style %}
+    <style type="text/css">
+        .green {color:    green;}
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div>
+        <h2 class="green">Вітаємо, {{ user.username }}!</h2>
+        <p>Ви успішно зареєструвалися на сайті KoopSite!</p>
+        <p><a href="/index/">Продовжити роботу</a></p>
+    </div>
+{% endblock %}
+
+{% block paginator %}
+{% endblock %}
+

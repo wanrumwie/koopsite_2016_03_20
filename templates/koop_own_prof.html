@@ -1,0 +1,17 @@
+﻿{% extends "koop_own_base.html" %}
+
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+
+{% block body %}
+    <h3>Мій профіль</h3>
+    {% block one_two_detail_show %}
+        {% include "block_one_two_detail_show.html" %}
+    {% endblock %}
+{% endblock %}
+
+{% block href-own-profile %}
+{% endblock %}
+
+{% block href-logout %}
+{% endblock %}
+

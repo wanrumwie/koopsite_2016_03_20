@@ -1,0 +1,64 @@
+{% extends "folders/folder_base.html" %}
+
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+
+{% block body %}
+    <h3>Створення теки</h3>
+
+    <div align="center">
+        <form id="folder_create_form" method="post" action=""
+              class="tableform"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                {% for field in form.visible_fields %}
+                    {% if field.errors %}
+                        <tr><td colspan=2>{{ field.errors }}   </td></tr>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <tr><td colspan=2>{{ field.help_text }}</td></tr>
+                    {% endif %}
+                    <tr>
+                        <th>{{ field.label }}</th>
+                        <td>{{ field }}      </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Створити" />
+            <input type="button" value="Скасувати" onclick="javascript:history.back()" />
+        </form>
+    </div>
+{% endblock %}
+
+{% block href-folder-contents %}
+{% endblock %}
+{% block href-folder-parent %}
+{% endblock %}
+{% block href-report-list %}
+{% endblock %}
+
+{% block href-folder-create %}
+{% endblock %}
+{% block href-report-upload %}
+{% endblock %}
+
+{% block href-folder-create-in %}
+{% endblock %}
+{% block href-folder-update %}
+{% endblock %}
+{% block href-folder-download %}
+{% endblock %}
+{% block href-folder-delete %}
+{% endblock %}
+{% block href-report-upload-in %}
+{% endblock %}
+
+{% block href-report-preview %}
+{% endblock %}
+{% block href-report-update %}
+{% endblock %}
+{% block href-report-download %}
+{% endblock %}
+{% block href-report-delete %}
+{% endblock %}
+

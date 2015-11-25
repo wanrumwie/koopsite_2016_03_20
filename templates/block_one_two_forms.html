@@ -1,0 +1,26 @@
+{% block one-two-forms %}
+    <div align="center">
+        <form id="one_two_form" method="post" action=""
+                class="tableform cell-height-1em5"
+                enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if render_variant == "as_ul" %}
+                <ul>
+                    {{ form_one.as_ul }}
+                    {{ form_two.as_ul }}
+                </ul>
+            {% elif render_variant == "as_p" %}
+                    {{ form_one.as_p }}
+                    {{ form_two.as_p }}
+            {% else %}
+                <table>
+                    {{ form_one }}
+                    {{ form_two }}
+                </table>
+            {% endif %}
+            <input type="submit" value="Готово" />
+            <input type="button" value="Скасувати" onclick="javascript:history.back()" />
+        </form>
+    </div>
+{% endblock %}
+

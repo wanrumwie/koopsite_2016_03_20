@@ -1,0 +1,61 @@
+{% extends "koop_base.html" %}
+
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону koop_base.html #}
+
+{% block body %}
+    <h3>Авторизація</h3>
+    {% if finished %}
+        <h2>Вітаємо, {{ user.username }}!</h2>
+        <p>Ви успішно авторизувались!</p>
+        <ul class="navigation-small buttons-y align-items-center" >
+            <li>
+                <a href="/index/">Продовжити роботу</a>
+            </li>
+        </ul>
+    {% else %}
+        <div align="center">
+            <form id="login_form" method="post" action="/login/"
+                  class="tableform">
+                {% csrf_token %}
+                {% if bad_details %}
+                    <p><strong>Введені логін та/або пароль неправильні!</strong></p>
+                {% elif disabled_account %}
+                    <p><strong>Ваш обліковий запис на даний момент недоступний;
+                                ви не можете увійти в нього!</strong></p>
+                {% endif %}
+                <table>
+                    <tr>
+                        <th>Логін: </th>
+                        <td>
+                            <input type="text" name="username" value="" size="50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Пароль: </th>
+                        <td>
+                            <input type="password" name="password" value="" size="50" />
+                        </td>
+                    </tr>
+                </table>
+                <input type="submit" value="Увійти" />
+                <input type="button" value="Скасувати" onclick="javascript:history.back()" />
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block paginator %}
+{% endblock %}
+
+{% block href-flats %}
+{% endblock %}
+{% block href-folders %}
+{% endblock %}
+{% block href-login %}
+{% endblock %}
+{% block href-register %}
+{% endblock %}
+{% block href-own-profile %}
+{% endblock %}
+{% block href-adm-index %}
+{% endblock %}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+{# Шаблон-каркас. Його блоки можуть перевизначатися дочірніми шаблонами #}
+
+<html xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    {% block load_style %}
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css"
+              href="{% static 'css/koop_style.css' %}">
+        <link rel="shortcut icon"
+              href="{% static 'favicon/favicon.ico' %}"/>
+    {% endblock %}
+
+    {% block style %}
+        {# У дочірньому шаблоні можна переозначити стилі #}
+    {% endblock %}
+
+</head>
+
+<body>
+ <div class="site-container">
+  <div class="site-header">
+    {% block title %}
+        {% include "block_title.html" %}
+    {% endblock %}
+  </div>
+
+  <div class="site-body">
+    <ul class="navigation">
+        {# У дочірньому шаблоні можна переозначити тільки самопосилання #}
+{% block href-report-reload %}
+{% endblock %}
+        {% block href-index %}
+            <li><a href="/index/">Головна сторінка</a></li>
+        {% endblock %}
+        {% block href-folder-contents %}
+            <li><a href="/folders/1/contents/">Документи</a></li>
+        {% endblock %}
+        {% block href-folder-list %}
+            <li><a href="/folders/list/">Список тек</a></li>
+        {% endblock %}
+        {% block href-folder-parent %}
+            <li><a href="/folders/parents/">Материнські теки</a></li>
+        {% endblock %}
+        {% block href-report-list %}
+            <li><a href="/folders/report/list/">Список файлів</a></li>
+        {% endblock %}
+
+        {% block href-folder-create %}
+            <li><a href="/folders/create/">Створити теку</a></li>
+        {% endblock %}
+        {% block href-report-upload %}
+            <li><a href="/folders/report/upload/">Заладувати файл</a></li>
+        {% endblock %}
+
+        {% block href-folder-create-in %}
+            <li><a href="/folders/{{ folder.id }}/create/">Створити теку в цій</a></li>
+        {% endblock %}
+        {% block href-folder-update %}
+            <li><a href="/folders/{{ folder.id }}/update/">Редагувати деталі теки</a></li>
+        {% endblock %}
+        {% block href-folder-download %}
+            <li><a href="/folders/{{ folder.id }}/download/">Завантажити вміст теки на мій комп'ютер</a></li>
+        {% endblock %}
+        {% block href-folder-delete %}
+            <li><a href="/folders/{{ folder.id }}/delete/">Видалити теку</a></li>
+        {% endblock %}
+        {% block href-report-upload-in %}
+            <li><a href="/folders/{{ folder.id }}/report/upload/" >Заладувати файл в цю теку</a></li>
+        {% endblock %}
+
+        {% block href-report-preview %}
+            <li><a href="/folders/report/{{ report.id }}/preview/">Попередній перегляд</a></li>
+        {% endblock %}
+        {% block href-report-update %}
+            <li><a href="/folders/report/{{ report.id }}/update/">Редагувати деталі файла</a></li>
+        {% endblock %}
+        {% block href-report-download %}
+            <li><a href="/folders/report/{{ report.id }}/download/">Завантажити файл на мій комп'ютер</a></li>
+        {% endblock %}
+        {% block href-report-delete %}
+            <li><a href="/folders/report/{{ report.id }}/delete/">Видалити файл</a></li>
+        {% endblock %}
+
+        {% block href-back %}
+            <li><a href="javascript:history.back()">Назад</a></li>
+        {% endblock %}
+    </ul>
+
+    {% block body %}
+        {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
+    {% endblock %}
+
+    {% block paginator %}
+        {# Для CBV з вбудованим paginator'ом навігація: "?page=3" #}
+        {# Для view без вбудованого paginator'а навігація: "/.../page3/" #}
+        {% include "block_paginator.html" %}
+    {% endblock %}
+
+    {% block load_js %}
+        {# У дочірньому шаблоні можна переозначити script #}
+    {% endblock %}
+
+    {% block ajax_browtab %}
+        {# У дочірньому шаблоні можна переозначити код #}
+    {% endblock %}
+
+    {% block load_ajax %}
+        {# У дочірньому шаблоні можна переозначити script #}
+    {% endblock %}
+  </div>
+
+  <div class="site-footer">
+    {% block bottom %}
+        {% include "block_bottom.html" %}
+    {% endblock %}
+  </div>
+ </div>
+</body>
+</html>
+
+<!------------------------------------------------>
+{% comment %}
+
+{% block href-index %}
+{% endblock %}
+{% block href-folder-contents %}
+{% endblock %}
+{% block href-folder-list %}
+{% endblock %}
+{% block href-folder-parent %}
+{% endblock %}
+{% block href-report-list %}
+{% endblock %}
+
+{% block href-folder-create %}
+{% endblock %}
+{% block href-report-upload %}
+{% endblock %}
+
+{% block href-folder-create-in %}
+{% endblock %}
+{% block href-folder-update %}
+{% endblock %}
+{% block href-folder-download %}
+{% endblock %}
+{% block href-folder-delete %}
+{% endblock %}
+{% block href-report-upload-in %}
+{% endblock %}
+
+{% block href-report-preview %}
+{% endblock %}
+{% block href-report-update %}
+{% endblock %}
+{% block href-report-download %}
+{% endblock %}
+{% block href-report-delete %}
+{% endblock %}
+
+{% block href-back %}
+{% endblock %}
+
+{% endcomment %}
+<!------------------------------------------------>

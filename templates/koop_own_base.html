@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+{# Шаблон-каркас. Його блоки можуть перевизначатися дочірніми шаблонами #}
+
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    {% block load_style %}
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css"
+              href="{% static 'css/koop_style.css' %}" />
+        <link rel="icon"
+              type="image/x-icon"
+              href="{% static 'favicon/favicon.ico' %}"/>
+        <link rel="shortcut icon"
+              type="image/x-icon"
+              href="{% static 'favicon/favicon.ico' %}"/>
+    {% endblock %}
+
+    {% block style %}
+        {# У дочірньому шаблоні можна переозначити стилі #}
+    {% endblock %}
+
+</head>
+
+<body>
+ <div class="site-container">
+  <div class="site-header">
+    {% block title %}
+        {% include "block_title.html" %}
+    {% endblock %}
+  </div>
+
+  <div class="site-body">
+    <ul class="navigation">
+        {# У дочірньому шаблоні переознач тільки самопосилання #}
+        {% block href-index %}
+            <li><a href="/index/">Головна сторінка</a></li>
+        {% endblock %}
+        {% block href-own-profile %}
+            {% if user.is_authenticated %}
+                <li><a href="/own/profile/">Мій профіль</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-own-profile-update %}
+            {% if user.is_authenticated %}
+                <li><a href="/own/profile/update/">Редагувати профіль</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-change-password %}
+            {% if user.is_authenticated %}
+                <li><a href="/own/change-password/">Змінити пароль</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-logout %}
+            {% if user.is_authenticated %}
+                <li><a href="/logout/" title="Logout">Вийти</a></li>
+            {% endif %}
+        {% endblock %}
+        {% block href-back %}
+            <li><a href="javascript:history.back()">Назад</a></li>
+        {% endblock %}
+    </ul>
+
+
+    {% block body %}
+        {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
+    {% endblock %}
+
+    {% block paginator %}
+        {# Для CBV з вбудованим paginator'ом навігація: "?page=3" #}
+        {# Для view без вбудованого paginator'а навігація: "/.../page3/" #}
+        {% include "block_paginator.html" %}
+    {% endblock %}
+
+  </div>
+
+  <div class="site-footer">
+    {% block bottom %}
+        {% include "block_bottom.html" %}
+    {% endblock %}
+  </div>
+ </div>
+</body>
+</html>
+
+{% comment %}
+<!------------------------------------------------>
+
+{% block href-index %}
+{% endblock %}
+
+{% block href-own-profile %}
+{% endblock %}
+
+{% block href-own-profile-update %}
+{% endblock %}
+
+{% block href-change-password %}
+{% endblock %}
+
+{% block href-logout %}
+{% endblock %}
+
+{% block href-back %}
+{% endblock %}
+
+<!------------------------------------------------>
+{% endcomment %}

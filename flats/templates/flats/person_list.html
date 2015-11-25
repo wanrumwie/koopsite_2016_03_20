@@ -1,0 +1,35 @@
+{% extends "flats/flat_base.html" %}
+
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+
+{% block style %}
+    <style type="text/css">
+        table.tabletab {
+            border-spacing:     1px;
+            }
+        div.visible {
+            width:              54px;
+            overflow:           visible;
+        }
+        div.hidden {
+            width:              54px;
+            overflow:           hidden;
+            font-weight:        normal;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+                person_list.html
+    {% load render_table from django_tables2 %}
+    {% render_table table %}
+{% endblock %}
+
+{% block paginator %}
+{% endblock %}
+
+{% block paginator-detail %}
+{% endblock %}
+
+{% block href-table %}
+{% endblock %}

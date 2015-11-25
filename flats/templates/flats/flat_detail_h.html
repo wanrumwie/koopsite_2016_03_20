@@ -1,0 +1,30 @@
+{% extends "flats/flat_base.html" %}
+
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+
+{% block body %}
+    <p>Характеристика квартири № {{ flat.flat_No }}</p>
+    <table class="tabledetail max-width-4em">
+        <tr>
+            {% for k, v in obj_details %}
+                <th>{{ k }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for k, v in obj_details %}
+                <td>{{ v }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endblock %}
+
+{% block paginator %}
+{% endblock %}
+
+{% block under-paginator %}
+    <ul class="navigation-small buttons-y align-items-center" >
+        <li>
+            <p><a href="/flats/{{ flat.pk }}/">В одну колонку</a></p>
+        </li>
+    </ul>
+{% endblock %}
