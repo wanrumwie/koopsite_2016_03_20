@@ -46,6 +46,7 @@ INSTALLED_APPS = (
                     # міграції моделей, описаних в koopsite.models.py
     'flats',
     'folders',
+    'lists',        # для прикладів з книги TDD with Python
 )
 
 MIDDLEWARE_CLASSES = (
