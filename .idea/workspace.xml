@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
+    <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="Відновлено db після помилки з foreignkey">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/0001_initial.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/0002_list.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/0003_item_list.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/0004_auto_20151126_2123.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/0005_list_list.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/0006_auto_20151126_2142.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/0007_auto_20151126_2147.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/koopsite/migrations/0009_auto_20151125_1005.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/migrations/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/admin.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/models.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/tests.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -27,11 +41,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="models.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lists/models.py">
+      <file leaf-file-name="tests.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lists/tests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3975535" vertical-offset="0" max-vertical-offset="364">
-              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.4968153" vertical-offset="1456" max-vertical-offset="2496">
+              <caret line="67" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -102,11 +116,11 @@
         <option value="$PROJECT_DIR$/koopsite/settings.py" />
         <option value="$PROJECT_DIR$/functional_tests/tests.py" />
         <option value="$PROJECT_DIR$/lists/urls.py" />
-        <option value="$PROJECT_DIR$/lists/views.py" />
         <option value="$PROJECT_DIR$/lists/templates/home.html" />
         <option value="$PROJECT_DIR$/lists/templates/list.html" />
-        <option value="$PROJECT_DIR$/lists/tests.py" />
         <option value="$PROJECT_DIR$/lists/models.py" />
+        <option value="$PROJECT_DIR$/lists/tests.py" />
+        <option value="$PROJECT_DIR$/lists/views.py" />
       </list>
     </option>
   </component>
@@ -551,8 +565,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
-        <item index="1" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+        <item index="0" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+        <item index="1" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
         <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT" />
         <item index="3" class="java.lang.String" itemvalue="Python.manage-test" />
         <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in tests" />
@@ -596,7 +610,11 @@
       <created>1448560497148</created>
       <updated>1448560497148</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Відновлено db після помилки з foreignkey">
+      <created>1448565586564</created>
+      <updated>1448565586564</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="2">
@@ -621,7 +639,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -632,7 +650,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.51976573" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.51976573" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -664,7 +682,8 @@
     <MESSAGE value="Move functional tests to subfolder; using LiveServerTestCase for working test with dummy DB." />
     <MESSAGE value="Уник помилки ConnectionResetError: [WinError 10054] в LiveServerTestCase. Стор.92 TDD with Python" />
     <MESSAGE value="URLs for forms x2, moved code in views + tests, new URL" />
-    <option name="LAST_COMMIT_MESSAGE" value="URLs for forms x2, moved code in views + tests, new URL" />
+    <MESSAGE value="Відновлено db після помилки з foreignkey" />
+    <option name="LAST_COMMIT_MESSAGE" value="Відновлено db після помилки з foreignkey" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1003,14 +1022,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23853211" vertical-offset="52" max-vertical-offset="546">
-          <caret line="7" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lists/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2867647" vertical-offset="156" max-vertical-offset="546">
@@ -1035,18 +1046,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/tests.py">
+    <entry file="file://$PROJECT_DIR$/lists/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.922272" vertical-offset="1775" max-vertical-offset="2548">
-          <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.28440368" vertical-offset="271" max-vertical-offset="624">
+          <caret line="16" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lists/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3975535" vertical-offset="0" max-vertical-offset="364">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.42813456" vertical-offset="42" max-vertical-offset="390">
+          <caret line="7" column="58" selection-start-line="7" selection-start-column="58" selection-end-line="7" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4968153" vertical-offset="1456" max-vertical-offset="2496">
+          <caret line="67" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
           <folding />
         </state>
       </provider>
