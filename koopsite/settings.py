@@ -41,12 +41,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # 'django_tables2',
-    'koopsite',     # "кореневий" каталог koopsite.koopsite
-                    # теж оголошується аплікацією, дозволяє робити
-                    # міграції моделей, описаних в koopsite.models.py
+    'koopsite',         # "кореневий" каталог koopsite.koopsite
+                        # теж оголошується аплікацією, дозволяє робити
+                        # міграції моделей, описаних в koopsite.models.py
     'flats',
     'folders',
-    'lists',        # для прикладів з книги TDD with Python
+    'lists',            # для прикладів з книги TDD with Python
+    # 'functional_tests', # для функціональних тестів
 )
 
 MIDDLEWARE_CLASSES = (
