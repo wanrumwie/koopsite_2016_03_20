@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/templates/home.html" afterPath="$PROJECT_DIR$/lists/templates/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/templates/list.html" afterPath="$PROJECT_DIR$/lists/templates/list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/urls.py" afterPath="$PROJECT_DIR$/lists/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -29,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="list.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lists/templates/list.html">
+      <file leaf-file-name="models.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lists/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33088234" vertical-offset="144" max-vertical-offset="728">
-              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.3975535" vertical-offset="0" max-vertical-offset="364">
+              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -97,7 +95,6 @@
         <option value="$PROJECT_DIR$/koopsite/fileExtIconPath.py" />
         <option value="$PROJECT_DIR$/koopsite/urls.py" />
         <option value="$PROJECT_DIR$/koopsite/tests.py" />
-        <option value="$PROJECT_DIR$/lists/models.py" />
         <option value="$PROJECT_DIR$/manage-test-lists.py" />
         <option value="$PROJECT_DIR$/functional_tests.py" />
         <option value="$PROJECT_DIR$/functional_tests/functional_tests.py" />
@@ -106,9 +103,10 @@
         <option value="$PROJECT_DIR$/functional_tests/tests.py" />
         <option value="$PROJECT_DIR$/lists/urls.py" />
         <option value="$PROJECT_DIR$/lists/views.py" />
-        <option value="$PROJECT_DIR$/lists/tests.py" />
         <option value="$PROJECT_DIR$/lists/templates/home.html" />
         <option value="$PROJECT_DIR$/lists/templates/list.html" />
+        <option value="$PROJECT_DIR$/lists/tests.py" />
+        <option value="$PROJECT_DIR$/lists/models.py" />
       </list>
     </option>
   </component>
@@ -230,6 +228,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="lists" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="migrations" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="functional_tests" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -270,7 +286,7 @@
       <recent name="C:\PyPrograms\Django\koopsite\static\folders" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.manage-test-lists">
+  <component name="RunManager" selected="Python.manage-2-migrate">
     <configuration default="false" name="manage-test-FT" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -535,10 +551,10 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.manage-test-FT" />
+        <item index="0" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
         <item index="1" class="java.lang.String" itemvalue="Python.manage-test-lists" />
-        <item index="2" class="java.lang.String" itemvalue="Python.manage-test" />
-        <item index="3" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
+        <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT" />
+        <item index="3" class="java.lang.String" itemvalue="Python.manage-test" />
         <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in tests" />
       </list>
     </recent_temporary>
@@ -576,7 +592,11 @@
       <created>1448558738056</created>
       <updated>1448558738056</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="URLs for forms x2, moved code in views + tests, new URL">
+      <created>1448560497148</created>
+      <updated>1448560497148</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView" selected-index="2">
@@ -603,12 +623,12 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20424597" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16398244" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20424597" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18081991" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -643,7 +663,8 @@
     <MESSAGE value="Refactor lists views to work with request.POST" />
     <MESSAGE value="Move functional tests to subfolder; using LiveServerTestCase for working test with dummy DB." />
     <MESSAGE value="Уник помилки ConnectionResetError: [WinError 10054] в LiveServerTestCase. Стор.92 TDD with Python" />
-    <option name="LAST_COMMIT_MESSAGE" value="Уник помилки ConnectionResetError: [WinError 10054] в LiveServerTestCase. Стор.92 TDD with Python" />
+    <MESSAGE value="URLs for forms x2, moved code in views + tests, new URL" />
+    <option name="LAST_COMMIT_MESSAGE" value="URLs for forms x2, moved code in views + tests, new URL" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -658,13 +679,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/templates/koop_adm_user_prof.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.675" vertical-offset="10" max-vertical-offset="650">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/koop_adm_index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.58532697" vertical-offset="803" max-vertical-offset="1482">
@@ -918,14 +932,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26712328" vertical-offset="0" max-vertical-offset="292">
-          <caret line="3" column="38" selection-start-line="3" selection-start-column="38" selection-end-line="3" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/manage-findstatic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="416">
@@ -1005,14 +1011,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3312102" vertical-offset="312" max-vertical-offset="1898">
-          <caret line="21" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lists/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2867647" vertical-offset="156" max-vertical-offset="546">
@@ -1023,8 +1021,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lists/templates/list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33088234" vertical-offset="144" max-vertical-offset="728">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7132353" vertical-offset="144" max-vertical-offset="728">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="234">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.922272" vertical-offset="1775" max-vertical-offset="2548">
+          <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3975535" vertical-offset="0" max-vertical-offset="364">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>
