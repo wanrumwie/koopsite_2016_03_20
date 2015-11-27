@@ -15,10 +15,10 @@ class NewVisitorTest(LiveServerTestCase):   # працює з окремою с�
     def setUpClass(cls):
         super(NewVisitorTest, cls).setUpClass()
         cls.browser = webdriver.Firefox()
-        cls.browser.implicitly_wait(3)
 
     @classmethod
     def tearDownClass(cls):
+        cls.browser.implicitly_wait(3)
         cls.browser.quit()
         super(NewVisitorTest, cls).tearDownClass()
 

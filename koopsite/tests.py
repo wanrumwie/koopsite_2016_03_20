@@ -5,7 +5,7 @@ from django.test import TestCase
 from koopsite.views import index
 
 
-class IndexPagetest(TestCase):
+class IndexPageTest(TestCase):
 
     def test_root_url_resolves_to_index_page_view(self):
         found = resolve('/')
@@ -20,5 +20,4 @@ class IndexPagetest(TestCase):
         response = index(request)
         expected_html = render_to_string('koop_index.html')
         self.assertEqual(response.content.decode(), expected_html)
-
 
