@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'flats',
     'folders',
     'lists',            # для прикладів з книги TDD with Python
-    # 'functional_tests', # для функціональних тестів
+    # 'functional_tests_lists', # для функціональних тестів
 )
 
 MIDDLEWARE_CLASSES = (
