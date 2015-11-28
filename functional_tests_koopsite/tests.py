@@ -3,6 +3,7 @@ import time
 from django.core.urlresolvers import reverse
 from django.test.testcases import LiveServerTestCase
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -37,11 +38,42 @@ class IndexVisitorTest(LiveServerTestCase):
         header_text = self.browser.find_element_by_id('page-name').text
         self.assertIn('Головна сторінка', header_text)
 
-    def check_go_to_link(self, link_text, expected_regex):
+    # TODO-Error 404 for /folders/1/contents
+    # TODO-Перевірка на 404 - тут чи в unitest?
+    links_for_anonymous_user = [
+        ('#body-navigation'          ,  'Квартири'          , '^flats/scheme/$'),
+        ('#body-navigation'          ,  'Документи'         , '^folders/(?P<pk>[0-9]+)/contents/$'),
+        ('#body-navigation'          ,  'Увійти'            , '^login/$'),
+        ('#body-navigation'          ,  'Зареєструватися'   , '^register/$'),
+        ('#header-aside-2-navigation',  'Авторизуватися'    , '^login/$'),
+        ('#body-aside-1-navigation'  ,  'Увійти'            , '^login/$'),
+        ('#body-aside-1-navigation'  ,  'Зареєструватися'   , '^register/$'),
+    ]
+    # TODO-зробити функц. тест для авторизованого користувача
+    links_for_authentificated_user = [
+        ('#body-navigation'          ,  'Квартири'          , '^flats/scheme/$'),
+        ('#body-navigation'          ,  'Документи'         , '^folders/(?P<pk>[0-9]+)/contents/$'),
+        ('#body-navigation'          ,  'Мій профіль'       , '^own/profile/$'),
+        ('#body-navigation'          ,  'Адміністрування'   , '^adm/index/$'),
+        ('#header-aside-2-navigation',  'Roman'             , '^own/profile/$'),
+        ('#header-aside-2-navigation',  'Вийти'             , '^logout/$'),
+    ]
+
+    def test_anonymous_user_all_links_exist(self):
+        self.browser.get('%s%s' % (self.live_server_url, '/index/'))
+        elements = self.browser.find_elements_by_tag_name('a')
+        self.assertEqual(len(elements),
+                         len(self.links_for_anonymous_user),
+                         msg="Кількість лінків на сторінці не відповідає очікуваній")
+
+    def check_go_to_link(self, link_parent_selector, link_text, expected_regex):
         # Користувач може перейти по лінку, заданому expected_regex
         # з текстом "link_text"
         self.browser.get('%s%s' % (self.live_server_url, '/index/'))
-        href = self.browser.find_element_by_link_text(link_text)
+        # print(link_parent_selector, link_text, expected_regex)
+        parent = self.browser.find_element_by_css_selector(
+                                                link_parent_selector)
+        href = parent.find_element_by_link_text(link_text)
         actions = ActionChains(self.browser)
         actions.move_to_element(href)
         actions.click(href)
@@ -50,24 +82,13 @@ class IndexVisitorTest(LiveServerTestCase):
         expected_regex = expected_regex.lstrip('^')
         self.assertRegex(passing_url, expected_regex)
 
-    def test_unauthorized_user_can_go_to_links(self):
+    def test_anonymous_user_can_go_to_links(self):
         # Незалогінений користувач може перейти по лінках на сторінці
-        links = [
-            ('Квартири'          , '^flats/scheme/$'),
-            # ('Документи'         , '^folders/(?P<pk>[0-9]+)/contents/$'),
-            ('Увійти'            , '^login/$'),
-            ('Зареєструватися'   , '^register/$'),
-            ('Авторизуватися'    , '^login/$'),
-            # ('Увійти'            , '^login/$'),
-            # ('Зареєструватися'   , '^register/$'),
-            # ('Квартири'          , '^flats/scheme/$'),
-            # ('Документи'         , '^folders/(?P<pk>[0-9]+)/contents/$'),
-            # ('Мій профіль'       , '^own/profile/$'),
-            # ('Адміністрування'   , '^adm/index/$'),
-            # ('Roman'             , '^own/profile/$'),
-            # ('Вийти'             , '^logout/$'),
-        ]
-        for link_text, expected_regex in links:
-            self.check_go_to_link(link_text, expected_regex)
+        for link_parent_selector, link_text, expected_regex \
+                in self.links_for_anonymous_user:
+            self.check_go_to_link(
+                link_parent_selector, link_text, expected_regex)
+
+
 
 

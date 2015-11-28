@@ -16,7 +16,8 @@
             {% if user.is_authenticated %}
                 <h2>Вітаємо, {{ user.username }}!</h2>
             {% else %}
-                <ul class="navigation-small buttons-y" >
+                <ul id="body-aside-1-navigation"
+                    class="navigation-small buttons-y" >
                     <li>
                         <a href="/login/">Увійти</a>
                     </li>

@@ -7,7 +7,8 @@
         </div>
         <div class="aside aside-1 align-flex-end aside-empty"></div>
         <div class="aside aside-2 align-flex-end">
-            <ul class="navigation-small">
+            <ul id="header-aside-2-navigation"
+                class="navigation-small">
             {% if request.user.is_authenticated %}
                 <li>
                     <a href="/user-profile/" title="Профіль користувача">
