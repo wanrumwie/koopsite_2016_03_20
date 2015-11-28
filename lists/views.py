@@ -6,9 +6,6 @@ from lists.models import Item, List
 def home_page(request):
     template_name = 'home.html'
     all = List.objects.all()
-    print('home_page(request):-----------')
-    print('List.objects.all() =', all)
-    for l in all: print('list_ =', l)
     return render(request, template_name)
 
 def view_list(request, list_id):
