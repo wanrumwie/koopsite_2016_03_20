@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 import time
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 from django.test.testcases import LiveServerTestCase
 from selenium import webdriver
@@ -15,7 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from koopsite.views import index
 
 
-class IndexVisitorTest(LiveServerTestCase):
+class IndexVisitorTest(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -27,7 +27,7 @@ class IndexVisitorTest(LiveServerTestCase):
         # time.sleep(5)
         cls.browser.implicitly_wait(30)
         # cls.browser.quit()
-        # super(IndexVisitorTest, cls).tearDownClass()
+        super(IndexVisitorTest, cls).tearDownClass()
 
     def test_can_visit_site_index_page(self):
         # Користувач може відвідати головну сторінку сайта

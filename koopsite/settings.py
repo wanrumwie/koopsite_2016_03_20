@@ -126,6 +126,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/koopsite"),
     os.path.join(BASE_DIR, "static/folders"),
     os.path.join(BASE_DIR, "static/flats"),
+    os.path.join(BASE_DIR, "static/lists"),
     MEDIA_ROOT,
 )
 

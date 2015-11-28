@@ -1,5 +1,6 @@
 import time
-from django.test.testcases import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+# from django.test.testcases import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
@@ -8,9 +9,9 @@ import unittest
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class NewVisitorTest(LiveServerTestCase):   # працює з окремою спеціально
-                                            # створюваною БД для тестів
-
+class NewVisitorTest(StaticLiveServerTestCase): # працює з окремою спеціально
+                                                # створюваною БД для тестів
+                                                # + статичні файли
     @classmethod
     def setUpClass(cls):
         super(NewVisitorTest, cls).setUpClass()
@@ -18,8 +19,14 @@ class NewVisitorTest(LiveServerTestCase):   # працює з окремою с�
 
     @classmethod
     def tearDownClass(cls):
-        cls.browser.implicitly_wait(3)
-        cls.browser.quit()
+        # cls.browser.refresh()
+        # cls.browser.implicitly_wait(3)
+        # if hasattr(cls, 'server_thread'):
+        #     print("IF hasattr(cls, 'server_thread')")
+        #     test if server_thread attribute is available (as there may have been an exception in setUpClass)
+        #     setting ignore_errors flag on WSGI server thread to avoid unwanted 10054
+            # cls.server_thread.httpd.ignore_errors = True
+        # cls.browser.quit()
         super(NewVisitorTest, cls).tearDownClass()
 
     def check_for_row_in_list_table(self, row_text):
@@ -108,14 +115,14 @@ class NewVisitorTest(LiveServerTestCase):   # працює з окремою с�
     def test_layout_and_styling(self):
         # Edith goes to the home page
         self.browser.get('%s%s' % (self.live_server_url, '/lists/'))
-        self.browser.set_window_size(1024, 768)
+        self.browser.set_window_size(1024, 600)
 
         # She notices the input box is nicely centered
         inputbox = self.browser.find_element_by_id('id_new_item')
         buttonbox = self.browser.find_element_by_id('submit_button')
         self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2 \
-                                   + buttonbox.size['width'] / 2,
+            inputbox.location['x'] + inputbox.size['width'] / 2 ,
+                                   # + buttonbox.size['width'] / 2,
             512,
             delta=10
         )
@@ -126,8 +133,8 @@ class NewVisitorTest(LiveServerTestCase):   # працює з окремою с�
         inputbox = self.browser.find_element_by_id('id_new_item')
         buttonbox = self.browser.find_element_by_id('submit_button')
         self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2 \
-                                   + buttonbox.size['width'] / 2,
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+                                   # + buttonbox.size['width'] / 2,
             512,
             delta=10
         )
