@@ -8,9 +8,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+import sys
 import unittest
-
-# class NewVisitorTest(unittest.TestCase):
 from selenium.webdriver.support.wait import WebDriverWait
 from koopsite.views import index
 
@@ -19,15 +18,27 @@ class IndexVisitorTest(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(IndexVisitorTest, cls).setUpClass()
-        cls.browser = webdriver.Firefox()
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
 
     @classmethod
     def tearDownClass(cls):
-        # time.sleep(5)
-        cls.browser.implicitly_wait(30)
-        # cls.browser.quit()
-        super(IndexVisitorTest, cls).tearDownClass()
+        if cls.server_url == cls.live_server_url:
+            super().tearDownClass()
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+        # self.browser.implicitly_wait(5)
+
+    def tearDown(self):
+        self.browser.implicitly_wait(30)
+        pass
+        # self.browser.refresh()
+        # self.browser.quit()
 
     def test_can_visit_site_index_page(self):
         # Користувач може відвідати головну сторінку сайта

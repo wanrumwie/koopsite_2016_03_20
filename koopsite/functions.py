@@ -125,7 +125,8 @@ def getSelections(session):
     """
     # Пробуємо отримати значення з сесії:
     selections = session.get('Selections')
-    print('getSelections: selections =', selections)
+    print('getSelections: session =', session.items())
+    # print('getSelections: selections =', selections)
     if (not selections) or (type(selections) != type({})):
         # якщо selections не існує або не є словником,
         # створюємо новий порожній словник:
@@ -134,7 +135,7 @@ def getSelections(session):
         # tableSelections = {str(parent_id) : emptyElement}
         # selections      = {browTabName  : tableSelections}
         selections      = {}
-        print('getSelections: not: selections =', selections)
+        # print('getSelections: not: selections =', selections)
         # Записуємо в сесію:
         session['Selections'] = selections
     return selections
@@ -158,7 +159,7 @@ def getSelElementFromSession(session, browTabName, parent_id=''):
     selections = getSelections(session)
     tableSelections = selections.get(browTabName, {})
     selElement = tableSelections.get(parent_id, emptyElement)
-    print('getSelElementFromSession: selElement =', selElement)
+    # print('getSelElementFromSession: selElement =', selElement)
     return selElement
 
 def setSelElementToSession(session, browTabName, parent_id='',
@@ -184,8 +185,8 @@ def setSelElementToSession(session, browTabName, parent_id='',
     selections[browTabName] = tableSelections
     # Записуємо в сесію:
     session['Selections'] = selections
-    print('setSelElementToSession:')
-    print('selElement =', selElement)
+    # print('setSelElementToSession:')
+    # print('selElement =', selElement)
 
 def parseClientRequest(request):
     """
@@ -224,7 +225,7 @@ def parseClientRequest(request):
     for key in keys:
         if not key in d.keys():
             d[key] = None
-    print('parseClientRequest: d=', d)
+    # print('parseClientRequest: d=', d)
     return d
 
 def parseXHRClientRequest(request):

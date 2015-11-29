@@ -220,7 +220,7 @@ class AjaxAccountView(View):
             response_cont = vars(msg)
             response_cont['changes'] = changes
             response_cont['supplement'] = supplement
-            print('handler: response_cont =', response_cont)
+            # print('handler: response_cont =', response_cont)
             # Посилаємо відповідь клієнту:
             return JsonResponse(response_cont)
         else:

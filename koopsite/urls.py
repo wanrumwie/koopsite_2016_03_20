@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url, static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 from koopsite.views import UserPermsActivateUpdate, OwnProfileDetailShow, UserProfileDetailShow
 from koopsite.viewsajaxuser import UsersTable, AjaxRecognizeAccount, \
                     AjaxDenyAccount, AjaxActivateAccount, \
@@ -97,26 +96,25 @@ urlpatterns = [
 urlpatterns += static.static(MEDIA_URL, document_root=MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()
 
-class WalkURL():
-    def __init__(self):
-        self.all_url_names = []
-        self.get_all_url_names()
-
-    def url_walk(self, prefix, urlpatterns):
-        # print(urlpatterns)
-        for u in urlpatterns:
-            if type(u) == RegexURLPattern:
-                s = u.regex.pattern
-                s = prefix + s.lstrip('^')
-                print('%-50s %s' % (s, u.name))
-                self.all_url_names.append((s, u.name))
-            if type(u) == RegexURLResolver:
-                # print(u.regex.pattern, u)
-                self.url_walk(u.regex.pattern, u.url_patterns)
-    def get_all_url_names(self):
-        self.url_walk('^',urlpatterns)
-        return self.all_url_names
-
-
+# from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
+# class WalkURL():
+#     def __init__(self):
+#         self.all_url_names = []
+#         self.get_all_url_names()
+#
+#     def url_walk(self, prefix, urlpatterns):
+#         for u in urlpatterns:
+#             if type(u) == RegexURLPattern:
+#                 s = u.regex.pattern
+#                 s = prefix + s.lstrip('^')
+#                 print('%-50s %s' % (s, u.name))
+#                 self.all_url_names.append((s, u.name))
+#             if type(u) == RegexURLResolver:
+#                 self.url_walk(u.regex.pattern, u.url_patterns)
+#     def get_all_url_names(self):
+#         self.url_walk('^',urlpatterns)
+#         return self.all_url_names
+#
+#
 # all_url = WalkURL().all_url_names
 # print('all_url =', all_url)

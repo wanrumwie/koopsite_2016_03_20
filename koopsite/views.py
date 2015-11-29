@@ -2,21 +2,20 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.paginator import Paginator
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout, \
-                                update_session_auth_hash
+from django.contrib.auth import authenticate, login, logout
+# TODO-відновити. Закоментував, щоб запустилось на pythoneverywhere
+from django.contrib.auth import update_session_auth_hash
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from flats.models import Flat
-from koopsite.decorators import LoginRequiredMixin
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                             UserPermsActivateForm, \
-                            ProfileFullForm, ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm
-from koopsite.functions import print_user_permissions
+                            ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm
 from .models import User, UserProfile
 from .forms import UserRegistrationForm, UserPersonDataForm
 
@@ -525,6 +524,7 @@ def change_password(request):
         form = PasswordChangeForm(request.user, data=request.POST)
         if form.is_valid():
             form.save()
+            # TODO-відновити. Закоментував, щоб запустилось на pythoneverywhere
             update_session_auth_hash(request, form.user) # dont logout the user.
             finished = True
             messages.success(request, "Password changed.")
