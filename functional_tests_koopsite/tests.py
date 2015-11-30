@@ -24,19 +24,25 @@ class IndexVisitorTest(StaticLiveServerTestCase):
                 return
         super().setUpClass()
         cls.server_url = cls.live_server_url
+        cls.browser = webdriver.Firefox()
 
     @classmethod
     def tearDownClass(cls):
+        # cls.browser.quit()
         if cls.server_url == cls.live_server_url:
             super().tearDownClass()
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
-        # self.browser.implicitly_wait(5)
+        pass
+        # self.browser = webdriver.Firefox()
 
     def tearDown(self):
-        self.browser.implicitly_wait(30)
-        pass
+        self.browser.implicitly_wait(10)
+        # browser.quit() викликає помилку 10054, і ніякі, навіть тривалі
+        # implicitly_wait, не допомагають.
+        # Тому я переніс створення browser=webdriver.Firefox()
+        # в метод класу, тоді все відбувається в одному вікні,
+        # яке залишається відкритим по завершенні.
         # self.browser.refresh()
         # self.browser.quit()
 

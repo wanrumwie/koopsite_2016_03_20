@@ -2,21 +2,18 @@ from copy import deepcopy
 import json
 import types
 from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models.functions import Lower
-from django.http import *
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.generic.base import View
 from django.views.generic.list import ListView
-from koopsite.decorators import ajax_login_required
 from koopsite.models import UserProfile
 from koopsite.settings import EMAIL_HOST_USER, STATIC_URL
 from koopsite.functions import has_group, add_group, \
-                        remove_group, is_staff_only, sendMailToUser, get_user_full_name, get_user_flat_No, \
-    get_user_is_recognized
+                        remove_group, is_staff_only, sendMailToUser, \
+                        get_user_full_name, get_user_flat_No, \
+                        get_user_is_recognized
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest
@@ -167,7 +164,7 @@ class UsersTable(ListView):
         return context
 
     def get_queryset(self):
-        self.qs = User.objects.all().order_by(Lower('username'))
+        self.qs = User.objects.all().order_by('username'.lower())
         # Якщо авторизований користувач не належить до групи staff,
         # то він не може бачити тих, хто належить ТІЛЬКИ до staff:
         if not self.request.user.is_staff:

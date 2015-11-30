@@ -2,14 +2,12 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import *
 from django.shortcuts import render
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.paginator import Paginator
 from folders.functions import response_for_download, response_for_download_zip
-from koopsite.decorators import LoginRequiredMixin
 from koopsite.views import AllDetailView
 from .models import Folder, Report, \
                     get_subfolders, get_subreports

@@ -1,10 +1,5 @@
 import os
-from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import models
-
-# Create your models here.
-from django.db.models.signals import post_delete
-from django.dispatch import receiver
 from django.core.urlresolvers import reverse
 
 

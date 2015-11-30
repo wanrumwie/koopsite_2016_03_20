@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from folders.views import folderDownload, ReportPreview
-from koopsite.views import page_not_ready
 from .views import success, \
                     FolderCreate, \
                     FolderCreateInFolder, \

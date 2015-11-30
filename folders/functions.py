@@ -1,7 +1,6 @@
 import os
 import zipfile
 from io import BytesIO
-from django.db.models.functions import Lower
 from django.http.response import HttpResponse
 from folders.models import Report, Folder
 from koopsite.fileExtMimeTypes import mimeType
@@ -70,7 +69,7 @@ tab = ' '*4
 def wrap_li(level, folder):
     indent = tab * level
     li = indent + '<li id="%s">%s\n' % (folder.id, folder.name)
-    qs = folder.children.all().order_by(Lower('name'))
+    qs = folder.children.all().order_by('name'.lower())
     if qs:
         li = li + wrap_ul(level, qs)
     li = li + indent + '</li>\n'
@@ -86,7 +85,7 @@ def wrap_ul(level, qs):
 
 def get_folders_tree_HTML(parent_qs=None):
     level = 0
-    qs = parent_qs or Folder.objects.filter(parent=None).order_by(Lower('name'))
+    qs = parent_qs or Folder.objects.filter(parent=None).order_by('name'.lower())
     html = wrap_ul(level, qs)
     return html
 

@@ -5,11 +5,9 @@ from itertools import chain
 import types
 from django.contrib.auth.decorators import permission_required
 from django.core.files.base import ContentFile
-from django.db.models.functions import Lower
-from django.http import *
+from django.http.response import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import ListView
@@ -191,8 +189,8 @@ class FolderContents(SingleObjectMixin, ListView):
         # Дочірні об'єкти:
         # два queryset з різних моделей об'єднується в один qs,
         # який обробляється в template як одне ціле (в т.ч. з Paginator'ом)
-        fs = self.object.children.all().order_by(Lower('name'))
-        rs = Report.objects.filter(parent=self.object).order_by(Lower('filename'))
+        fs = self.object.children.all().order_by('name'.lower())
+        rs = Report.objects.filter(parent=self.object).order_by('filename'.lower())
         self.qs = list(chain(fs, rs))
         return self.qs
 

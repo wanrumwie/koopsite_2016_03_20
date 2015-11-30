@@ -1,5 +1,5 @@
 import types
-from django.http import *
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \

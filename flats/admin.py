@@ -1,9 +1,5 @@
 from django.contrib import admin
-
-# Register your models here.
-
 from .models import Flat, Person
-# from koopsite.models import UserProfile
 
 class FlatAdmin(admin.ModelAdmin):
     list_per_page = 15

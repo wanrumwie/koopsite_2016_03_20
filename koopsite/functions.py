@@ -2,10 +2,8 @@ import os
 import re
 import json
 from urllib.parse import unquote
-from io import BytesIO
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
-from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 from koopsite.fileExtIconPath import iconPath
 from koopsite.settings import EMAIL_HOST_USER
 

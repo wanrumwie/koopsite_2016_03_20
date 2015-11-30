@@ -7,10 +7,10 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 # TODO-відновити. Закоментував, щоб запустилось на pythoneverywhere
-from django.contrib.auth import update_session_auth_hash
+# from django.contrib.auth import update_session_auth_hash
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from flats.models import Flat
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
@@ -525,7 +525,7 @@ def change_password(request):
         if form.is_valid():
             form.save()
             # TODO-відновити. Закоментував, щоб запустилось на pythoneverywhere
-            update_session_auth_hash(request, form.user) # dont logout the user.
+            # update_session_auth_hash(request, form.user) # don't logout the user.
             finished = True
             messages.success(request, "Password changed.")
         else:

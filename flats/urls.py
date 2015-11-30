@@ -1,11 +1,9 @@
 from django.conf.urls import url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from koopsite.views import page_not_ready
 
 from .views import FlatList, FlatScheme, \
                     FlatDetail, FlatDetailHorizontal, \
                     FlatTable
-from .tables import PersonTableView
 
 """
 /flats/ - під'єднано у модулі koopsite.urls.py:
