@@ -5,7 +5,7 @@ from itertools import chain
 import types
 from django.contrib.auth.decorators import permission_required
 from django.core.files.base import ContentFile
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
@@ -260,7 +260,8 @@ class AjaxTableRowView(View):
             response_cont['changes'] = changes
             response_cont['supplement'] = supplement
             print('AjaxTableRowView: processing: response_cont=', response_cont)
-            return JsonResponse(response_cont)
+            # return JsonResponse(response_cont)
+            return HttpResponse(json.dumps(response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
             return render(self, request, self.no_request_template)
@@ -772,7 +773,8 @@ def ajaxFoldersTreeFromBase(request):
         folderTree = get_folders_tree_HTML()
         # Посилаємо відповідь клієнту:
         response_dict = {'server_response': folderTree }
-        return JsonResponse(response_dict)
+        # return JsonResponse(response_dict)
+        return HttpResponse(json.dumps(response_dict), content_type="application/json")
     else:
         return render(request, 'folders/folder_contents.html')
 

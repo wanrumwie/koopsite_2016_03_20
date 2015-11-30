@@ -1,5 +1,6 @@
+import json
 import types
-from django.http.response import JsonResponse
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
@@ -43,7 +44,8 @@ def ajaxSelRowIndexToSession(request):
                                             selElement=selElement)
         # Посилаємо відповідь клієнту:
         response_dict = {'server_response': selElement }
-        return JsonResponse(response_dict)
+        # return JsonResponse(response_dict)
+        return HttpResponse(json.dumps(response_dict), content_type="application/json")
     else:
         return render(request, 'folders/folder_contents.html')
 
@@ -60,7 +62,8 @@ def ajaxStartRowIndexFromSession(request):
                                             parent_id=parent_id)
         # Посилаємо відповідь клієнту:
         response_dict = {'server_response': selElement }
-        return JsonResponse(response_dict)
+        # return JsonResponse(response_dict)
+        return HttpResponse(json.dumps(response_dict), content_type="application/json")
     else:
         return render(request, 'folders/folder_contents.html')
 

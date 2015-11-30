@@ -3,7 +3,7 @@ import json
 import types
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import User
-from django.http.response import JsonResponse
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
@@ -219,7 +219,8 @@ class AjaxAccountView(View):
             response_cont['supplement'] = supplement
             # print('handler: response_cont =', response_cont)
             # Посилаємо відповідь клієнту:
-            return JsonResponse(response_cont)
+            # return JsonResponse(response_cont)
+            return HttpResponse(json.dumps(response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
             return render(self, request, self.no_request_template)
@@ -528,7 +529,8 @@ class AjaxAllAccountsView(View):
             group_response_cont = vars(self.group_msg)
             group_response_cont['group'] = group_response_set
             # Посилаємо відповідь клієнту:
-            return JsonResponse(group_response_cont)
+            # return JsonResponse(group_response_cont)
+            return HttpResponse(json.dumps(group_response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
             return render(self, request, self.no_request_template)
