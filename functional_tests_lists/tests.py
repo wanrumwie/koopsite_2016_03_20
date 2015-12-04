@@ -12,6 +12,7 @@ class NewVisitorTest(StaticLiveServerTestCase): # працює з окремою
                                                 # + статичні файли
     @classmethod
     def setUpClass(cls):
+        cls.browser = webdriver.Firefox()
         for arg in sys.argv:
             if 'liveserver' in arg:
                 cls.server_url = 'http://' + arg.split('=')[1]
@@ -25,9 +26,10 @@ class NewVisitorTest(StaticLiveServerTestCase): # працює з окремою
             super().tearDownClass()
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        pass
 
     def tearDown(self):
+        self.browser.implicitly_wait(10)
         pass
         # self.browser.refresh()
         # self.browser.quit()

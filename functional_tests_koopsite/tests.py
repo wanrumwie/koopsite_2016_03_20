@@ -1,30 +1,24 @@
-import time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.core.urlresolvers import reverse
-from django.test.testcases import LiveServerTestCase
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
 import sys
-import unittest
-from selenium.webdriver.support.wait import WebDriverWait
-from koopsite.views import index
+from folders.models import Folder
 
 
 class IndexVisitorTest(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
+        # folder = Folder(name='Root')
+        # folder.save()
+        # print('folder.id =', folder.id)
+        cls.browser = webdriver.Firefox()
         for arg in sys.argv:
             if 'liveserver' in arg:
                 cls.server_url = 'http://' + arg.split('=')[1]
                 return
         super().setUpClass()
         cls.server_url = cls.live_server_url
-        cls.browser = webdriver.Firefox()
 
     @classmethod
     def tearDownClass(cls):
@@ -33,6 +27,10 @@ class IndexVisitorTest(StaticLiveServerTestCase):
             super().tearDownClass()
 
     def setUp(self):
+        # Every test needs access to the request factory.
+        # self.factory = RequestFactory()
+        # self.user = User.objects.create_user(
+        #     username='temporary', email='temporary@gmail.com', password='top_secret')
         pass
         # self.browser = webdriver.Firefox()
 
@@ -48,7 +46,7 @@ class IndexVisitorTest(StaticLiveServerTestCase):
 
     def test_can_visit_site_index_page(self):
         # Користувач може відвідати головну сторінку сайта
-        self.browser.get('%s%s' % (self.live_server_url, '/index/'))
+        self.browser.get('%s%s' % (self.server_url, '/index/'))
         # Ця сторінка справді є сторінкою потрібного сайту
         self.assertIn('Пасічний', self.browser.title)
         # Цe головна сторінка
@@ -77,7 +75,7 @@ class IndexVisitorTest(StaticLiveServerTestCase):
     ]
 
     def test_anonymous_user_all_links_exist(self):
-        self.browser.get('%s%s' % (self.live_server_url, '/index/'))
+        self.browser.get('%s%s' % (self.server_url, '/index/'))
         elements = self.browser.find_elements_by_tag_name('a')
         self.assertEqual(len(elements),
                          len(self.links_for_anonymous_user),
@@ -86,7 +84,7 @@ class IndexVisitorTest(StaticLiveServerTestCase):
     def check_go_to_link(self, link_parent_selector, link_text, expected_regex):
         # Користувач може перейти по лінку, заданому expected_regex
         # з текстом "link_text"
-        self.browser.get('%s%s' % (self.live_server_url, '/index/'))
+        self.browser.get('%s%s' % (self.server_url, '/index/'))
         # print(link_parent_selector, link_text, expected_regex)
         parent = self.browser.find_element_by_css_selector(
                                                 link_parent_selector)
@@ -98,6 +96,10 @@ class IndexVisitorTest(StaticLiveServerTestCase):
         passing_url = self.browser.current_url  # url після переходу
         expected_regex = expected_regex.lstrip('^')
         self.assertRegex(passing_url, expected_regex)
+        # print('href =', href)
+        # print('passing_url =', passing_url)
+        # print('expected_regex =', expected_regex)
+
 
     def test_anonymous_user_can_go_to_links(self):
         # Незалогінений користувач може перейти по лінках на сторінці
@@ -105,7 +107,14 @@ class IndexVisitorTest(StaticLiveServerTestCase):
                 in self.links_for_anonymous_user:
             self.check_go_to_link(
                 link_parent_selector, link_text, expected_regex)
-
+    '''
+    def test_authentificated_user_can_go_to_links(self):
+        # Залогінений користувач може перейти по лінках на сторінці
+        for link_parent_selector, link_text, expected_regex \
+                in self.links_for_authentificated_user:
+            self.check_go_to_link(
+                link_parent_selector, link_text, expected_regex)
+    '''
 
 
 

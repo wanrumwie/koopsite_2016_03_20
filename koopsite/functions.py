@@ -35,7 +35,7 @@ def get_namespace_from_dict(d, ns, extend=False):
 def get_iconPathForFolder(openFlag=False):
     if openFlag: p = 'img/open_folder.png'
     else:        p = 'img/folder.png'
-    print('folder: p=', p)
+    # print('folder: p=', p)
     return p
 
 def get_iconPathByFileExt(ext):
@@ -43,7 +43,7 @@ def get_iconPathByFileExt(ext):
     if not p: p = "_page.png"
     directory = 'img/file-icons/32px/'
     p = directory + p
-    print('ext =', ext, '  p=', p)
+    # print('ext =', ext, '  p=', p)
     return p
 
 def fileNameCheckInsert(fileName, fileNameList):
@@ -241,7 +241,7 @@ def parseXHRClientRequest(request):
     json_s = unquote(encoded_json_s)
     # Розкодовуємо стрічку JSON в звичайний словник
     d = json.loads(json_s)
-    print('parseXHRClientRequest: d=', d)
+    # print('parseXHRClientRequest: d=', d)
     return d
 
 
