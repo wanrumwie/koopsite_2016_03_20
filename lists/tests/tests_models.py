@@ -41,6 +41,10 @@ class ListAndItemModelsTest(TestCase):
             item.full_clean()   # Django не перевіряє порожніх текстових полів!
                                 # full_clean заставить провести валідацію.
 
+    def test_get_absolute_url(self):
+        list_ = List.objects.create()
+        self.assertEqual(list_.get_absolute_url(), '/lists/%d/' % (list_.id,))
+
 
 
 
