@@ -30,6 +30,7 @@ class IndexVisitorTest(FunctionalTest):
 
     # TODO-Error 404 for /folders/1/contents
     # TODO-Перевірка на 404 - тут чи в unitest?
+    url_from = '/index/'
     links_for_anonymous_user = [
         ('#body-navigation'          ,  'Квартири'          , '^flats/scheme/$'),
         ('#body-navigation'          ,  'Документи'         , '^folders/(?P<pk>[0-9]+)/contents/$'),
@@ -60,14 +61,14 @@ class IndexVisitorTest(FunctionalTest):
         # Незалогінений користувач може перейти по лінках на сторінці
         for link_parent_selector, link_text, expected_regex \
                 in self.links_for_anonymous_user:
-            self.check_go_to_link(
+            self.check_go_to_link(self.url_from,
                 link_parent_selector, link_text, expected_regex)
     '''
     def test_authentificated_user_can_go_to_links(self):
         # Залогінений користувач може перейти по лінках на сторінці
         for link_parent_selector, link_text, expected_regex \
                 in self.links_for_authentificated_user:
-            self.check_go_to_link(
+            self.check_go_to_link(url_from,
                 link_parent_selector, link_text, expected_regex)
     '''
 

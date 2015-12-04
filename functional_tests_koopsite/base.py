@@ -10,7 +10,8 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
     @classmethod
     def setUpClass(cls):
         cls.browser = webdriver.Firefox()
-        cls.browser.implicitly_wait(120)
+        cls.browser.implicitly_wait(5)
+        cls.browser.set_window_position(250, 0)
         for arg in sys.argv:
             if 'liveserver' in arg:
                 cls.server_url = 'http://' + arg.split('=')[1]
@@ -34,10 +35,10 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # self.browser.refresh()
         # self.browser.quit()
 
-    def check_go_to_link(self, link_parent_selector, link_text, expected_regex):
+    def check_go_to_link(self, url, link_parent_selector, link_text, expected_regex):
         # Користувач може перейти по лінку, заданому expected_regex
         # з текстом "link_text"
-        self.browser.get('%s%s' % (self.server_url, '/index/'))
+        self.browser.get('%s%s' % (self.server_url, url))
         # print(link_parent_selector, link_text, expected_regex)
         parent = self.browser.find_element_by_css_selector(
                                                 link_parent_selector)
