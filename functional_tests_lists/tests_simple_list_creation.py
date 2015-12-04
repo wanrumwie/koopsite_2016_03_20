@@ -1,43 +1,9 @@
-import time
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium import webdriver
+from unittest.case import skip
 from selenium.webdriver.common.keys import Keys
-import unittest
-from selenium.webdriver.support.wait import WebDriverWait
-import sys
+from functional_tests_lists.base import ListsFunctionalTest
 
 
-class NewVisitorTest(StaticLiveServerTestCase): # працює з окремою спеціально
-                                                # створюваною БД для тестів
-                                                # + статичні файли
-    @classmethod
-    def setUpClass(cls):
-        cls.browser = webdriver.Firefox()
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        self.browser.implicitly_wait(10)
-        pass
-        # self.browser.refresh()
-        # self.browser.quit()
-
-    def check_for_row_in_list_table(self, row_text):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(row_text, [row.text for row in rows])
+class NewVisitorTestLists(ListsFunctionalTest):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
@@ -45,7 +11,6 @@ class NewVisitorTest(StaticLiveServerTestCase): # працює з окремою
         # self.browser.get('http://localhost:8000/lists/')
         # self.browser.get(self.server_url)
         self.browser.get('%s%s' % (self.server_url, '/lists/'))
-
 
         # She notices the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
@@ -117,29 +82,3 @@ class NewVisitorTest(StaticLiveServerTestCase): # працює з окремою
         # self.fail('Finish the test!')
 
 
-    def test_layout_and_styling(self):
-        # Edith goes to the home page
-        self.browser.get('%s%s' % (self.server_url, '/lists/'))
-        self.browser.set_window_size(1024, 600)
-
-        # She notices the input box is nicely centered
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        buttonbox = self.browser.find_element_by_id('submit_button')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2 ,
-                                   # + buttonbox.size['width'] / 2,
-            512,
-            delta=10
-        )
-
-        # She starts a new list and sees the input is nicely
-        # centered there too
-        inputbox.send_keys('testing\n')
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        buttonbox = self.browser.find_element_by_id('submit_button')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-                                   # + buttonbox.size['width'] / 2,
-            512,
-            delta=10
-        )

@@ -1,48 +1,23 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
 import sys
 from folders.models import Folder
+from functional_tests_koopsite.base import FunctionalTest
 
 
-class IndexVisitorTest(StaticLiveServerTestCase):
+class IndexVisitorTest(FunctionalTest):
 
-    @classmethod
-    def setUpClass(cls):
-        # folder = Folder(name='Root')
-        # folder.save()
-        # print('folder.id =', folder.id)
-        cls.browser = webdriver.Firefox()
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
+    def test_layout_and_styling_index_page(self):
+        # Edith goes to the home page
+        self.browser.get('%s%s' % (self.server_url, '/index/'))
+        self.browser.set_window_size(1024, 800)
 
-    @classmethod
-    def tearDownClass(cls):
-        # cls.browser.quit()
-        if cls.server_url == cls.live_server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        # Every test needs access to the request factory.
-        # self.factory = RequestFactory()
-        # self.user = User.objects.create_user(
-        #     username='temporary', email='temporary@gmail.com', password='top_secret')
-        pass
-        # self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.implicitly_wait(10)
-        # browser.quit() викликає помилку 10054, і ніякі, навіть тривалі
-        # implicitly_wait, не допомагають.
-        # Тому я переніс створення browser=webdriver.Firefox()
-        # в метод класу, тоді все відбувається в одному вікні,
-        # яке залишається відкритим по завершенні.
-        # self.browser.refresh()
-        # self.browser.quit()
+        # She notices the input box is nicely centered
+        box = self.browser.find_element_by_id('site-header')
+        self.assertAlmostEqual(
+            box.location['x'] + box.size['width'] / 2, 512, delta=10,
+            msg="Не працює CSS."
+            )
 
     def test_can_visit_site_index_page(self):
         # Користувач може відвідати головну сторінку сайта
@@ -80,26 +55,6 @@ class IndexVisitorTest(StaticLiveServerTestCase):
         self.assertEqual(len(elements),
                          len(self.links_for_anonymous_user),
                          msg="Кількість лінків на сторінці не відповідає очікуваній")
-
-    def check_go_to_link(self, link_parent_selector, link_text, expected_regex):
-        # Користувач може перейти по лінку, заданому expected_regex
-        # з текстом "link_text"
-        self.browser.get('%s%s' % (self.server_url, '/index/'))
-        # print(link_parent_selector, link_text, expected_regex)
-        parent = self.browser.find_element_by_css_selector(
-                                                link_parent_selector)
-        href = parent.find_element_by_link_text(link_text)
-        actions = ActionChains(self.browser)
-        actions.move_to_element(href)
-        actions.click(href)
-        actions.perform()
-        passing_url = self.browser.current_url  # url після переходу
-        expected_regex = expected_regex.lstrip('^')
-        self.assertRegex(passing_url, expected_regex)
-        # print('href =', href)
-        # print('passing_url =', passing_url)
-        # print('expected_regex =', expected_regex)
-
 
     def test_anonymous_user_can_go_to_links(self):
         # Незалогінений користувач може перейти по лінках на сторінці
