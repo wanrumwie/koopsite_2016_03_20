@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/forms.py" afterPath="$PROJECT_DIR$/lists/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/tests/test_forms.py" afterPath="$PROJECT_DIR$/lists/tests/test_forms.py" />
+      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\folders\tests\tests_models.py" afterPath="$PROJECT_DIR$/folders/tests/test_models.py" />
+      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\folders\tests\tests_views.py" afterPath="$PROJECT_DIR$/folders/tests/test_views.py" />
+      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\lists\tests\tests_models.py" afterPath="$PROJECT_DIR$/lists/tests/test_models.py" />
+      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\lists\tests\tests_views.py" afterPath="$PROJECT_DIR$/lists/tests/test_views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/models.py" afterPath="$PROJECT_DIR$/lists/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" afterPath="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/views.py" afterPath="$PROJECT_DIR$/lists/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -29,11 +33,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lists/views.py">
+      <file leaf-file-name="test_models.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lists/tests/test_models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.9587301" vertical-offset="85" max-vertical-offset="884">
-              <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.33333334" vertical-offset="1065" max-vertical-offset="1716">
+              <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -58,7 +62,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/functional_tests/functional_tests.py" />
         <option value="$PROJECT_DIR$/manage-test-FT.py" />
         <option value="$PROJECT_DIR$/functional_tests/tests.py" />
         <option value="$PROJECT_DIR$/lists/tests.py" />
@@ -91,7 +94,6 @@
         <option value="$PROJECT_DIR$/lists/templates/home.html" />
         <option value="$PROJECT_DIR$/lists/templates/list.html" />
         <option value="$PROJECT_DIR$/lists/tests/tests_models.py" />
-        <option value="$PROJECT_DIR$/lists/models.py" />
         <option value="$PROJECT_DIR$/functional_tests_koopsite/base.py" />
         <option value="$PROJECT_DIR$/manageform.py" />
         <option value="$PROJECT_DIR$/koopsite/urls.py" />
@@ -100,7 +102,6 @@
         <option value="$PROJECT_DIR$/functional_tests_koopsite/tests.py" />
         <option value="$PROJECT_DIR$/functional_tests_lists/base.py" />
         <option value="$PROJECT_DIR$/functional_tests_lists/tests_layout_and_styling.py" />
-        <option value="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
         <option value="$PROJECT_DIR$/functional_tests_lists/tests_simple_list_creation.py" />
         <option value="$PROJECT_DIR$/static/lists/css/base.css" />
         <option value="$PROJECT_DIR$/static_root/css/base.css" />
@@ -108,7 +109,10 @@
         <option value="$PROJECT_DIR$/lists/tests/tests_views.py" />
         <option value="$PROJECT_DIR$/lists/tests/test_forms.py" />
         <option value="$PROJECT_DIR$/lists/forms.py" />
+        <option value="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
+        <option value="$PROJECT_DIR$/lists/models.py" />
         <option value="$PROJECT_DIR$/lists/views.py" />
+        <option value="$PROJECT_DIR$/lists/tests/test_models.py" />
       </list>
     </option>
   </component>
@@ -396,25 +400,7 @@
       <recent name="C:\PyPrograms\Django\koopsite" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.manageform">
-    <configuration default="false" name="manage-test-FT-koopsite" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="koopsite" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-test-FT-koopsite.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.manage-2-migrate">
     <configuration default="false" name="manage-test-koopsite" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -484,6 +470,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="koopsite" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-test-lists.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="manage-2-migrate" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="koopsite" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-2-migrate.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -649,19 +653,19 @@
     <list size="7">
       <item index="0" class="java.lang.String" itemvalue="Python.manage-0-runserver" />
       <item index="1" class="java.lang.String" itemvalue="Python.manage-1-makemigrations" />
-      <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT-koopsite" />
-      <item index="3" class="java.lang.String" itemvalue="Python.manage-test-koopsite" />
-      <item index="4" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
-      <item index="5" class="java.lang.String" itemvalue="Python.manageform" />
-      <item index="6" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+      <item index="2" class="java.lang.String" itemvalue="Python.manage-test-koopsite" />
+      <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
+      <item index="4" class="java.lang.String" itemvalue="Python.manageform" />
+      <item index="5" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+      <item index="6" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
-        <item index="1" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+        <item index="0" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+        <item index="1" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
         <item index="2" class="java.lang.String" itemvalue="Python.manageform" />
-        <item index="3" class="java.lang.String" itemvalue="Python.manage-test-koopsite" />
-        <item index="4" class="java.lang.String" itemvalue="Python.manage-test-FT-koopsite" />
+        <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
+        <item index="4" class="java.lang.String" itemvalue="Python.manage-test-koopsite" />
       </list>
     </recent_temporary>
   </component>
@@ -786,7 +790,11 @@
       <created>1449326105252</created>
       <updated>1449326105252</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Lists: use form in all views">
+      <created>1449328435064</created>
+      <updated>1449328435064</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -811,19 +819,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5488722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20424597" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1830161" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20424597" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1830161" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5183016" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5183016" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -848,7 +856,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="lists app appended with basic html home_page" />
     <MESSAGE value="Refactor lists home page to use a template" />
     <MESSAGE value="Refactor lists views to work with request.POST" />
     <MESSAGE value="Move functional tests to subfolder; using LiveServerTestCase for working test with dummy DB." />
@@ -873,7 +880,8 @@
     <MESSAGE value="Lists: new form for list items&#10;" />
     <MESSAGE value="Lists: use new form in home_page, simplify tests. NB breaks stuff&#10;" />
     <MESSAGE value="Lists: use form in all views, back to working state&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lists: use form in all views, back to working state&#10;" />
+    <MESSAGE value="Lists: use form in all views" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lists: use form in all views" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1100,14 +1108,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="546">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/folders/tests/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="682">
@@ -1140,14 +1140,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/tests/tests_models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.50476193" vertical-offset="777" max-vertical-offset="1404">
-          <caret line="38" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/folders/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.2047832" vertical-offset="130" max-vertical-offset="1742">
@@ -1164,7 +1156,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/folders/tests/tests_models.py">
+    <entry file="file://$PROJECT_DIR$/folders/tests/test_models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.24761905" vertical-offset="0" max-vertical-offset="1690">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
@@ -1172,7 +1164,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/folders/tests/tests_views.py">
+    <entry file="file://$PROJECT_DIR$/folders/tests/test_views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.55487806" vertical-offset="0" max-vertical-offset="858">
           <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
@@ -1192,14 +1184,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5809524" vertical-offset="545" max-vertical-offset="1638">
           <caret line="28" column="5" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33235294" vertical-offset="667" max-vertical-offset="1014">
-          <caret line="32" column="33" selection-start-line="30" selection-start-column="33" selection-end-line="30" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -1252,18 +1236,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/tests/tests_views.py">
+    <entry file="file://$PROJECT_DIR$/lists/tests/test_views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.15695067" vertical-offset="2833" max-vertical-offset="4186">
           <caret line="120" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lists/tests/test_forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="363" max-vertical-offset="754">
-          <caret line="21" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1276,10 +1252,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lists/tests/test_forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="754">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.68908817" vertical-offset="735" max-vertical-offset="1404">
+          <caret line="48" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9512195" vertical-offset="0" max-vertical-offset="676">
+          <caret line="13" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lists/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.9587301" vertical-offset="85" max-vertical-offset="884">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/tests/test_models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="1065" max-vertical-offset="1716">
+          <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
           <folding />
         </state>
       </provider>

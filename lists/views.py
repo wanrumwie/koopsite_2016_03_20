@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from lists.forms import ItemForm
 from lists.models import Item, List
@@ -18,8 +17,6 @@ def view_list(request, list_id):
             return redirect(list_)
     return render(request, 'list.html', {'list': list_, "form": form})
 
-
-
 def new_list(request):
     form = ItemForm(data=request.POST)
     if form.is_valid():
@@ -29,4 +26,3 @@ def new_list(request):
     else:
         return render(request, 'home.html', {"form": form})
 
-1
