@@ -11,7 +11,7 @@ class LayoutAndStylingTestLists(ListsFunctionalTest):
         self.browser.set_window_size(1024, 600)
 
         # She notices the input box is nicely centered
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         buttonbox = self.browser.find_element_by_id('submit_button')
         self.assertAlmostEqual(
             inputbox.location['x'] + inputbox.size['width'] / 2 ,
@@ -23,7 +23,7 @@ class LayoutAndStylingTestLists(ListsFunctionalTest):
         # She starts a new list and sees the input is nicely
         # centered there too
         inputbox.send_keys('testing\n')
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         buttonbox = self.browser.find_element_by_id('submit_button')
         self.assertAlmostEqual(
             inputbox.location['x'] + inputbox.size['width'] / 2,
