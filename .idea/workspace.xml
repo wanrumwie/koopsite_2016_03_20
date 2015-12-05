@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/lists/css/base.css" afterPath="$PROJECT_DIR$/static/lists/css/base.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/templates/base.html" afterPath="$PROJECT_DIR$/lists/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_lists/base.py" afterPath="$PROJECT_DIR$/functional_tests_lists/base.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/forms.py" afterPath="$PROJECT_DIR$/lists/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_lists/tests_layout_and_styling.py" afterPath="$PROJECT_DIR$/functional_tests_lists/tests_layout_and_styling.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" afterPath="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_lists/tests_simple_list_creation.py" afterPath="$PROJECT_DIR$/functional_tests_lists/tests_simple_list_creation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/tests/tests_views.py" afterPath="$PROJECT_DIR$/lists/tests/tests_views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/tests/test_forms.py" afterPath="$PROJECT_DIR$/lists/tests/test_forms.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/views.py" afterPath="$PROJECT_DIR$/lists/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -38,8 +32,8 @@
       <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lists/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.22539683" vertical-offset="137" max-vertical-offset="884">
-              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+            <state vertical-scroll-proportion="1.9587301" vertical-offset="85" max-vertical-offset="884">
+              <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -104,16 +98,16 @@
         <option value="$PROJECT_DIR$/folders/tests/tests_models.py" />
         <option value="$PROJECT_DIR$/folders/tests/tests_views.py" />
         <option value="$PROJECT_DIR$/functional_tests_koopsite/tests.py" />
-        <option value="$PROJECT_DIR$/lists/tests/test_forms.py" />
         <option value="$PROJECT_DIR$/functional_tests_lists/base.py" />
         <option value="$PROJECT_DIR$/functional_tests_lists/tests_layout_and_styling.py" />
         <option value="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
         <option value="$PROJECT_DIR$/functional_tests_lists/tests_simple_list_creation.py" />
         <option value="$PROJECT_DIR$/static/lists/css/base.css" />
         <option value="$PROJECT_DIR$/static_root/css/base.css" />
-        <option value="$PROJECT_DIR$/lists/forms.py" />
         <option value="$PROJECT_DIR$/lists/templates/base.html" />
         <option value="$PROJECT_DIR$/lists/tests/tests_views.py" />
+        <option value="$PROJECT_DIR$/lists/tests/test_forms.py" />
+        <option value="$PROJECT_DIR$/lists/forms.py" />
         <option value="$PROJECT_DIR$/lists/views.py" />
       </list>
     </option>
@@ -788,7 +782,11 @@
       <created>1449321409017</created>
       <updated>1449321409017</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Lists: use form in all views, back to working state&#10;">
+      <created>1449326105252</created>
+      <updated>1449326105252</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -874,7 +872,8 @@
     <MESSAGE value="Lists: Use get_absolute_url on List model to DRY urls in views&#10;" />
     <MESSAGE value="Lists: new form for list items&#10;" />
     <MESSAGE value="Lists: use new form in home_page, simplify tests. NB breaks stuff&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lists: use new form in home_page, simplify tests. NB breaks stuff&#10;" />
+    <MESSAGE value="Lists: use form in all views, back to working state&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lists: use form in all views, back to working state&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1197,14 +1196,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lists/tests/test_forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.68292683" vertical-offset="166" max-vertical-offset="546">
-          <caret line="17" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33235294" vertical-offset="667" max-vertical-offset="1014">
@@ -1233,14 +1224,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="353">
           <caret line="0" column="8" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lists/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14730878" vertical-offset="0" max-vertical-offset="728">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1277,10 +1260,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lists/tests/test_forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="363" max-vertical-offset="754">
+          <caret line="21" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.28658536" vertical-offset="114" max-vertical-offset="832">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lists/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22539683" vertical-offset="137" max-vertical-offset="884">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        <state vertical-scroll-proportion="1.9587301" vertical-offset="85" max-vertical-offset="884">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding />
         </state>
       </provider>
