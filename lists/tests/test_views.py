@@ -1,31 +1,12 @@
-from django.core.urlresolvers import resolve
-from django.http.request import HttpRequest
-from django.template.loader import render_to_string
+from unittest.case import skip
 from django.test import TestCase
 from django.utils.html import escape
-from lists.forms import ItemForm, EMPTY_ITEM_ERROR
-from lists.views import home_page
+from lists.forms import ItemForm, EMPTY_ITEM_ERROR, DUPLICATE_ITEM_ERROR, ExistingListItemForm
 from lists.models import Item, List
 
 
 class HomePagetest(TestCase):
     maxDiff = None
-
-    # Закоментовано надмірні тести (TDD, ch.11)
-    # def test_root_url_resolves_to_home_page_view(self):
-    #     found = resolve('/lists/')
-    #     self.assertEqual(found.func, home_page) #
-    #
-    # def test_home_page_returns_correct_html(self):
-    #     request = HttpRequest()
-    #     response = home_page(request)
-    #     expected_html = render_to_string('home.html', {'form': ItemForm()})
-    #     self.assertMultiLineEqual(response.content.decode(), expected_html)
-    #
-    # def test_home_page_only_saves_items_when_necessary(self):
-    #     request = HttpRequest()
-    #     home_page(request)
-    #     self.assertEqual(Item.objects.count(), 0)
 
     def test_home_page_renders_home_template(self):
         response = self.client.get('/lists/')
@@ -49,7 +30,6 @@ class ListViewTest(TestCase):
         # correct_list = List().save()
         Item.objects.create(text='itemey 1', list=correct_list)
         Item.objects.create(text='itemey 2', list=correct_list)
-
 
         other_list = List.objects.create()
         # other_list = List().save()
@@ -93,7 +73,7 @@ class ListViewTest(TestCase):
     def test_displays_item_form(self):
         list_ = List.objects.create()
         response = self.client.get('/lists/%d/' % (list_.id,))
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
         self.assertContains(response, 'name="text"')
 
     def post_invalid_input(self):
@@ -114,12 +94,25 @@ class ListViewTest(TestCase):
 
     def test_for_invalid_input_passes_form_to_template(self):
         response = self.post_invalid_input()
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
 
     def test_for_invalid_input_shows_error_on_page(self):
         response = self.post_invalid_input()
         self.assertContains(response, escape(EMPTY_ITEM_ERROR))
 
+    # @skip
+    def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
+        list1 = List.objects.create()
+        item1 = Item.objects.create(list=list1, text='textey')
+        response = self.client.post(
+            '/lists/%d/' % (list1.id,),
+            data={'text': 'textey'}
+        )
+
+        expected_error = escape(DUPLICATE_ITEM_ERROR)
+        self.assertContains(response, expected_error)
+        self.assertTemplateUsed(response, 'list.html')
+        self.assertEqual(Item.objects.all().count(), 1)
 
 
 class NewListTest(TestCase):
