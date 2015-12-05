@@ -1,6 +1,7 @@
 from glob import glob
 import os
 import os.path
+from pathlib import Path
 from tkinter import Tk, mainloop
 from comboform import ComboForm
 from koopsite.settings import INSTALLED_APPS, BASE_DIR
@@ -8,13 +9,19 @@ from koopsite.settings import INSTALLED_APPS, BASE_DIR
 fname = 'manageform.data'
 
 def get_test_list(start_path):
-    path_pattern = os.path.join(start_path, "*\*test*.py")
-    path_list = glob(path_pattern)
+    # path_pattern = os.path.join(start_path, "*\\test*.py")
+    path_pattern = "**/test*.py"
+    # print('path_pattern =', path_pattern)
+    path_list = Path(start_path).glob(path_pattern)
     test_list = set()
     for i in path_list:
-        r = os.path.relpath(i, start=start_path)
+        # print('i =', i)
+        # r = os.path.relpath(i, start=start_path)
+        r = i.relative_to(start_path)
+        r = str(r)
         d, b = os.path.split(r)
         n, e = os.path.splitext(b)
+        d = d.replace('\\', '.')
         test_list.add(d)
         f = '.'.join([d,n])
         test_list.add(f)
@@ -58,6 +65,8 @@ class ManageComboForm(ComboForm):
 if __name__ == '__main__':
 
     test_list = get_test_list(BASE_DIR)
+    # for t in test_list:
+    #     print(t)
 
     args = get_defaults(fname)
 
@@ -75,7 +84,7 @@ if __name__ == '__main__':
     # Початкові дані в Entry
     arg1    = 'manage.py'
     arg2    = 'test'
-    arg3def = test_list[0]
+    arg3def = test_list[0] if test_list else ''
     arg3    = test_list
 
     if args and len(args) == 3:

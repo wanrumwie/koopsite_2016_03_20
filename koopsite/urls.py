@@ -98,25 +98,25 @@ urlpatterns += staticfiles_urlpatterns()
 
 # Друк списку всіх url.
 # Закоментовано, тому що Pythonenywhere не сприйняв RegexURLResolver
-# from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
-# class WalkURL():
-#     def __init__(self):
-#         self.all_url_names = []
-#         self.get_all_url_names()
-#
-#     def url_walk(self, prefix, urlpatterns):
-#         for u in urlpatterns:
-#             if type(u) == RegexURLPattern:
-#                 s = u.regex.pattern
-#                 s = prefix + s.lstrip('^')
-#                 print('%-50s %s' % (s, u.name))
-#                 self.all_url_names.append((s, u.name))
-#             if type(u) == RegexURLResolver:
-#                 self.url_walk(u.regex.pattern, u.url_patterns)
-#     def get_all_url_names(self):
-#         self.url_walk('^',urlpatterns)
-#         return self.all_url_names
-#
-#
+from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
+class WalkURL():
+    def __init__(self):
+        self.all_url_names = []
+        self.get_all_url_names()
+
+    def url_walk(self, prefix, urlpatterns):
+        for u in urlpatterns:
+            if type(u) == RegexURLPattern:
+                s = u.regex.pattern
+                s = prefix + s.lstrip('^')
+                print('%-50s %s' % (s, u.name))
+                self.all_url_names.append((s, u.name))
+            if type(u) == RegexURLResolver:
+                self.url_walk(u.regex.pattern, u.url_patterns)
+    def get_all_url_names(self):
+        self.url_walk('^',urlpatterns)
+        return self.all_url_names
+
+
 # all_url = WalkURL().all_url_names
 # print('all_url =', all_url)
