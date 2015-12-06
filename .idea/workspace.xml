@@ -2,159 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/example_pretty_date.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/example_pretty_date_2.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/example_pretty_date_3.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/example_pretty_date_4.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/js_tests/js_tests.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/prettydate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/prettydate4.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/qunit.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/qunit/qunit.js" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\jstree.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\jstree.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\default\32px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\default\40px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\default\style.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\default\style.min.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\default\throbber.gif" afterPath="" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\document.png" afterPath="$PROJECT_DIR$/folders/static/img/document.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\document_xml.png" afterPath="$PROJECT_DIR$/folders/static/img/document_xml.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\excel.png" afterPath="$PROJECT_DIR$/folders/static/img/excel.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\file_xml.png" afterPath="$PROJECT_DIR$/folders/static/img/file_xml.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\folder.png" afterPath="$PROJECT_DIR$/folders/static/img/folder.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\folder16.png" afterPath="$PROJECT_DIR$/folders/static/img/folder16.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\folder32.png" afterPath="$PROJECT_DIR$/folders/static/img/folder32.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\open_folder.png" afterPath="$PROJECT_DIR$/folders/static/img/open_folder.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\pdf.png" afterPath="$PROJECT_DIR$/folders/static/img/pdf.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\pict.png" afterPath="$PROJECT_DIR$/folders/static/img/pict.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\img\word.png" afterPath="$PROJECT_DIR$/folders/static/img/word.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\js\folder_browtab.js" afterPath="$PROJECT_DIR$/folders/static/js/folder_browtab.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\js\folder_browtab_ajax.js" afterPath="$PROJECT_DIR$/folders/static/js/folder_browtab_ajax.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\js\folder_browtab_sort.js" afterPath="$PROJECT_DIR$/folders/static/js/folder_browtab_sort.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\folders\js\folder_browtab_ui.js" afterPath="$PROJECT_DIR$/folders/static/js/folder_browtab_ui.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\css\index.html" afterPath="$PROJECT_DIR$/static/css/index.html" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\css\koop_popup.css" afterPath="$PROJECT_DIR$/static/css/koop_popup.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\css\koop_style.css" afterPath="$PROJECT_DIR$/static/css/koop_style.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\css\kseso.css" afterPath="$PROJECT_DIR$/static/css/kseso.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\css\kseso.htm" afterPath="$PROJECT_DIR$/static/css/kseso.htm" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\css\scrolltable.css" afterPath="$PROJECT_DIR$/static/css/scrolltable.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\css\style.css" afterPath="$PROJECT_DIR$/static/css/style.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\favicon\favicon.ico" afterPath="$PROJECT_DIR$/static/favicon/favicon.ico" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\_blank.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/_blank.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\_page.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/_page.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\aac.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/aac.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\ai.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/ai.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\aiff.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/aiff.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\avi.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/avi.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\bmp.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/bmp.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\c.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/c.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\cpp.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/cpp.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\css.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/css.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\dat.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/dat.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\dmg.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/dmg.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\doc.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/doc.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\dotx.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/dotx.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\dwg.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/dwg.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\dxf.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/dxf.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\eps.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/eps.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\exe.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/exe.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\flv.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/flv.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\gif.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/gif.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\h.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/h.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\hpp.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/hpp.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\html.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/html.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\ics.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/ics.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\iso.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/iso.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\java.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/java.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\jpg.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/jpg.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\js.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/js.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\key.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/key.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\less.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/less.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\mid.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/mid.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\mp3.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/mp3.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\mp4.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/mp4.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\mpg.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/mpg.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\odf.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/odf.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\ods.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/ods.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\odt.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/odt.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\otp.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/otp.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\ots.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/ots.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\ott.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/ott.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\pdf.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/pdf.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\php.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/php.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\png.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/png.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\ppt.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/ppt.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\psd.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/psd.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\py.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/py.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\qt.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/qt.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\rar.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/rar.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\rb.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/rb.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\rtf.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/rtf.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\sass.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/sass.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\scss.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/scss.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\sql.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/sql.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\tga.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/tga.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\tgz.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/tgz.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\tiff.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/tiff.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\txt.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/txt.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\wav.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/wav.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\xls.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/xls.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\xlsx.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/xlsx.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\xml.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/xml.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\yml.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/yml.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\file-icons\32px\zip.png" afterPath="$PROJECT_DIR$/static/img/file-icons/32px/zip.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\koop_building.jpg" afterPath="$PROJECT_DIR$/static/img/koop_building.jpg" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\land.JPG" afterPath="$PROJECT_DIR$/static/img/land.JPG" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\narrow.JPG" afterPath="$PROJECT_DIR$/static/img/narrow.JPG" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\img\wide.JPG" afterPath="$PROJECT_DIR$/static/img/wide.JPG" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\browtab.js" afterPath="$PROJECT_DIR$/static/js/browtab.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\browtab_ajax.js" afterPath="$PROJECT_DIR$/static/js/browtab_ajax.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\browtab_sort.js" afterPath="$PROJECT_DIR$/static/js/browtab_sort.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\browtab_ui.js" afterPath="$PROJECT_DIR$/static/js/browtab_ui.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\download.js" afterPath="$PROJECT_DIR$/static/js/download.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\filesize.js" afterPath="$PROJECT_DIR$/static/js/filesize.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jq\jquery-1.11.3.js" afterPath="$PROJECT_DIR$/static/js/jq/jquery-1.11.3.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jq\jquery.cookie.js" afterPath="$PROJECT_DIR$/static/js/jq/jquery.cookie.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\datepicker-uk.js" afterPath="$PROJECT_DIR$/static/js/ui/datepicker-uk.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\external\jquery\jquery.js" afterPath="$PROJECT_DIR$/static/js/ui/external/jquery/jquery.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_diagonals-medium_10_F0E68C_40x40.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_diagonals-medium_10_F0E68C_40x40.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_diagonals-medium_20_F0E68C_40x40.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_diagonals-medium_20_F0E68C_40x40.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_diagonals-thick_45_3CB371_40x40.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_diagonals-thick_45_3CB371_40x40.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_flat_100_F0E68C_40x100.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_flat_100_F0E68C_40x100.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_flat_30_cccccc_40x100.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_flat_30_cccccc_40x100.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_flat_50_5c5c5c_40x100.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_flat_50_5c5c5c_40x100.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_gloss-wave_60_fece2f_500x100.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_gloss-wave_60_fece2f_500x100.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_gloss-wave_70_ffdd57_500x100.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_gloss-wave_70_ffdd57_500x100.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-bg_inset-soft_30_ffffff_1x100.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-bg_inset-soft_30_ffffff_1x100.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-icons_3CB371_256x240.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-icons_3CB371_256x240.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-icons_3d3d3d_256x240.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-icons_3d3d3d_256x240.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-icons_F0E68C_256x240.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-icons_F0E68C_256x240.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-icons_bd7b00_256x240.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-icons_bd7b00_256x240.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-icons_c63012_256x240.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-icons_c63012_256x240.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\images\ui-icons_eb990f_256x240.png" afterPath="$PROJECT_DIR$/static/js/ui/images/ui-icons_eb990f_256x240.png" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\index.html" afterPath="$PROJECT_DIR$/static/js/ui/index.html" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.css" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.js" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.min.css" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.min.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.min.js" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.min.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.structure.css" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.structure.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.structure.min.css" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.structure.min.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.theme.css" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.theme.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\ui\jquery-ui.theme.min.css" afterPath="$PROJECT_DIR$/static/js/ui/jquery-ui.theme.min.css" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\users_browtab.js" afterPath="$PROJECT_DIR$/koopsite/static/js/users_browtab.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\users_browtab_ajax.js" afterPath="$PROJECT_DIR$/koopsite/static/js/users_browtab_ajax.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\users_browtab_filter.js" afterPath="$PROJECT_DIR$/koopsite/static/js/users_browtab_filter.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\users_browtab_sort.js" afterPath="$PROJECT_DIR$/koopsite/static/js/users_browtab_sort.js" />
-      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\users_browtab_ui.js" afterPath="$PROJECT_DIR$/koopsite/static/js/users_browtab_ui.js" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\folders\32px - Копія.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\folders\32px.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\folders\40px.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\folders\Thumbs.db" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\folders\style.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\folders\style.min.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\folders\throbber.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\koopstyle\32px - Копія.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\koopstyle\32px.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\koopstyle\40px.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\koopstyle\Thumbs.db" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\koopstyle\style.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\koopstyle\style.min.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static\koopsite\js\jstree\themes\koopstyle\throbber.gif" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static_root/js/browtab.js" afterPath="$PROJECT_DIR$/static_root/js/browtab.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/static/list.js" afterPath="$PROJECT_DIR$/lists/static/list.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/settings.py" afterPath="$PROJECT_DIR$/koopsite/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flats/tests.py" afterPath="$PROJECT_DIR$/flats/tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/tests.py" afterPath="$PROJECT_DIR$/folders/tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/urls.py" afterPath="$PROJECT_DIR$/koopsite/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/views.py" afterPath="$PROJECT_DIR$/koopsite/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -179,11 +41,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/koopsite/settings.py">
+      <file leaf-file-name="manage-collectstatic-clear.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/manage-collectstatic-clear.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8206278" vertical-offset="3169" max-vertical-offset="5564">
-              <caret line="143" column="16" selection-start-line="143" selection-start-column="16" selection-end-line="143" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="416">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -319,6 +181,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -334,32 +197,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jstree" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -497,7 +334,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -548,7 +384,7 @@
       <recent name="C:\PyPrograms\Django\koopsite\templates" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.manage-collectstatic-clear">
+  <component name="RunManager" selected="Python.manage-0-runserver">
     <configuration default="false" name="manage-test-FT-lists" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -956,7 +792,11 @@
       <created>1449407119166</created>
       <updated>1449407119166</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="KoopSite: перенесено файли і koopsite/static/folders/*.* в /folders/static/*.*">
+      <created>1449424532256</created>
+      <updated>1449424532256</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -983,24 +823,24 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5488722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20424597" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1830161" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1830161" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5183016" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5183016" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1018,7 +858,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="URLs for forms x2, moved code in views + tests, new URL" />
     <MESSAGE value="Відновлено db після помилки з foreignkey" />
     <MESSAGE value="Створено модель List" />
     <MESSAGE value="new URL + view for adding to existing lists. FT passes :-)" />
@@ -1043,7 +882,8 @@
     <MESSAGE value="Lists: Усунуто database integrity error (видалив кілька Items)" />
     <MESSAGE value="Lists: Оновлено static_root" />
     <MESSAGE value="Lists: Додано js test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lists: Додано js test" />
+    <MESSAGE value="KoopSite: перенесено файли і koopsite/static/folders/*.* в /folders/static/*.*" />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite: перенесено файли і koopsite/static/folders/*.* в /folders/static/*.*" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1068,13 +908,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Python34/Lib/ntpath.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.19730942" vertical-offset="6134" max-vertical-offset="16302">
-          <caret line="245" column="0" selection-start-line="241" selection-start-column="0" selection-end-line="241" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python34/Lib/site-packages/Django-1.8.2-py3.4.egg/django/core/management/base.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3916293" vertical-offset="9878" max-vertical-offset="17004">
@@ -1094,7 +927,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1452514" vertical-offset="1872" max-vertical-offset="6786">
           <caret line="76" column="57" selection-start-line="74" selection-start-column="57" selection-end-line="74" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1109,7 +941,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.922272" vertical-offset="20833" max-vertical-offset="23894">
           <caret line="838" column="0" selection-start-line="825" selection-start-column="0" selection-end-line="825" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1145,7 +976,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.75238097" vertical-offset="1401" max-vertical-offset="2886">
           <caret line="69" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1153,7 +983,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.922272" vertical-offset="3049" max-vertical-offset="4654">
           <caret line="143" column="0" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1161,7 +990,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.2047832" vertical-offset="130" max-vertical-offset="1742">
           <caret line="36" column="50" selection-start-line="0" selection-start-column="0" selection-end-line="28" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1190,7 +1018,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2002">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1198,7 +1025,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5809524" vertical-offset="545" max-vertical-offset="1638">
           <caret line="28" column="5" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1241,7 +1067,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.50476193" vertical-offset="1427" max-vertical-offset="1742">
           <caret line="63" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1263,7 +1088,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.082539685" vertical-offset="0" max-vertical-offset="546">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1271,7 +1095,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5243902" vertical-offset="88" max-vertical-offset="416">
           <caret line="11" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1279,7 +1102,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46636772" vertical-offset="0" max-vertical-offset="669">
           <caret line="15" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1287,7 +1109,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.31707317" vertical-offset="0" max-vertical-offset="328">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1295,7 +1116,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="156">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1303,7 +1123,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8761905" vertical-offset="7550" max-vertical-offset="7982">
           <caret line="301" column="0" selection-start-line="301" selection-start-column="0" selection-end-line="301" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1311,7 +1130,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="2.1062272" vertical-offset="543" max-vertical-offset="1326">
           <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1319,7 +1137,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.31838566" vertical-offset="1061" max-vertical-offset="1820">
           <caret line="51" column="27" selection-start-line="49" selection-start-column="27" selection-end-line="49" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1327,7 +1144,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.659375" vertical-offset="332" max-vertical-offset="1014">
           <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1335,7 +1151,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4290429" vertical-offset="0" max-vertical-offset="303">
           <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1343,7 +1158,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7172414" vertical-offset="702" max-vertical-offset="12558">
           <caret line="35" column="52" selection-start-line="35" selection-start-column="52" selection-end-line="35" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1351,7 +1165,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7982">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1359,7 +1172,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.121875" vertical-offset="0" max-vertical-offset="640">
           <caret line="3" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1367,7 +1179,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5936073" vertical-offset="0" max-vertical-offset="702">
           <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1375,7 +1186,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1625" vertical-offset="78" max-vertical-offset="1482">
           <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1383,7 +1193,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.771875" vertical-offset="0" max-vertical-offset="1066">
           <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1391,7 +1200,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6546875" vertical-offset="153" max-vertical-offset="936">
           <caret line="22" column="2" selection-start-line="22" selection-start-column="2" selection-end-line="22" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1399,7 +1207,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.92085236" vertical-offset="305" max-vertical-offset="1066">
           <caret line="35" column="1" selection-start-line="35" selection-start-column="1" selection-end-line="35" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1407,7 +1214,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.91875" vertical-offset="296" max-vertical-offset="2106">
           <caret line="34" column="26" selection-start-line="34" selection-start-column="26" selection-end-line="34" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1415,7 +1221,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19431987" vertical-offset="390" max-vertical-offset="2808">
           <caret line="41" column="72" selection-start-line="20" selection-start-column="72" selection-end-line="20" selection-end-column="72" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1423,7 +1228,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="10140">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1431,7 +1235,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="18122">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1439,7 +1242,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5016077" vertical-offset="0" max-vertical-offset="1040">
           <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1447,7 +1249,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.022222223" vertical-offset="14333" max-vertical-offset="15002">
           <caret line="571" column="12" selection-start-line="551" selection-start-column="12" selection-end-line="551" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1455,6 +1256,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8206278" vertical-offset="3169" max-vertical-offset="5564">
           <caret line="143" column="16" selection-start-line="143" selection-start-column="16" selection-end-line="143" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage-collectstatic-clear.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="416">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
