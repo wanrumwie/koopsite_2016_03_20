@@ -127,7 +127,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/koopsite"),
     os.path.join(BASE_DIR, "static/folders"),
     os.path.join(BASE_DIR, "static/flats"),
-    os.path.join(BASE_DIR, "static/lists"),
+    # os.path.join(BASE_DIR, "static/lists"), # вміст теки перенесено до lists/static
     MEDIA_ROOT,
 )
 

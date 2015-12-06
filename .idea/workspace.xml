@@ -2,60 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\11.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\11_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\13.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16_klMSHi1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16_nvkI8zn.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16_nvkI8zn_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17_qF9eQlF.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17_qF9eQlF_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_2Ydtpdl.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_2Ydtpdl_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_2Ydtpdl_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_3EXmyzS.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_9b6NFdx.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_AcsPWVn.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_AcsPWVn_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_AcsPWVn_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_KfqFxK5.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_KfqFxK5_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_KfqFxK5_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_OH1eVqy.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_V5Jhyse.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_V5Jhyse_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_V5Jhyse_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_b9ovCKb.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_b9ovCKb_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_b9ovCKb_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_p2J5Iht.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_rgZ46KM.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_rgZ46KM_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_rgZ46KM_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_s67LP6K.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_s67LP6K_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_s67LP6K_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_zOrY7Qx.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_zOrY7Qx_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_zOrY7Qx_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\22.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\22_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\23.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\23_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\3_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW_200x200.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW_200x300.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW_30x24.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\5.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\5_200x200.jpg" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/static/list.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/static/tests/qunit.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/static/tests/qunit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lists/static/tests/tests.html" />
+      <change type="MOVED" beforePath="C:\PyPrograms\Django\koopsite\static\lists\css\base.css" afterPath="$PROJECT_DIR$/lists/static/css/base.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/templates/base.html" afterPath="$PROJECT_DIR$/lists/templates/base.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/settings.py" afterPath="$PROJECT_DIR$/koopsite/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" afterPath="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/urls.py" afterPath="$PROJECT_DIR$/koopsite/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -80,11 +35,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="urls.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lists/urls.py">
+      <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/koopsite/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.082539685" vertical-offset="0" max-vertical-offset="546">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.75238097" vertical-offset="3117" max-vertical-offset="5564">
+              <caret line="129" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -109,11 +64,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/functional_tests/tests.py" />
-        <option value="$PROJECT_DIR$/lists/tests.py" />
-        <option value="$PROJECT_DIR$/manage-test-FT-koopsite.py" />
-        <option value="$PROJECT_DIR$/manage-test-koopsite.py" />
-        <option value="$PROJECT_DIR$/koopsite/tests.py" />
         <option value="$PROJECT_DIR$/templates/block_title.html" />
         <option value="$PROJECT_DIR$/templates/koop_index.html" />
         <option value="$PROJECT_DIR$/templates/koop_base.html" />
@@ -131,7 +81,6 @@
         <option value="$PROJECT_DIR$/koopsite/views.py" />
         <option value="$PROJECT_DIR$/koopsite/functions.py" />
         <option value="$PROJECT_DIR$/manage-test-FT-lists-web.py" />
-        <option value="$PROJECT_DIR$/koopsite/settings.py" />
         <option value="$PROJECT_DIR$/koopsite/templates/block_title.html" />
         <option value="$PROJECT_DIR$/functional_tests_lists/tests.py" />
         <option value="$PROJECT_DIR$/gridform.py" />
@@ -141,7 +90,6 @@
         <option value="$PROJECT_DIR$/lists/tests/tests_models.py" />
         <option value="$PROJECT_DIR$/functional_tests_koopsite/base.py" />
         <option value="$PROJECT_DIR$/manageform.py" />
-        <option value="$PROJECT_DIR$/koopsite/urls.py" />
         <option value="$PROJECT_DIR$/folders/tests/tests_models.py" />
         <option value="$PROJECT_DIR$/folders/tests/tests_views.py" />
         <option value="$PROJECT_DIR$/functional_tests_koopsite/tests.py" />
@@ -150,9 +98,7 @@
         <option value="$PROJECT_DIR$/functional_tests_lists/tests_simple_list_creation.py" />
         <option value="$PROJECT_DIR$/static/lists/css/base.css" />
         <option value="$PROJECT_DIR$/static_root/css/base.css" />
-        <option value="$PROJECT_DIR$/lists/templates/base.html" />
         <option value="$PROJECT_DIR$/lists/tests/tests_views.py" />
-        <option value="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
         <option value="$PROJECT_DIR$/lists/tests/test_views.py" />
         <option value="$PROJECT_DIR$/lists/tests/test_forms.py" />
         <option value="$PROJECT_DIR$/lists/forms.py" />
@@ -160,6 +106,15 @@
         <option value="$PROJECT_DIR$/lists/tests/test_models.py" />
         <option value="$PROJECT_DIR$/lists/views.py" />
         <option value="$PROJECT_DIR$/lists/urls.py" />
+        <option value="$PROJECT_DIR$/koopsite/urls.py" />
+        <option value="$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py" />
+        <option value="$PROJECT_DIR$/lists/static/css/base.css" />
+        <option value="$PROJECT_DIR$/lists/static/tests/qunit.js" />
+        <option value="$PROJECT_DIR$/lists/static/tests/qunit.css" />
+        <option value="$PROJECT_DIR$/lists/static/list.js" />
+        <option value="$PROJECT_DIR$/lists/static/tests/tests.html" />
+        <option value="$PROJECT_DIR$/lists/templates/base.html" />
+        <option value="$PROJECT_DIR$/koopsite/settings.py" />
       </list>
     </option>
   </component>
@@ -248,87 +203,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="static_root" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uploads" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="folders" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="0" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static_root" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="uploads" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="folders" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="0" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -379,6 +254,68 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lists" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lists" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lists" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -498,7 +435,7 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/folders" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lists/static" />
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
@@ -534,14 +471,14 @@
       <recent name="C:\PyPrograms\Django\koopsite\functional_tests_lists" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\PyPrograms\Django\koopsite\lists\static" />
       <recent name="C:\PyPrograms\Django\koopsite\koopsite\tests" />
       <recent name="C:\PyPrograms\Django\koopsite\lists\tests" />
       <recent name="C:\PyPrograms\Django\koopsite\koopsite\templates" />
       <recent name="C:\PyPrograms\Django\koopsite\functional_tests" />
-      <recent name="C:\PyPrograms\Django\koopsite" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.manage-collectstatic-noinput">
+  <component name="RunManager" selected="Python.manage-collectstatic-clear">
     <configuration default="false" name="manage-test-FT-lists" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -557,26 +494,6 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-test-FT-lists.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="manageform" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="koopsite" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manageform.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PyDebugRunner" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PyDebugRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
@@ -598,7 +515,7 @@
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
-    <configuration default="false" name="manage-2-migrate" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="manageform" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -610,7 +527,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="koopsite" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-2-migrate.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manageform.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -629,6 +546,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="koopsite" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-collectstatic-noinput.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="manage-collectstatic-clear" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="koopsite" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-collectstatic-clear.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -795,18 +730,18 @@
       <item index="0" class="java.lang.String" itemvalue="Python.manage-0-runserver" />
       <item index="1" class="java.lang.String" itemvalue="Python.manage-1-makemigrations" />
       <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
-      <item index="3" class="java.lang.String" itemvalue="Python.manageform" />
-      <item index="4" class="java.lang.String" itemvalue="Python.manage-test-lists" />
-      <item index="5" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
-      <item index="6" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
+      <item index="3" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+      <item index="4" class="java.lang.String" itemvalue="Python.manageform" />
+      <item index="5" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
+      <item index="6" class="java.lang.String" itemvalue="Python.manage-collectstatic-clear" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
-        <item index="1" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
-        <item index="2" class="java.lang.String" itemvalue="Python.manage-test-lists" />
-        <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
-        <item index="4" class="java.lang.String" itemvalue="Python.manageform" />
+        <item index="0" class="java.lang.String" itemvalue="Python.manage-collectstatic-clear" />
+        <item index="1" class="java.lang.String" itemvalue="Python.manageform" />
+        <item index="2" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
+        <item index="3" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+        <item index="4" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
       </list>
     </recent_temporary>
   </component>
@@ -943,7 +878,11 @@
       <created>1449339622994</created>
       <updated>1449339622994</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Lists: Оновлено static_root">
+      <created>1449391528150</created>
+      <updated>1449391528150</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -968,13 +907,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5488722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20424597" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1830161" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1830161" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -984,7 +924,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -1005,7 +944,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Move functional tests to subfolder; using LiveServerTestCase for working test with dummy DB." />
     <MESSAGE value="Уник помилки ConnectionResetError: [WinError 10054] в LiveServerTestCase. Стор.92 TDD with Python" />
     <MESSAGE value="URLs for forms x2, moved code in views + tests, new URL" />
     <MESSAGE value="Відновлено db після помилки з foreignkey" />
@@ -1030,7 +968,8 @@
     <MESSAGE value="Lists: use form in all views" />
     <MESSAGE value="Lists: Implement duplicate item validation at model layer" />
     <MESSAGE value="Lists: Усунуто database integrity error (видалив кілька Items)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lists: Усунуто database integrity error (видалив кілька Items)" />
+    <MESSAGE value="Lists: Оновлено static_root" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lists: Оновлено static_root" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1055,34 +994,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Python34/Lib/site-packages/Django-1.8.2-py3.4.egg/django/contrib/auth/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2002" max-vertical-offset="5330">
-          <caret line="88" column="4" selection-start-line="77" selection-start-column="4" selection-end-line="77" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python34/Lib/site-packages/selenium/webdriver/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.771261" vertical-offset="384" max-vertical-offset="1066">
-          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python34/Lib/site-packages/Django-1.8.2-py3.4.egg/django/contrib/staticfiles/testing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11659193" vertical-offset="0" max-vertical-offset="669">
-          <caret line="4" column="40" selection-start-line="3" selection-start-column="40" selection-end-line="3" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python34/Lib/site-packages/Django-1.8.2-py3.4.egg/django/test/testcases.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3109118" vertical-offset="27664" max-vertical-offset="32240">
-          <caret line="1118" column="6" selection-start-line="1072" selection-start-column="6" selection-end-line="1072" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/koopsite/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.74509805" vertical-offset="12512" max-vertical-offset="14794">
@@ -1101,6 +1012,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46636772" vertical-offset="20306" max-vertical-offset="36218">
           <caret line="806" column="0" selection-start-line="793" selection-start-column="0" selection-end-line="793" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1136,13 +1048,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1222">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/koopsite/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27204782" vertical-offset="208" max-vertical-offset="5564">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1216,6 +1121,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.922272" vertical-offset="20833" max-vertical-offset="23894">
           <caret line="838" column="0" selection-start-line="825" selection-start-column="0" selection-end-line="825" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1252,13 +1158,6 @@
         <state vertical-scroll-proportion="0.75238097" vertical-offset="1401" max-vertical-offset="2886">
           <caret line="69" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/koopsite/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42222223" vertical-offset="2363" max-vertical-offset="2782">
-          <caret line="117" column="0" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1301,6 +1200,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2002">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1308,6 +1208,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5809524" vertical-offset="545" max-vertical-offset="1638">
           <caret line="28" column="5" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1318,46 +1219,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/lists/css/base.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="353">
-          <caret line="0" column="3" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static_root/css/base.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="353">
-          <caret line="0" column="8" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/functional_tests_lists/tests_layout_and_styling.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.55487806" vertical-offset="416" max-vertical-offset="1014">
           <caret line="25" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/functional_tests_lists/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33968255" vertical-offset="205" max-vertical-offset="520">
-          <caret line="15" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lists/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7619048" vertical-offset="442" max-vertical-offset="1274">
-          <caret line="25" column="72" selection-start-line="25" selection-start-column="72" selection-end-line="25" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8445441" vertical-offset="631" max-vertical-offset="1404">
-          <caret line="48" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1372,13 +1237,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8414634" vertical-offset="738" max-vertical-offset="1196">
           <caret line="41" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/manage-test-lists.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79268295" vertical-offset="0" max-vertical-offset="416">
-          <caret line="11" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1415,6 +1273,94 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.082539685" vertical-offset="0" max-vertical-offset="546">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage-test-lists.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5243902" vertical-offset="88" max-vertical-offset="416">
+          <caret line="11" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/koopsite/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14820592" vertical-offset="1933" max-vertical-offset="2782">
+          <caret line="99" column="39" selection-start-line="78" selection-start-column="33" selection-end-line="78" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional_tests_lists/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46636772" vertical-offset="0" max-vertical-offset="669">
+          <caret line="15" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional_tests_lists/tests_list_item_validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.74216026" vertical-offset="1061" max-vertical-offset="1820">
+          <caret line="51" column="27" selection-start-line="49" selection-start-column="20" selection-end-line="49" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/static/css/base.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31707317" vertical-offset="0" max-vertical-offset="328">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/static/tests/qunit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="156">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/static/tests/qunit.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8761905" vertical-offset="7550" max-vertical-offset="7982">
+          <caret line="301" column="0" selection-start-line="301" selection-start-column="0" selection-end-line="301" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/static/list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="657">
+          <caret line="0" column="3" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/static/tests/tests.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.59375" vertical-offset="374" max-vertical-offset="1014">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.1062272" vertical-offset="543" max-vertical-offset="1326">
+          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/koopsite/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.75238097" vertical-offset="3117" max-vertical-offset="5564">
+          <caret line="129" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
           <folding />
         </state>
       </provider>

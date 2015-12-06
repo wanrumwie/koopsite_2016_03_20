@@ -97,7 +97,7 @@ urlpatterns += static.static(MEDIA_URL, document_root=MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()
 
 # Друк списку всіх url.
-# Закоментовано, тому що Pythonenywhere не сприйняв RegexURLResolver
+# Закоментовано, тому що Pythonanywhere не сприйняв RegexURLResolver
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 class WalkURL():
     def __init__(self):
