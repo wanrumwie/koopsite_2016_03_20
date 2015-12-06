@@ -2,13 +2,60 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/forms.py" afterPath="$PROJECT_DIR$/lists/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/models.py" afterPath="$PROJECT_DIR$/lists/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/tests/test_forms.py" afterPath="$PROJECT_DIR$/lists/tests/test_forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/tests/test_models.py" afterPath="$PROJECT_DIR$/lists/tests/test_models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/tests/test_views.py" afterPath="$PROJECT_DIR$/lists/tests/test_views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lists/views.py" afterPath="$PROJECT_DIR$/lists/views.py" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\11.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\11_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\13.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16_klMSHi1.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16_nvkI8zn.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\16_nvkI8zn_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17_qF9eQlF.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\17_qF9eQlF_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_2Ydtpdl.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_2Ydtpdl_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_2Ydtpdl_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_3EXmyzS.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_9b6NFdx.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_AcsPWVn.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_AcsPWVn_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_AcsPWVn_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_KfqFxK5.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_KfqFxK5_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_KfqFxK5_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_OH1eVqy.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_V5Jhyse.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_V5Jhyse_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_V5Jhyse_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_b9ovCKb.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_b9ovCKb_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_b9ovCKb_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_p2J5Iht.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_rgZ46KM.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_rgZ46KM_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_rgZ46KM_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_s67LP6K.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_s67LP6K_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_s67LP6K_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_zOrY7Qx.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_zOrY7Qx_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\18_zOrY7Qx_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\22.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\22_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\23.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\23_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\3.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\3_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW_200x200.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW_200x300.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\4_FhVXUoW_30x24.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\5.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\PyPrograms\Django\koopsite\static_root\profile_images\5_200x200.jpg" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -188,6 +235,100 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static_root" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uploads" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="folders" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static_root" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="media" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="uploads" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="folders" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="koopsite" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="media" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -400,25 +541,7 @@
       <recent name="C:\PyPrograms\Django\koopsite" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.manage-2-migrate">
-    <configuration default="false" name="manage-test-koopsite" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="koopsite" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-test-koopsite.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.manage-collectstatic-noinput">
     <configuration default="false" name="manage-test-FT-lists" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -488,6 +611,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="koopsite" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-2-migrate.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="manage-collectstatic-noinput" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="koopsite" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-collectstatic-noinput.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -653,25 +794,25 @@
     <list size="7">
       <item index="0" class="java.lang.String" itemvalue="Python.manage-0-runserver" />
       <item index="1" class="java.lang.String" itemvalue="Python.manage-1-makemigrations" />
-      <item index="2" class="java.lang.String" itemvalue="Python.manage-test-koopsite" />
-      <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
-      <item index="4" class="java.lang.String" itemvalue="Python.manageform" />
-      <item index="5" class="java.lang.String" itemvalue="Python.manage-test-lists" />
-      <item index="6" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
+      <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
+      <item index="3" class="java.lang.String" itemvalue="Python.manageform" />
+      <item index="4" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+      <item index="5" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
+      <item index="6" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
-        <item index="1" class="java.lang.String" itemvalue="Python.manage-test-lists" />
-        <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
-        <item index="3" class="java.lang.String" itemvalue="Python.manageform" />
-        <item index="4" class="java.lang.String" itemvalue="Python.manage-test-koopsite" />
+        <item index="0" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
+        <item index="1" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
+        <item index="2" class="java.lang.String" itemvalue="Python.manage-test-lists" />
+        <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
+        <item index="4" class="java.lang.String" itemvalue="Python.manageform" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="StructureViewFactory">
-    <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED" />
+    <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED,ALPHA_COMPARATOR" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -798,7 +939,11 @@
       <created>1449333621695</created>
       <updated>1449333621695</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Lists: Усунуто database integrity error (видалив кілька Items)">
+      <created>1449339622994</created>
+      <updated>1449339622994</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -825,11 +970,9 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5488722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20424597" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1830161" sideWeight="0.49926794" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -839,10 +982,12 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -860,7 +1005,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Refactor lists views to work with request.POST" />
     <MESSAGE value="Move functional tests to subfolder; using LiveServerTestCase for working test with dummy DB." />
     <MESSAGE value="Уник помилки ConnectionResetError: [WinError 10054] в LiveServerTestCase. Стор.92 TDD with Python" />
     <MESSAGE value="URLs for forms x2, moved code in views + tests, new URL" />
@@ -885,7 +1029,8 @@
     <MESSAGE value="Lists: use form in all views, back to working state&#10;" />
     <MESSAGE value="Lists: use form in all views" />
     <MESSAGE value="Lists: Implement duplicate item validation at model layer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lists: Implement duplicate item validation at model layer" />
+    <MESSAGE value="Lists: Усунуто database integrity error (видалив кілька Items)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lists: Усунуто database integrity error (видалив кілька Items)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -956,7 +1101,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46636772" vertical-offset="20306" max-vertical-offset="36218">
           <caret line="806" column="0" selection-start-line="793" selection-start-column="0" selection-end-line="793" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -999,7 +1143,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27204782" vertical-offset="208" max-vertical-offset="5564">
           <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1073,7 +1216,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.922272" vertical-offset="20833" max-vertical-offset="23894">
           <caret line="838" column="0" selection-start-line="825" selection-start-column="0" selection-end-line="825" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1102,7 +1244,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="682">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1118,7 +1259,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.42222223" vertical-offset="2363" max-vertical-offset="2782">
           <caret line="117" column="0" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1126,7 +1266,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.922272" vertical-offset="3049" max-vertical-offset="4654">
           <caret line="143" column="0" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1134,7 +1273,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.2047832" vertical-offset="130" max-vertical-offset="1742">
           <caret line="36" column="50" selection-start-line="0" selection-start-column="0" selection-end-line="28" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1142,7 +1280,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.83492064" vertical-offset="12659" max-vertical-offset="16588">
           <caret line="515" column="0" selection-start-line="497" selection-start-column="0" selection-end-line="497" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1150,7 +1287,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.24761905" vertical-offset="0" max-vertical-offset="1690">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1158,7 +1294,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.55487806" vertical-offset="0" max-vertical-offset="858">
           <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1166,7 +1301,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2002">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1174,7 +1308,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5809524" vertical-offset="545" max-vertical-offset="1638">
           <caret line="28" column="5" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1182,7 +1315,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33235294" vertical-offset="1551" max-vertical-offset="2288">
           <caret line="66" column="44" selection-start-line="64" selection-start-column="44" selection-end-line="64" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1190,7 +1322,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="353">
           <caret line="0" column="3" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1198,7 +1329,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="353">
           <caret line="0" column="8" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1206,7 +1336,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.55487806" vertical-offset="416" max-vertical-offset="1014">
           <caret line="25" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1214,7 +1343,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33968255" vertical-offset="205" max-vertical-offset="520">
           <caret line="15" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1230,7 +1358,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8445441" vertical-offset="631" max-vertical-offset="1404">
           <caret line="48" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1238,7 +1365,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33968255" vertical-offset="1089" max-vertical-offset="1404">
           <caret line="51" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1246,15 +1372,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8414634" vertical-offset="738" max-vertical-offset="1196">
           <caret line="41" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lists/tests/test_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4031746" vertical-offset="1407" max-vertical-offset="4082">
-          <caret line="63" column="47" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1262,7 +1379,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.79268295" vertical-offset="0" max-vertical-offset="416">
           <caret line="11" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1270,7 +1386,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5243902" vertical-offset="374" max-vertical-offset="702">
           <caret line="22" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1286,7 +1401,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.07926829" vertical-offset="650" max-vertical-offset="1248">
           <caret line="28" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lists/tests/test_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19629057" vertical-offset="1407" max-vertical-offset="4082">
+          <caret line="63" column="47" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="47" />
         </state>
       </provider>
     </entry>
