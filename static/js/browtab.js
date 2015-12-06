@@ -33,6 +33,7 @@ $( "#browtable tbody" ).on( "keydown", "td", function( event ) {
 
 // Click event doesn't trigger the event on dynamically created elements.
 // We must use on function to trigger the event on dynamically created elements.
+// This is because of $(document).ready(function() :
 /*
 This not works for dynamically created elements:
 $(document).ready(function(){

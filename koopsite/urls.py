@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url, static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from koopsite.views import UserPermsActivateUpdate, OwnProfileDetailShow, UserProfileDetailShow
+from koopsite.views import UserPermsActivateUpdate, OwnProfileDetailShow, UserProfileDetailShow, qunit_page
 from koopsite.viewsajaxuser import UsersTable, AjaxRecognizeAccount, \
                     AjaxDenyAccount, AjaxActivateAccount, \
                     AjaxDeactivateAccount, AjaxDeleteAccount, \
@@ -39,6 +39,7 @@ from .viewsajax import \
 urlpatterns = [
     # сайт: localhost або готовий сайт
 
+    url(r'^qunit/$',    qunit_page,                     name='qunit-page'),
     # /index/ та інші "кореневі" url - виклик з views.py проекту
     url(r'^$',          index,                          name='index0'),
     url(r'^index/$',    index,                          name='index'),

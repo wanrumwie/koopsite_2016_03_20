@@ -1,3 +1,4 @@
+import os
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -15,6 +16,7 @@ from flats.models import Flat
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                             UserPermsActivateForm, \
                             ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm
+from koopsite.settings import BASE_DIR
 from .models import User, UserProfile
 from .forms import UserRegistrationForm, UserPersonDataForm
 
@@ -573,6 +575,14 @@ def success(request):
 
 def page_not_ready(request):
     template_name = 'koop_page_not_ready.html'
+    if request.method == 'POST':
+        pass
+    else:
+        return render(request, template_name, {})
+
+def qunit_page(request):
+    template_name = 'js_tests/js_tests.html'
+    # template_name = os.path.join(BASE_DIR, "static/koopsite", "js_tests", "js_tests.html")
     if request.method == 'POST':
         pass
     else:
