@@ -39,7 +39,6 @@ from .viewsajax import \
 urlpatterns = [
     # сайт: localhost або готовий сайт
 
-    url(r'^qunit/$',    qunit_page,                     name='qunit-page'),
     # /index/ та інші "кореневі" url - виклик з views.py проекту
     url(r'^$',          index,                          name='index0'),
     url(r'^index/$',    index,                          name='index'),
@@ -86,6 +85,9 @@ urlpatterns = [
     url(r'^flats/',     include('flats.urls')),
     url(r'^folders/',   include('folders.urls')),
     url(r'^lists/',     include('lists.urls')), # для прикладів з книги TDD with Python
+
+    # /js_tests/ - під'єднуємо urls.py js-тестів
+    url(r'^js_tests/',  include('js_tests.urls')),
 
     # /admin/ - під'єднання до вбудованого admin
     url(r'^admin/',     include(admin.site.urls)),

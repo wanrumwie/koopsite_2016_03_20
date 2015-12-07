@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Javascript tests</title>
+    <title>Javascript tests - KoopSite - Lists app</title>
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'js/qunit/qunit.css' %}">
 </head>
@@ -17,18 +17,8 @@
     </div>
     <script src="http://code.jquery.com/jquery.min.js"></script>
     <script src="{% static 'js/qunit/qunit.js' %}"     ></script>
-    <script src="{% static 'list.js' %}"></script>
-    <script>
-/*global $, test, equal */
-
-test("errors should be hidden on keypress", function () {
-    $('input').trigger('keypress');
-    equal($('.has-error').is(':visible'), false);
-});
-test("errors not be hidden unless there is a keypress", function () {
-    equal($('.has-error').is(':visible'), true);
-});
-    </script>
+    <script src="{% static 'list.js' %}"                        ></script>
+    <script src="{% static 'js_tests/lists/test_lists.js' %}"   ></script>
 
 </body>
 </html>
