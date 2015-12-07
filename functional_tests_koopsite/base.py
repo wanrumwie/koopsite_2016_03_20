@@ -2,6 +2,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
+from functional_tests_koopsite.create_session_cookie import create_session_cookie
 
 
 class FunctionalTest(StaticLiveServerTestCase): # працює з окремою спеціально
@@ -53,5 +54,29 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # print('href =', href)
         # print('passing_url =', passing_url)
         # print('expected_regex =', expected_regex)
+
+
+class FunctionalTestAuthenticateUser(FunctionalTest):
+    def setUp(self):
+        session_cookie = create_session_cookie(
+            username='testuser', password='top_secret'
+        )
+
+        # visit some url in your domain to setup Selenium.
+        # (404 pages load the quickest)
+        # self.browser.get('your-url' + '/404-non-existent/')
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # add the newly created session cookie to selenium webdriver.
+        print('self.browser =', self.browser)
+        self.browser.add_cookie(session_cookie)
+        print('self.browser =', self.browser)
+
+        # refresh to exchange cookies with the server.
+        self.browser.refresh()
+        print('self.browser =', self.browser)
+
+        # This time user should present as logged in.
+        # self.browser.get('your-url')
 
 
