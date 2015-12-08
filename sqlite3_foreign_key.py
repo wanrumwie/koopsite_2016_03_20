@@ -1,6 +1,5 @@
 __author__ = 'Мирослава'
 
-from evalprint import evprint, elprint
 from django_apps_setup import django_apps_setup
 
 # Встановлення змінної оточення та ініціалізація Django

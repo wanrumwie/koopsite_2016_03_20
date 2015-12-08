@@ -10,7 +10,7 @@
         <div class="main">
             <ul class="column-list column-count-5">
                 {% for f in flat_list %}
-                    <li><a class="padding-y-0" href="/flats/{{ f.id }}/">{{ f }}</a></li>
+                    <li><a class="padding-y-0" href="{% url 'flats:flat-detail' f.id %}">{{ f }}</a></li>
                 {% endfor %}
             </ul>
         </div>

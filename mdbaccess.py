@@ -4,6 +4,7 @@ __author__ = 'Мирослава'
 '''
 
 import pypyodbc
+import os.path
 
 pypyodbc.lowercase = False
 
@@ -60,3 +61,61 @@ def allfieldnamesprint(cursor):
             s = '"%s"' % columnParameters[3]
             print(': %-40s' % s)
 
+def get_mdb_connection(mdbfilepath):
+    pypyodbc.lowercase = False
+    connection = pypyodbc.win_connect_mdb(mdbfilepath)
+    return connection
+
+def close_mdb_connection(connection):
+    # connection.cursor.close()
+    connection.commit()
+    connection.close()
+
+def mdb_investigation(mdbfilepath):
+    # Досліджує невідому mdb
+    connection = get_mdb_connection(mdbfilepath)
+    cursor = connection.cursor()
+    allfieldnamesprint(cursor)
+    print('-'*50)
+    close_mdb_connection(connection)
+
+def all_data_print_from_mdb(mdbfilepath, tableName):
+    # друкує всі дані з таблиці mdb
+    connection = get_mdb_connection(mdbfilepath)
+    cursor = connection.cursor()
+    fields = "*"
+    condition = ""
+    sqlcommand = "SELECT %s FROM %s %s" % (fields, tableName, condition)
+    cursor.execute(sqlcommand)
+
+    print('-'*50)
+    attr = False
+    while True:
+        row = cursor.fetchone()
+        if not row: break
+        print('row=', row)
+        if not attr:
+            attr = True
+            coldict, collist = rowAttributes(row)
+        # print(coldict)
+        # print(collist)
+        print('-'*50)
+        # input()
+
+    print('-'*50)
+
+    close_mdb_connection(connection)
+
+
+
+if __name__ == '__main__':
+
+    # mdbfiledir = 'c:/PyPrograms/PyRoman/mdbaccess/'
+    # mdbfilename = 'Список Кооперативу Example.mdb'
+    # mdbfilepath = mdbfiledir + mdbfilename
+    mdbfiledir = r'D:\Файли з Lenovo\Роман\Кооп Пасічний\1с Кооп 2013 11 30\Db-Koop'
+    mdbfilename = r'1c Кооп 2013 11 30 Access.accdb'
+    mdbfilepath = os.path.join(mdbfiledir, mdbfilename)
+    print(mdbfilepath)
+
+    mdb_investigation(mdbfilepath)

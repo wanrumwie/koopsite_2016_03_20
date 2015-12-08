@@ -10,7 +10,7 @@
         <div class="main">
             <ul class="column-list">
                 {% for f in object_list %}
-                    <li><a href="/folders/{{ f.id }}/contents/">{{ f }}</a></li>
+                    <li><a href="{% url 'folders:folder-contents' f.id %}">{{ f }}</a></li>
                 {% endfor %}
             </ul>
         </div>

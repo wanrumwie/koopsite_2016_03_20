@@ -84,7 +84,7 @@ class AllRecordDetailView(ListView):
     model = Flat
     per_page = 15
     template_name = 'flats/flat_table.html'
-    url_name = 'flat-table' # параметр name в url(), який є основним для
+    url_name = 'flats:flat-table' # параметр name в url(), який є основним для
                             # даного DetailView (ще без сторінок)
 
     def get_context_data(self, **kwargs):

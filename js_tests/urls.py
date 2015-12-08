@@ -7,9 +7,9 @@ from django.views.generic.base import TemplateView
 """
 
 urlpatterns = [
-    url(r'^$',          TemplateView.as_view(template_name='js_tests.html')),
-    url(r'^koopsite/$', TemplateView.as_view(template_name='js_tests_koopsite.html')),
-    url(r'^lists/$',    TemplateView.as_view(template_name='js_tests_lists.html')),
-    url(r'^folders/$',  TemplateView.as_view(template_name='js_tests_folders.html')),
+    url(r'^$',          TemplateView.as_view(template_name='js_tests.html'),            name='index'),
+    url(r'^koopsite/$', TemplateView.as_view(template_name='js_tests_koopsite.html'),   name='koopsite'),
+    url(r'^lists/$',    TemplateView.as_view(template_name='js_tests_lists.html'),      name='lists'),
+    url(r'^folders/$',  TemplateView.as_view(template_name='js_tests_folders.html'),    name='folders'),
 ]
 

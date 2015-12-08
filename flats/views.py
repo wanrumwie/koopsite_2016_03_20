@@ -27,7 +27,7 @@ def block_scheme():
         for x in range(6):
             entr = x + 1
             block_list[y].append([])
-    for f in Flat.objects.order_by('flat_99'):
+    for f in Flat.objects.all().order_by('flat_99'):
         y = 5 - f.floor_No
         x = f.entrance_No - 1
         block_list[y][x].append(f)  # кожну квартиру вміщуємо у свій блок
@@ -47,6 +47,7 @@ class FlatScheme(ListView):
         context = super(FlatScheme, self).get_context_data(**kwargs)
         context['block_list']       = block_scheme()
         context['entrance_list']    = list(range(1,7))
+        print("context['block_list'] =", context['block_list'])
         return context
 
 

@@ -37,26 +37,26 @@
     <ul class="navigation">
         {# У дочірньому шаблоні переознач тільки самопосилання #}
         {% block href-index %}
-            <li><a href="/index/">Головна сторінка</a></li>
+            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
         {% block href-own-profile %}
             {% if user.is_authenticated %}
-                <li><a href="/own/profile/">Мій профіль</a></li>
+                <li><a href="{% url 'own-profile' %}">Мій профіль</a></li>
             {% endif %}
         {% endblock %}
         {% block href-own-profile-update %}
             {% if user.is_authenticated %}
-                <li><a href="/own/profile/update/">Редагувати профіль</a></li>
+                <li><a href="{% url 'own-profile-update' %}">Редагувати профіль</a></li>
             {% endif %}
         {% endblock %}
         {% block href-change-password %}
             {% if user.is_authenticated %}
-                <li><a href="/own/change-password/">Змінити пароль</a></li>
+                <li><a href="{% url 'change-password' %}">Змінити пароль</a></li>
             {% endif %}
         {% endblock %}
         {% block href-logout %}
             {% if user.is_authenticated %}
-                <li><a href="/logout/" title="Logout">Вийти</a></li>
+                <li><a href="{% url 'logout' %}" title="Logout">Вийти</a></li>
             {% endif %}
         {% endblock %}
         {% block href-back %}

@@ -38,32 +38,32 @@
         class="navigation">
         {# У дочірньому шаблоні переознач тільки самопосилання #}
         {% block href-index %}
-            <li><a href="/index/">Головна сторінка</a></li>
+            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
         {% block href-flats %}
-            <li><a href="/flats/scheme/">Квартири</a></li>
+            <li><a href="{% url 'flats:flat-scheme' %}">Квартири</a></li>
         {% endblock %}
         {% block href-folders %}
-            <li><a href="/folders/1/contents/">Документи</a></li>
+            <li><a href="{% url 'folders:folder-contents' 1 %}">Документи</a></li>
         {% endblock %}
         {% block href-login %}
             {% if not user.is_authenticated %}
-            <li><a href="/login/" title="Login">Увійти</a></li>
+            <li><a href="{% url 'login' %}" title="Login">Увійти</a></li>
             {% endif %}
         {% endblock %}
         {% block href-register %}
             {% if not user.is_authenticated %}
-                <li><a href="/register/">Зареєструватися</a></li>
+                <li><a href="{% url 'register' %}">Зареєструватися</a></li>
             {% endif %}
         {% endblock %}
         {% block href-own-profile %}
             {% if user.is_authenticated %}
-                <li><a href="/own/profile/">Мій профіль</a></li>
+                <li><a href="{% url 'own-profile' %}">Мій профіль</a></li>
             {% endif %}
         {% endblock %}
         {% block href-adm-index %}
             {% if user.is_staff or perms.koopsite.activate_account %}
-                <li><a href="/adm/index/">Адміністрування</a></li>
+                <li><a href="{% url 'adm-index' %}">Адміністрування</a></li>
             {% endif %}
         {% endblock %}
         {% block href-back %}

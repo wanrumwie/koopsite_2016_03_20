@@ -20,19 +20,19 @@
 
 <!-- Всі href з батьківського шаблону: -->
 {% block href-folder-create %}
-    <li><a href="/folders/create/{{ folder.id }}/">Створити теку в цій</a></li>
+    <li><a href="{% url 'folders:folder-create-in' folder.id %}">Створити теку в цій</a></li>
 {% endblock %}
 {% block href-folder-update %}
-    <li><a href="/folders/{{ folder.id }}/update/">Редагувати деталі теки</a></li>
+    <li><a href="{% url 'folders:folder-update' folder.id %}">Редагувати деталі теки</a></li>
 {% endblock %}
 {% block href-folder-download %}
-    <li><a href="/folders/{{ folder.id }}/download/">Завантажити вміст теки на мій комп'ютер</a></li>
+    <li><a href="{% url 'folders:folder-download' folder.id %}">Завантажити вміст теки на мій комп'ютер</a></li>
 {% endblock %}
 {% block href-folder-delete %}
-    <li><a href="/folders/{{ folder.id }}/delete/">Видалити теку</a></li>
+    <li><a href="{% url 'folders:folder-delete' folder.id %}">Видалити теку</a></li>
 {% endblock %}
 {% block href-report-upload %}
-    <li><a href="/folders/report/upload/{{ folder.id }}/" >Заладувати файл в цю теку</a></li>
+    <li><a href="{% url 'folders:report-upload-in' folder.id %}" >Заладувати файл в цю теку</a></li>
 {% endblock %}
 {% block href-report-update %}
 {% endblock %}

@@ -24,7 +24,7 @@
 {% block under-paginator %}
     <ul class="navigation-small buttons-y align-items-center" >
         <li>
-            <p><a href="/flats/{{ flat.pk }}/">В одну колонку</a></p>
+            <p><a href="{% url 'flats:flat-detail' flat.pk %}">В одну колонку</a></p>
         </li>
     </ul>
 {% endblock %}

@@ -33,14 +33,14 @@
     <ul class="navigation">
         {# У дочірньому шаблоні можна переозначити тільки самопосилання #}
         {% block href-index %}
-            <li><a href="/index/">Головна сторінка</a></li>
+            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
         {% block href-folder-contents %}
-            <li><a href="/folders/1/contents/">Документи</a></li>
+            <li><a href="{% url 'folders:folder-contents' 1 %}">Документи</a></li>
         {% endblock %}
         {% block href-folder-list %}
-            <li><a href="/folders/list/">Список тек</a></li>
-        {% endblock %}
+            <li><a href="{% url 'folders:folder-list' %}">Список тек</a></li>
+       {% endblock %}
         {% block href-back %}
             <li><a href="javascript:history.back()">Назад</a></li>
         {% endblock %}

@@ -9,7 +9,7 @@
         <p>Профіль користувача {{ capital }} збережено!</p>
         <ul class="navigation-small buttons-y align-items-center" >
             <li>
-                <a href="/adm/users/list/">Продовжити роботу</a>
+                <a href="{% url 'adm-users-list' %}">Продовжити роботу</a>
             </li>
         </ul>
     {% else %}

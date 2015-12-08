@@ -33,19 +33,19 @@
     <ul class="navigation">
         {# У дочірньому шаблоні переознач тільки самопосилання #}
         {% block href-index %}
-            <li><a href="/index/">Головна сторінка</a></li>
+            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
         {% block href-flat-scheme %}
-            <li><a href="/flats/scheme/">Схема розташування квартир</a></li>
+            <li><a href="{% url 'flats:flat-scheme' %}">Схема розташування квартир</a></li>
         {% endblock %}
         {% block href-flat-list %}
-            <li><a href="/flats/list/">Список квартир</a></li>
+            <li><a href="{% url 'flats:flat-list' %}">Список квартир</a></li>
         {% endblock %}
         {% block href-flat-table %}
-            <li><a href="/flats/table/">Таблиця параметрів всіх квартир</a></li>
+            <li><a href="{% url 'flats:flat-table' %}">Таблиця параметрів всіх квартир</a></li>
         {% endblock %}
         {% block href-person-table %}
-            <li><a href="/flats/person/table/">Таблиця персон (в роботі!)</a></li>
+            <li><a href="{% url 'flats:person-table' %}">Таблиця персон (в роботі!)</a></li>
         {% endblock %}
         {% block href-back %}
             <li><a href="javascript:history.back()">Назад</a></li>

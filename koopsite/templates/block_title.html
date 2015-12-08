@@ -11,7 +11,7 @@
                 class="navigation-small">
             {% if request.user.is_authenticated %}
                 <li>
-                    <a href="/user-profile/" title="Профіль користувача">
+                    <a href="{% url 'own-profile' %}" title="Профіль користувача">
                         {% with pic=request.user.userprofile.picture %}
                             {% if pic and pic != "False"  %}
                                 <img src="{% static pic|thumbnail %}"/>
@@ -22,17 +22,17 @@
                 </li>
                 <li>
                     {% if request.user.userprofile.flat %}
-                        <a href="/flats/{{ user.userprofile.flat.id }}/"
+                        <a href="{% url 'flats:flat-detail' user.userprofile.flat.id %}"
                            title="Про квартиру">
                             Кв.{{ request.user.userprofile.flat.flat_No }}</a>
                     {% endif %}
                 </li>
                 <li>
-                    <a href="/logout/" title="Logout">Вийти</a>
+                    <a href="{% url 'logout' %}" title="Logout">Вийти</a>
                 </li>
             {% else %}
                 <li>
-                    <a href="/login/" title="Login">Авторизуватися</a>
+                    <a href="{% url 'login' %}" title="Login">Авторизуватися</a>
                 </li>
             {% endif %}
             </ul>

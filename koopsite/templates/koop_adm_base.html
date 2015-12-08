@@ -37,41 +37,41 @@
     <ul class="navigation">
         {# У дочірньому шаблоні переознач тільки самопосилання #}
         {% block href-index %}
-            <li><a href="/index/">Головна сторінка</a></li>
+            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
         {% block href-adm-index %}
             {% if user.is_staff or perms.koopsite.activate_account %}
-                <li><a href="/adm/index/">Адміністрування</a></li>
+                <li><a href="{% url 'adm-index' %}">Адміністрування</a></li>
             {% endif %}
         {% endblock %}
         {% block href-adm-users-table %}
             {% if user.is_staff or perms.koopsite.activate_account %}
-                <li><a href="/adm/users/table/">Список акаунтів</a></li>
+                <li><a href="{% url 'adm-users-table' %}">Список акаунтів</a></li>
             {% endif %}
         {% endblock %}
         {% block href-adm-users-perms-update %}
             {% if user.is_staff %}
-                <li><a href="/adm/users/{{ one_id }}/perms/update/">Редагувати доступ</a></li>
+                <li><a href="{% url 'all-users-perm-update' one_id %}">Редагувати доступ</a></li>
             {% else %}
-                <li><a href="/adm/users/{{ one_id }}/perms/activate/">Редагувати доступ</a></li>
+                <li><a href="{% url 'all-users-perm-activate' one_id %}">Редагувати доступ</a></li>
             {% endif %}
         {% endblock %}
         {% block href-adm-users-profile %}
-                <li><a href="/adm/users/{{ one_id }}/profile/">Переглянути профіль</a></li>
+                <li><a href="{% url 'adm-users-profile' one_id %}">Переглянути профіль</a></li>
         {% endblock %}
         {% block href-adm-users-profile-update %}
-                <li><a href="/adm/users/{{ one_id }}/profile/update/">Редагувати профіль</a></li>
+                <li><a href="{% url 'adm-users-profile-update' one_id %}">Редагувати профіль</a></li>
         {% endblock %}
     {% comment %}
         {% block href-adm-users-list %}
             {% if user.is_staff or perms.koopsite.activate_account %}
-                <li><a href="/adm/users/list/">Профілі користувачів</a></li>
+                <li><a href="{% url 'adm-users-list' %}">Профілі користувачів</a></li>
             {% endif %}
         {% endblock %}
     {% endcomment %}
         {% block href-admin %}
             {% if user.is_staff %}
-                <li><a href="/admin/">Django Admin</a></li>
+                <li><a href="{% url 'admin:index' %}">Django Admin</a></li>
             {% endif %}
         {% endblock %}
         {% block href-back %}

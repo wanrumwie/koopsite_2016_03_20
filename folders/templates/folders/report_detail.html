@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block href-report-reload %}
-    <li><a href="/folders/report/{{ report.id }}/reload/">Переладувати файл</a></li>
+    <li><a href="{% url 'folders:report-reload' report.id %}">Переладувати файл</a></li>
 {% endblock %}
 {% block href-folder-contents %}
 {% endblock %}

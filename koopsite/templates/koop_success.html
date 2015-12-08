@@ -12,7 +12,7 @@
     <div>
         <h2 class="green">Вітаємо, {{ user.username }}!</h2>
         <p>Ви успішно зареєструвалися на сайті KoopSite!</p>
-        <p><a href="/index/">Продовжити роботу</a></p>
+        <p><a href="{% url 'index' %}">Продовжити роботу</a></p>
     </div>
 {% endblock %}
 

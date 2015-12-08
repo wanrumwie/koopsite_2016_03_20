@@ -26,7 +26,7 @@
                         {% for f in parents %}
                             <li>
                             <a  id="parent#{{ f.id }}"
-                                href="/folders/{{ f.id }}/contents/">
+                                href="{% url 'folders:folder-contents' f.id %}">
                                 <img src="{% static 'img/folder.png' %}" alt="Тека" />
                                 {{ f }}
                             </a>
@@ -34,7 +34,7 @@
                         {% endfor %}
                         <li>
                         <a  id="thisfolder"
-                            href="/folders/{{ folder.id }}/contents/">
+                            href="{% url 'folders:folder-contents' folder.id %}">
                             <img src="{% static 'img/open_folder.png' %}" alt="Тека" />
                             <span>{{ folder }}</span>
                         </a>
@@ -93,10 +93,10 @@
                                 >
                                 {% if f|model_name == 'folder' %}
                                     <a id="folder#{{ f.id }}"
-                                       href="/folders/{{ f.id }}/contents/">{{ f }}</a>
+                                       href="{% url 'folders:folder-contents' f.id %}">{{ f }}</a>
                                 {% else %}
                                     <a id="report#{{ f.id }}"
-                                       href="/folders/report/{{ f.id }}/preview/">{{ f }}</a>
+                                       href="{% url 'folders:report-preview' f.id %}">{{ f }}</a>
                                 {% endif %}
                             </td>
                             <td id="td3-{{ f|model_name }}#{{ f.id }}"

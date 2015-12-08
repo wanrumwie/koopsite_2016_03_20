@@ -29,7 +29,6 @@ class IndexVisitorTest(FunctionalTest):
         header_text = self.browser.find_element_by_id('page-name').text
         self.assertIn('Головна сторінка', header_text)
 
-    @skip
     def test_layout_and_styling_index_page(self):
         # Користувач відвідує головну сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -41,7 +40,6 @@ class IndexVisitorTest(FunctionalTest):
             msg="Не працює CSS."
             )
 
-    @skip
     def test_anonymous_user_all_links_exist(self):
         # Сторінка має всі передбачені лінки (по кількості)
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -50,7 +48,6 @@ class IndexVisitorTest(FunctionalTest):
                          len(self.links_for_anonymous_user),
                          msg="Кількість лінків на сторінці не відповідає очікуваній")
 
-    @skip
     def test_anonymous_user_can_go_to_links(self):
         # Незалогінений користувач може перейти по всіх лінках на сторінці
         folder = Folder()
@@ -82,7 +79,6 @@ class IndexAuthenticatedVisitorTest(FunctionalTestAuthenticateUser):
         header_text = self.browser.find_element_by_id('page-name').text
         self.assertIn('Головна сторінка', header_text)
 
-    @skip
     def test_layout_and_styling_index_page(self):
         # Користувач відвідує головну сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -94,6 +90,7 @@ class IndexAuthenticatedVisitorTest(FunctionalTestAuthenticateUser):
             msg="Не працює CSS."
             )
 
+    @skip
     def test_authenticated_user_can_go_to_links(self):
         # Залогінений користувач може перейти по всіх лінках на сторінці
         folder = Folder()

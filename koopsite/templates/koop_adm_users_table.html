@@ -61,9 +61,9 @@
                                     data-column-header="{{ cap|get_at_index:j }}">
                                     {% if j == 1 %}
                                         {% if user.is_staff %}
-                                            <a href="/adm/users/{{ row.0.id }}/profile/">{{ v }}</a>
+                                            <a href="{% url 'adm-users-profile' row.0.id %}">{{ v }}</a>
                                         {% else %}
-                                            <a href="/adm/users/{{ row.0.id }}/profile/">{{ v }}</a>
+                                            <a href="{% url 'adm-users-profile' row.0.id %}">{{ v }}</a>
                                         {% endif %}
 
                                     {% elif j == 5 %}

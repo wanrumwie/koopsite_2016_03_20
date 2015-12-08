@@ -35,55 +35,55 @@
 {% block href-report-reload %}
 {% endblock %}
         {% block href-index %}
-            <li><a href="/index/">Головна сторінка</a></li>
+            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
         {% block href-folder-contents %}
-            <li><a href="/folders/1/contents/">Документи</a></li>
+            <li><a href="{% url 'folders:folder-contents' 1 %}">Документи</a></li>
         {% endblock %}
         {% block href-folder-list %}
-            <li><a href="/folders/list/">Список тек</a></li>
+            <li><a href="{% url 'folders:folder-list' %}">Список тек</a></li>
         {% endblock %}
         {% block href-folder-parent %}
-            <li><a href="/folders/parents/">Материнські теки</a></li>
+            <li><a href="{% url 'folders:folder-parents' %}">Материнські теки</a></li>
         {% endblock %}
         {% block href-report-list %}
-            <li><a href="/folders/report/list/">Список файлів</a></li>
+            <li><a href="{% url 'folders:report-list' %}">Список файлів</a></li>
         {% endblock %}
 
         {% block href-folder-create %}
-            <li><a href="/folders/create/">Створити теку</a></li>
+            <li><a href="{% url 'folders:folder-create' %}">Створити теку</a></li>
         {% endblock %}
         {% block href-report-upload %}
-            <li><a href="/folders/report/upload/">Заладувати файл</a></li>
+            <li><a href="{% url 'folders:report-upload' %}">Заладувати файл</a></li>
         {% endblock %}
 
         {% block href-folder-create-in %}
-            <li><a href="/folders/{{ folder.id }}/create/">Створити теку в цій</a></li>
+            <li><a href="{% url 'folders:folder-create-in' folder.id %}">Створити теку в цій</a></li>
         {% endblock %}
         {% block href-folder-update %}
-            <li><a href="/folders/{{ folder.id }}/update/">Редагувати деталі теки</a></li>
+            <li><a href="{% url 'folders:folder-update' folder.id %}">Редагувати деталі теки</a></li>
         {% endblock %}
         {% block href-folder-download %}
-            <li><a href="/folders/{{ folder.id }}/download/">Завантажити вміст теки на мій комп'ютер</a></li>
+            <li><a href="{% url 'folders:folder-download' folder.id %}">Завантажити вміст теки на мій комп'ютер</a></li>
         {% endblock %}
         {% block href-folder-delete %}
-            <li><a href="/folders/{{ folder.id }}/delete/">Видалити теку</a></li>
+            <li><a href="{% url 'folders:folder-delete' folder.id %}">Видалити теку</a></li>
         {% endblock %}
         {% block href-report-upload-in %}
-            <li><a href="/folders/{{ folder.id }}/report/upload/" >Заладувати файл в цю теку</a></li>
+            <li><a href="{% url 'folders:report-upload-in' folder.id %}" >Заладувати файл в цю теку</a></li>
         {% endblock %}
 
         {% block href-report-preview %}
-            <li><a href="/folders/report/{{ report.id }}/preview/">Попередній перегляд</a></li>
+            <li><a href="{% url 'folders:report-preview' report.id %}">Попередній перегляд</a></li>
         {% endblock %}
         {% block href-report-update %}
-            <li><a href="/folders/report/{{ report.id }}/update/">Редагувати деталі файла</a></li>
+            <li><a href="{% url 'folders:report-update' report.id %}">Редагувати деталі файла</a></li>
         {% endblock %}
         {% block href-report-download %}
-            <li><a href="/folders/report/{{ report.id }}/download/">Завантажити файл на мій комп'ютер</a></li>
+            <li><a href="{% url 'folders:report-download' report.id %}">Завантажити файл на мій комп'ютер</a></li>
         {% endblock %}
         {% block href-report-delete %}
-            <li><a href="/folders/report/{{ report.id }}/delete/">Видалити файл</a></li>
+            <li><a href="{% url 'folders:report-delete' report.id %}">Видалити файл</a></li>
         {% endblock %}
 
         {% block href-back %}
