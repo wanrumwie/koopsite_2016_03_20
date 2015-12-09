@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.paginator import Paginator
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
@@ -49,13 +49,39 @@ class AllDetailView(DetailView):
     # template_name = 'folders/report_detail.html'
     # per_page = 12
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        # url_prefix - повна адреса для даного pk ще без сторінок
+        print('args =', args)
+        print('kwargs =', kwargs)
+        print('self.url_name =', self.url_name)
+        print('self.object.pk =', self.object.pk)
+        self.url_name = 'flats:%s' % self.url_name
+        print('self.url_name =', self.url_name)
+        rev_kwargs = {}
+        rev_kwargs['current_app'] = resolve(request.path).namespace
+        rev_kwargs['pk'] = self.object.pk
+        print('rev_kwargs =', rev_kwargs)
+        url_prefix=reverse(self.url_name, kwargs=rev_kwargs)
+        context['url_prefix'] = url_prefix + 'page'
+        # href="{{ url_prefix }}{{ page_obj.previous_page_number }}" => "/flats/page43"
+        print('context =', context)
+        return self.render_to_response(context)
+
     def get_context_data(self, **kwargs):
         context = super(AllDetailView, self).get_context_data(**kwargs)
         obj = context['object']
         # url_prefix - повна адреса для даного pk ще без сторінок
-        url_prefix=reverse(self.url_name, kwargs={'pk': obj.pk})
-        context['url_prefix'] = url_prefix + 'page'
+        # print('self.url_name =', self.url_name)
+        # print('obj.pk =', obj.pk)
+        # self.url_name = 'flats:%s' % self.url_name
+        # print('self.url_name =', self.url_name)
+        # url_prefix=reverse(self.url_name, kwargs={'pk': obj.pk})
+        # context['url_prefix'] = url_prefix + 'page'
         # href="{{ url_prefix }}{{ page_obj.previous_page_number }}" => "/flats/page43"
+        print('self.keylist =', self.keylist)
+        print('obj.__dict__ =', obj.__dict__)
         obj_details = []
         keylist = self.keylist or obj.__dict__
         for k in keylist:
@@ -90,8 +116,11 @@ class AllRecordDetailView(ListView):
     def get_context_data(self, **kwargs):
         context = super(AllRecordDetailView, self).get_context_data(**kwargs)
         # url_prefix - повна адреса для даного pk ще без сторінок
-        url_prefix=reverse(self.url_name)
-        context['url_prefix'] = url_prefix + 'page'
+        print('self.url_name =', self.url_name)
+        self.url_name = 'flats:%s' % self.url_name
+        print('self.url_name =', self.url_name)
+        # url_prefix=reverse(self.url_name)
+        # context['url_prefix'] = url_prefix + 'page'
         field_name = []
         field_val  = []
         firstiter  = True

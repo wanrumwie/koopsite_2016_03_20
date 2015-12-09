@@ -23,13 +23,13 @@ def fileext(f):
     except: e = ""
     return e
 
-@register.filter
-def filetype(f):
+# @register.filter
+# def filetype(f):
     # Фільтр для типу файла (відповідно до розширення)
-    try:    e = os.path.splitext(f.filename)[1]  # [0] returns path+filename
-    except: e = ""
-    t = fileTypeByFileExt(e)
-    return t
+    # try:    e = os.path.splitext(f.filename)[1]  # [0] returns path+filename
+    # except: e = ""
+    # t = fileTypeByFileExt(e)
+    # return t
 
 # Фільтр для назви файла-іконки (для моделей folder і report)
 @register.filter

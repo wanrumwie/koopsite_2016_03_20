@@ -9,22 +9,22 @@
         <div class="aside aside-2 align-flex-end">
             <ul id="header-aside-2-navigation"
                 class="navigation-small">
-            {% if request.user.is_authenticated %}
+            {% if user.is_authenticated %}
                 <li>
                     <a href="{% url 'own-profile' %}" title="Профіль користувача">
-                        {% with pic=request.user.userprofile.picture %}
+                        {% with pic=user.userprofile.picture %}
                             {% if pic and pic != "False"  %}
                                 <img src="{% static pic|thumbnail %}"/>
                             {% endif %}
                         {% endwith %}
-                        {{ request.user.username }}
+                        {{ user.username }}
                     </a>
                 </li>
                 <li>
-                    {% if request.user.userprofile.flat %}
+                    {% if user.userprofile.flat %}
                         <a href="{% url 'flats:flat-detail' user.userprofile.flat.id %}"
                            title="Про квартиру">
-                            Кв.{{ request.user.userprofile.flat.flat_No }}</a>
+                            Кв.{{ user.userprofile.flat.flat_No }}</a>
                     {% endif %}
                 </li>
                 <li>

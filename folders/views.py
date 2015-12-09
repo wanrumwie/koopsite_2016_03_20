@@ -2,7 +2,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import *
 from django.shortcuts import render
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -17,7 +17,7 @@ from .forms import FolderForm, ReportForm, \
 
 class FolderList(ListView):
     model = Folder
-    # paginate_by = 20
+    paginate_by = 5
     ordering = 'name'
     template_name = 'folders/folder_list.html'
 
@@ -30,6 +30,9 @@ class FolderDetail(AllDetailView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        r = resolve(request.path)
+        print('resolve(request.path) =', r)
+        print('r.namespace =', r.namespace)
         return super(FolderDetail, self).dispatch(request, *args, **kwargs)
 
 

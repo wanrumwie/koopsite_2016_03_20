@@ -51,15 +51,91 @@ class FlatScheme(ListView):
         return context
 
 
-class FlatDetail(AllDetailView):
+
+class AllFieldsView(ListView):
+    # CBV для виводу всіх полів одного запису моделі
+    keylist = []            # Список полів, які буде виведено.
+                            # Якщо пустий, то список полів буде __dict__
+    namedict = {}           # Словник укр.назв полів, які буде виведено.
+                            # Якщо пустий, то назви будуть взяті з keylist
+    valfunction = round     # Функція обробки значення поля (напр. round)
+    fargs = (2,)            # список аргументів функції f(v, *fargs)
+    fkwargs = {}            # словник аргументів функції f(v, **fkwargs)
+    url_name = ''           # параметр name в url(), який є основним для
+                            # даного DetailView (ще без сторінок)
+    # Наступні змінні будуть визначені в наслідуваному класі:
+    # model = Report
+    # template_name = 'folders/report_detail.html'
+    # per_page = 12
+
+    context_object_name = 'obj_details' # назва queryset, що йде в шаблон
+                                        # {% for k, v in obj_details %}
+    context_obj_name    = 'obj'         # назва об'єкта, що йде в шаблон
+
+    def get_context_obj_name(self, obj):
+        """
+        Дає назву obj, чиї поля зібрані в queryset.
+        Функція зроблена за аналогією до get_context_object_name з ListView
+        """
+        if self.context_obj_name:
+            s = self.context_obj_name
+        elif self.model:
+            try: s =  obj._meta.model_name
+            except: s = None
+        else:
+            s = None
+        return s
+
+    def get(self, request, *args, **kwargs):
+        self.id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
+        return super(AllFieldsView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        self.obj = self.model.objects.get(id=self.id)
+        obj_details = []
+        keylist = self.keylist or self.obj.__dict__
+        for k in keylist:
+            try:    n = self.namedict[k]
+            except: n = k
+            v = getattr(self.obj,k)
+            if self.valfunction:
+                try:    v = self.valfunction(v, *self.fargs, **self.fkwargs)
+                        # Замість v = round(v,2) або v = round(v,ndigits=2)
+                except: pass
+            if v == 0: v = ""
+            obj_details.append((n, v))
+        return obj_details
+
+    def get_context_data(self, **kwargs):
+        context = super(AllFieldsView, self).get_context_data(**kwargs)
+        context_obj_name = self.get_context_obj_name(self.obj)
+        context[context_obj_name]  = self.obj
+        print('context :------------------------')
+        for k,v in context.items():
+            print('%20s : %s' % (k, v))
+        return context
+
+
+
+class FlatDetail(AllFieldsView):
     model = Flat
     template_name = 'flats/flat_detail.html'
     per_page = 12
     keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
     namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
     url_name='flat-detail'
+    context_obj_name    = 'flat' # назва об'єкта, що йде в шаблон
 
 
+# class FlatDetail(AllDetailView):
+#     model = Flat
+#     template_name = 'flats/flat_detail.html'
+#     per_page = 12
+#     keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
+#     namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
+#     url_name='flat-detail'
+#
+#
 class FlatDetailHorizontal(FlatDetail):
     template_name = 'flats/flat_detail_h.html'
     per_page = 0
