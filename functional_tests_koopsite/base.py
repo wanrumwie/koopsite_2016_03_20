@@ -66,37 +66,11 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         expected_regex = expected_regex.lstrip('^')
         self.assertRegex(passing_url, expected_regex)
         # print('href =', href)
-        print('passing_url =', passing_url)
-        print('expected_regex =', expected_regex)
-        print('url_name =', url_name)
-        print('kwargs =', kwargs)
-        print('condition =', condition)
-
-'''
-class FunctionalTestAuthenticateUser(FunctionalTest):
-    def setUp(self):
-        session_cookie = create_session_cookie(
-            username='testuser', password='top_secret'
-        )
-
-        # visit some url in your domain to setup Selenium.
-        # (404 pages load the quickest)
-        # self.browser.get('your-url' + '/404-non-existent/')
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # add the newly created session cookie to selenium webdriver.
-        print('self.browser =', self.browser)
-        self.browser.add_cookie(session_cookie)
-        print('self.browser =', self.browser)
-
-        # refresh to exchange cookies with the server.
-        self.browser.refresh()
-        print('self.browser =', self.browser)
-
-        # This time user should present as logged in.
-        # self.browser.get('your-url')
-
-'''
+        # print('passing_url =', passing_url)
+        # print('expected_regex =', expected_regex)
+        # print('url_name =', url_name)
+        # print('kwargs =', kwargs)
+        # print('condition =', condition)
 
 def create_user_session(user):
     # Then create the authenticated session using the new user credentials
@@ -124,13 +98,10 @@ def add_cookie_to_browser(cookie, browser, server_url, url):
     browser.get('%s%s' % (server_url, url))
 
     # add the newly created session cookie to selenium webdriver.
-    # print('self.browser =', browser)
     browser.add_cookie(cookie)
-    # print('self.browser =', browser)
 
     # refresh to exchange cookies with the server.
     browser.refresh()
-    # print('self.browser =', browser)
 
     # This time user should present as logged in.
     # self.browser.get('your-url')
@@ -144,6 +115,7 @@ class DummyUser():
         User.objects.create_user(username=username, password=password)
         user = authenticate(username=username, password=password)
         user.is_staff = True
+        user.save()
         self.dummy_user = user
         return user
 

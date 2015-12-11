@@ -62,6 +62,9 @@
             {% endif %}
         {% endblock %}
         {% block href-adm-index %}
+                <li><span>user.username = {{ user.username }}</span></li>
+                <li><span>user.is_staff = {{ user.is_staff }}</span></li>
+                <li><span>perms.koopsite.activate_account = {{ perms.koopsite.activate_account }}</span></li>
             {% if user.is_staff or perms.koopsite.activate_account %}
                 <li><a href="{% url 'adm-index' %}">Адміністрування</a></li>
             {% endif %}

@@ -8,10 +8,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import update_session_auth_hash
+from django.template import Template
+from django.template.loader import get_template, render_to_string
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+import parser
 from flats.models import Flat
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                             UserPermsActivateForm, \
@@ -580,6 +583,7 @@ def index(request):
         return render(request, template_name, {})
 
 # TODO-можливо зробити декоратор перевірки належності до групи?
+# TODO-додати перевірку АБО is_stuff
 @permission_required('koopsite.activate_account')
 def adm_index(request):
     template_name = 'koop_adm_index.html'
