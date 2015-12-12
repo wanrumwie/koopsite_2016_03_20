@@ -1,7 +1,7 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 import sys
-from functional_tests_koopsite.base import FunctionalTest
+from functional_tests_koopsite.ft_base import FunctionalTest
 
 
 class ListsFunctionalTest(FunctionalTest): # працює з окремою спеціально

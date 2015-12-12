@@ -8,6 +8,9 @@ from django.core.urlresolvers import reverse
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
+from flats.models import Flat
+from folders.models import Folder
+from koopsite.models import UserProfile
 
 
 class FunctionalTest(StaticLiveServerTestCase): # працює з окремою спеціально
@@ -53,6 +56,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
             except: c = None
         else:
             c = True    # відсутність умови рівносильна виконанню умови
+        # print('user =', user, 'cd =', condition, 'eval =', c)
         return c
 
     def check_go_to_link(self, this_url, link_parent_selector, link_text,
@@ -138,23 +142,51 @@ class DummyUser():
         User = get_user_model()
         User.objects.create_user(username=username, password=password)
         user = authenticate(username=username, password=password)
-        permission = Permission.objects.get(name='Can activate/deactivate account')
-        user.user_permissions.add(permission)
-
-        # print('-'*50)
-        # print('permission =', permission)
-        print('created user:', user)
-        #
-        # user.is_staff = True
         user.save()
         self.dummy_user = user
+        print('created user:', user)
         return user
 
+    def add_dummy_permission(self, user, name='Can activate/deactivate account'):
+        permission = Permission.objects.get(name=name)
+        user.user_permissions.add(permission)
+        user.save()
+        # print('-'*50)
+        # print('permission =', permission)
+        #
+        # user.is_staff = True
+        print('added permission:', permission, 'for user:', user)
+        return permission
+
+    def create_dummy_profile(self, user):
+        profile = UserProfile(user=user)
+        profile.save()
+        print('created profile:', profile, 'for user:', user)
+        return profile
 
 
-class FunctionalTestAuthenticateUser(DummyUser, FunctionalTest):
-    def setUp(self):
-        self.dummy_user = self.create_dummy_user()
-        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url, "/")
+class DummyData():
+    # Створення в базі додаткових даних, потрібних для конкретного класу тестів
+    def create_dummy_flat(self, flat_No="25а"):
+        # створюємо квартиру:
+        flat = Flat(flat_No=flat_No)
+        flat.save()
+        print('created flat:', flat)
+        return flat
+
+    def create_dummy_folder(self):
+        # Створення в базі додаткових даних, потрібних для конкретного класу тестів
+        # створюємо теку з id=1 для folders/1/contents/:
+        folder = Folder(name="dummy_root_folder", id=1)
+        folder.save()
+        print('created folder:', folder)
+        return folder
+
+
+# class FunctionalTestAuthenticateUser(DummyUser, DummyData, FunctionalTest):
+#     def setUp(self):
+#         self.dummy_user = self.create_dummy_user()
+#         add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url, "/")
+#         self.create_dummy_data()
 
 
