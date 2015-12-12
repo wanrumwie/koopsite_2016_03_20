@@ -583,7 +583,6 @@ def index(request):
         return render(request, template_name, {})
 
 # TODO-можливо зробити декоратор перевірки належності до групи?
-# TODO-додати перевірку АБО is_stuff
 @permission_required('koopsite.activate_account')
 def adm_index(request):
     template_name = 'koop_adm_index.html'
