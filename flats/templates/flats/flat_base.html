@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>ЖК "Пасічний" (Django)</title>
 
     {% block load_style %}
         {% load staticfiles %}
@@ -30,7 +30,8 @@
   </div>
 
   <div class="site-body">
-    <ul class="navigation">
+    <ul id="body-navigation"
+        class="navigation">
         {# У дочірньому шаблоні переознач тільки самопосилання #}
         {% block href-index %}
             <li><a href="{% url 'index' %}">Головна сторінка</a></li>

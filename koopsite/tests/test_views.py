@@ -21,3 +21,7 @@ class IndexPageTest(TestCase):
         expected_html = render_to_string('koop_index.html')
         self.assertEqual(response.content.decode(), expected_html)
 
+    def test_index_page_renders_proper_template(self):
+        response = self.client.get('/index/')
+        self.assertTemplateUsed(response, 'koop_index.html')
+
