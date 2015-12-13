@@ -119,9 +119,9 @@ class AllRecordDetailView(ListView):
     def get_context_data(self, **kwargs):
         context = super(AllRecordDetailView, self).get_context_data(**kwargs)
         # url_prefix - повна адреса для даного pk ще без сторінок
-        print('self.url_name =', self.url_name)
+        # print('self.url_name =', self.url_name)
         self.url_name = 'flats:%s' % self.url_name
-        print('self.url_name =', self.url_name)
+        # print('self.url_name =', self.url_name)
         # url_prefix=reverse(self.url_name)
         # context['url_prefix'] = url_prefix + 'page'
         field_name = []
@@ -347,7 +347,6 @@ class OneToOneDetailShow(DetailView):
                 'capital'        : getattr(one, self.capital_name),
                 'one_id'         : getattr(one, 'id'),
                 }
-        print('data =', data)
         return render(request, self.template_name, data)
 
 

@@ -48,8 +48,8 @@ class UrlNameSpaceTest(TestCase):
     def test_no_duplicate_urls(self):
         all_url = WalkURL(urlpatterns).all_url_names
         # print('all_urls:')
-        for u, n in sorted(all_url):
-            print('%-60s %s' % (u, n))
+        # for u, n in sorted(all_url):
+        #     print('%-60s %s' % (u, n))
         # print('-'*50)
 
         dupl_in_urls, dupl_in_name = get_duplicates_in_tuple_list(all_url)

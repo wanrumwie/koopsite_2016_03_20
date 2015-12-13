@@ -5,7 +5,7 @@ from urllib.parse import unquote
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 from koopsite.fileExtIconPath import iconPath
-from koopsite.settings import EMAIL_HOST_USER
+from koopsite.settings import EMAIL_HOST_USER, TRACE_CONDITION
 
 try:
     from PIL import Image, ImageOps
@@ -13,6 +13,20 @@ except ImportError:
     print('from PIL import Image, ImageOps: ImportError')
     import Image
     import ImageOps
+
+def trace_print(*args):
+    """
+    Умовний друк, залежно від значення параметра TRACE_CONDITION з settings.py
+    :param args:
+    :return:
+    """
+    if TRACE_CONDITION:
+        print(*args)
+
+def print_list(name, list):
+    print(name, 'len =', len(list))
+    for i in list: print(i)
+
 
 def get_namespace_from_dict(d, ns, extend=False):
     """
@@ -123,7 +137,7 @@ def getSelections(session):
     """
     # Пробуємо отримати значення з сесії:
     selections = session.get('Selections')
-    print('getSelections: session =', session.items())
+    trace_print('getSelections: session =', session.items())
     # print('getSelections: selections =', selections)
     if (not selections) or (type(selections) != type({})):
         # якщо selections не існує або не є словником,

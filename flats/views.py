@@ -1,4 +1,5 @@
 from django.views.generic import ListView, DetailView
+from koopsite.functions import trace_print, print_list
 from koopsite.views import AllDetailView
 from koopsite.views import AllRecordDetailView
 from .models import Flat
@@ -11,31 +12,31 @@ class FlatList(ListView):
     template_name = 'flats/flat_list.html'
 
 
-def block_scheme():
-    # фомування вкладеного списку квартир - список блоків.
-    # Блок - це квартири на одній сходовій клітці.
-    # [floor0, floor1, ... floor5]
-    # floor1 = [block1, block2, ... block6]
-    # block1 = [flat1, flat2, flat3]
-    # У результаті матимемо список:
-    # block = [ [ [flat1, flat2, flat3], ... ] , [ [ ... ], ... ] ... ]
-    block_list = []
-    for y in range(6):      # формуємо для кожного блоку поч.знач.: - []
-        floor = 5 - y
-        block_list.append([])
-        block_list[y] = []
-        for x in range(6):
-            entr = x + 1
-            block_list[y].append([])
-    for f in Flat.objects.all().order_by('flat_99'):
-        y = 5 - f.floor_No
-        x = f.entrance_No - 1
-        block_list[y][x].append(f)  # кожну квартиру вміщуємо у свій блок
-    for y in [5]:
-        for x in [0,1,2]:
-            for i in range(3):
-                block_list[y][x].append(None)   # блоки без квартир
-    return block_list
+def block_scheme(entrances=(1,2,3,4,5,6), floors=(0,1,2,3,4,5)):
+    # Готуємо порожні словники і списки до заповнення:
+    # {0: {1: [flat, ], 2: [flat, ]}, 1: {1: [flat, ], 2: [flat, ]},}
+    d = {}
+    for f in floors:
+        d[f] = {}
+        for e in entrances:
+            d[f][e] = []
+    # Кожну квартиру з бази додаємо до списку d[f][e]
+    for flat in Flat.objects.all().order_by('flat_99'):
+        f = flat.floor_No
+        e = flat.entrance_No
+        d[f][e].append(flat)  # кожну квартиру вміщуємо у свій блок
+    return d
+
+def block_length(d):
+    # Визначаємо для кожного під'їзду макс.к-ть квартир на поверсі
+    # для того, щоб кожен під'їзд в шаблоні був представлений вертик. колонкою:
+    block_length = {}
+    for f in d:
+        for e in d[f]:
+            n = block_length.get(e, 0)
+            n = max(n, len(d[f][e]))
+            block_length[e] = n
+    return block_length
 
 
 class FlatScheme(ListView):
@@ -44,11 +45,19 @@ class FlatScheme(ListView):
     template_name = 'flats/flat_scheme.html'
 
     def get_context_data(self, **kwargs):
-        context = super(FlatScheme, self).get_context_data(**kwargs)
-        context['block_list']       = block_scheme()
-        context['entrance_list']    = list(range(1,7))
-        print("context['block_list'] =", context['block_list'])
-        return context
+        # kwargs['object_list'] = Flat.objects.all()
+        # kwargs['object_list'] = []
+        self.object_list = Flat.objects.all()
+        entrances=(1,2,3,4,5,6)
+        floors=(0,1,2,3,4,5)
+        d = block_scheme(entrances=entrances, floors=floors)
+        l = block_length(d)
+        kwargs['block_scheme'] = block_scheme()
+        kwargs['block_length'] = block_length(d)
+        kwargs['entrances']    = entrances
+        kwargs['floors']       = floors
+        # print('kwargs=', kwargs)
+        return super(FlatScheme, self).get_context_data(**kwargs)
 
 
 
@@ -110,9 +119,9 @@ class AllFieldsView(ListView):
         context = super(AllFieldsView, self).get_context_data(**kwargs)
         context_obj_name = self.get_context_obj_name(self.obj)
         context[context_obj_name]  = self.obj
-        print('context :------------------------')
+        trace_print('context :------------------------')
         for k,v in context.items():
-            print('%20s : %s' % (k, v))
+            trace_print('%20s : %s' % (k, v))
         return context
 
 

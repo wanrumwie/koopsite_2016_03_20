@@ -1,3 +1,4 @@
+import inspect
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, \
                        HASH_SESSION_KEY, get_user_model, authenticate
@@ -10,6 +11,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import sys
 from flats.models import Flat
 from folders.models import Folder
+from koopsite.functions import trace_print, print_list
 from koopsite.models import UserProfile
 
 
@@ -43,6 +45,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
 
     def tearDown(self):
         pass
+        self.browser.implicitly_wait(10)
         # self.browser.implicitly_wait(10)
         # self.browser.refresh()
         # self.browser.quit()
@@ -113,11 +116,11 @@ def create_cookie(session):
     }
     return cookie
 
-def add_cookie_to_browser(cookie, browser, server_url, url):
+def add_cookie_to_browser(cookie, browser, server_url, url=None):
     # visit some url in your domain to setup Selenium.
     # (404 pages load the quickest)
-    # self.browser.get('your-url' + '/404-non-existent/')
-    browser.get('%s%s' % (server_url, url))
+    if url: browser.get('%s%s' % (server_url, url))
+    else:   browser.get('%s%s' % (server_url, '/404-non-existent/'))
 
     # add the newly created session cookie to selenium webdriver.
     browser.add_cookie(cookie)
@@ -128,7 +131,7 @@ def add_cookie_to_browser(cookie, browser, server_url, url):
     # This time user should present as logged in.
     # self.browser.get('your-url')
 
-def add_user_cookie_to_browser(user, browser, server_url, url="/"):
+def add_user_cookie_to_browser(user, browser, server_url, url=None):
     session = create_user_session(user)
     cookie = create_cookie(session)
     add_cookie_to_browser(cookie, browser, server_url, url)
@@ -144,7 +147,7 @@ class DummyUser():
         user = authenticate(username=username, password=password)
         user.save()
         self.dummy_user = user
-        print('created user:', user)
+        trace_print('created user:', user)
         return user
 
     def add_dummy_permission(self, user, name='Can activate/deactivate account'):
@@ -155,21 +158,23 @@ class DummyUser():
         # print('permission =', permission)
         #
         # user.is_staff = True
-        print('added permission:', permission, 'for user:', user)
+        trace_print('added permission:', permission, 'for user:', user)
         return permission
 
     def create_dummy_profile(self, user):
         profile = UserProfile(user=user)
         profile.save()
-        print('created profile:', profile, 'for user:', user)
+        trace_print('created profile:', profile, 'for user:', user)
         return profile
 
 
 class DummyData():
     # Створення в базі додаткових даних, потрібних для конкретного класу тестів
-    def create_dummy_flat(self, flat_No="25а"):
+    def create_dummy_flat(self, flat_No="25а", floor_No=2,
+                                entrance_No=3, flat_99=25):
         # створюємо квартиру:
-        flat = Flat(flat_No=flat_No)
+        flat = Flat(flat_No=flat_No, floor_No=floor_No,
+                    entrance_No=entrance_No, flat_99=flat_99)
         flat.save()
         print('created flat:', flat)
         return flat
@@ -183,10 +188,106 @@ class DummyData():
         return folder
 
 
-# class FunctionalTestAuthenticateUser(DummyUser, DummyData, FunctionalTest):
-#     def setUp(self):
-#         self.dummy_user = self.create_dummy_user()
-#         add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url, "/")
-#         self.create_dummy_data()
+class PageVisitTest(DummyUser, DummyData, FunctionalTest):
+    """
+    Допоміжний клас для функціональних тестів.
+    Описані тут параметри - для перевірки головної сторінки сайту
+    аутентифікованим користувачем.
+    Цей клас буде використовуватися як основа
+    для класів тестування інших сторінок.
+    """
+    this_url    = '/index/'
+    page_title  = 'Пасічний'
+    page_name   = 'Головна сторінка'
+    data_links_number = 0   # кількість лінків, які приходять в шаблон з даними
+
+    def setUp(self):
+        self.dummy_user = self.create_dummy_user()
+        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url)
+        self.create_dummy_folder()
+        self.data_links_number = 0   # кількість лінків, які приходять в шаблон з даними
+
+    def can_visit_page(self):
+        # Користувач може відвідати головну сторінку сайта
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        # Ця сторінка справді є сторінкою потрібного сайту
+        self.assertIn(self.page_title, self.browser.title)
+        # Цe головна сторінка
+        header_text = self.browser.find_element_by_id('page-name').text
+        self.assertIn(self.page_name, header_text)
+
+    def links_in_template(self, user):
+        # Перелік лінків, важливих для сторінки.
+        # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
+        #     def check_go_to_link(self, this_url, link_parent_selector, link_text,
+        #                           expected_regex=None, url_name=None, kwargs=None):
+        # Ключі словників скорочені до 2-х літер: ls lt er un kw
+        # плюс cd - condition для перевірки видимості лінка (буде аргументом ф-ції eval() ).
+        # Спочатку визначаються деякі параметри:
+        try:    username = user.username
+        except: username = ""
+        try:    flat_id = user.userprofile.flat.id
+        except: flat_id = ""
+        try:    flat_No = user.userprofile.flat.flat_No
+        except: flat_No = ""
+        s = [
+            {'ls':'#body-aside-1-navigation'  , 'lt': 'Увійти'           , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
+            {'ls':'#body-aside-1-navigation'  , 'lt': 'Зареєструватися'  , 'un': 'register'    , 'cd': "not user.is_authenticated()"},
+            # {'ls':'#body-navigation'          , 'lt': 'Головна сторінка' , 'un': 'index'},##########
+            {'ls':'#body-navigation'          , 'lt': 'Квартири'         , 'un': 'flats:flat-scheme'},
+            {'ls':'#body-navigation'          , 'lt': 'Документи'        , 'un': 'folders:folder-contents', 'kw': {'pk': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Увійти'           , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
+            {'ls':'#body-navigation'          , 'lt': 'Зареєструватися'  , 'un': 'register'    , 'cd': "not user.is_authenticated()"},
+            {'ls':'#body-navigation'          , 'lt': 'Мій профіль'      , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
+            {'ls':'#body-navigation'          , 'lt': 'Адміністрування'  , 'un': 'adm-index'   , 'cd': "user.has_perm('koopsite.activate_account')"},
+            # {'ls':'#body-navigation'          , 'lt': 'Назад           ' , 'un': '"javascript:history.back()"'},#########
+            {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
+            {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
+            {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'            , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
+            {'ls':'#header-aside-2-navigation', 'lt': 'Авторизуватися'   , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
+            ]
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        return s
+
+    def visitor_can_go_to_links(self):
+        # Лінки, вказані в шаблоні (в т.ч. і недоступні через умову if):
+        links =  self.links_in_template(self.dummy_user)
+        # Сторінка має всі передбачені лінки (по кількості)
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        elements = self.browser.find_elements_by_tag_name('a')
+        visible_links = []
+        for d in links:
+            condition = d.get('cd')
+            link_must_be_visible = self.eval_condition(condition, self.dummy_user)
+            if link_must_be_visible :
+                visible_links.append(d)
+        expected = len(visible_links)
+        expected += self.data_links_number # + лінки в таблицях з даними. Ці лінки даних не входять до словника links_in_template.
+        # print_list('links', links)
+        # print_list('visible_links', visible_links)
+        # print_list('expected =', expected)
+        self.assertEqual(len(elements), expected,
+              msg="Кількість лінків на сторінці не відповідає очікуваній")
+        # Користувач може перейти по всіх лінках на сторінці
+        # Беремо список словників, які описують всі лінки на цій сторінці.
+        # Ключі словників скорочені до 2-х літер: ls lt er un kw cd.
+        for d in visible_links:
+            link_parent_selector = d.get('ls')
+            link_text            = d.get('lt')
+            url_name             = d.get('un')
+            kwargs               = d.get('kw')
+            expected_regex       = d.get('er')
+            self.check_go_to_link(self.this_url, link_parent_selector, link_text,
+                url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
+
+    def layout_and_styling_page(self):
+        # Користувач відвідує сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        self.browser.set_window_size(1024, 800)
+        # Заголовок сайта добре відцентрований
+        box = self.browser.find_element_by_id('site-header')
+        real = box.location['x'] + box.size['width'] / 2
+        expected = 512
+        self.assertAlmostEqual(real, expected, delta=10, msg="Не працює CSS.")
 
 

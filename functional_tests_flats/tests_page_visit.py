@@ -1,11 +1,11 @@
 import inspect
 from unittest.case import skip
 from django.contrib.auth.models import AnonymousUser
-from functional_tests_koopsite.ft_base import add_user_cookie_to_browser
-from functional_tests_koopsite.tests_page_visit import IndexPageVisitTest
+from flats.models import Flat
+from functional_tests_koopsite.ft_base import add_user_cookie_to_browser, PageVisitTest
 
 
-class FlatSchemePageVisitTest(IndexPageVisitTest):
+class FlatSchemePageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки одної сторінки сайту
@@ -19,9 +19,12 @@ class FlatSchemePageVisitTest(IndexPageVisitTest):
 
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
-        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url, "/flats/scheme/")
+        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url)
+        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк javascript:history.back()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    def expected_links_on_page(self, user):
+    def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
         #     def check_go_to_link(self, this_url, link_parent_selector, link_text,
         #                           expected_regex=None, url_name=None, kwargs=None):
@@ -40,14 +43,14 @@ class FlatSchemePageVisitTest(IndexPageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             {'ls':'#body-navigation'          , 'lt': 'Таблиця параметрів всіх квартир'   , 'un': 'flats:flat-table'},
             {'ls':'#body-navigation'          , 'lt': 'Таблиця персон (в роботі!)'   , 'un': 'flats:person-table'},
-            # {'ls':'#body-navigation'          , 'lt': 'Назад           ' , 'un': '"javascript:history.back()"'},
+            # {'ls':'#body-navigation'          , 'lt': 'Назад           ' , 'un': "javascript:history.back()"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'            , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
             {'ls':'#header-aside-2-navigation', 'lt': 'Авторизуватися'   , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
             ]
         return s
-
+'''
 class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -58,18 +61,18 @@ class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished:', inspect.stack()[0][3])
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished:', inspect.stack()[0][3])
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished:', inspect.stack()[0][3])
-
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+'''
 
 class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
     """
@@ -80,19 +83,22 @@ class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
     """
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
-        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url, "/")
-        self.create_dummy_folder()
+        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url, "/flats/scheme/")
+        # self.create_dummy_folder()
         profile = self.create_dummy_profile(user=self.dummy_user)
         flat = self.create_dummy_flat()
         profile.flat=flat
         profile.save()
+        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк javascript:history.back()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished:', inspect.stack()[0][3])
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-
+'''
 class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -102,9 +108,42 @@ class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        self.create_dummy_folder()
+        # self.create_dummy_folder()
+        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк javascript:history.back()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished:', inspect.stack()[0][3])
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+'''
+'''
+class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    анонімним користувачем
+    і переходу за лінком, вказаним в таблиці даних
+    (параметри сторінки описані в суперкласі, тому не потребують переозначення)
+    Переозначуємо параметри користувача:
+    """
+    def setUp(self):
+        self.dummy_user = AnonymousUser()
+        self.create_dummy_flat(flat_No='52d')
+        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк javascript:history.back()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_visitor_can_go_to_flat(self):
+        # Користувач може перейти по лінку потрібні дані
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        flat = Flat.objects.get(flat_No='52d')
+        link_parent_selector = 'body-table'
+        link_text            = flat.flat_No
+        url_name             = 'flat-detail'
+        kwargs               = flat.id
+        expected_regex       = ""
+        self.check_go_to_link(self.this_url, link_parent_selector, link_text,
+            url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+'''

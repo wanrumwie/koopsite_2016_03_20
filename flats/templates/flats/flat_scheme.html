@@ -4,7 +4,9 @@
 
 {% block body %}
     <p id="page-name">Схема розташування квартир</p>
-    <table class="tabledetail tablescheme"  >
+        {{ floors }}<br> {{ entrances }}<br> {{ block_length }}<br>
+    <table id="body-table"
+        class="tabledetail tablescheme"  >
         <colgroup span="1"></colgroup>
         <colgroup span="3"></colgroup>
         <colgroup span="3"></colgroup>
@@ -23,7 +25,11 @@
                 <th>{{ forloop.revcounter0 }}</th>
                 {% for entr in floor %}
                     {% for f in entr %}
-                        <td><a href="/flats/{{ f.id }}/">{{ f.flat_No }}</a></td>
+                        {% if f.id %}
+                            <td><a href="/flats/{{ f.id }}/">{{ f.flat_No }}</a></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
                     {% endfor %}
                 {% endfor %}
             </tr>

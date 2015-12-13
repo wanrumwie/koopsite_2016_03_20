@@ -156,6 +156,10 @@ if DEBUG:
 else:
     SITE_ID = 1
 
+# Умова, при якій друкує trace_print(*args) з koopsite.functions
+# TRACE_CONDITION = True
+TRACE_CONDITION = False
+
 # print('BASE_DIR=',BASE_DIR)
 
 '''

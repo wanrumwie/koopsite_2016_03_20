@@ -3,15 +3,14 @@
 """
 
 import os
+from django.template import Library
 from koopsite.functions import get_user_full_name, \
                                 get_user_flat_No
-
 try:
     from PIL import Image
 except ImportError:
     print('ImportError: from PIL import Image')
     import Image
-from django.template import Library
 
 register = Library()
 
