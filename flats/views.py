@@ -59,35 +59,25 @@ def block_length(d):
 
 class FlatScheme(ListView):
     model = Flat
-    context_object_name = 'flat_scheme'
+    # context_object_name = 'flat_scheme'
     template_name = 'flats/flat_scheme.html'
 
     def get_context_data(self, **kwargs):
-        # kwargs['object_list'] = Flat.objects.all()
-        # kwargs['object_list'] = []
+        self.object_list = None
+        # інакше TestCase дає AttributeError:
+        # 'FlatScheme' object has no attribute 'object_list'
+        # Крім того при None в контекст не передається (двічі!)
+        # непотрібний тут список всіх об'єктів.
+        # Всі потрібні значення описані нижче:
         kwargs = super(FlatScheme, self).get_context_data(**kwargs)
-        self.object_list = Flat.objects.all()
         d, floors, entrances = block_scheme()
         l = block_length(d)
         kwargs['block_scheme'] = d
         kwargs['block_length'] = l
         kwargs['floors']       = floors
         kwargs['entrances']    = entrances
-        print_dict(kwargs, 'kwargs')
-        return super(FlatScheme, self).get_context_data(**kwargs)
-    # def get_context_data(self, **kwargs):
-    #     # kwargs['object_list'] = Flat.objects.all()
-    #     # kwargs['object_list'] = []
-    #     self.object_list = Flat.objects.all()
-    #     d, floors, entrances = block_scheme()
-    #     l = block_length(d)
-    #     kwargs['block_scheme'] = d
-    #     kwargs['block_length'] = l
-    #     kwargs['floors']       = floors
-    #     kwargs['entrances']    = entrances
-    #     print_dict(kwargs, 'kwargs')
-    #     return super(FlatScheme, self).get_context_data(**kwargs)
-
+        # print_dict(kwargs, 'kwargs')
+        return kwargs
 
 
 class AllFieldsView(ListView):
