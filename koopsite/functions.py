@@ -23,9 +23,13 @@ def trace_print(*args):
     if TRACE_CONDITION:
         print(*args)
 
-def print_list(name, list):
+def print_list(list, name=''):
     print(name, 'len =', len(list))
     for i in list: print(i)
+
+def print_dict(d, name=''):
+    print(name, 'len =', len(d))
+    for k,v in sorted(d.items()): print('%-20s : %s' % (k,v))
 
 
 def get_namespace_from_dict(d, ns, extend=False):

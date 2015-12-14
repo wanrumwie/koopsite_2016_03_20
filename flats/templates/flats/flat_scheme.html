@@ -3,38 +3,46 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
+    {% load koop_template_filters %}
+    {% load staticfiles %}
+
     <p id="page-name">Схема розташування квартир</p>
-        {{ floors }}<br> {{ entrances }}<br> {{ block_length }}<br>
     <table id="body-table"
         class="tabledetail tablescheme"  >
         <colgroup span="1"></colgroup>
-        <colgroup span="3"></colgroup>
-        <colgroup span="3"></colgroup>
-        <colgroup span="3"></colgroup>
-        <colgroup span="3"></colgroup>
-        <colgroup span="3"></colgroup>
-        <colgroup span="3"></colgroup>
+        {% for entr in entrances %}
+            <colgroup span="{{ block_length|get_item_by_key:entr }}"></colgroup>
+        {% endfor %}
         <tr>
             <th>Поверх</th>
-            {% for entr in entrance_list %}
-                <th colspan="3">{{ entr }}-й під'їзд</th>
+            {% for entr in entrances %}
+                <th colspan="{{ block_length|get_item_by_key:entr }}">{{ entr }}-й під'їзд</th>
             {% endfor %}
         </tr>
-        {% for floor in block_list %}
-            <tr>
-                <th>{{ forloop.revcounter0 }}</th>
-                {% for entr in floor %}
-                    {% for f in entr %}
-                        {% if f.id %}
-                            <td><a href="/flats/{{ f.id }}/">{{ f.flat_No }}</a></td>
-                        {% else %}
-                            <td></td>
-                        {% endif %}
+        {% for floor in floors reversed %}
+            {% with floor_blocks=block_scheme|get_item_by_key:floor %}
+                <tr>
+                    <th>{{ floor }}</th>
+                    {% for entr in entrances %}
+                        {% for i in block_length|get_item_by_key:entr|range_of %}
+                            {% with block=floor_blocks|get_item_by_key:entr %}
+                                {% if block%}
+                                    {% with f=block|get_at_index:i %}
+                                        {% if f.id %}
+                                            <td><a href="{% url 'flats:flat-detail' f.id %}">{{ f.flat_No }}</a></td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    <td></td>
+                                {% endif%}
+                            {% endwith %}
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            </tr>
+                </tr>
+            {% endwith %}
         {% endfor %}
-
     </table>
     Клацніть мишкою по номеру квартири, щоб побачити її характеристики
 {% endblock %}
@@ -46,5 +54,6 @@
 {% endblock %}
 
 {% comment %}
-                        <td><a href="{% url 'flats:flat-detail' f.id %}">{{ f.flat_No }}</a></td>
+    <td><a href="{% url 'flats:flat-detail' f.id %}">{{ f.flat_No }}</a></td>
+    <td><a href="/flats/{{ f.id }}/">{{ f.flat_No }}</a></td>
 {% endcomment %}

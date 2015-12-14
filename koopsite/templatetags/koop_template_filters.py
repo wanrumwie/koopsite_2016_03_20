@@ -20,6 +20,16 @@ def get_at_index(list, index):
     return list[index]
 
 @register.filter()
+def get_item_by_key(dictionary, key):
+    # Фільтр для отримання значення словника за його ключем
+    return dictionary.get(key)
+
+@register.filter()
+def range_of(n):
+    # Фільтр для отримання ітератора range(n) в шаблоні
+    return range(n)
+
+@register.filter()
 def model_name(f):
     # Фільтр для назви моделі
     m = f._meta.model_name
