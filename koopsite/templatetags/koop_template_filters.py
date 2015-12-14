@@ -17,17 +17,25 @@ register = Library()
 @register.filter()
 def get_at_index(list, index):
     # Фільтр для отримання елемента списку за його індексом
-    return list[index]
+    try:    val = list[index]
+    except: val = None
+    return val
 
 @register.filter()
 def get_item_by_key(dictionary, key):
     # Фільтр для отримання значення словника за його ключем
-    return dictionary.get(key)
+    try:    val = dictionary.get(key)
+    except: val = None
+    return val
 
 @register.filter()
 def range_of(n):
     # Фільтр для отримання ітератора range(n) в шаблоні
-    return range(n)
+    try:    val = range(n)
+    except: val = None
+    return val
+
+# TODO-доробити тести для всіх наступних фільтрів
 
 @register.filter()
 def model_name(f):

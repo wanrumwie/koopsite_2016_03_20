@@ -1,8 +1,9 @@
 import inspect
-from unittest.case import skip
+from unittest.case import skip, skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
-from functional_tests_koopsite.ft_base import add_user_cookie_to_browser, PageVisitTest
+from functional_tests_koopsite.ft_base import add_user_cookie_to_browser, PageVisitTest, wait_for_page_load
+from koopsite.settings import SKIP_TEST
 
 
 class FlatSchemePageVisitTest(PageVisitTest):
@@ -50,7 +51,8 @@ class FlatSchemePageVisitTest(PageVisitTest):
             {'ls':'#header-aside-2-navigation', 'lt': 'Авторизуватися'   , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
             ]
         return s
-'''
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -72,8 +74,9 @@ class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-'''
 
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -98,7 +101,7 @@ class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
         self.visitor_can_go_to_links()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-'''
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -117,8 +120,9 @@ class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-'''
-'''
+
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -138,12 +142,109 @@ class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
         # Користувач може перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         flat = Flat.objects.get(flat_No='52d')
-        link_parent_selector = 'body-table'
+        link_parent_selector = '#body-table'
         link_text            = flat.flat_No
-        url_name             = 'flat-detail'
-        kwargs               = flat.id
+        url_name             = 'flats:flat-detail'
+        kwargs               = {'pk': flat.id}
         expected_regex       = ""
         self.check_go_to_link(self.this_url, link_parent_selector, link_text,
             url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-'''
+
+
+class FlatSchemePageVisitorCanFindFlatTest(FlatSchemePageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    анонімним користувачем
+    і переходу за лінком, вказаним в таблиці даних
+    (параметри сторінки описані в суперкласі, тому не потребують переозначення)
+    Переозначуємо параметри користувача:
+    """
+    def setUp(self):
+        self.dummy_user = AnonymousUser()
+        self.create_dummy_building()
+        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк javascript:history.back()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_visitor_can_find_flat(self):
+        # Користувач може  перейти по лінку потрібні дані
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        for flat in Flat.objects.all():
+            link_parent_selector = '#body-table'
+            link_text            = flat.flat_No
+            url_name             = 'flats:flat-detail'
+            kwargs               = {'pk': flat.id}
+            expected_regex       = ""
+            self.check_go_to_link(self.this_url, link_parent_selector, link_text,
+                url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_flats_situated_properly(self):
+        # Квартири розташовані в таблиці коректно:
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        link_parent_selector = '#body-table'
+        floors = set()
+        entrances = set()
+        for flat in Flat.objects.all():
+            floors.add(flat.floor_No)
+            entrances.add(flat.entrance_No)
+        floors = sorted(floors, reverse=True)
+        entrances = sorted(entrances)
+        # Поверхи розташовані знизу вверх
+        yfact = []
+        ydict = {}
+        print('floors =', floors)
+        for floor in floors:
+            flat = Flat.objects.filter(floor_No=floor)[:1].get()
+            link_text      = flat.flat_No
+            location, size = self.get_link_location(link_parent_selector,
+                                                    link_text)
+            yc = location['y'] + size['height']/2
+            yfact.append(yc)
+            ydict[floor] = yc
+        # yfact -  список y координат у порядку ЗМЕНШЕННЯ поверха
+        # y має зростати. Перевіряємо:
+        self.assertListEqual(yfact, sorted(yfact))
+
+        # Під'їзди розташовані зліва направо
+        xfact = []
+        xdict = {}
+        for entr in entrances:
+            flat = Flat.objects.filter(entrance_No=entr)[:1].get()
+            link_text      = flat.flat_No
+            location, size = self.get_link_location(link_parent_selector,
+                                                    link_text)
+            xc = location['x'] + size['width']/2
+            xfact.append(xc)
+            xdict[entr] = xc
+        # xfact -  список y координат у порядку ЗБІЛЬШЕННЯ номера під'їзду
+        # x має зростати. Перевіряємо:
+        self.assertListEqual(xfact, sorted(xfact))
+
+        # Всі квартири на одному поверсі мають однаковий Y
+        for flat in Flat.objects.all():
+            floor = flat.floor_No
+            link_text      = flat.flat_No
+            location, size = self.get_link_location(link_parent_selector,
+                                                    link_text)
+            yc = location['y'] + size['height']/2
+            # Порівнюємо з ydict[floor] - попередньо визначені координати поверхів
+            self.assertAlmostEqual(yc, ydict[floor])
+
+        # Всі перші на поверсі квартири в одному під'їзді мають однаковий X
+        xentr = {}
+        for flat in Flat.objects.all():
+            entr = flat.entrance_No
+            link_text      = flat.flat_No
+            location, size = self.get_link_location(link_parent_selector,
+                                                    link_text)
+            xc = location['x'] + size['width']/2
+            if entr in xentr: xentr[entr] = min(xentr[entr], xc)
+            else: xentr[entr] = xc
+
+        # Порівнюємо з xdict[entr] - попередньо визначені координати під'їздів
+        for entr in entrances:
+            self.assertAlmostEqual(xentr[entr], xdict[entr])
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))

@@ -22,7 +22,7 @@ def block_scheme():
     floors - сортований список поверхів;
     entrances - сортований список під'їздів
     """
-    # ПовГотуємо порожні словники і списки до заповнення:
+    # Готуємо порожні словники і списки до заповнення:
     entrances = set()
     floors = set()
     d = {}
@@ -37,8 +37,7 @@ def block_scheme():
         d[f][e].append(flat)  # кожну квартиру вміщуємо у свій блок
         floors.add(f)
         entrances.add(e)
-    floors = sorted(floors)
-    # floors = reversed(floors)
+    floors = sorted(floors, reverse=True)
     entrances = sorted(entrances)
     # print(d)
     # print(floors)
@@ -63,9 +62,11 @@ class FlatScheme(ListView):
     template_name = 'flats/flat_scheme.html'
 
     def get_context_data(self, **kwargs):
+        # self.object_list = Flat.objects.all()
         self.object_list = None
+        # Створюємо атрибут класу self.object_list
         # інакше TestCase дає AttributeError:
-        # 'FlatScheme' object has no attribute 'object_list'
+        #   'FlatScheme' object has no attribute 'object_list'
         # Крім того при None в контекст не передається (двічі!)
         # непотрібний тут список всіх об'єктів.
         # Всі потрібні значення описані нижче:

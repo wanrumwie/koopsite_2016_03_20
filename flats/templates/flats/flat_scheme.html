@@ -19,7 +19,7 @@
                 <th colspan="{{ block_length|get_item_by_key:entr }}">{{ entr }}-й під'їзд</th>
             {% endfor %}
         </tr>
-        {% for floor in floors reversed %}
+        {% for floor in floors %}
             {% with floor_blocks=block_scheme|get_item_by_key:floor %}
                 <tr>
                     <th>{{ floor }}</th>

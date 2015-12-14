@@ -9,10 +9,39 @@ from django.core.urlresolvers import reverse
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
+import time
 from flats.models import Flat
 from folders.models import Folder
 from koopsite.functions import trace_print, print_list
 from koopsite.models import UserProfile
+
+
+def wait_for(condition_function):
+    start_time = time.time()
+    while time.time() < start_time + 3:
+        if condition_function():
+            return True
+        else:
+            time.sleep(0.1)
+    raise Exception(
+        'Timeout waiting for {}'.format(condition_function.__name__)
+    )
+
+
+class wait_for_page_load(object):
+
+    def __init__(self, browser):
+        self.browser = browser
+
+    def __enter__(self):
+        self.old_page = self.browser.find_element_by_tag_name('html')
+
+    def page_has_loaded(self):
+        new_page = self.browser.find_element_by_tag_name('html')
+        return new_page.id != self.old_page.id
+
+    def __exit__(self, *_):
+        wait_for(self.page_has_loaded)
 
 
 class FunctionalTest(StaticLiveServerTestCase): # працює з окремою спеціально
@@ -24,7 +53,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
     @classmethod
     def setUpClass(cls):
         cls.browser = webdriver.Firefox()
-        cls.browser.implicitly_wait(5)
+        cls.browser.implicitly_wait(20)
         cls.browser.set_window_position(250, 0)
         for arg in sys.argv:
             if 'liveserver' in arg:
@@ -45,7 +74,6 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
 
     def tearDown(self):
         pass
-        self.browser.implicitly_wait(10)
         # self.browser.implicitly_wait(10)
         # self.browser.refresh()
         # self.browser.quit()
@@ -96,6 +124,15 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # print('passing_url =', passing_url)
         # print('expected_regex =', expected_regex)
         self.assertRegex(passing_url, expected_regex)
+
+    def get_link_location(self, link_parent_selector, link_text):
+        parent = self.browser.find_element_by_css_selector(
+                                                link_parent_selector)
+        href = parent.find_element_by_link_text(link_text)
+        location = href.location
+        size = href.size
+        return location, size
+
 
 def create_user_session(user):
     # Then create the authenticated session using the new user credentials
@@ -178,6 +215,18 @@ class DummyData():
         flat.save()
         print('created flat:', flat)
         return flat
+
+    def create_dummy_building(self, floors=(0,1,2,), entrances=(1,2,3,)):
+        for f in floors:
+            for e in entrances:
+                for i in range(f+e):
+                    no = f*100 + e*10 + i+1
+                    flat_No = str(no)
+                    # створюємо квартиру:
+                    flat = Flat(flat_No=flat_No, floor_No=f,
+                                entrance_No=e, flat_99=no)
+                    flat.save()
+        print('created building')
 
     def create_dummy_folder(self):
         # Створення в базі додаткових даних, потрібних для конкретного класу тестів

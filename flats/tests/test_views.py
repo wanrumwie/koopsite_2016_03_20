@@ -5,6 +5,9 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from flats.models import Flat
 from flats.views import FlatScheme
+import flats.views
+from functional_tests_koopsite.ft_base import DummyData
+from koopsite.functions import print_dict
 from koopsite.views import index
 
 def setup_view(view, request, *args, **kwargs):
@@ -71,7 +74,7 @@ class FlatSchemeTest(TestCase):
         flat2.save()
         flat3 = Flat(floor_No=2, entrance_No=2)
         flat3.save()
-        floors=[1,2]
+        floors=[2,1]
         entrances=[1,2]
         block_scheme = {1: {1: [flat1]}, 2: {2: [flat2, flat3]}}
         # {0: {1: [flat, ], 2: [flat, ]}, 1: {1: [flat, ], 2: [flat, ]},}
@@ -90,6 +93,32 @@ class FlatSchemeTest(TestCase):
         # Check.
         self.assertEqual(context['block_scheme'], block_scheme)
         self.assertEqual(context['block_length'], block_length)
+        self.assertEqual(context['floors']      , floors)
+        self.assertEqual(context['entrances']   , entrances)
+
+    def test_context_data_3(self):
+        """FlatScheme.get_context_data() sets proper values in context."""
+        # Імітуємо будинок з кількох квартир:
+        floors=(1,2)
+        entrances=(1,2)
+        DummyData().create_dummy_building(floors=floors, entrances=entrances)
+        d, floors, entrances = flats.views.block_scheme()
+        l = flats.views.block_length(d)
+        kwargs = {}
+        kwargs['block_scheme'] = d
+        kwargs['block_length'] = l
+        kwargs['floors']       = floors
+        kwargs['entrances']    = entrances
+        # print_dict(kwargs, 'kwargs')
+        # Setup request and view.
+        request = RequestFactory().get('/flats/scheme/')
+        view = FlatScheme()
+        view = setup_view(view, request, kwargs)
+        # Run.
+        context = view.get_context_data()
+        # Check.
+        self.assertEqual(context['block_scheme'], d)
+        self.assertEqual(context['block_length'], l)
         self.assertEqual(context['floors']      , floors)
         self.assertEqual(context['entrances']   , entrances)
 

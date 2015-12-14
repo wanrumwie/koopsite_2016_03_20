@@ -156,9 +156,15 @@ if DEBUG:
 else:
     SITE_ID = 1
 
+# ---------------------------------------------------------------
+# Власні глобальні параметри для етапу розробки:
 # Умова, при якій друкує trace_print(*args) з koopsite.functions
 # TRACE_CONDITION = True
 TRACE_CONDITION = False
+
+# Умова для декоратора @unittest.skipIf()
+SKIP_TEST = True
+
 
 # print('BASE_DIR=',BASE_DIR)
 
