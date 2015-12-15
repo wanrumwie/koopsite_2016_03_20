@@ -11,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.template import Template
 from django.template.loader import get_template, render_to_string
 from django.utils.decorators import method_decorator
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
@@ -611,12 +612,13 @@ def page_not_ready(request):
     else:
         return render(request, template_name, {})
 
-def qunit_page(request):
-    template_name = 'js_tests/js_tests.html'
-    # template_name = os.path.join(BASE_DIR, "static/koopsite", "js_tests", "js_tests.html")
-    if request.method == 'POST':
-        pass
-    else:
-        return render(request, template_name, {})
+# def qunit_page(request):
+#     template_name = 'js_tests/js_tests.html'
+    template_name = os.path.join(BASE_DIR, "static/koopsite", "js_tests", "js_tests.html")
+    # if request.method == 'POST':
+    #     pass
+    # else:
+    #     return render(request, template_name, {})
 
-
+# class SeleniumCookieSetupView(TemplateView):
+#     template_name = 'selenium_cookie_page.html'

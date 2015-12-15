@@ -65,18 +65,27 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
     @classmethod
     def tearDownClass(cls):
         # cls.browser.refresh()
-        # cls.browser.quit()
         if cls.server_url == cls.live_server_url:
             super().tearDownClass()
+        cls.browser.quit()
 
-    def setUp(self):
-        pass
+    # def setUp(self):
+    #     pass
 
     def tearDown(self):
-        pass
-        # self.browser.implicitly_wait(10)
-        # self.browser.refresh()
-        # self.browser.quit()
+        super().tearDown()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def add_user_cookie_to_browser(self, user, url=None):
+        session = create_user_session(user)
+        cookie = create_cookie(session)
+        # visit some url in your domain to setup Selenium.
+        if not url: url = '/selenium-cookie-setup/'
+        self.browser.get('%s%s' % (self.server_url, url))
+        # add the newly created session cookie to selenium webdriver.
+        self.browser.add_cookie(cookie)
+        # refresh to exchange cookies with the server.
+        self.browser.refresh()
 
     def eval_condition(self, condition, user):
         # перевірка умови, заданої стрічкою
@@ -107,8 +116,16 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         """
         self.browser.get('%s%s' % (self.server_url, this_url))
         # print(link_parent_selector, link_text, expected_regex)
-        parent = self.browser.find_element_by_css_selector(
-                                                link_parent_selector)
+        #
+        # TODO-виловити помилку при очікуванні на сторінку "Документи" головної сторінки.
+        # Помилка виникає часом. 
+        # Trace:
+        # selenium.common.exceptions.UnexpectedAlertPresentException: Alert Text: xhrErrorAlert:
+        #  xhr.status=0
+        #  xhr.statusText=error
+        #  xhr.responseText={"server_response": {"selRowIndex": 0, "model": null, "id": null}}
+        #
+        parent = self.browser.find_element_by_css_selector(link_parent_selector)
         href = parent.find_element_by_link_text(link_text)
         actions = ActionChains(self.browser)
         actions.move_to_element(href)
@@ -153,26 +170,6 @@ def create_cookie(session):
     }
     return cookie
 
-def add_cookie_to_browser(cookie, browser, server_url, url=None):
-    # visit some url in your domain to setup Selenium.
-    # (404 pages load the quickest)
-    if url: browser.get('%s%s' % (server_url, url))
-    else:   browser.get('%s%s' % (server_url, '/404-non-existent/'))
-
-    # add the newly created session cookie to selenium webdriver.
-    browser.add_cookie(cookie)
-
-    # refresh to exchange cookies with the server.
-    browser.refresh()
-
-    # This time user should present as logged in.
-    # self.browser.get('your-url')
-
-def add_user_cookie_to_browser(user, browser, server_url, url=None):
-    session = create_user_session(user)
-    cookie = create_cookie(session)
-    add_cookie_to_browser(cookie, browser, server_url, url)
-
 
 class DummyUser():
     def create_dummy_user(self,
@@ -213,7 +210,7 @@ class DummyData():
         flat = Flat(flat_No=flat_No, floor_No=floor_No,
                     entrance_No=entrance_No, flat_99=flat_99)
         flat.save()
-        print('created flat:', flat)
+        # print('created flat:', flat)
         return flat
 
     def create_dummy_building(self, floors=(0,1,2,), entrances=(1,2,3,)):
@@ -226,22 +223,21 @@ class DummyData():
                     flat = Flat(flat_No=flat_No, floor_No=f,
                                 entrance_No=e, flat_99=no)
                     flat.save()
-        print('created building')
+        # print('created building')
 
     def create_dummy_folder(self):
         # Створення в базі додаткових даних, потрібних для конкретного класу тестів
         # створюємо теку з id=1 для folders/1/contents/:
         folder = Folder(name="dummy_root_folder", id=1)
         folder.save()
-        print('created folder:', folder)
+        # print('created folder:', folder)
         return folder
 
 
 class PageVisitTest(DummyUser, DummyData, FunctionalTest):
     """
     Допоміжний клас для функціональних тестів.
-    Описані тут параметри - для перевірки головної сторінки сайту
-    аутентифікованим користувачем.
+    Описані тут параметри - для перевірки головної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування інших сторінок.
     """
@@ -249,12 +245,6 @@ class PageVisitTest(DummyUser, DummyData, FunctionalTest):
     page_title  = 'Пасічний'
     page_name   = 'Головна сторінка'
     data_links_number = 0   # кількість лінків, які приходять в шаблон з даними
-
-    def setUp(self):
-        self.dummy_user = self.create_dummy_user()
-        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url)
-        self.create_dummy_folder()
-        self.data_links_number = 0   # кількість лінків, які приходять в шаблон з даними
 
     def can_visit_page(self):
         # Користувач може відвідати головну сторінку сайта
@@ -295,7 +285,6 @@ class PageVisitTest(DummyUser, DummyData, FunctionalTest):
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'            , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
             {'ls':'#header-aside-2-navigation', 'lt': 'Авторизуватися'   , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
             ]
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         return s
 
     def visitor_can_go_to_links(self):

@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url, static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic.base import TemplateView
 from openpyxl.compat.strings import basestring
-from koopsite.views import UserPermsActivateUpdate, OwnProfileDetailShow, UserProfileDetailShow, qunit_page
+from koopsite.views import UserPermsActivateUpdate, \
+                    OwnProfileDetailShow, \
+                    UserProfileDetailShow
 from koopsite.viewsajaxuser import UsersTable, AjaxRecognizeAccount, \
                     AjaxDenyAccount, AjaxActivateAccount, \
                     AjaxDeactivateAccount, AjaxDeleteAccount, \
@@ -88,6 +91,11 @@ urlpatterns = [
 
     # /admin/ - під'єднання до вбудованого admin
     url(r'^admin/',     include(admin.site.urls)),
+
+    # FT - порожня сторінка, щоб задати кукі перед аутентифікацією при тестах
+    url(r'^selenium-cookie-setup/$',
+        TemplateView.as_view(template_name='selenium_cookie_page.html'),
+                                        name='selenium-cookie-setup'),
 
 ]
 urlpatterns += static.static(MEDIA_URL, document_root=MEDIA_ROOT)

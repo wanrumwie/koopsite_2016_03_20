@@ -2,28 +2,20 @@ import inspect
 from unittest.case import skip, skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
-from functional_tests_koopsite.ft_base import add_user_cookie_to_browser, PageVisitTest, wait_for_page_load
+from functional_tests_koopsite.ft_base import PageVisitTest, wait_for_page_load
 from koopsite.settings import SKIP_TEST
 
 
 class FlatSchemePageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
-    Описані тут параметри - для перевірки одної сторінки сайту
-    аутентифікованим користувачем.
+    Описані тут параметри - для перевірки одної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування цієї сторінки з іншими користувачами.
     """
     this_url    = '/flats/scheme/'
     page_title  = 'Пасічний'
     page_name   = 'Схема розташування квартир'
-
-    def setUp(self):
-        self.dummy_user = self.create_dummy_user()
-        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url)
-        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 1 # лінк javascript:history.back()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -57,9 +49,15 @@ class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
-    (такі параметри користувача і сторінки
-    описані в суперкласі, тому не потребують переозначення)
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
     """
+    def setUp(self):
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк javascript:history.back()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
@@ -81,12 +79,11 @@ class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем з номером квартири)
-    (параметри сторінки описані в суперкласі, тому не потребують переозначення)
-    Переозначуємо параметри користувача:
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
     """
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
-        add_user_cookie_to_browser(self.dummy_user, self.browser, self.server_url, "/flats/scheme/")
+        self.add_user_cookie_to_browser(self.dummy_user)
         # self.create_dummy_folder()
         profile = self.create_dummy_profile(user=self.dummy_user)
         flat = self.create_dummy_flat()
@@ -106,8 +103,7 @@ class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
-    (параметри сторінки описані в суперкласі, тому не потребують переозначення)
-    Переозначуємо параметри користувача:
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
@@ -128,8 +124,7 @@ class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
     Тест відвідання сторінки сайту
     анонімним користувачем
     і переходу за лінком, вказаним в таблиці даних
-    (параметри сторінки описані в суперкласі, тому не потребують переозначення)
-    Переозначуємо параметри користувача:
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
@@ -156,9 +151,8 @@ class FlatSchemePageVisitorCanFindFlatTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
-    і переходу за лінком, вказаним в таблиці даних
-    (параметри сторінки описані в суперкласі, тому не потребують переозначення)
-    Переозначуємо параметри користувача:
+    Чи всі дані правильно відображені?
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()

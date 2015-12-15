@@ -129,6 +129,13 @@ class UsersTable(ListView):
         else:
             # вперше відвідуємо цю таблицю
             sel_model_id = {}
+        # TODO-використати цей фрагмент для новостворених словників/ключів
+        # if self.session_id is not None:
+        #     if not params:
+        #         params = {'sessionId': self.session_id}
+        #     elif 'sessionId' not in params:
+        #         params['sessionId'] = self.session_id
+
         # Готуємо 2D-масив всіх даних таблиці
         # Одночасно шукаємо порядковий номер виділеного рядка
         bta = UsersTableArray()

@@ -163,7 +163,8 @@ else:
 TRACE_CONDITION = False
 
 # Умова для декоратора @unittest.skipIf()
-SKIP_TEST = True
+# SKIP_TEST = True
+SKIP_TEST = False
 
 
 # print('BASE_DIR=',BASE_DIR)
