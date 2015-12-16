@@ -133,7 +133,6 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         elif href_itself:
             href = parent.find_element_by_xpath("//a[contains(@href,'%s')]" % href_itself)
         # a[href*="w3schools"]
-        print('href =', href)
 
         actions = ActionChains(self.browser)
         actions.move_to_element(href)

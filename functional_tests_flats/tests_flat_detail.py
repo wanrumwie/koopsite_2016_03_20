@@ -27,12 +27,7 @@ class FlatDetailPageVisitTest(PageVisitTest):
         # Ключі словників скорочені до 2-х літер: ls lt er un kw
         # плюс cd - condition для перевірки видимості лінка (буде аргументом ф-ції eval() ).
         # Спочатку визначаються деякі параметри:
-        try:    username = user.username
-        except: username = ""
-        try:    flat_id = user.userprofile.flat.id
-        except: flat_id = ""
-        try:    flat_No = user.userprofile.flat.flat_No
-        except: flat_No = ""
+        username, flat_id, flat_No = self.get_user_name_flat(user)
         s = [
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка' , 'un': 'index'},
             {'ls':'#body-navigation'          , 'lt': 'Схема розташування квартир', 'un': 'flats:flat-scheme'},
@@ -142,7 +137,7 @@ class FlatDetailPageAnonymousVisitorTest(FlatDetailPageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageDataTest(FlatDetailPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -207,12 +202,7 @@ class FlatDetail_h_PageVisitTest(PageVisitTest):
         # Ключі словників скорочені до 2-х літер: ls lt er un kw
         # плюс cd - condition для перевірки видимості лінка (буде аргументом ф-ції eval() ).
         # Спочатку визначаються деякі параметри:
-        try:    username = user.username
-        except: username = ""
-        try:    flat_id = user.userprofile.flat.id
-        except: flat_id = ""
-        try:    flat_No = user.userprofile.flat.flat_No
-        except: flat_No = ""
+        username, flat_id, flat_No = self.get_user_name_flat(user)
         s = [
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка' , 'un': 'index'},
             {'ls':'#body-navigation'          , 'lt': 'Схема розташування квартир', 'un': 'flats:flat-scheme'},
@@ -239,8 +229,9 @@ class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        flat = self.create_dummy_flat(flat_No='1')
-        self.get_data_links_number()
+        self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк "В одну колонку"
+        self.data_links_number += 1 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
@@ -248,13 +239,15 @@ class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
         self.can_visit_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
+    @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
-        for flat in Flat.objects.all():
-            print('flat:', flat.id, flat.flat_No, flat.flat_99)
+        # for flat in Flat.objects.all():
+        #     print('flat:', flat.id, flat.flat_No, flat.flat_99)
         self.layout_and_styling_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
+    @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()

@@ -1,3 +1,4 @@
+from unittest.case import skip
 from django.views.generic import ListView, DetailView
 from django.views.generic.list import BaseListView
 from koopsite.functions import trace_print, print_list, print_dict
@@ -137,11 +138,17 @@ class AllFieldsView(ListView):
         return s
 
     def get(self, request, *args, **kwargs):
+        print('kwargs =', kwargs)
         self.id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
+        print('self.id =', self.id)
+        print('self.model =', self.model)
+        a = self.model.objects.all()
+        print('a =', a)
+        self.obj = self.model.objects.get(id=self.id)
+        print('self.obj =',self.obj)
         return super(AllFieldsView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        self.obj = self.model.objects.get(id=self.id)
         obj_details = self.get_label_value_list(self.obj)
         return obj_details
 
@@ -170,7 +177,8 @@ class FlatDetail(AllFieldsView):
 
 class FlatDetailHorizontal(FlatDetail):
     template_name = 'flats/flat_detail_h.html'
-    per_page = 0
+    paginate_by = 0
+    url_name='flat-detail-h'
 
 
 class FlatTable(AllRecordDetailView):

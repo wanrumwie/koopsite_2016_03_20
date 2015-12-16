@@ -5,13 +5,10 @@ from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import RequestFactory
 from flats.models import Flat, Person
-from flats.views import FlatScheme, FlatDetail, AllFieldsView
+from flats.views import FlatScheme, FlatDetail, AllFieldsView, FlatDetailHorizontal
 import flats.views
-from folders.models import Folder
-from folders.views import FolderDetail
 from functional_tests_koopsite.ft_base import DummyData
 from koopsite.functions import print_dict, print_list
-from koopsite.views import index
 
 def setup_view(view, request, *args, **kwargs):
     """
@@ -24,10 +21,13 @@ def setup_view(view, request, *args, **kwargs):
     view.kwargs = kwargs
     return view
 
+
+@skip
 class FlatSchemeTest(TestCase):
+    TView = FlatScheme
 
     def test_flat_scheme_model(self):
-        view = FlatScheme()
+        view = self.TView()
         self.assertEqual(view.model, Flat)
 
     def test_flat_scheme_page_renders_proper_template(self):
@@ -35,14 +35,14 @@ class FlatSchemeTest(TestCase):
         self.assertTemplateUsed(response, 'flats/flat_scheme.html')
 
     def test_get(self):
-        """FlatScheme.get() gives response.status_code == 200 """
+        """TView.get() gives response.status_code == 200 """
         request = RequestFactory().get('/flats/scheme/')
-        view = FlatScheme.as_view()
+        view = self.TView.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
     def test_context_data(self):
-        """FlatScheme.get_context_data() sets proper values in context."""
+        """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з одної квартири:
         floors=[0]
         entrances=[1]
@@ -58,7 +58,7 @@ class FlatSchemeTest(TestCase):
         kwargs['entrances']    = entrances
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
-        view = FlatScheme()
+        view = self.TView()
         view = setup_view(view, request, kwargs)
         # Run.
         context = view.get_context_data()
@@ -69,7 +69,7 @@ class FlatSchemeTest(TestCase):
         self.assertEqual(context['entrances']   , entrances)
 
     def test_context_data_2(self):
-        """FlatScheme.get_context_data() sets proper values in context."""
+        """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з кількох квартир:
         flat1 = Flat(floor_No=1, entrance_No=1)
         flat1.save()
@@ -89,7 +89,7 @@ class FlatSchemeTest(TestCase):
         kwargs['entrances']    = entrances
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
-        view = FlatScheme()
+        view = self.TView()
         view = setup_view(view, request, kwargs)
         # Run.
         context = view.get_context_data()
@@ -100,7 +100,7 @@ class FlatSchemeTest(TestCase):
         self.assertEqual(context['entrances']   , entrances)
 
     def test_context_data_3(self):
-        """FlatScheme.get_context_data() sets proper values in context."""
+        """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з кількох квартир:
         floors=(1,2)
         entrances=(1,2)
@@ -115,7 +115,7 @@ class FlatSchemeTest(TestCase):
         # print_dict(kwargs, 'kwargs')
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
-        view = FlatScheme()
+        view = self.TView()
         view = setup_view(view, request, kwargs)
         # Run.
         context = view.get_context_data()
@@ -126,6 +126,7 @@ class FlatSchemeTest(TestCase):
         self.assertEqual(context['entrances']   , entrances)
 
 
+# @skip
 class AllFieldsViewTest(TestCase):
     # Тестуємо клас, базовий для, напр., FlatDetail
 
@@ -179,13 +180,12 @@ class AllFieldsViewTest(TestCase):
         self.assertEqual(view.val_repr(0), "")
         self.assertEqual(view.val_repr("qwe"), "qwe")
 
-    def test_get_label_value_list(self):
+    def test_get_label_value_list_gives_unordered__dict__based__list(self):
+        # Має вийти несортований список [(n, v),...], де n - obj.__dict__
         flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
         flat.save()
         view = AllFieldsView()
         view.obj = flat
-
-        # Має вийти несортований список [(n, v),...], де n - obj.__dict__
         view.keylist = []
         view.namedict = []
         expected_obj_details = [
@@ -198,9 +198,14 @@ class AllFieldsViewTest(TestCase):
         for expected in expected_obj_details:
             self.assertIn(expected, obj_details)
 
+    def test_get_label_value_list_gives_ordered_fieldList_based_list(self):
         # Має вийти список [(n, v),...], сортований так як keylist - спеціально описаний в моделі
+        flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
+        flat.save()
+        view = AllFieldsView()
+        view.obj = flat
         view.keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
-        # view.namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
+        view.namedict = []
         expected_obj_details = [
             ('flat_No', '5'),
             ('entrance_No', 2),
@@ -210,15 +215,23 @@ class AllFieldsViewTest(TestCase):
         for expected in expected_obj_details:
             self.assertIn(expected, obj_details)
         # id не входить до списку keylist
-        self.assertNotEquals(('id', 5), obj_details)
+        self.assertNotIn(('id', 5), obj_details)
         # перевірка сортування
-        self.assertEquals(expected_obj_details[0], obj_details[0])
-        self.assertEquals(expected_obj_details[1], obj_details[3])
-        self.assertEquals(expected_obj_details[2], obj_details[4])
+        self.assertEquals(obj_details[0], expected_obj_details[0])
+        self.assertEquals(obj_details[3], expected_obj_details[1])
+        self.assertEquals(obj_details[4], expected_obj_details[2])
+        # перевірка довжини списку
+        self.assertEquals(len(obj_details), 23)
 
+    def test_get_label_value_list_gives_ordered_fieldList_namedict_based_list(self):
         # Має вийти список [(n, v),...], сортований так як keylist - спеціально описаний в моделі
         # з укр.назвами полів з словника namedict, описаного в моделі
         # view.keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
+        flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
+        flat.save()
+        view = AllFieldsView()
+        view.obj = flat
+        view.keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
         view.namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
         expected_obj_details = [
             ('Квартира №', '5'),
@@ -229,19 +242,21 @@ class AllFieldsViewTest(TestCase):
         for expected in expected_obj_details:
             self.assertIn(expected, obj_details)
         # id не входить до списку keylist
-        self.assertNotEquals(('id', 5), obj_details)
+        self.assertNotIn(('id', 5), obj_details)
         # перевірка сортування
-        self.assertEquals(expected_obj_details[0], obj_details[0])
-        self.assertEquals(expected_obj_details[1], obj_details[3])
-        self.assertEquals(expected_obj_details[2], obj_details[4])
-        self.assertEquals(expected_obj_details[2], obj_details[4])
-
+        self.assertEquals(obj_details[0], expected_obj_details[0])
+        self.assertEquals(obj_details[3], expected_obj_details[1])
+        self.assertEquals(obj_details[4], expected_obj_details[2])
+        self.assertEquals(obj_details[4], expected_obj_details[2])
+        # перевірка довжини списку
+        self.assertEquals(len(obj_details), 23)
 
     # TODO-використати flat._meta.fields.name і ...verbose_name
     #     print('flat._meta.fields =', flat._meta.fields)
     #     for f in flat._meta.fields:
     #         print('-'*20)
     #         print_dict(f.__dict__, name=f.name)
+
 
     def test_get_queryset(self):
         flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
@@ -264,19 +279,11 @@ class AllFieldsViewTest(TestCase):
         for expected in expected_obj_details:
             self.assertIn(expected, obj_details)
 
-    '''
-        request = RequestFactory().get('/flats/scheme/')
-        view = FlatScheme()
-        view = setup_view(view, request, kwargs)
-        # Run.
-        context = view.get_context_data()
-
-    '''
-
     def test_get(self):
         flat = Flat(id=5)
         flat.save()
         request = RequestFactory().get('/flats/5/')
+        print('request =', request.GET)
         kwargs = {'pk': 5}
         view = AllFieldsView()
         view = setup_view(view, request, **kwargs)
@@ -300,17 +307,20 @@ class AllFieldsViewTest(TestCase):
         print_dict(context, 'context')
         self.assertEqual(context['CON'], flat)
 
-
+@skip
 class FlatDetailTest(TestCase):
+    TView = FlatDetail
 
+    @skip
     def test_flat_detail_model_and_attributes(self):
-        view = FlatDetail()
-        self.assertEqual(view.model,    Flat)
-        self.assertEqual(view.per_page, 12)
-        self.assertEqual(view.keylist , Flat.fieldsList)
-        self.assertEqual(view.namedict, Flat.mdbFields)
+        view = self.TView()
+        self.assertEqual(view.model,        Flat)
+        self.assertEqual(view.paginate_by,  12)
+        self.assertEqual(view.keylist ,     Flat.fieldsList)
+        self.assertEqual(view.namedict,     Flat.mdbFields)
         self.assertEqual(view.context_obj_name, 'flat')
 
+    @skip
     def test_flat_detail_page_renders_proper_template(self):
         flat = Flat(id=5, flat_No='5')
         flat.save()
@@ -318,10 +328,40 @@ class FlatDetailTest(TestCase):
         self.assertTemplateUsed(response, 'flats/flat_detail.html')
 
     def test_get(self):
-        """FlatDetail.get() gives response.status_code == 200 """
+        """TView.get() gives response.status_code == 200 """
         flat = Flat(id=5)
         flat.save()
         request = RequestFactory().get('/flats/5/')
-        view = FlatScheme.as_view()
+        print('request =', request.GET)
+        view = self.TView.as_view()
+        response = view(request)
+        self.assertEqual(response.status_code, 200)
+
+
+@skip
+class FlatDetailHorizontalTest(TestCase):
+
+    def test_flat_detail_h_model_and_attributes(self):
+        view = FlatDetailHorizontal()
+        self.assertEqual(view.paginate_by,  0)
+        # inherited from FlatDetail:
+        self.assertEqual(view.model,        Flat)
+        self.assertEqual(view.keylist ,     Flat.fieldsList)
+        self.assertEqual(view.namedict,     Flat.mdbFields)
+        self.assertEqual(view.context_obj_name, 'flat')
+
+    def test_flat_detail_h_page_renders_proper_template(self):
+        flat = Flat(id=5, flat_No='5')
+        flat.save()
+        response = self.client.get('/flats/5/h/')
+        self.assertTemplateUsed(response, 'flats/flat_detail_h.html')
+
+    @skip
+    def test_get(self):
+        """FlatDetailHorizontal.get() gives response.status_code == 200 """
+        flat = Flat(id=5)
+        flat.save()
+        request = RequestFactory().get('/flats/5/h')
+        view = FlatDetailHorizontal.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 200)

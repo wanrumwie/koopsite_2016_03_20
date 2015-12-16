@@ -24,12 +24,7 @@ class FlatSchemePageVisitTest(PageVisitTest):
         # Ключі словників скорочені до 2-х літер: ls lt er un kw
         # плюс cd - condition для перевірки видимості лінка (буде аргументом ф-ції eval() ).
         # Спочатку визначаються деякі параметри:
-        try:    username = user.username
-        except: username = ""
-        try:    flat_id = user.userprofile.flat.id
-        except: flat_id = ""
-        try:    flat_No = user.userprofile.flat.flat_No
-        except: flat_No = ""
+        username, flat_id, flat_No = self.get_user_name_flat(user)
         s = [
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка' , 'un': 'index'},
             # {'ls':'#body-navigation'          , 'lt': 'Схема розташування квартир', 'un': 'flats:flat-scheme'},#########
