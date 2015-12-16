@@ -1,6 +1,7 @@
 from unittest.case import skip
 from django.views.generic import ListView, DetailView
-from django.views.generic.list import BaseListView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import BaseListView, MultipleObjectMixin
 from koopsite.functions import trace_print, print_list, print_dict
 from koopsite.views import AllDetailView
 from koopsite.views import AllRecordDetailView
@@ -83,7 +84,8 @@ class FlatScheme(ListView):
         return kwargs
 
 
-class AllFieldsView(ListView):
+# class AllFieldsView(SingleObjectMixin, ListView):
+class AllFieldsView(MultipleObjectMixin, DetailView):
     # CBV для виводу всіх полів одного запису моделі
     keylist = []            # Список полів, які буде виведено.
                             # Якщо пустий, то список полів буде __dict__
@@ -114,11 +116,11 @@ class AllFieldsView(ListView):
 
     def get_label_value_list(self, obj):
         obj_details = []
-        keylist = self.keylist or self.obj.__dict__
+        keylist = self.keylist or self.object.__dict__
         for k in keylist:
             try:    n = self.namedict[k]
             except: n = k
-            v = getattr(self.obj,k)
+            v = getattr(self.object,k)
             v = self.val_repr(v, 2)
             obj_details.append((n, v))
         return obj_details
@@ -137,28 +139,32 @@ class AllFieldsView(ListView):
             s = None
         return s
 
-    def get(self, request, *args, **kwargs):
-        print('kwargs =', kwargs)
-        self.id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
-        print('self.id =', self.id)
-        print('self.model =', self.model)
-        a = self.model.objects.all()
-        print('a =', a)
-        self.obj = self.model.objects.get(id=self.id)
-        print('self.obj =',self.obj)
-        return super(AllFieldsView, self).get(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     print('kwargs =', kwargs)
+    #     self.id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
+    #     print('self.id =', self.id)
+    #     print('self.model =', self.model)
+    #     a = self.model.objects.all()
+    #     print('a =', a)
+    #     self.obj = self.model.objects.get(id=self.id)
+    #     print('self.obj =',self.obj)
+    #     return super(AllFieldsView, self).get(request, *args, **kwargs)
 
-    def get_queryset(self):
-        obj_details = self.get_label_value_list(self.obj)
-        return obj_details
+    # def get_queryset(self):
+    #     self.object = self.model.objects.get(id=self.)
+    #     obj_details = self.get_label_value_list(self.object)
+    #     return obj_details
 
     def get_context_data(self, **kwargs):
         # print('get_context_data: self.object_list =', self.object_list)
         # print('get_context_data: self.obj =', self.obj)
         # print('get_context_data: self.obj =', self.obj.__dict__)
+        self.object_list = self.get_label_value_list(self.object)
         context = super(AllFieldsView, self).get_context_data(**kwargs)
-        context_obj_name = self.get_context_obj_name(self.obj)
-        context[context_obj_name]  = self.obj
+        context_obj_name = self.get_context_obj_name(self.object)
+        # context[context_obj_name]  = self.object
+        # context[context_obj_name]  = obj_details
+        context[context_obj_name]  = self.object_list
         # print('context :------------------------')
         # print_dict(context, 'contenxt')
         return context
@@ -171,14 +177,18 @@ class FlatDetail(AllFieldsView):
     paginate_by = 12
     keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
     namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
-    url_name='flat-detail'
+    # url_name='flat-detail'
     context_obj_name    = 'flat' # назва об'єкта, що йде в шаблон
 
 
-class FlatDetailHorizontal(FlatDetail):
+class FlatDetailHorizontal(AllFieldsView):
+    model = Flat
     template_name = 'flats/flat_detail_h.html'
     paginate_by = 0
-    url_name='flat-detail-h'
+    keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
+    namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
+    # url_name='flat-detail-h'
+    context_obj_name    = 'flat' # назва об'єкта, що йде в шаблон
 
 
 class FlatTable(AllRecordDetailView):
