@@ -1,4 +1,5 @@
 from django.views.generic import ListView, DetailView
+from django.views.generic.list import BaseListView
 from koopsite.functions import trace_print, print_list, print_dict
 from koopsite.views import AllDetailView
 from koopsite.views import AllRecordDetailView
@@ -97,9 +98,29 @@ class AllFieldsView(ListView):
     # template_name = 'folders/report_detail.html'
     # per_page = 12
 
-    context_object_name = 'obj_details' # назва queryset, що йде в шаблон
+    context_obj_name    = 'obj'         # назва об'єкта, чиї деталі йдуть в шаблон
+    context_object_name = 'obj_details' # назва списку, що йде в шаблон
                                         # {% for k, v in obj_details %}
-    context_obj_name    = 'obj'         # назва об'єкта, що йде в шаблон
+
+    def val_repr(self, v, decimal=2):
+        """
+        Заокруглює число. Для нуля повертає "".
+        """
+        try:    v = round(v, decimal)
+        except: pass
+        if v == 0: v = ""
+        return v
+
+    def get_label_value_list(self, obj):
+        obj_details = []
+        keylist = self.keylist or self.obj.__dict__
+        for k in keylist:
+            try:    n = self.namedict[k]
+            except: n = k
+            v = getattr(self.obj,k)
+            v = self.val_repr(v, 2)
+            obj_details.append((n, v))
+        return obj_details
 
     def get_context_obj_name(self, obj):
         """
@@ -109,7 +130,7 @@ class AllFieldsView(ListView):
         if self.context_obj_name:
             s = self.context_obj_name
         elif self.model:
-            try: s =  obj._meta.model_name
+            try:    s =  obj._meta.model_name
             except: s = None
         else:
             s = None
@@ -121,27 +142,18 @@ class AllFieldsView(ListView):
 
     def get_queryset(self):
         self.obj = self.model.objects.get(id=self.id)
-        obj_details = []
-        keylist = self.keylist or self.obj.__dict__
-        for k in keylist:
-            try:    n = self.namedict[k]
-            except: n = k
-            v = getattr(self.obj,k)
-            if self.valfunction:
-                try:    v = self.valfunction(v, *self.fargs, **self.fkwargs)
-                        # Замість v = round(v,2) або v = round(v,ndigits=2)
-                except: pass
-            if v == 0: v = ""
-            obj_details.append((n, v))
+        obj_details = self.get_label_value_list(self.obj)
         return obj_details
 
     def get_context_data(self, **kwargs):
+        # print('get_context_data: self.object_list =', self.object_list)
+        # print('get_context_data: self.obj =', self.obj)
+        # print('get_context_data: self.obj =', self.obj.__dict__)
         context = super(AllFieldsView, self).get_context_data(**kwargs)
         context_obj_name = self.get_context_obj_name(self.obj)
         context[context_obj_name]  = self.obj
-        trace_print('context :------------------------')
-        for k,v in context.items():
-            trace_print('%20s : %s' % (k, v))
+        # print('context :------------------------')
+        # print_dict(context, 'contenxt')
         return context
 
 
@@ -149,22 +161,13 @@ class AllFieldsView(ListView):
 class FlatDetail(AllFieldsView):
     model = Flat
     template_name = 'flats/flat_detail.html'
-    per_page = 12
+    paginate_by = 12
     keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
     namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
     url_name='flat-detail'
     context_obj_name    = 'flat' # назва об'єкта, що йде в шаблон
 
 
-# class FlatDetail(AllDetailView):
-#     model = Flat
-#     template_name = 'flats/flat_detail.html'
-#     per_page = 12
-#     keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
-#     namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
-#     url_name='flat-detail'
-#
-#
 class FlatDetailHorizontal(FlatDetail):
     template_name = 'flats/flat_detail_h.html'
     per_page = 0

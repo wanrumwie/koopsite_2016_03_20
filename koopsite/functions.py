@@ -4,6 +4,7 @@ import json
 from urllib.parse import unquote
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
+from math import ceil
 from koopsite.fileExtIconPath import iconPath
 from koopsite.settings import EMAIL_HOST_USER, TRACE_CONDITION
 
@@ -31,6 +32,14 @@ def print_dict(d, name=''):
     print(name, 'len =', len(d))
     for k,v in sorted(d.items()): print('%-20s : %s' % (k,v))
 
+def round_up_division(a, b):
+    """
+    :param a: чисельник
+    :param b: знаменник
+    :return: частка, заокруглена до більшого цілого
+    """
+    r = ceil(float(a)/b)
+    return r
 
 def get_namespace_from_dict(d, ns, extend=False):
     """

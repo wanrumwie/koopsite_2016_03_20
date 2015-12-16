@@ -100,7 +100,8 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         return c
 
     def check_go_to_link(self, this_url, link_parent_selector, link_text,
-                        url_name=None, kwargs=None, expected_regex=None):
+                        url_name=None, kwargs=None, expected_regex=None,
+                        partial=False, href_itself=None):
         """
         Допоміжна функція для функц.тесту. Викликається в циклі for
         для кожного лінка на сторінці.
@@ -118,7 +119,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # print(link_parent_selector, link_text, expected_regex)
         #
         # TODO-виловити помилку при очікуванні на сторінку "Документи" головної сторінки.
-        # Помилка виникає часом. 
+        # Помилка виникає часом.
         # Trace:
         # selenium.common.exceptions.UnexpectedAlertPresentException: Alert Text: xhrErrorAlert:
         #  xhr.status=0
@@ -126,7 +127,14 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         #  xhr.responseText={"server_response": {"selRowIndex": 0, "model": null, "id": null}}
         #
         parent = self.browser.find_element_by_css_selector(link_parent_selector)
-        href = parent.find_element_by_link_text(link_text)
+        if link_text:
+            if partial: href = parent.find_element_by_partial_link_text(link_text)
+            else:       href = parent.find_element_by_link_text(link_text)
+        elif href_itself:
+            href = parent.find_element_by_xpath("//a[contains(@href,'%s')]" % href_itself)
+        # a[href*="w3schools"]
+        print('href =', href)
+
         actions = ActionChains(self.browser)
         actions.move_to_element(href)
         actions.click(href)
@@ -204,10 +212,10 @@ class DummyUser():
 
 class DummyData():
     # Створення в базі додаткових даних, потрібних для конкретного класу тестів
-    def create_dummy_flat(self, flat_No="25а", floor_No=2,
+    def create_dummy_flat(self, id=1, flat_No="25а", floor_No=2,
                                 entrance_No=3, flat_99=25):
         # створюємо квартиру:
-        flat = Flat(flat_No=flat_No, floor_No=floor_No,
+        flat = Flat(id=id, flat_No=flat_No, floor_No=floor_No,
                     entrance_No=entrance_No, flat_99=flat_99)
         flat.save()
         # print('created flat:', flat)
@@ -255,6 +263,15 @@ class PageVisitTest(DummyUser, DummyData, FunctionalTest):
         header_text = self.browser.find_element_by_id('page-name').text
         self.assertIn(self.page_name, header_text)
 
+    def get_user_name_flat(self, user):
+        try:    username = user.username
+        except: username = ""
+        try:    flat_id = user.userprofile.flat.id
+        except: flat_id = ""
+        try:    flat_No = user.userprofile.flat.flat_No
+        except: flat_No = ""
+        return username, flat_id, flat_No
+
     def links_in_template(self, user):
         # Перелік лінків, важливих для сторінки.
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -263,12 +280,7 @@ class PageVisitTest(DummyUser, DummyData, FunctionalTest):
         # Ключі словників скорочені до 2-х літер: ls lt er un kw
         # плюс cd - condition для перевірки видимості лінка (буде аргументом ф-ції eval() ).
         # Спочатку визначаються деякі параметри:
-        try:    username = user.username
-        except: username = ""
-        try:    flat_id = user.userprofile.flat.id
-        except: flat_id = ""
-        try:    flat_No = user.userprofile.flat.flat_No
-        except: flat_No = ""
+        username, flat_id, flat_No = self.get_user_name_flat(user)
         s = [
             {'ls':'#body-aside-1-navigation'  , 'lt': 'Увійти'           , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
             {'ls':'#body-aside-1-navigation'  , 'lt': 'Зареєструватися'  , 'un': 'register'    , 'cd': "not user.is_authenticated()"},

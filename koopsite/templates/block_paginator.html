@@ -1,6 +1,7 @@
 {% block paginator %}
     {% if paginator.num_pages > 1 %}
-        <ul class="navigation-small justify-content-center" >
+        <ul id="paginator"
+            class="navigation-small justify-content-center" >
             {% if page_obj.has_previous %}
                 {% if page_obj.previous_page_number != 1 %}
                     <li><a href="{{ url_prefix|default:'?page=' }}1">&Lt;</a></li>
@@ -17,7 +18,5 @@
                 {% endif %}
             {% endif %}
         </ul>
-        url_prefix={{ url_prefix }}<br>
-        url_prefix|default={{ url_prefix|default:'?page=' }}
     {% endif %}
 {% endblock %}

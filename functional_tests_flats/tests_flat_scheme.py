@@ -44,7 +44,7 @@ class FlatSchemePageVisitTest(PageVisitTest):
             ]
         return s
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -74,7 +74,7 @@ class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -98,7 +98,7 @@ class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
         self.visitor_can_go_to_links()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -118,7 +118,7 @@ class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -147,6 +147,7 @@ class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageVisitorCanFindFlatTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту

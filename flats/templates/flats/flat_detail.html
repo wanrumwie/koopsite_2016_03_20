@@ -3,8 +3,9 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <p>Характеристика квартири № {{ flat.flat_No }}</p>
-    <table class="tabledetail">
+    <p id="page-name">Характеристика квартири № {{ flat.flat_No }}</p>
+    <table id="body-table"
+        class="tabledetail">
         <tr>
             <th>Параметр</th>
             <th>Значення</th>
@@ -19,7 +20,8 @@
 {% endblock %}
 
 {% block under-paginator %}
-    <ul class="navigation-small buttons-y align-items-center" >
+    <ul id="under-paginator"
+        class="navigation-small buttons-y align-items-center" >
         <li>
             <p><a href="{% url 'flats:flat-detail-h' flat.pk %}">В один рядок</a></p>
         </li>
