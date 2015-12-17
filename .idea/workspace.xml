@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flats/templates/flats/flat_detail.html" afterPath="$PROJECT_DIR$/flats/templates/flats/flat_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flats/templates/flats/flat_detail_h.html" afterPath="$PROJECT_DIR$/flats/templates/flats/flat_detail_h.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flats/models.py" afterPath="$PROJECT_DIR$/flats/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flats/tests/test_views.py" afterPath="$PROJECT_DIR$/flats/tests/test_views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flats/views.py" afterPath="$PROJECT_DIR$/flats/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -29,11 +30,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="models.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/flats/models.py">
+      <file leaf-file-name="flat_detail_h.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/flats/templates/flats/flat_detail_h.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.27204782" vertical-offset="0" max-vertical-offset="5824">
-              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="962">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -58,7 +59,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/koopsite/templates/koop_own_prof_update.html" />
         <option value="$PROJECT_DIR$/koopsite/templates/koop_success.html" />
         <option value="$PROJECT_DIR$/koopsite/templates/koop_user_prof_create.html" />
         <option value="$PROJECT_DIR$/koopsite/templates/koop_user_prof_detail.html" />
@@ -105,10 +105,11 @@
         <option value="$PROJECT_DIR$/koopsite/settings.py" />
         <option value="$PROJECT_DIR$/functional_tests_koopsite/ft_base.py" />
         <option value="$PROJECT_DIR$/functional_tests_flats/tests_flat_detail.py" />
-        <option value="$PROJECT_DIR$/flats/tests/test_views.py" />
         <option value="$PROJECT_DIR$/flats/templates/flats/flat_detail.html" />
         <option value="$PROJECT_DIR$/flats/templates/flats/flat_detail_h.html" />
+        <option value="$PROJECT_DIR$/flats/models.py" />
         <option value="$PROJECT_DIR$/flats/views.py" />
+        <option value="$PROJECT_DIR$/flats/tests/test_views.py" />
       </list>
     </option>
   </component>
@@ -454,7 +455,7 @@
       <recent name="C:\PyPrograms\Django\koopsite\static\js_tests\lists" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.manage-test-UT-flats">
+  <component name="RunManager" selected="Python.manage-2-migrate">
     <configuration default="false" name="manage-test-FT-koopsite" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -527,7 +528,7 @@
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
-    <configuration default="false" name="manageform" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="manage-2-migrate" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -539,7 +540,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="koopsite" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manageform.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage-2-migrate.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -709,15 +710,15 @@
       <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-flats" />
       <item index="4" class="java.lang.String" itemvalue="Python.manage-test-UT-koopsite" />
       <item index="5" class="java.lang.String" itemvalue="Python.manage-test-UT-flats" />
-      <item index="6" class="java.lang.String" itemvalue="Python.manageform" />
+      <item index="6" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.manage-test-UT-flats" />
-        <item index="1" class="java.lang.String" itemvalue="Python.manage-test-FT-flats" />
-        <item index="2" class="java.lang.String" itemvalue="Python.manage-test-UT-koopsite" />
-        <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-koopsite" />
-        <item index="4" class="java.lang.String" itemvalue="Python.manageform" />
+        <item index="1" class="java.lang.String" itemvalue="Python.manage-2-migrate" />
+        <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT-flats" />
+        <item index="3" class="java.lang.String" itemvalue="Python.manage-test-UT-koopsite" />
+        <item index="4" class="java.lang.String" itemvalue="Python.manage-test-FT-koopsite" />
       </list>
     </recent_temporary>
   </component>
@@ -934,7 +935,11 @@
       <created>1450295659298</created>
       <updated>1450295659299</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="KoopSite: Працює AllFieldsView(MultipleObjectMixin, DetailView).">
+      <created>1450346310670</created>
+      <updated>1450346310670</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -961,6 +966,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5488722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -969,13 +975,12 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.431918" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5431918" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -996,7 +1001,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Lists: Use get_absolute_url on List model to DRY urls in views&#10;" />
     <MESSAGE value="Lists: new form for list items&#10;" />
     <MESSAGE value="Lists: use new form in home_page, simplify tests. NB breaks stuff&#10;" />
     <MESSAGE value="Lists: use form in all views, back to working state&#10;" />
@@ -1021,7 +1025,8 @@
     <MESSAGE value="KoopSite: FT упорядкував пари setUp і tearDown для методів і класів ==&gt; зникла помилка WinError 10053!" />
     <MESSAGE value="KoopSite: UT for AllFieldsView + FT for FlatDetail" />
     <MESSAGE value="KoopSite: Принципово змінив AllFieldsView(MultipleObjectMixin, DetailView). Працює, але в контексті треба розібратися з іменем flat. І, очевидно, що UT треба буде переробити" />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite: Принципово змінив AllFieldsView(MultipleObjectMixin, DetailView). Працює, але в контексті треба розібратися з іменем flat. І, очевидно, що UT треба буде переробити" />
+    <MESSAGE value="KoopSite: Працює AllFieldsView(MultipleObjectMixin, DetailView)." />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite: Працює AllFieldsView(MultipleObjectMixin, DetailView)." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1046,27 +1051,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.041467305" vertical-offset="1534" max-vertical-offset="5486">
-          <caret line="60" column="82" selection-start-line="60" selection-start-column="82" selection-end-line="60" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python34/Lib/unittest/case.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.038863976" vertical-offset="1820" max-vertical-offset="36218">
-          <caret line="84" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/koopsite/tests/test_template_filters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5926893" vertical-offset="683" max-vertical-offset="1144">
-          <caret line="38" column="47" selection-start-line="35" selection-start-column="47" selection-end-line="35" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/koopsite/templatetags/koop_template_filters.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.78918916" vertical-offset="592" max-vertical-offset="2860">
@@ -1178,6 +1162,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="30212" max-vertical-offset="32240">
           <caret line="1208" column="8" selection-start-line="1162" selection-start-column="8" selection-end-line="1162" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1185,6 +1170,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8327974" vertical-offset="16407" max-vertical-offset="23894">
           <caret line="654" column="0" selection-start-line="641" selection-start-column="0" selection-end-line="641" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1227,6 +1213,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8056801" vertical-offset="2529" max-vertical-offset="15756">
           <caret line="142" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1341,6 +1328,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334" vertical-offset="2949" max-vertical-offset="7410">
           <caret line="126" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1348,6 +1336,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8804598" vertical-offset="7703" max-vertical-offset="45604">
           <caret line="333" column="0" selection-start-line="311" selection-start-column="0" selection-end-line="311" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1374,14 +1363,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/flats/templates/flats/flat_detail_h.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39156628" vertical-offset="0" max-vertical-offset="962">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/flats/templates/flats/flat_detail.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0873494" vertical-offset="283" max-vertical-offset="910">
@@ -1390,26 +1371,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/flats/tests/test_views.py">
+    <entry file="file://$PROJECT_DIR$/flats/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.922272" vertical-offset="5831" max-vertical-offset="9438">
-          <caret line="258" column="0" selection-start-line="244" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.038863976" vertical-offset="1222" max-vertical-offset="5824">
+          <caret line="49" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/koopsite/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46636772" vertical-offset="5200" max-vertical-offset="8268">
+          <caret line="212" column="32" selection-start-line="212" selection-start-column="32" selection-end-line="212" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/koopsite/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8005865" vertical-offset="2392" max-vertical-offset="3094">
+          <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python34/Lib/site-packages/Django-1.8.2-py3.4.egg/django/forms/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.038863976" vertical-offset="9828" max-vertical-offset="34060">
+          <caret line="399" column="0" selection-start-line="379" selection-start-column="0" selection-end-line="379" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/flats/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44245142" vertical-offset="3058" max-vertical-offset="4940">
-          <caret line="136" column="58" selection-start-line="129" selection-start-column="58" selection-end-line="129" selection-end-column="58" />
+        <state vertical-scroll-proportion="1.2214766" vertical-offset="3536" max-vertical-offset="4602">
+          <caret line="157" column="31" selection-start-line="143" selection-start-column="14" selection-end-line="143" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/flats/models.py">
+    <entry file="file://$PROJECT_DIR$/flats/tests/test_views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27204782" vertical-offset="0" max-vertical-offset="5824">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        <state vertical-scroll-proportion="2.1814816" vertical-offset="5781" max-vertical-offset="6526">
+          <caret line="255" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/flats/templates/flats/flat_detail_h.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="962">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

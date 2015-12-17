@@ -99,15 +99,16 @@ class AllFieldsView(MultipleObjectMixin, DetailView):
     дописавши в нього щось на зразок context['flat'] = self.object
     та/або context['flat_details'] = self.object_list .
     """
-    exclude = ['id',]   # Поля, які виключаються із списку виводу.
-    keylist = []        # Список полів, які буде виведено.
+    fields  = ()        # Поля, які будуть виведені. Якщо порожній, то всі.
+    exclude = ('id',)   # Поля, які виключаються із списку виводу.
+    # keylist = []        # Список полів, які буде виведено.
                         # Якщо пустий, то список полів буде __dict__
-    namedict = {}       # Словник укр.назв полів, які буде виведено.
+    # namedict = {}       # Словник укр.назв полів, які буде виведено.
                         # Якщо пустий, то назви будуть взяті з keylist
-    valfunction = round # Функція обробки значення поля (напр. round)
-    fargs = (2,)        # список аргументів функції f(v, *fargs)
-    fkwargs = {}        # словник аргументів функції f(v, **fkwargs)
-    url_name = ''       # параметр name в url(), який є основним для
+    # valfunction = round # Функція обробки значення поля (напр. round)
+    # fargs = (2,)        # список аргументів функції f(v, *fargs)
+    # fkwargs = {}        # словник аргументів функції f(v, **fkwargs)
+    # url_name = ''       # параметр name в url(), який є основним для
                         # даного DetailView (ще без сторінок)
     # Наступні змінні будуть визначені в наслідуваному класі, наприклад:
     # model = Report
@@ -123,46 +124,30 @@ class AllFieldsView(MultipleObjectMixin, DetailView):
         if v == 0: v = ""
         return v
 
-    #     print('flat._meta.fields =', flat._meta.fields)
-    #     for f in flat._meta.fields:
-    #         print('-'*20)
-    #         print_dict(f.__dict__, name=f.name)
     def get_label_value_list(self, obj):
-        print('flat._meta.fields =', obj._meta.fields)
         keys = []
-        for f in obj._meta.fields:
-            k = f.name
-            if k not in self.exclude: keys.append(k)
-            print(k)
-            # print('%-20s %s' % (f.name, f.verbose_name))
+        if self.fields:
+            for k in self.fields:
+                f = obj._meta.get_field(k)
+                n = f.verbose_name
+                if k not in self.exclude: keys.append((k, n))
+        else:
+            for f in obj._meta.fields:
+                k = f.name
+                n = f.verbose_name
+                if k not in self.exclude: keys.append((k, n))
         obj_details = []
-        # keylist = [f.name for f in self.object._meta.fields]
-        # keylist = self.keylist #or keylist
-        keylist = keys
-        for k in keylist:
-            try:    n = self.namedict[k]
-            except: n = k
+        for k, n in keys:
             v = getattr(self.object,k)
             v = self.val_repr(v, 2)
             obj_details.append((n, v))
         return obj_details
 
-    # def get_label_value_list(self, obj):
-    #     obj_details = []
-    #     keylist = self.keylist or self.object.__dict__
-    #     for k in keylist:
-    #         try:    n = self.namedict[k]
-    #         except: n = k
-    #         v = getattr(self.object,k)
-    #         v = self.val_repr(v, 2)
-    #         obj_details.append((n, v))
-    #     return obj_details
-
     def get_context_data(self, **kwargs):
         self.object_list = self.get_label_value_list(self.object)
         context = super(AllFieldsView, self).get_context_data(**kwargs)
-        print('context :------------------------')
-        print_dict(context, 'contenxt')
+        # print('context :------------------------')
+        # print_dict(context, 'contenxt')
         return context
 
 
@@ -170,16 +155,18 @@ class FlatDetail(AllFieldsView):
     model = Flat
     template_name = 'flats/flat_detail.html'
     paginate_by = 12
-    keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
-    namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
+    exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
+    # keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
+    # namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
 
 
 class FlatDetailHorizontal(AllFieldsView):
     model = Flat
     template_name = 'flats/flat_detail_h.html'
     paginate_by = 0
-    keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
-    namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
+    exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
+    # keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
+    # namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
 
 
 class FlatTable(AllRecordDetailView):
