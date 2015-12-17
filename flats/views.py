@@ -84,26 +84,35 @@ class FlatScheme(ListView):
         return kwargs
 
 
-# class AllFieldsView(SingleObjectMixin, ListView):
 class AllFieldsView(MultipleObjectMixin, DetailView):
-    # CBV для виводу всіх полів одного запису моделі
-    keylist = []            # Список полів, які буде виведено.
-                            # Якщо пустий, то список полів буде __dict__
-    namedict = {}           # Словник укр.назв полів, які буде виведено.
-                            # Якщо пустий, то назви будуть взяті з keylist
-    valfunction = round     # Функція обробки значення поля (напр. round)
-    fargs = (2,)            # список аргументів функції f(v, *fargs)
-    fkwargs = {}            # словник аргументів функції f(v, **fkwargs)
-    url_name = ''           # параметр name в url(), який є основним для
-                            # даного DetailView (ще без сторінок)
-    # Наступні змінні будуть визначені в наслідуваному класі:
+    """
+    Базовий CBV для відображення ВСІХ полів одного запису моделі.
+    Успадкування від DetailView дозволяє отримати pk з url_conf
+    і сам об'єкт, який передасться у складі контексту у шаблон
+    під іменем object .
+    Успадкування від MultipleObjectMixin дозволяє використати
+    розбиття на сторінки списку. Сам список object_list формується
+    методом get_label_value_list(self, obj) і охоплює всі поля моделі
+    у заданому порядку.
+    При необхідності змінити імена об'єкта і списку його деталей
+    потрібно переозначити метод get_context_data(self, **kwargs),
+    дописавши в нього щось на зразок context['flat'] = self.object
+    та/або context['flat_details'] = self.object_list .
+    """
+    exclude = ['id',]   # Поля, які виключаються із списку виводу.
+    keylist = []        # Список полів, які буде виведено.
+                        # Якщо пустий, то список полів буде __dict__
+    namedict = {}       # Словник укр.назв полів, які буде виведено.
+                        # Якщо пустий, то назви будуть взяті з keylist
+    valfunction = round # Функція обробки значення поля (напр. round)
+    fargs = (2,)        # список аргументів функції f(v, *fargs)
+    fkwargs = {}        # словник аргументів функції f(v, **fkwargs)
+    url_name = ''       # параметр name в url(), який є основним для
+                        # даного DetailView (ще без сторінок)
+    # Наступні змінні будуть визначені в наслідуваному класі, наприклад:
     # model = Report
-    # template_name = 'folders/report_detail.html'
     # per_page = 12
-
-    context_obj_name    = 'obj'         # назва об'єкта, чиї деталі йдуть в шаблон
-    context_object_name = 'obj_details' # назва списку, що йде в шаблон
-                                        # {% for k, v in obj_details %}
+    # template_name = 'folders/report_detail.html'
 
     def val_repr(self, v, decimal=2):
         """
@@ -114,9 +123,22 @@ class AllFieldsView(MultipleObjectMixin, DetailView):
         if v == 0: v = ""
         return v
 
+    #     print('flat._meta.fields =', flat._meta.fields)
+    #     for f in flat._meta.fields:
+    #         print('-'*20)
+    #         print_dict(f.__dict__, name=f.name)
     def get_label_value_list(self, obj):
+        print('flat._meta.fields =', obj._meta.fields)
+        keys = []
+        for f in obj._meta.fields:
+            k = f.name
+            if k not in self.exclude: keys.append(k)
+            print(k)
+            # print('%-20s %s' % (f.name, f.verbose_name))
         obj_details = []
-        keylist = self.keylist or self.object.__dict__
+        # keylist = [f.name for f in self.object._meta.fields]
+        # keylist = self.keylist #or keylist
+        keylist = keys
         for k in keylist:
             try:    n = self.namedict[k]
             except: n = k
@@ -125,50 +147,23 @@ class AllFieldsView(MultipleObjectMixin, DetailView):
             obj_details.append((n, v))
         return obj_details
 
-    def get_context_obj_name(self, obj):
-        """
-        Дає назву obj, чиї поля зібрані в queryset.
-        Функція зроблена за аналогією до get_context_object_name з ListView
-        """
-        if self.context_obj_name:
-            s = self.context_obj_name
-        elif self.model:
-            try:    s =  obj._meta.model_name
-            except: s = None
-        else:
-            s = None
-        return s
-
-    # def get(self, request, *args, **kwargs):
-    #     print('kwargs =', kwargs)
-    #     self.id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
-    #     print('self.id =', self.id)
-    #     print('self.model =', self.model)
-    #     a = self.model.objects.all()
-    #     print('a =', a)
-    #     self.obj = self.model.objects.get(id=self.id)
-    #     print('self.obj =',self.obj)
-    #     return super(AllFieldsView, self).get(request, *args, **kwargs)
-
-    # def get_queryset(self):
-    #     self.object = self.model.objects.get(id=self.)
-    #     obj_details = self.get_label_value_list(self.object)
+    # def get_label_value_list(self, obj):
+    #     obj_details = []
+    #     keylist = self.keylist or self.object.__dict__
+    #     for k in keylist:
+    #         try:    n = self.namedict[k]
+    #         except: n = k
+    #         v = getattr(self.object,k)
+    #         v = self.val_repr(v, 2)
+    #         obj_details.append((n, v))
     #     return obj_details
 
     def get_context_data(self, **kwargs):
-        # print('get_context_data: self.object_list =', self.object_list)
-        # print('get_context_data: self.obj =', self.obj)
-        # print('get_context_data: self.obj =', self.obj.__dict__)
         self.object_list = self.get_label_value_list(self.object)
         context = super(AllFieldsView, self).get_context_data(**kwargs)
-        context_obj_name = self.get_context_obj_name(self.object)
-        # context[context_obj_name]  = self.object
-        # context[context_obj_name]  = obj_details
-        context[context_obj_name]  = self.object_list
-        # print('context :------------------------')
-        # print_dict(context, 'contenxt')
+        print('context :------------------------')
+        print_dict(context, 'contenxt')
         return context
-
 
 
 class FlatDetail(AllFieldsView):
@@ -177,8 +172,6 @@ class FlatDetail(AllFieldsView):
     paginate_by = 12
     keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
     namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
-    # url_name='flat-detail'
-    context_obj_name    = 'flat' # назва об'єкта, що йде в шаблон
 
 
 class FlatDetailHorizontal(AllFieldsView):
@@ -187,8 +180,6 @@ class FlatDetailHorizontal(AllFieldsView):
     paginate_by = 0
     keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
     namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
-    # url_name='flat-detail-h'
-    context_obj_name    = 'flat' # назва об'єкта, що йде в шаблон
 
 
 class FlatTable(AllRecordDetailView):

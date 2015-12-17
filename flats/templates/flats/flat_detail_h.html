@@ -3,17 +3,16 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-        QWERTY
-    <p id="page-name">Характеристика квартири № {{ flat.flat_No }}</p>
+    <p id="page-name">Характеристика квартири № {{ object.flat_No }}</p>
     <table id="body-table"
         class="tabledetail max-width-4em">
         <tr>
-            {% for k, v in obj_details %}
+            {% for k, v in object_list %}
                 <th>{{ k }}</th>
             {% endfor %}
         </tr>
         <tr>
-            {% for k, v in obj_details %}
+            {% for k, v in object_list %}
                 <td>{{ v }}</td>
             {% endfor %}
         </tr>
@@ -26,7 +25,7 @@
 {% block under-paginator %}
     <ul class="navigation-small buttons-y align-items-center" >
         <li>
-            <p><a href="{% url 'flats:flat-detail' flat.pk %}">В одну колонку</a></p>
+            <p><a href="{% url 'flats:flat-detail' object.pk %}">В одну колонку</a></p>
         </li>
     </ul>
 {% endblock %}
