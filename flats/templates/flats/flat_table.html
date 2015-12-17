@@ -3,8 +3,9 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <p>Характеристика квартир</p>
-    <table class="tabledetail max-width-4em">
+    <p id="page-name">Характеристика квартир</p>
+    <table id="body-table"
+        class="tabledetail max-width-4em">
         <tr>
             {% for k in field_name %}
                 <th>{{ k }}</th>

@@ -2,7 +2,7 @@ import inspect
 from unittest.case import skip, skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
-from functional_tests_koopsite.ft_base import PageVisitTest, wait_for_page_load
+from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.settings import SKIP_TEST
 
 

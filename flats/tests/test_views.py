@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import RequestFactory
 from flats.models import Flat, Person
-from flats.views import FlatScheme, FlatDetail, AllFieldsView, FlatDetailHorizontal
+from flats.views import FlatScheme, FlatDetail, AllFieldsView, FlatDetailHorizontal, FlatList
 import flats.views
 from functional_tests_koopsite.ft_base import DummyData
 from koopsite.functions import print_dict, print_list
@@ -22,22 +22,21 @@ def setup_view(view, request, *args, **kwargs):
     return view
 
 
-@skip
+# @skip
 class FlatSchemeTest(TestCase):
     TView = FlatScheme
 
     def test_flat_scheme_model(self):
-        view = self.TView()
+        view = FlatScheme()
         self.assertEqual(view.model, Flat)
 
     def test_flat_scheme_page_renders_proper_template(self):
         response = self.client.get('/flats/scheme/')
         self.assertTemplateUsed(response, 'flats/flat_scheme.html')
 
-    def test_get(self):
-        """TView.get() gives response.status_code == 200 """
+    def test_flat_scheme_gives_response_status_code_200(self):
         request = RequestFactory().get('/flats/scheme/')
-        view = self.TView.as_view()
+        view = FlatScheme.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
@@ -58,7 +57,7 @@ class FlatSchemeTest(TestCase):
         kwargs['entrances']    = entrances
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
-        view = self.TView()
+        view = FlatScheme()
         view = setup_view(view, request, kwargs)
         # Run.
         context = view.get_context_data()
@@ -89,7 +88,7 @@ class FlatSchemeTest(TestCase):
         kwargs['entrances']    = entrances
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
-        view = self.TView()
+        view = FlatScheme()
         view = setup_view(view, request, kwargs)
         # Run.
         context = view.get_context_data()
@@ -115,7 +114,7 @@ class FlatSchemeTest(TestCase):
         # print_dict(kwargs, 'kwargs')
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
-        view = self.TView()
+        view = FlatScheme()
         view = setup_view(view, request, kwargs)
         # Run.
         context = view.get_context_data()
@@ -146,50 +145,70 @@ class AllFieldsViewTest(TestCase):
         self.assertEqual(view.val_repr(0), "")
         self.assertEqual(view.val_repr("qwe"), "qwe")
 
-    def test_get_label_value_list_gives_all_fields(self):
+    def test_get_field_keys_verbnames_gives_all_fields(self):
+        view = AllFieldsView()
+        view.model = Flat
+        view.fields = ()
+        view.exclude = ('id',)
+        key_list, verbname_list = view.get_field_keys_verbnames()
+        # Списки мають мати довжину == кількості полів у моделі Flat
+        self.assertEqual(len(key_list), 23)
+        self.assertEqual(len(verbname_list), 23)
+        # id не входить до списку
+        self.assertNotIn('id', key_list)
+        # Вибіркова перевірка:
+        self.assertEqual(key_list[0], "flat_No")
+        self.assertEqual(verbname_list[0], "Квартира №")
+        self.assertEqual(key_list[5], "room1_S")
+        self.assertEqual(verbname_list[5], "кімната")
+        self.assertEqual(key_list[22], "listing")
+        self.assertEqual(verbname_list[22], "Список")
+
+    def test_get_field_keys_verbnames_gives_some_fields(self):
+        view = AllFieldsView()
+        view.model = Flat
+        view.fields = ("flat_No", "room1_S", "listing")
+        view.exclude = ('id',)
+        key_list, verbname_list = view.get_field_keys_verbnames()
+        # Списки мають мати довжину == кількості полів у self.fields
+        self.assertEqual(len(key_list), 3)
+        self.assertEqual(len(verbname_list), 3)
+        # id не входить до списку
+        self.assertNotIn('id', key_list)
+        # Вибіркова перевірка:
+        self.assertEqual(key_list[0], "flat_No")
+        self.assertEqual(verbname_list[0], "Квартира №")
+        self.assertEqual(key_list[1], "room1_S")
+        self.assertEqual(verbname_list[1], "кімната")
+        self.assertEqual(key_list[2], "listing")
+        self.assertEqual(verbname_list[2], "Список")
+
+    def test_get_value_list_gives_proper_values(self):
+        view = AllFieldsView()
+        view.model = Flat
         flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
         flat.save()
-        view = AllFieldsView()
-        view.object = flat
-        expected_obj_details = [
-            ('Квартира №', '5'),
-            ("Під'їзд", 2),
-            ('Поверх', 1),
-            ]
-        obj_details = view.get_label_value_list(view.object)
-        for expected in expected_obj_details:
-            self.assertIn(expected, obj_details)
-        # id не входить до списку
-        self.assertNotIn(('id', 5), obj_details)
-        # перевірка сортування
-        self.assertEquals(obj_details[0], expected_obj_details[0])
-        self.assertEquals(obj_details[3], expected_obj_details[1])
-        self.assertEquals(obj_details[4], expected_obj_details[2])
-        self.assertEquals(obj_details[4], expected_obj_details[2])
-        # перевірка довжини списку
-        self.assertEquals(len(obj_details), 23)
+        key_list = ("flat_No", "floor_No", "entrance_No")
+        value_list = view.get_value_list(flat, key_list)
+        # Списки мають мати довжину
+        self.assertEqual(len(value_list), 3)
+        # Перевірка значень:
+        self.assertEqual(value_list[0], '5')
+        self.assertEqual(value_list[1], 1)
+        self.assertEqual(value_list[2], 2)
 
-    def test_get_label_value_list_gives_some_fields(self):
-        flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
-        flat.save()
+    def test_get_label_value_list_gives_list_of_tuples(self):
         view = AllFieldsView()
-        view.object = flat
-        view.fields = ('id', 'flat_No', 'floor_No')
-        expected_obj_details = [
-            ('Квартира №', '5'),
-            ('Поверх', 1),
-            ]
-        obj_details = view.get_label_value_list(view.object)
-        for expected in expected_obj_details:
-            self.assertIn(expected, obj_details)
-        # id не входить до списку
-        self.assertNotIn(('id', 5), obj_details)
-        # перевірка сортування
-        self.assertEquals(obj_details[0], expected_obj_details[0])
-        self.assertEquals(obj_details[1], expected_obj_details[1])
-        # перевірка довжини списку
-        self.assertEquals(len(obj_details), 2)
+        key_list = ("flat_No", "floor_No", "entrance_No")
+        value_list = ('1', 2, 3)
+        kv_list = view.get_label_value_list(key_list, value_list)
 
+        # Список має мати довжину:
+        self.assertEqual(len(kv_list), 3)
+        # Перевірка значень:
+        self.assertEqual(kv_list[0], ("flat_No", '1'))
+        self.assertEqual(kv_list[1], ("floor_No", 2))
+        self.assertEqual(kv_list[2], ("entrance_No", 3))
 
     def test_get_context_data(self):
         flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
@@ -207,6 +226,7 @@ class AllFieldsViewTest(TestCase):
             ]
         context = view.get_context_data()
         self.assertEqual(context['object_list'], expected_obj_details)
+
 
 class FlatDetailTest(TestCase):
 
@@ -251,5 +271,23 @@ class FlatDetailHorizontalTest(TestCase):
         request = RequestFactory().get('/flats/5/h/')
         view = FlatDetailHorizontal.as_view()
         response = view(request, pk=5)
+        self.assertEqual(response.status_code, 200)
+
+
+class FlatListTest(TestCase):
+
+    def test_flat_list_model_and_attributes(self):
+        view = FlatList()
+        self.assertEqual(view.model,                Flat)
+        self.assertEqual(view.context_object_name , 'flat_list')
+
+    def test_flat_list_page_renders_proper_template(self):
+        response = self.client.get('/flats/list/')
+        self.assertTemplateUsed(response, 'flats/flat_list.html')
+
+    def test_flat_list_gives_response_status_code_200(self):
+        request = RequestFactory().get('/flats/list/')
+        view = FlatList.as_view()
+        response = view(request)
         self.assertEqual(response.status_code, 200)
 

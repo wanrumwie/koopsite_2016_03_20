@@ -23,7 +23,8 @@
 {% endblock %}
 
 {% block under-paginator %}
-    <ul class="navigation-small buttons-y align-items-center" >
+    <ul id="under-paginator"
+        class="navigation-small buttons-y align-items-center" >
         <li>
             <p><a href="{% url 'flats:flat-detail' object.pk %}">В одну колонку</a></p>
         </li>

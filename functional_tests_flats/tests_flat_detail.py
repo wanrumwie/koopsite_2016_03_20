@@ -4,7 +4,7 @@ from unittest.case import skip, skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
 from flats.views import FlatDetail
-from functional_tests_koopsite.ft_base import PageVisitTest, wait_for_page_load
+from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.functions import round_up_division
 from koopsite.settings import SKIP_TEST
 
@@ -46,8 +46,7 @@ class FlatDetailPageVisitTest(PageVisitTest):
         # Повертає к-ть сторінок і к-ть лінків пейджінатора
         paginate_by = FlatDetail.paginate_by
         if paginate_by:
-            keylist = FlatDetail.keylist
-            num_pages = round_up_division(len(keylist), paginate_by)
+            num_pages = round_up_division(22, paginate_by)
             if   num_pages == 1: page_links_number = 0
             elif num_pages == 2: page_links_number = 1
             else: page_links_number = 2
@@ -85,8 +84,6 @@ class FlatDetailPageAuthenticatedVisitorTest(FlatDetailPageVisitTest):
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
-        for flat in Flat.objects.all():
-            print('flat:', flat.id, flat.flat_No, flat.flat_99)
         self.layout_and_styling_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -151,7 +148,7 @@ class FlatDetailPageDataTest(FlatDetailPageVisitTest):
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    def test_(self):
+    def test_data_links(self):
         # Користувач може перейти по лінку на горизонтальну таблицю
         # Таблиця має дві колонки і потрібну кількість рядків
         # Під таблицею є лінки пейджінатора
@@ -184,6 +181,7 @@ class FlatDetailPageDataTest(FlatDetailPageVisitTest):
 
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetail_h_PageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
@@ -219,7 +217,7 @@ class FlatDetail_h_PageVisitTest(PageVisitTest):
 
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -229,6 +227,7 @@ class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
+        flat = self.create_dummy_flat(flat_No='1')
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк "В одну колонку"
         self.data_links_number += 1 # лінк javascript:history.back()
@@ -239,17 +238,52 @@ class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
         self.can_visit_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    @skip
+    # @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
-        # for flat in Flat.objects.all():
-        #     print('flat:', flat.id, flat.flat_No, flat.flat_99)
         self.layout_and_styling_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    @skip
+    # @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+@skipIf(SKIP_TEST, "пропущено для економії часу")
+class FlatDetail_h_PageAnonymousVisitorTest(FlatDetail_h_PageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    анонімним користувачем
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        self.dummy_user = AnonymousUser()
+        self.create_dummy_flat(flat_No='1')
+        self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк "В одну колонку"
+        self.data_links_number += 1 # лінк javascript:history.back()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_visitor_can_go_to_links(self):
+        # Користувач може перейти по всіх лінках на сторінці
+        self.visitor_can_go_to_links()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_data_links(self):
+        # Користувач може перейти по лінку на горизонтальну таблицю
+        # Таблиця має два рядки і потрібну кількість колонок
+        # TODO-чи перевіряти як виглядає таблиця і які містить дані?
+
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        flat = Flat.objects.get(flat_No='1')
+        kwargs               = {'pk': flat.id}
+        link_parent_selector = '#under-paginator'
+        link_text            = "В одну колонку"
+        url_name             = 'flats:flat-detail'
+        expected_regex       = ""
+        self.check_go_to_link(self.this_url, link_parent_selector, link_text,
+            kwargs=kwargs, url_name=url_name, expected_regex=expected_regex)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 

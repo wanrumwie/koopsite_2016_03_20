@@ -97,7 +97,8 @@ li  {
     text-align:         left;
     margin-left:        10px;
     margin-right:       10px;
-    /* next lines are copied from "user agent stylesheet" in Chrome for ul, menu, dir, because Firefox shows li incorrectly */
+    /* next lines are copied from "user agent stylesheet" in Chrome
+    for ul, menu, dir, because Firefox shows li incorrectly */
 /*
     list-style-type:        disc;
     display:                block;
@@ -369,7 +370,8 @@ a:focus     {outline-style: none;}
 
 /*=======================================================================*/
 .column-list {
-    -webkit-column-width:   10em; /* Chrome, Safari, Opera */
+    list-style-type:        none; /* because Mozilla break line after mark
+        -webkit-column-width:   10em; /* Chrome, Safari, Opera */
        -moz-column-width:   10em; /* Firefox */
             column-width:   10em;
     -webkit-column-gap:     3px; /* Chrome, Safari, Opera */
@@ -399,16 +401,21 @@ a:focus     {outline-style: none;}
 ul.column-list {
     list-style-position:    inside;
     -webkit-padding-start:  0;
+       -moz-padding-start:  0;
+            padding-start:  0;
     padding:                0;
 }
 .column-list li {
     color:              inherit;
     background:         inherit;
     margin:             0;
+    display:            list-item;
 }
 .column-list a,
 .column-list span {
     -webkit-column-break-inside: avoid;
+       -moz-column-break-inside: avoid;
+            column-break-inside: avoid;
               page-break-inside: avoid;
                    break-inside: avoid;
     color:              inherit;

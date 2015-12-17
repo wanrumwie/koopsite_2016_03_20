@@ -3,12 +3,14 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <div class="padding-y-05">
+    <div id="page-name"
+         class="padding-y-05">
         Список квартир
     </div>
     <div class="wrapper">
         <div class="main">
-            <ul class="column-list column-count-5">
+            <ul id="body-list"
+                class="column-list column-count-5">
                 {% for f in flat_list %}
                     <li><a class="padding-y-0" href="{% url 'flats:flat-detail' f.id %}">{{ f }}</a></li>
                 {% endfor %}

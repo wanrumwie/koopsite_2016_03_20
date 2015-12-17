@@ -101,15 +101,6 @@ class AllFieldsView(MultipleObjectMixin, DetailView):
     """
     fields  = ()        # Поля, які будуть виведені. Якщо порожній, то всі.
     exclude = ('id',)   # Поля, які виключаються із списку виводу.
-    # keylist = []        # Список полів, які буде виведено.
-                        # Якщо пустий, то список полів буде __dict__
-    # namedict = {}       # Словник укр.назв полів, які буде виведено.
-                        # Якщо пустий, то назви будуть взяті з keylist
-    # valfunction = round # Функція обробки значення поля (напр. round)
-    # fargs = (2,)        # список аргументів функції f(v, *fargs)
-    # fkwargs = {}        # словник аргументів функції f(v, **fkwargs)
-    # url_name = ''       # параметр name в url(), який є основним для
-                        # даного DetailView (ще без сторінок)
     # Наступні змінні будуть визначені в наслідуваному класі, наприклад:
     # model = Report
     # per_page = 12
@@ -117,35 +108,95 @@ class AllFieldsView(MultipleObjectMixin, DetailView):
 
     def val_repr(self, v, decimal=2):
         """
+        Представлення значення у шаблоні.
         Заокруглює число. Для нуля повертає "".
+        Не винесена в модуль functions.py , щоб у дочірньому класі
+        можна було її переозначити.
         """
+        # TODO-поверх 0 втводиться як "" - виправити!
         try:    v = round(v, decimal)
         except: pass
         if v == 0: v = ""
         return v
 
-    def get_label_value_list(self, obj):
+    def get_field_keys_verbnames(self):
+        """
+        Визначення списку пар: (name, verbose_name) для кожного
+          поля моделі self.model. Маючи цей перелік легко отримати
+          список значень всіх полів для будь-якого-запису моделі.
+        :return keys: список ідентифікаторів полів моделі за мінусом excluded
+        :return verb: список людських найменувань полів моделі за мінусом excluded
+        """
         keys = []
+        verb = []
         if self.fields:
             for k in self.fields:
-                f = obj._meta.get_field(k)
-                n = f.verbose_name
-                if k not in self.exclude: keys.append((k, n))
+                if k not in self.exclude:
+                    fo = self.model._meta.get_field(k)
+                    vn = fo.verbose_name
+                    keys.append(k)
+                    verb.append(vn)
         else:
-            for f in obj._meta.fields:
-                k = f.name
-                n = f.verbose_name
-                if k not in self.exclude: keys.append((k, n))
-        obj_details = []
-        for k, n in keys:
-            v = getattr(self.object,k)
+            for fo in self.model._meta.fields:
+                k = fo.name
+                vn = fo.verbose_name
+                if k not in self.exclude:
+                    keys.append(k)
+                    verb.append(vn)
+        return keys, verb
+
+    def get_value_list(self, record, keys):
+        """
+        Отримання списку значень полів
+        :param record: об'єкт моделі
+        :param keys: список полів, синхронно якому створиться список значень
+        :return: values - список значень
+        """
+        values = []
+        for k in keys:
+            v = getattr(record, k)
             v = self.val_repr(v, 2)
-            obj_details.append((n, v))
-        return obj_details
+            values.append(v)
+        return values
+
+    def get_label_value_list(self, keys, values):
+        """
+        Отримання списку, що складається з кортежів (key, value)
+        :param keys: список ідентифікаторів полів моделі
+        :param values: список значень полів моделі
+        :return: [(k, v), ...]
+        """
+        return [(k, v) for k, v in zip(keys, values)]
+
+    # def get_label_value_list(self, obj):
+    #     keys = []
+    #     if self.fields:
+    #         for k in self.fields:
+    #             f = obj._meta.get_field(k)
+    #             n = f.verbose_name
+    #             if k not in self.exclude: keys.append((k, n))
+    #     else:
+    #         for f in obj._meta.fields:
+    #             k = f.name
+    #             n = f.verbose_name
+    #             if k not in self.exclude: keys.append((k, n))
+    #     obj_details = []
+    #     for k, n in keys:
+    #         v = getattr(self.object,k)
+    #         v = self.val_repr(v, 2)
+    #         obj_details.append((n, v))
+    #     return obj_details
 
     def get_context_data(self, **kwargs):
-        self.object_list = self.get_label_value_list(self.object)
+        key_list, verbname_list = self.get_field_keys_verbnames()
+        value_list = self.get_value_list(self.object, key_list)
+        self.object_list = self.get_label_value_list(verbname_list, value_list)
+        # self.object_list = self.get_label_value_list(self.object)
         context = super(AllFieldsView, self).get_context_data(**kwargs)
+        # print_list(key_list, name='key_list')
+        # print_list(verbname_list, name='vn_list')
+        # print_list(value_list, name='value_list from model')
+        # print_list(nv_list, name='label_value_list from model')
         # print('context :------------------------')
         # print_dict(context, 'contenxt')
         return context
@@ -156,8 +207,6 @@ class FlatDetail(AllFieldsView):
     template_name = 'flats/flat_detail.html'
     paginate_by = 12
     exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
-    # keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
-    # namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
 
 
 class FlatDetailHorizontal(AllFieldsView):
@@ -165,8 +214,6 @@ class FlatDetailHorizontal(AllFieldsView):
     template_name = 'flats/flat_detail_h.html'
     paginate_by = 0
     exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
-    # keylist = Flat.fieldsList   # список полів, спеціально описаний в моделі
-    # namedict = Flat.mdbFields   # укр.назви полів, описані в моделі
 
 
 class FlatTable(AllRecordDetailView):
