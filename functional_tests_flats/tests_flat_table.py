@@ -56,7 +56,6 @@ class FlatTablePageVisitTest(PageVisitTest):
         else:
             num_pages = 1
             page_links_number = 0
-        print('list_len, num_pages, page_links_number: ', list_len, num_pages, page_links_number)
         return num_pages, page_links_number
 
     def get_data_links_number(self):

@@ -14,15 +14,117 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.list import ListView
+from django.views.generic.list import ListView, MultipleObjectMixin
 import parser
 from flats.models import Flat
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                             UserPermsActivateForm, \
                             ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm
+from koopsite.functions import AllFieldsMixin, print_list, print_dict
 from koopsite.settings import BASE_DIR
 from .models import User, UserProfile
 from .forms import UserRegistrationForm, UserPersonDataForm
+
+
+class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
+    """
+    Базовий CBV для відображення ВСІХ полів одного запису моделі.
+    Від AllFieldsMixin успадковано методи отримання списків значень
+    і назв всіх полів будь-якого запису моделі.
+    Успадкування від DetailView дозволяє отримати pk з url_conf
+    і сам об'єкт, який передасться у складі контексту у шаблон
+    під іменем object .
+    Успадкування від MultipleObjectMixin дозволяє використати
+    розбиття на сторінки списку. Сам список object_list формується
+    методом get_label_value_list(self, obj) і охоплює всі поля моделі
+    у заданому порядку.
+    При необхідності змінити імена об'єкта і списку його деталей
+    потрібно переозначити метод get_context_data(self, **kwargs),
+    дописавши в нього щось на зразок context['flat'] = self.object
+    та/або context['flat_details'] = self.object_list .
+    """
+    # Змінні, успадковані від AllFieldsMixin
+    # model = None
+    # fields  = ()        # Поля, які будуть виведені. Якщо порожній, то всі.
+    # exclude = ('id',)   # Поля, які виключаються із списку виводу.
+    # Наступні змінні будуть визначені в наслідуваному класі, наприклад:
+    # per_page = 12
+    # template_name = 'folders/report_detail.html'
+
+
+    def get_context_data(self, **kwargs):
+        key_list, verbname_list = self.get_field_keys_verbnames()
+        value_list = self.get_value_list(self.object, key_list)
+        self.object_list = self.get_label_value_list(verbname_list, value_list)
+        # self.object_list = self.get_label_value_list(self.object)
+        context = super(AllFieldsView, self).get_context_data(**kwargs)
+        # print_list(key_list, name='key_list')
+        # print_list(verbname_list, name='vn_list')
+        # print_list(value_list, name='value_list from model')
+        # print_list(nv_list, name='label_value_list from model')
+        # print('context :------------------------')
+        # print_dict(context, 'context')
+        return context
+
+
+class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
+    """
+    Базовий CBV для відображення ВСІХ полів всіх записів моделі.
+    Від AllFieldsMixin успадковано методи отримання списків значень
+    і назв всіх полів будь-якого запису моделі.
+    Успадкування від ListView:
+      - get_queryset() - формує власне список записів,
+        кожним елементом якого є список значень полів;
+        під іменем objects_list цей список йде у шаблон
+      - get_context_data() - доповнює контекст назвами полів;
+      - context_object_name - можна заміними object_list
+        на будь-що зручне для шаблону;
+      - використовується розбиття на сторінки списку.
+    """
+    # Змінні, успадковані від AllFieldsMixin
+    # model = None
+    # fields  = ()        # Поля, які будуть виведені. Якщо порожній, то всі.
+    # exclude = ('id',)   # Поля, які виключаються із списку виводу.
+    # Наступні змінні будуть визначені в наслідуваному класі, наприклад:
+    # per_page = 12
+    # template_name = 'folders/report_detail.html'
+    # context_object_name = "field_val"
+    context_verbose_list_name = None
+
+    def get_context_verbose_list_name(self):
+        """
+        Get the name of the item to be used in the context.
+        """
+        if self.context_verbose_list_name:
+            return self.context_verbose_list_name
+        # elif self.model:
+        #     return '%s_list' % self.model.name
+        else:
+            return "field_name"
+
+    def get_queryset(self):
+        key_list, verbname_list = self.get_field_keys_verbnames()
+        records = self.model.objects.all()
+        queryset = []
+        for record in records:
+            value_list = self.get_value_list(record, key_list)
+            queryset.append(value_list)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(AllRecordsAllFieldsView, self).get_context_data(**kwargs)
+        context[self.get_context_verbose_list_name()] = self.get_field_keys_verbnames()[1] # назви полів
+        # print_list(key_list, name='key_list')
+        # print_list(verbname_list, name='vn_list')
+        # print_list(self.object_list, name='self.object_list')
+        # print('context :------------------------')
+        # print_dict(context, 'context')
+        return context
+
+
+
+
+
 
 
 def context_per_page(obj_key,  context, page=1, per_page=12):

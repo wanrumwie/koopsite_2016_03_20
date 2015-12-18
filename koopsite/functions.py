@@ -326,3 +326,78 @@ def remove_group(user, group_name):
     user.groups.remove(group)
 
 
+class AllFieldsMixin():
+    """
+    Базовий клас, який робить вибірку ВСІХ полів будь-якого одного
+    запису або всіх записів моделі. Методи класу формують дані
+    у вигляді списків, зручних до використання в шаблонах.
+    Підмішуючи цей клас до CBV і переозначуючи там лише
+    get_context_data() можна отримати клас-представлення для всіх
+    полів одного запису або всіх полів всіх записів обраної моделі.
+    """
+    model   = None      # модель слід зазначити у дочірньому класі
+    fields  = ()        # Поля, які будуть виведені. Якщо порожній, то всі.
+    exclude = ('id',)   # Поля, які виключаються із списку виводу.
+
+    def val_repr(self, v, decimal=2):
+        """
+        Представлення значення у шаблоні.
+        Заокруглює число. Для нуля повертає "".
+        У дочірньому класі можна переозначити для специфічних потреб,
+        наприклад, щоб floor_No = 0 ДРУКУВАЛОСЬ ЯК 0, а не ""
+        """
+        # TODO-floor_No = 0 виводиться як "" - виправити!
+        try:    v = round(v, decimal)
+        except: pass
+        if v == 0: v = ""
+        return v
+
+    def get_field_keys_verbnames(self):
+        """
+        Визначення списку пар: (name, verbose_name) для кожного
+          поля моделі self.model. Маючи цей перелік легко отримати
+          список значень всіх полів для будь-якого-запису моделі.
+        :return keys: список ідентифікаторів полів моделі за мінусом excluded
+        :return verb: список людських найменувань полів моделі за мінусом excluded
+        """
+        keys = []
+        verb = []
+        if self.fields:
+            for k in self.fields:
+                if k not in self.exclude:
+                    fo = self.model._meta.get_field(k)
+                    vn = fo.verbose_name
+                    keys.append(k)
+                    verb.append(vn)
+        else:
+            for fo in self.model._meta.fields:
+                k = fo.name
+                vn = fo.verbose_name
+                if k not in self.exclude:
+                    keys.append(k)
+                    verb.append(vn)
+        return keys, verb
+
+    def get_value_list(self, record, keys):
+        """
+        Отримання списку значень полів
+        :param record: об'єкт моделі
+        :param keys: список полів, синхронно якому створиться список значень
+        :return: values - список значень
+        """
+        values = []
+        for k in keys:
+            v = getattr(record, k)
+            v = self.val_repr(v, 2)
+            values.append(v)
+        return values
+
+    def get_label_value_list(self, keys, values):
+        """
+        Отримання списку, що складається з кортежів (key, value)
+        :param keys: список ідентифікаторів полів моделі
+        :param values: список значень полів моделі
+        :return: [(k, v), ...]
+        """
+        return [(k, v) for k, v in zip(keys, values)]
+
