@@ -194,13 +194,13 @@ class SetSelElementToSessionTest(TestCase):
 class ParseClientRequestTest(TestCase):
 
     def test_parseClientRequest(self):
-        json_s = '"browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"'
+        json_s = '{"browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
         requestPOST = {'client_request': json_s}
         expected = {'sendMail': None, 'id': None, 'name': None, 'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0', 'model': None}
         self.assertEqual(parseClientRequest(requestPOST), expected)
 
     def test_parseClientRequest_can_expand_d(self):
-        json_s = '"alfa":"beta","browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"'
+        json_s = '{"alfa":"beta","browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
         requestPOST = {'client_request': json_s}
         expected = {'alfa': 'beta', 'sendMail': None, 'id': None, 'name': None, 'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0', 'model': None}
         self.assertEqual(parseClientRequest(requestPOST), expected)
