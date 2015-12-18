@@ -1,10 +1,7 @@
 from unittest.case import skip
-from django.views.generic import ListView, DetailView
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.list import BaseListView, MultipleObjectMixin
-from koopsite.functions import trace_print, print_list, print_dict, AllFieldsMixin
-from koopsite.views import AllDetailView, AllFieldsView, AllRecordsAllFieldsView
-from koopsite.views import AllRecordDetailView
+from django.views.generic import ListView
+from koopsite.functions import trace_print, print_list, print_dict
+from koopsite.views import AllFieldsView, AllRecordsAllFieldsView
 from .models import Flat
 
 
@@ -103,6 +100,6 @@ class FlatTable(AllRecordsAllFieldsView):
     paginate_by = 15
     exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
     template_name = 'flats/flat_table.html'
-    context_object_name = "field_val"
-    context_verbose_list_name = "field_name"
+    context_object_name = "field_vals"
+    context_verbose_list_name = "field_names"
 

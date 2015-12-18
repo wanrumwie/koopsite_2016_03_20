@@ -17,11 +17,11 @@ class FunctionsTest(TestCase):
 class AllFieldsMixinTest(TestCase):
     # Тестуємо клас, базовий для AllFieldsView і AllRecordsAllFieldsView
 
-    def test_all_fields_view_attributes(self):
+    def test_attributes(self):
         cls = AllFieldsMixin
         self.assertIsNone(cls.model)
         self.assertEqual(cls.fields, ())
-        self.assertEqual(cls.exclude, ('id',))
+        self.assertEqual(cls.exclude, ())
 
     def test_val_repr(self):
         cls = AllFieldsMixin()

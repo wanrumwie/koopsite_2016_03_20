@@ -189,8 +189,8 @@ class FlatTableTest(TestCase):
         self.assertEqual(view.model, Flat)
         self.assertEqual(view.paginate_by, 15)
         self.assertEqual(view.exclude, ('id', 'flat_99'))
-        self.assertEqual(view.context_object_name , "field_val")
-        self.assertEqual(view.context_verbose_list_name, "field_name")
+        self.assertEqual(view.context_object_name , "field_vals")
+        self.assertEqual(view.context_verbose_list_name, "field_names")
 
     def test_flat_table_page_renders_proper_template(self):
         response = self.client.get('/flats/table/')

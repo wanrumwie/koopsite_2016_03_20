@@ -8,7 +8,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from folders.functions import response_for_download, response_for_download_zip
-from koopsite.views import AllDetailView
+from koopsite.views import AllFieldsView
 from .models import Folder, Report, \
                     get_subfolders, get_subreports
 from .forms import FolderForm, ReportForm, \
@@ -22,17 +22,19 @@ class FolderList(ListView):
     template_name = 'folders/folder_list.html'
 
 
-class FolderDetail(AllDetailView):
+class FolderDetail(AllFieldsView):
     model = Folder
     template_name = 'folders/folder_detail.html'
-    per_page = 15
-    url_name='folder-detail'
+    paginate_by = 12
+    # exclude = ('id',)   # Поля, які виключаються із списку виводу.
+    context_self_object_name = 'folder' # додатковий ідентифікатор для об'єкта self.object
+    context_object_name = 'obj_details'  # додатковий ідентифікатор для списку self.object_list
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        r = resolve(request.path)
-        print('resolve(request.path) =', r)
-        print('r.namespace =', r.namespace)
+        # r = resolve(request.path)
+        # print('resolve(request.path) =', r)
+        # print('r.namespace =', r.namespace)
         return super(FolderDetail, self).dispatch(request, *args, **kwargs)
 
 
@@ -43,11 +45,13 @@ class ReportList(ListView):
     template_name = 'folders/report_list.html'
 
 
-class ReportDetail(AllDetailView):
+class ReportDetail(AllFieldsView):
     model = Report
     template_name = 'folders/report_detail.html'
-    per_page = 15
-    url_name='report-detail'
+    paginate_by = 12
+    # exclude = ('id',)   # Поля, які виключаються із списку виводу.
+    context_self_object_name = 'report'  # додатковий ідентифікатор для об'єкта self.object
+    context_object_name = 'obj_details'  # додатковий ідентифікатор для списку self.object_list
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):

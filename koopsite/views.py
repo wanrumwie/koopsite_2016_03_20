@@ -38,10 +38,9 @@ class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
     розбиття на сторінки списку. Сам список object_list формується
     методом get_label_value_list(self, obj) і охоплює всі поля моделі
     у заданому порядку.
-    При необхідності змінити імена об'єкта і списку його деталей
-    потрібно переозначити метод get_context_data(self, **kwargs),
-    дописавши в нього щось на зразок context['flat'] = self.object
-    та/або context['flat_details'] = self.object_list .
+    Ідентифікатори object та object_list можна продублювати цікавішими
+    іменами, задавши значення атрибутам відповідно
+    context_self_object_name та context_object_name
     """
     # Змінні, успадковані від AllFieldsMixin
     # model = None
@@ -50,7 +49,8 @@ class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
     # Наступні змінні будуть визначені в наслідуваному класі, наприклад:
     # per_page = 12
     # template_name = 'folders/report_detail.html'
-
+    context_self_object_name = None # додатковий ідентифікатор для об'єкта self.object
+    context_object_name = None # додатковий ідентифікатор для списку self.object_list
 
     def get_context_data(self, **kwargs):
         key_list, verbname_list = self.get_field_keys_verbnames()
@@ -58,6 +58,8 @@ class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
         self.object_list = self.get_label_value_list(verbname_list, value_list)
         # self.object_list = self.get_label_value_list(self.object)
         context = super(AllFieldsView, self).get_context_data(**kwargs)
+        if self.context_self_object_name:
+            context[self.context_self_object_name] = self.object
         # print_list(key_list, name='key_list')
         # print_list(verbname_list, name='vn_list')
         # print_list(value_list, name='value_list from model')
@@ -80,6 +82,8 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
       - context_object_name - можна заміними object_list
         на будь-що зручне для шаблону;
       - використовується розбиття на сторінки списку.
+    Атрибут context_verbose_list_name = "field_name"  - ідентифікатор
+        для списку назв полів.
     """
     # Змінні, успадковані від AllFieldsMixin
     # model = None
@@ -88,19 +92,8 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
     # Наступні змінні будуть визначені в наслідуваному класі, наприклад:
     # per_page = 12
     # template_name = 'folders/report_detail.html'
-    # context_object_name = "field_val"
-    context_verbose_list_name = None
-
-    def get_context_verbose_list_name(self):
-        """
-        Get the name of the item to be used in the context.
-        """
-        if self.context_verbose_list_name:
-            return self.context_verbose_list_name
-        # elif self.model:
-        #     return '%s_list' % self.model.name
-        else:
-            return "field_name"
+    # context_object_name = "field_val" # додатковий ідентифікатор для об'єкта self.object_list
+    context_verbose_list_name = "field_names" # ідентифікатор для списку назв полів
 
     def get_queryset(self):
         key_list, verbname_list = self.get_field_keys_verbnames()
@@ -113,147 +106,12 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AllRecordsAllFieldsView, self).get_context_data(**kwargs)
-        context[self.get_context_verbose_list_name()] = self.get_field_keys_verbnames()[1] # назви полів
+        context[self.context_verbose_list_name] = self.get_field_keys_verbnames()[1] # назви полів
         # print_list(key_list, name='key_list')
         # print_list(verbname_list, name='vn_list')
         # print_list(self.object_list, name='self.object_list')
         # print('context :------------------------')
         # print_dict(context, 'context')
-        return context
-
-
-
-
-
-
-
-def context_per_page(obj_key,  context, page=1, per_page=12):
-    # Функція зміни контексту з доп. Paginator
-    # З цілого списку в контекст поступає лише частина, відповідно до page
-    paginator = Paginator(context[obj_key], per_page=per_page)
-    context['paginator']    = paginator
-    context['is_paginated'] = True
-    pp                      = paginator.page(page)
-    context['page_obj']     = pp
-    context[obj_key]        = pp.object_list # частина списку в межах page
-    return context
-
-
-class AllDetailView(DetailView):
-    # CBV для виводу всіх полів одного запису моделі
-    keylist = []            # Список полів, які буде виведено.
-                            # Якщо пустий, то список полів буде __dict__
-    namedict = {}           # Словник укр.назв полів, які буде виведено.
-                            # Якщо пустий, то назви будуть взяті з keylist
-    valfunction = round     # Функція обробки значення поля (напр. round)
-    fargs = (2,)            # список аргументів функції f(v, *fargs)
-    fkwargs = {}            # словник аргументів функції f(v, **fkwargs)
-    url_name = ''           # параметр name в url(), який є основним для
-                            # даного DetailView (ще без сторінок)
-    # Наступні змінні будуть визначені в наслідуваному класі:
-    # model = Report
-    # template_name = 'folders/report_detail.html'
-    # per_page = 12
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-        # url_prefix - повна адреса для даного pk ще без сторінок
-        print('args =', args)
-        print('kwargs =', kwargs)
-        print('self.url_name =', self.url_name)
-        print('self.object.pk =', self.object.pk)
-        self.url_name = 'flats:%s' % self.url_name
-        print('self.url_name =', self.url_name)
-        rev_kwargs = {}
-        rev_kwargs['current_app'] = resolve(request.path).namespace
-        rev_kwargs['pk'] = self.object.pk
-        print('rev_kwargs =', rev_kwargs)
-        url_prefix=reverse(self.url_name, kwargs=rev_kwargs)
-        context['url_prefix'] = url_prefix + 'page'
-        # href="{{ url_prefix }}{{ page_obj.previous_page_number }}" => "/flats/page43"
-        print('context =', context)
-        return self.render_to_response(context)
-
-    def get_context_data(self, **kwargs):
-        context = super(AllDetailView, self).get_context_data(**kwargs)
-        obj = context['object']
-        # url_prefix - повна адреса для даного pk ще без сторінок
-        # print('self.url_name =', self.url_name)
-        # print('obj.pk =', obj.pk)
-        # self.url_name = 'flats:%s' % self.url_name
-        # print('self.url_name =', self.url_name)
-        # url_prefix=reverse(self.url_name, kwargs={'pk': obj.pk})
-        # context['url_prefix'] = url_prefix + 'page'
-        # href="{{ url_prefix }}{{ page_obj.previous_page_number }}" => "/flats/page43"
-        print('self.keylist =', self.keylist)
-        print('obj.__dict__ =', obj.__dict__)
-        obj_details = []
-        keylist = self.keylist or obj.__dict__
-        for k in keylist:
-            try:    n = self.namedict[k]
-            except: n = k
-            v = getattr(obj,k)
-            if self.valfunction:
-                try:    v = self.valfunction(v, *self.fargs, **self.fkwargs)
-                        # Замість v = round(v,2) або v = round(v,ndigits=2)
-                except: pass
-            if v == 0: v = ""
-            obj_details.append((n, v))
-        context['obj_details']  = obj_details    # весь список
-        # Наступний фрагмент додано,
-        # бо DetailView не має вбудованого paginator'a
-        if self.per_page > 0:
-            page = self.kwargs.get('page') or 1 # ОТРИМАННЯ даних з URLconf
-            # зміна контексту для відображення одної сторінки
-            context = context_per_page('obj_details', context, page, self.per_page)
-        return context
-
-
-class AllRecordDetailView(ListView):
-    # CBV для виводу всіх полів всіх записів моделі
-    # ПОТРІБНО універсалізувати: замість Flat поставити б-я модель
-    model = Flat
-    per_page = 15
-    template_name = 'flats/flat_table.html'
-    url_name = 'flats:flat-table' # параметр name в url(), який є основним для
-                            # даного DetailView (ще без сторінок)
-
-    def get_context_data(self, **kwargs):
-        context = super(AllRecordDetailView, self).get_context_data(**kwargs)
-        # url_prefix - повна адреса для даного pk ще без сторінок
-        # print('self.url_name =', self.url_name)
-        self.url_name = 'flats:%s' % self.url_name
-        # print('self.url_name =', self.url_name)
-        # url_prefix=reverse(self.url_name)
-        # context['url_prefix'] = url_prefix + 'page'
-        field_name = []
-        field_val  = []
-        firstiter  = True
-        for flat in Flat.objects.order_by('flat_99'):
-            flatval  = []
-            for k in flat.fieldsList:
-                if firstiter:
-                    n = flat.mdbFields[k]
-                    field_name.append(n)
-                v = getattr(flat,k)
-                try:
-                    v = round(v,2)
-                except:
-                    pass
-                if v == 0: v = ""
-                flatval.append(v)
-            field_val.append(flatval)
-            firstiter = False
-        context['field_name'] = field_name    # наззви полів
-        context['field_val']  = field_val     # весь список
-        # Наступний фрагмент додано,
-        # бо вбудований в ListView paginator опрацьовує object_list,
-        # а не 2D масив, який передається в шаблон
-        if self.per_page > 0:
-            page = self.kwargs.get('page') or 1 # ОТРИМАННЯ даних з URLconf
-            # зміна контексту для відображення одної сторінки
-            context = context_per_page('field_val', context, page, self.per_page)
         return context
 
 

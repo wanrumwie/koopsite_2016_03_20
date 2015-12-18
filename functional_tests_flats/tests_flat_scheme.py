@@ -184,7 +184,6 @@ class FlatSchemePageVisitorCanFindFlatTest(FlatSchemePageVisitTest):
         # Поверхи розташовані знизу вверх
         yfact = []
         ydict = {}
-        print('floors =', floors)
         for floor in floors:
             flat = Flat.objects.filter(floor_No=floor)[:1].get()
             link_text      = flat.flat_No

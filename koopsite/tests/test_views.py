@@ -27,6 +27,11 @@ def setup_view(view, request, *args, **kwargs):
 class AllFieldsViewTest(TestCase):
     # Тестуємо клас, базовий для, напр., FlatDetail
 
+    def test_attributes(self):
+        view = AllFieldsView()
+        self.assertIsNone(view.context_self_object_name)
+        self.assertIsNone(view.context_object_name)
+
     def test_get_context_data(self):
         flat = Flat(id=5, flat_No='5', floor_No=1, entrance_No=2)
         flat.save()
@@ -36,6 +41,7 @@ class AllFieldsViewTest(TestCase):
         view = setup_view(view, request, **kwargs)
         view.model = Flat
         view.fields = ('id', 'flat_No', 'floor_No')
+        view.exclude = ('id', )
         view.object = flat
         expected_obj_details = [
             ('Квартира №', '5'),
@@ -50,9 +56,7 @@ class AllRecordsAllFieldsViewTest(TestCase):
 
     def test_get_context_verbose_list_name(self):
         view = AllRecordsAllFieldsView()
-        self.assertEqual(view.get_context_verbose_list_name(), "field_name")
-        view.context_verbose_list_name = "titles"
-        self.assertEqual(view.get_context_verbose_list_name(), "titles")
+        self.assertEqual(view.context_verbose_list_name, "field_names")
 
     def test_get_queryset(self):
         flat = Flat(id=1, flat_99=1, flat_No='1', floor_No=1, entrance_No=1)
@@ -64,6 +68,7 @@ class AllRecordsAllFieldsViewTest(TestCase):
         view = AllRecordsAllFieldsView()
         view.model = Flat
         view.fields = ('id', 'flat_No', 'floor_No', 'entrance_No')
+        view.exclude = ('id', )
         expected = [['1', 1, 1], ['2', 2, 2], ['3', 3, 3]]
         self.assertEqual(view.get_queryset(), expected)
 
@@ -90,6 +95,7 @@ class AllRecordsAllFieldsViewTest(TestCase):
                                 # AttributeError: 'AllRecordsAllFieldsView' object has no attribute 'object_list'
         view.context_verbose_list_name = 'title_list'
         view.fields = ('id', 'flat_No', 'floor_No', 'entrance_No')
+        view.exclude = ('id', )
         expected = [['1', 1, 1], ['2', 2, 2], ['3', 3, 3]]
         exp_verb = ['Квартира №', 'Поверх', "Під'їзд"]
         context = view.get_context_data(**kwargs)

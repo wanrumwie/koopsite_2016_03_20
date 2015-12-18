@@ -32,8 +32,8 @@
   <div class="site-body">
     <ul class="navigation">
         {# У дочірньому шаблоні можна переозначити тільки самопосилання #}
-{% block href-report-reload %}
-{% endblock %}
+        {% block href-report-reload %}
+        {% endblock %}
         {% block href-index %}
             <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
