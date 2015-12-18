@@ -268,7 +268,7 @@ class AjaxTableRowView(View):
 
     def get_request_data(self, request, rqst):
         # Розбираємо дані від клієнта:
-        d = parseClientRequest(request)
+        d = parseClientRequest(request.POST)
         rqst = get_namespace_from_dict(d, rqst)
         # rqst.parent_id            = d.get('parent_id')
         # rqst.model                = d.get('model')
@@ -561,7 +561,7 @@ class XHRTableRowView(View):
 
     def get_XHR_data(self, request, rqst):
         # Розбираємо дані від клієнта:
-        d = parseXHRClientRequest(request)
+        d = parseXHRClientRequest(request.META)
         rqst = get_namespace_from_dict(d, rqst, True)
         # rqst.parent_id            = d.get('parent_id')
         # rqst.model                = d.get('model')

@@ -234,7 +234,7 @@ class AjaxAccountView(View):
 
     def get_request_data(self, request):
         # Розбираємо дані від клієнта:
-        d = parseClientRequest(request)
+        d = parseClientRequest(request.POST)
         self.sendMail = d['sendMail']
         user_id = d['id']                       # id of selected user
         user = User.objects.get(id=user_id)     # selected user
@@ -544,7 +544,7 @@ class AjaxAllAccountsView(View):
 
     def get_request_data_set(self, request):
         # Розбираємо дані від клієнта:
-        d = parseClientRequest(request)
+        d = parseClientRequest(request.POST)
         self.sendMail = d['sendMail']
         elemSet = d.get('elemSet')
         users_set = []

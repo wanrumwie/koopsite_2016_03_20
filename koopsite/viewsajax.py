@@ -29,7 +29,7 @@ msgType = types.SimpleNamespace(
 def ajaxSelRowIndexToSession(request):
     if 'client_request' in request.POST:
         # Розбираємо дані від клієнта:
-        d = parseClientRequest(request)
+        d = parseClientRequest(request.POST)
         browTabName = d['browTabName']
         parent_id   = d['parent_id']
         # Формуємо дані для зберігання в сесії:
@@ -52,7 +52,7 @@ def ajaxSelRowIndexToSession(request):
 def ajaxStartRowIndexFromSession(request):
     if 'client_request' in request.POST:
         # Розбираємо дані від клієнта:
-        d = parseClientRequest(request)
+        d = parseClientRequest(request.POST)
         browTabName = d['browTabName']
         parent_id   = d['parent_id']
         # Беремо з сесії масив параметрів виділеного елемента

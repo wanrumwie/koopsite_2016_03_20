@@ -213,10 +213,10 @@ def setSelElementToSession(session, browTabName, parent_id='',
     # print('setSelElementToSession:')
     # print('selElement =', selElement)
 
-def parseClientRequest(request):
+def parseClientRequest(requestPOST):
     """
     Розбираємо запит від клієнта
-    :param request:
+    :param requestPOST: request.POST
     :return  d: одновимірний словник
     Формат запиту від клієнта:
     {'client_request' : json_s}
@@ -234,7 +234,7 @@ def parseClientRequest(request):
     що не входить до "стандартного" набору keys.
     """
     # Отримуємо запит з даними від клієнта:
-    json_s = request.POST['client_request']
+    json_s = requestPOST['client_request']
     # Розкодовуємо стрічку JSON в звичайний словник
     d = json.loads(json_s)
     # Стандартний набір ключів:
@@ -250,24 +250,28 @@ def parseClientRequest(request):
     for key in keys:
         if not key in d.keys():
             d[key] = None
+    # print('json_s =', json_s)
     # print('parseClientRequest: d=', d)
     return d
 
-def parseXHRClientRequest(request):
+def parseXHRClientRequest(requestMETA):
     """
     Розбираємо xhr запит від клієнта
-    :param request:
+    :param requestMETA: request.META
     :return:  d - словник з даними про материнську теку і інш.
     Формат запиту від клієнта:
     encoded_json_string знаходиться у заголовку "X-client-request"
     Кожна ф-ція xhr ajax...view витягне з словника d необхідні дані
     """
     # Отримуємо запит з даними від клієнта:
-    encoded_json_s = request.META.get("HTTP_X_CLIENT_REQUEST")
+    encoded_json_s = requestMETA.get("HTTP_X_CLIENT_REQUEST")
     # Розкодовуємо в UTF8:
     json_s = unquote(encoded_json_s)
     # Розкодовуємо стрічку JSON в звичайний словник
     d = json.loads(json_s)
+    # print('requestMETA =', requestMETA)
+    # print('encoded_json_s =', encoded_json_s)
+    # print('json_s =', json_s)
     # print('parseXHRClientRequest: d=', d)
     return d
 

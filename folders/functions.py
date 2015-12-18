@@ -20,7 +20,7 @@ def response_for_download(report):
     response = HttpResponse(report.file, content_type=ct)
     response['Content-Disposition'] = 'attachment' + fn + md
     response['Content-Length'] = report.file.size
-    print('response_for_download = ', response)
+    # print('response_for_download = ', response)
     return response
 
 def response_for_download_zip(folder):
