@@ -122,9 +122,9 @@ class FlatDetailTest(TestCase):
 
     def test_flat_detail_model_and_attributes(self):
         view = FlatDetail()
-        self.assertEqual(view.model,        Flat)
-        self.assertEqual(view.paginate_by,  12)
-        self.assertEqual(view.exclude ,     ('id', 'flat_99'))
+        self.assertEqual(view.model, Flat)
+        self.assertEqual(view.paginate_by, 14)
+        self.assertEqual(view.exclude, ('id', 'flat_99', 'note', 'listing'))
 
     def test_flat_detail_page_renders_proper_template(self):
         flat = Flat(id=5, flat_No='5')
@@ -145,9 +145,9 @@ class FlatDetailHorizontalTest(TestCase):
 
     def test_flat_detail_h_model_and_attributes(self):
         view = FlatDetailHorizontal()
-        self.assertEqual(view.model,        Flat)
-        self.assertEqual(view.paginate_by,  0)
-        self.assertEqual(view.exclude,      ('id', 'flat_99'))
+        self.assertEqual(view.model, Flat)
+        self.assertEqual(view.paginate_by, 0)
+        self.assertEqual(view.exclude, ('id', 'flat_99', 'note', 'listing'))
 
     def test_flat_detail_h_page_renders_proper_template(self):
         flat = Flat(id=5, flat_No='5')
@@ -188,7 +188,7 @@ class FlatTableTest(TestCase):
         view = FlatTable()
         self.assertEqual(view.model, Flat)
         self.assertEqual(view.paginate_by, 15)
-        self.assertEqual(view.exclude, ('id', 'flat_99'))
+        self.assertEqual(view.exclude, ('id', 'flat_99', 'note', 'listing'))
         self.assertEqual(view.context_object_name , "field_vals")
         self.assertEqual(view.context_verbose_list_name, "field_names")
 

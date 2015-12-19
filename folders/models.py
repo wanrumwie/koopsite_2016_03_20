@@ -73,7 +73,7 @@ class Folder(models.Model):
     def __str__(self):
         return self.name
     def get_absolute_url(self):
-        return reverse('folder-contents', kwargs={'pk': self.pk})
+        return reverse('folders:folder-contents', kwargs={'pk': self.pk})
 
     class Meta:
         unique_together = (("parent", "name"),)
@@ -93,7 +93,7 @@ def get_report_path(report_id):
                         str(k),         # тека для кожних 512 файлів
                         str(report_id)  # id файла
                         + ".data")       # фіктивне розширення файла
-    print('get_report_path:', report_id, k, file_path)
+    # print('get_report_path:', report_id, k, file_path)
     return file_path
 
 
@@ -145,7 +145,7 @@ class Report(models.Model):
         s = self.filename or ''
         return s
     def get_absolute_url(self):
-        return reverse('report-detail', kwargs={'pk': self.pk})
+        return reverse('folders:report-detail', kwargs={'pk': self.pk})
 
     class Meta:
         permissions = (

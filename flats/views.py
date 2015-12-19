@@ -1,6 +1,4 @@
-from unittest.case import skip
 from django.views.generic import ListView
-from koopsite.functions import trace_print, print_list, print_dict
 from koopsite.views import AllFieldsView, AllRecordsAllFieldsView
 from .models import Flat
 
@@ -44,16 +42,17 @@ def block_scheme():
     # print(entrances)
     return d, floors, entrances
 
+
 def block_length(d):
     # Визначаємо для кожного під'їзду макс.к-ть квартир на поверсі
     # для того, щоб кожен під'їзд в шаблоні був представлений вертик. колонкою:
-    block_length = {}
+    block_len = {}
     for f in d:
         for e in d[f]:
-            n = block_length.get(e, 0)
+            n = block_len.get(e, 0)
             n = max(n, len(d[f][e]))
-            block_length[e] = n
-    return block_length
+            block_len[e] = n
+    return block_len
 
 
 class FlatScheme(ListView):
@@ -84,21 +83,21 @@ class FlatScheme(ListView):
 class FlatDetail(AllFieldsView):
     model = Flat
     template_name = 'flats/flat_detail.html'
-    paginate_by = 12
-    exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
+    paginate_by = 14
+    exclude = ('id', 'flat_99', 'note', 'listing')   # Поля, які виключаються із списку виводу.
 
 
 class FlatDetailHorizontal(AllFieldsView):
     model = Flat
     template_name = 'flats/flat_detail_h.html'
     paginate_by = 0
-    exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
+    exclude = ('id', 'flat_99', 'note', 'listing')   # Поля, які виключаються із списку виводу.
 
 
 class FlatTable(AllRecordsAllFieldsView):
     model = Flat
     paginate_by = 15
-    exclude = ('id', 'flat_99')   # Поля, які виключаються із списку виводу.
+    exclude = ('id', 'flat_99', 'note', 'listing')   # Поля, які виключаються із списку виводу.
     template_name = 'flats/flat_table.html'
     context_object_name = "field_vals"
     context_verbose_list_name = "field_names"

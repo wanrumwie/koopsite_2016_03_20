@@ -81,8 +81,8 @@ table {
     border-color:       black;
     border-style:       solid;
     border-width:       thin;
-    border-collapse:    separate;
-    border-spacing:     1px;
+    border-collapse:    collapse;
+    border-spacing:     0;
     empty-cells:        show;
     padding:            0;
     margin-left:        auto;
@@ -123,8 +123,8 @@ a:focus     {outline-style: none;}
 /*=======================================================================*/
 .tabledetail {
     border:             1px solid black;
-    border-collapse:    separate;
-    border-spacing:     1px;
+/*    border-collapse:    separate;*/
+/*    border-spacing:     1px;*/
     }
 .tabledetail th, 
 .tabledetail td {
@@ -144,6 +144,7 @@ a:focus     {outline-style: none;}
 
 /*=======================================================================*/
 .tablescheme {
+    border-collapse:    separate;
     border-spacing:     5px;
             }
 .tablescheme th, 
@@ -159,11 +160,11 @@ a:focus     {outline-style: none;}
 }
 .max-width-4em th, 
 .max-width-4em td {
-    max-width:          4em;
+    max-width:          4.7em;
     min-width:          1em;
     overflow:           hidden;
     font-weight:        normal;
-    padding:            0;
+    padding:            0 1px;
     text-align:         center;
     }
 @media all and (max-width: 700px) {
