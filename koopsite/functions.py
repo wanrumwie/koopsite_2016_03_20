@@ -32,6 +32,12 @@ def print_dict(d, name=''):
     print(name, 'len =', len(d))
     for k,v in sorted(d.items()): print('%-20s : %s' % (k,v))
 
+def get_or_none(classmodel, **kwargs):
+    try:
+        return classmodel.objects.get(**kwargs)
+    except classmodel.DoesNotExist:
+        return None
+
 def round_up_division(a, b):
     """
     :param a: чисельник
@@ -311,22 +317,22 @@ def print_user_permissions(user):
 
 def is_staff_only(user):
     groups = user.groups.all()
-    staff  = Group.objects.get(name='staff')
+    staff  = get_or_none(Group, name='staff')
     return staff in groups and len(groups) == 1
 
 def has_group_member(user):
     return has_group(user, 'members')
 
 def has_group(user, group_name):
-    group = Group.objects.get(name=group_name)
-    return True if group in user.groups.all() else False
+    group = get_or_none(Group, name=group_name)
+    return group in user.groups.all()
 
 def add_group(user, group_name):
-    group = Group.objects.get(name=group_name)
+    group = get_or_none(Group, name=group_name)
     user.groups.add(group)
 
 def remove_group(user, group_name):
-    group = Group.objects.get(name=group_name)
+    group = get_or_none(Group, name=group_name)
     user.groups.remove(group)
 
 

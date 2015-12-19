@@ -1,15 +1,17 @@
 import types
-from unittest.case import skip
-from django.contrib.auth.models import User
+from django.core.exceptions import MultipleObjectsReturned
+from django.db.utils import IntegrityError
 from django.test import TestCase
 from flats.models import Flat
 from folders.models import Folder
+from functional_tests_koopsite.ft_base import DummyUser, DummyData
 from koopsite.functions import round_up_division, AllFieldsMixin, get_namespace_from_dict, get_iconPathForFolder, \
     get_iconPathByFileExt, fileNameCheckInsert, scale_height, scale_width, getSelections, getSelElementFromSession, \
-    setSelElementToSession, parseClientRequest, parseXHRClientRequest
+    setSelElementToSession, parseClientRequest, parseXHRClientRequest, get_user_full_name, get_user_flat_No, \
+    get_user_is_recognized, is_staff_only, get_or_none, has_group_member, has_group, add_group, remove_group
 
 
-class FunctionsTest(TestCase):
+class DifferentFunctionsTest(TestCase):
 
     def test_round_up_division(self):
         self.assertEqual(round_up_division(5, 5), 1)
@@ -25,6 +27,17 @@ class FunctionsTest(TestCase):
     def test_get_iconPathByFileExt(self):
         self.assertEqual(get_iconPathByFileExt(""), "img/file-icons/32px/_page.png")
         self.assertEqual(get_iconPathByFileExt(".doc"), 'img/file-icons/32px/doc.png')
+
+    def test_get_or_none(self):
+        flat = DummyData().create_dummy_flat(id=1, flat_No="1")
+        self.assertEqual(get_or_none(Flat, id=1), flat)
+        self.assertEqual(get_or_none(Flat, id=1, flat_No="1"), flat)
+        self.assertFalse(get_or_none(Flat, id=1, flat_No="2"))
+
+    def test_get_or_none_gives_error_if_multiple(self):
+        DummyData().create_dummy_building()
+        with self.assertRaises(MultipleObjectsReturned):
+            f = get_or_none(Flat, floor_No="2")
 
 
 class FileNameCheckInsertTest(TestCase):
@@ -67,7 +80,6 @@ class Scale_height_width_Test(TestCase):
         self.assertEqual(scale_height(100, 100,    0), (  0,   0))
         self.assertEqual(scale_height(100,   0,    0), (  0,   0))
         self.assertEqual(scale_height(100, 100,   30), ( 30,  30))
-
 
 
 class GetSelectionsTest(TestCase):
@@ -148,6 +160,7 @@ class GetSelElementFromSessionTest(TestCase):
         b = 'foldertab'
         self.assertEqual(getSelElementFromSession(self.session, b), expected)
 
+
 class SetSelElementToSessionTest(TestCase):
 
     def setUp(self):
@@ -187,11 +200,13 @@ class SetSelElementToSessionTest(TestCase):
                     }
         setSelElementToSession(self.session, b, p)
         self.assertEqual(self.session['Selections'], expected)
-        # TODO-нагадати собі, для чого зберігати в сесії дані з id=""?
+        # TODO-нагадати собі, для чого зберігати в сесії дані з id=""? Бо наступний тест не проходить:
         # setSelElementToSession(self.session, b)
         # self.assertEqual(self.session['Selections'], expected)
 
+
 class ParseClientRequestTest(TestCase):
+    # для тесту взято дані, роздруковані в ході виконання folder/contents/1/
 
     def test_parseClientRequest(self):
         json_s = '{"browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
@@ -207,18 +222,18 @@ class ParseClientRequestTest(TestCase):
 
 
 class ParseXHRClientRequestTest(TestCase):
+    # для тесту взято дані, роздруковані в ході виконання report download
 
     def test_parseXHRClientRequest(self):
-        # для тесту взято дані, роздруковані в ході виконання report download
         requestMETA = {'PYTHONIOENCODING': 'UTF-8', 'HTTP_X_CLIENT_REQUEST': '%7B%22browTabName%22%3A%22folders_contents%22%2C%22parent_id%22%3A%227%22%2C%22selRowIndex%22%3A%222%22%2C%22model%22%3A%22report%22%2C%22id%22%3A%22130%22%2C%22name%22%3A%22%D0%92%D1%96%D0%B4%D1%80%D1%8F%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F.tif%22%7D', }
         expected = {'model': 'report', 'browTabName': 'folders_contents', 'selRowIndex': '2', 'id': '130', 'parent_id': '7', 'name': 'Відрядження.tif'}
         self.assertEqual(parseXHRClientRequest(requestMETA), expected)
 
 
 class Get_namespace_from_dictTest(TestCase):
+
     def setUp(self):
-        self.ns = types.SimpleNamespace(
-                                        a   = None,
+        self.ns = types.SimpleNamespace(a   = None,
                                         b   = None,
                                         c   = None,
                                         )
@@ -335,4 +350,89 @@ class AllFieldsMixinTest(TestCase):
         self.assertEqual(kv_list[2], ("entrance_No", 3))
 
 
+class UserDifferentAttributesTest(TestCase):
+
+    def setUp(self):
+        self.user = DummyUser().create_dummy_user()
+
+    def test_get_user_full_name_gives_empty_str(self):
+        self.assertEqual(get_user_full_name(self.user), "")
+
+    def test_get_user_full_name_gives_capitelized_names(self):
+        user = DummyUser().create_dummy_user(username='AB', first_name='alfa', last_name='beta')
+        self.assertEqual(get_user_full_name(user), "Beta Alfa")
+
+    def test_get_user_full_name_gives_stripped_names(self):
+        user = DummyUser().create_dummy_user(username='AB', first_name=' alfa ', last_name=' be ta ')
+        self.assertEqual(get_user_full_name(user), "Be ta Alfa")
+
+    def test_get_user_flat_No_gives_empty_str(self):
+        self.assertEqual(get_user_flat_No(self.user), "")
+
+    def test_get_user_flat_No_gives_proper_value(self):
+        flat = DummyData().create_dummy_flat(flat_No='11a')
+        DummyUser().create_dummy_profile(self.user, flat=flat)
+        self.assertEqual(get_user_flat_No(self.user), "11a")
+
+    def test_get_user_is_recognized_gives_empty_str(self):
+        self.assertEqual(get_user_is_recognized(self.user), "")
+
+    def test_get_user_is_recognized_gives_proper_value(self):
+        DummyUser().create_dummy_profile(self.user, is_recognized=True)
+        self.assertEqual(get_user_is_recognized(self.user), True)
+
+    def test_is_staff_only_gives_true(self):
+        DummyUser().create_dummy_group(group_name='staff')
+        DummyUser().add_dummy_group(self.user, group_name='staff')
+        self.assertTrue(is_staff_only(self.user))
+
+    def test_is_staff_only_gives_false_for_enother_group(self):
+        DummyUser().create_dummy_group(group_name='STAFF')
+        DummyUser().add_dummy_group(self.user, group_name='STAFF')
+        self.assertFalse(is_staff_only(self.user))
+
+    def test_is_staff_only_gives_false_for_two_groups(self):
+        DummyUser().create_dummy_group(group_name='staff')
+        DummyUser().add_dummy_group(self.user, group_name='staff')
+        DummyUser().create_dummy_group(group_name='STAFF')
+        DummyUser().add_dummy_group(self.user, group_name='STAFF')
+        self.assertFalse(is_staff_only(self.user))
+
+    def test_has_group_member(self):
+        DummyUser().create_dummy_group(group_name='members')
+        DummyUser().add_dummy_group(self.user, group_name='members')
+        self.assertTrue(has_group_member(self.user))
+
+    def test_has_group_member_gives_false(self):
+        DummyUser().create_dummy_group(group_name='stuff')
+        DummyUser().add_dummy_group(self.user, group_name='stuff')
+        self.assertFalse(has_group_member(self.user))
+
+    def test_has_group(self):
+        DummyUser().create_dummy_group(group_name='members')
+        DummyUser().add_dummy_group(self.user, group_name='members')
+        self.assertTrue(has_group(self.user, 'members'))
+
+    def test_has_group_gives_false(self):
+        self.assertFalse(has_group(self.user, 'members'))
+
+    def test_add_group(self):
+        DummyUser().create_dummy_group(group_name='members')
+        add_group(self.user, 'members')
+        self.assertTrue(has_group(self.user, 'members'))
+
+    def test_add_group_gives_error_if_no_group(self):
+        with self.assertRaises(IntegrityError):
+            add_group(self.user, 'members')
+
+    def test_remove_group(self):
+        DummyUser().create_dummy_group(group_name='members')
+        add_group(self.user, 'members')
+        self.assertTrue(has_group(self.user, 'members'))
+        remove_group(self.user, 'members')
+        self.assertFalse(has_group(self.user, 'members'))
+
+    def test_remove_group_gives_false_if_no_group(self):
+        remove_group(self.user, 'members')
+        self.assertFalse(has_group(self.user, 'members'))
 

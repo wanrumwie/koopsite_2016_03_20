@@ -9,6 +9,7 @@ from koopsite.functions import round_up_division
 from koopsite.settings import SKIP_TEST
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.

@@ -10,7 +10,7 @@ from koopsite.settings import SKIP_TEST
 
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatTablePageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
@@ -66,7 +66,7 @@ class FlatTablePageVisitTest(PageVisitTest):
         return self.data_links_number
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatTablePageAuthenticatedVisitorTest(FlatTablePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -98,6 +98,7 @@ class FlatTablePageAuthenticatedVisitorTest(FlatTablePageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatTablePageAnonymousVisitorTest(FlatTablePageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -116,7 +117,7 @@ class FlatTablePageAnonymousVisitorTest(FlatTablePageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatTablePageDataTest(FlatTablePageVisitTest):
     """
     Тест відвідання сторінки сайту

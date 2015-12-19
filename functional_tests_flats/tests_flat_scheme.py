@@ -39,7 +39,7 @@ class FlatSchemePageVisitTest(PageVisitTest):
             ]
         return s
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
     """
     Тест відвідання сторінки сайту
