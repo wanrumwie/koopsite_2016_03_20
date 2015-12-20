@@ -32,9 +32,6 @@ class FolderDetail(AllFieldsView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        # r = resolve(request.path)
-        # print('resolve(request.path) =', r)
-        # print('r.namespace =', r.namespace)
         return super(FolderDetail, self).dispatch(request, *args, **kwargs)
 
 
@@ -61,7 +58,7 @@ class ReportDetail(AllFieldsView):
 class ReportPreview(DetailView):
     model = Report
     template_name = 'folders/report_preview.html'
-    url_name='report-preview'
+    # url_name='report-preview'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
