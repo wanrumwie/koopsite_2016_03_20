@@ -1,15 +1,10 @@
-from unittest.case import skip
-from django.core.urlresolvers import resolve
-from django.http.request import HttpRequest
-from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import RequestFactory
-from flats.models import Flat, Person
+from flats.models import Flat
+from flats.tests.test_base import DummyFlat
 from flats.views import FlatScheme, FlatDetail, \
                         FlatDetailHorizontal, FlatList, FlatTable
 import flats.views
-from functional_tests_koopsite.ft_base import DummyData
-from koopsite.functions import print_dict, print_list
 
 # @skip
 from koopsite.tests.test_views import setup_view
@@ -35,19 +30,19 @@ class FlatSchemeTest(TestCase):
     def test_context_data(self):
         """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з одної квартири:
-        floors=[0]
-        entrances=[1]
+        floors = [0]
+        entrances = [1]
         flat = Flat(floor_No=0, entrance_No=1)
         flat.save()
         block_scheme = {0: {1: [flat, ]}}
         # {0: {1: [flat, ], 2: [flat, ]}, 1: {1: [flat, ], 2: [flat, ]},}
         block_length = {1: 1}
         # TODO-
-        kwargs = {}
-        kwargs['block_scheme'] = block_scheme
-        kwargs['block_length'] = block_length
-        kwargs['floors']       = floors
-        kwargs['entrances']    = entrances
+        kwargs = {'block_scheme': block_scheme,
+                  'block_length': block_length,
+                  'floors'      : floors,
+                  'entrances'   : entrances,
+                }
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
         view = FlatScheme()
@@ -69,16 +64,17 @@ class FlatSchemeTest(TestCase):
         flat2.save()
         flat3 = Flat(floor_No=2, entrance_No=2)
         flat3.save()
-        floors=[2,1]
-        entrances=[1,2]
+        floors = [2, 1]
+        entrances = [1, 2]
         block_scheme = {1: {1: [flat1]}, 2: {2: [flat2, flat3]}}
         # {0: {1: [flat, ], 2: [flat, ]}, 1: {1: [flat, ], 2: [flat, ]},}
         block_length = {1: 1, 2: 2}
-        kwargs = {}
-        kwargs['block_scheme'] = block_scheme
-        kwargs['block_length'] = block_length
-        kwargs['floors']       = floors
-        kwargs['entrances']    = entrances
+        kwargs = {
+                'block_scheme' : block_scheme,
+                'block_length' : block_length,
+                'floors'       : floors,
+                'entrances'    : entrances,
+        }
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
         view = FlatScheme()
@@ -94,16 +90,17 @@ class FlatSchemeTest(TestCase):
     def test_context_data_3(self):
         """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з кількох квартир:
-        floors=(1,2)
-        entrances=(1,2)
-        DummyData().create_dummy_building(floors=floors, entrances=entrances)
+        floors = (1, 2)
+        entrances = (1, 2)
+        DummyFlat().create_dummy_building(floors=floors, entrances=entrances)
         d, floors, entrances = flats.views.block_scheme()
         l = flats.views.block_length(d)
-        kwargs = {}
-        kwargs['block_scheme'] = d
-        kwargs['block_length'] = l
-        kwargs['floors']       = floors
-        kwargs['entrances']    = entrances
+        kwargs = {
+                'block_scheme' : d,
+                'block_length' : l,
+                'floors'       : floors,
+                'entrances'    : entrances,
+        }
         # print_dict(kwargs, 'kwargs')
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
@@ -169,7 +166,7 @@ class FlatListTest(TestCase):
     def test_flat_list_model_and_attributes(self):
         view = FlatList()
         self.assertEqual(view.model,                Flat)
-        self.assertEqual(view.context_object_name , 'flat_list')
+        self.assertEqual(view.context_object_name, 'flat_list')
 
     def test_flat_list_page_renders_proper_template(self):
         response = self.client.get('/flats/list/')
@@ -189,7 +186,7 @@ class FlatTableTest(TestCase):
         self.assertEqual(view.model, Flat)
         self.assertEqual(view.paginate_by, 15)
         self.assertEqual(view.exclude, ('id', 'flat_99', 'note', 'listing'))
-        self.assertEqual(view.context_object_name , "field_vals")
+        self.assertEqual(view.context_object_name, "field_vals")
         self.assertEqual(view.context_verbose_list_name, "field_names")
 
     def test_flat_table_page_renders_proper_template(self):

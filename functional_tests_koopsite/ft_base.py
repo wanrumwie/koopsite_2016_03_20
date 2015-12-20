@@ -1,8 +1,7 @@
 import inspect
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, \
-                       HASH_SESSION_KEY, get_user_model, authenticate
-from django.contrib.auth.models import Permission, Group
+                       HASH_SESSION_KEY
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
@@ -10,10 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
 import time
-from flats.models import Flat
-from folders.models import Folder
-from koopsite.functions import trace_print, print_list
-from koopsite.models import UserProfile
+from koopsite.tests.test_base import DummyUser
 
 
 def wait_for(condition_function):
@@ -42,6 +38,25 @@ class wait_for_page_load(object):
 
     def __exit__(self, *_):
         wait_for(self.page_has_loaded)
+
+def create_user_session(user):
+    # Then create the authenticated session using the new user credentials
+    session = SessionStore()
+    session[SESSION_KEY] = user.pk
+    session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
+    session[HASH_SESSION_KEY] = user.get_session_auth_hash()
+    session.save()
+    return session
+
+def create_cookie(session):
+    # Finally, create the cookie dictionary
+    cookie = {
+        'name': settings.SESSION_COOKIE_NAME,
+        'value': session.session_key,
+        'secure': False,
+        'path': '/',
+    }
+    return cookie
 
 
 class FunctionalTest(StaticLiveServerTestCase): # працює з окремою спеціально
@@ -132,7 +147,8 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
             else:       href = parent.find_element_by_link_text(link_text)
         elif href_itself:
             href = parent.find_element_by_xpath("//a[contains(@href,'%s')]" % href_itself)
-        # a[href*="w3schools"]
+        else:
+            href = None
 
         actions = ActionChains(self.browser)
         actions.move_to_element(href)
@@ -158,105 +174,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         return location, size
 
 
-def create_user_session(user):
-    # Then create the authenticated session using the new user credentials
-    session = SessionStore()
-    session[SESSION_KEY] = user.pk
-    session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-    session[HASH_SESSION_KEY] = user.get_session_auth_hash()
-    session.save()
-    return session
-
-def create_cookie(session):
-    # Finally, create the cookie dictionary
-    cookie = {
-        'name': settings.SESSION_COOKIE_NAME,
-        'value': session.session_key,
-        'secure': False,
-        'path': '/',
-    }
-    return cookie
-
-
-class DummyUser():
-    def create_dummy_user(self,
-                              username='dummy_user',
-                              password='top_secret',
-                              last_name="",
-                              first_name=""
-                            ):
-        User = get_user_model()
-        User.objects.create_user(username=username, password=password,
-                                first_name=first_name, last_name=last_name)
-        user = authenticate(username=username, password=password)
-        user.save()
-        self.dummy_user = user
-        trace_print('created user:', user)
-        return user
-
-    def add_dummy_permission(self, user, name='Can activate/deactivate account'):
-        permission = Permission.objects.get(name=name)
-        user.user_permissions.add(permission)
-        user.save()
-        # print('-'*50)
-        # print('permission =', permission)
-        #
-        # user.is_staff = True
-        trace_print('added permission:', permission, 'for user:', user)
-        return permission
-
-    def create_dummy_group(self, group_name):
-        group = Group(name=group_name)
-        group.save()
-        return group
-
-    def add_dummy_group(self, user, group_name):
-        group = Group.objects.get(name=group_name)
-        user.groups.add(group)
-        return group
-
-    def create_dummy_profile(self, user, flat=None, picture=None,
-                              is_recognized=None):
-        profile = UserProfile(user=user, flat=flat, picture=picture,
-                              is_recognized=is_recognized)
-        profile.save()
-        trace_print('created profile:', profile, 'for user:', user)
-        return profile
-
-
-class DummyData():
-    # Створення в базі додаткових даних, потрібних для конкретного класу тестів
-    def create_dummy_flat(self, id=1, flat_No="25а", floor_No=2,
-                                entrance_No=3, flat_99=25):
-        # створюємо квартиру:
-        flat = Flat(id=id, flat_No=flat_No, floor_No=floor_No,
-                    entrance_No=entrance_No, flat_99=flat_99)
-        flat.save()
-        # print('created flat:', flat)
-        return flat
-
-    def create_dummy_building(self, floors=(0,1,2,), entrances=(1,2,3,)):
-        for f in floors:
-            for e in entrances:
-                for i in range(f+e):
-                    no = f*100 + e*10 + i+1
-                    flat_No = str(no)
-                    # створюємо квартиру:
-                    flat = Flat(flat_No=flat_No, floor_No=f,
-                                entrance_No=e, flat_99=no)
-                    flat.save()
-        # print('created building')
-
-    def create_dummy_folder(self):
-        # Створення в базі додаткових даних, потрібних для конкретного класу тестів
-        # створюємо теку з id=1 для folders/1/contents/:
-        folder = Folder(name="dummy_root_folder", id=1)
-        folder.save()
-        # print('created folder:', folder)
-        return folder
-
-
-class PageVisitTest(DummyUser, DummyData, FunctionalTest):
+class PageVisitTest(DummyUser, FunctionalTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки головної сторінки сайту.

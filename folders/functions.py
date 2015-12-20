@@ -23,7 +23,7 @@ def response_for_download(report):
     # print('response_for_download = ', response)
     return response
 
-def response_for_download_zip(folder):
+def response_for_download_zip(folder, maxFileSize = 200000000):
     """
     Preparing response for downloading zip-file,
     consist of all files in folder (without recursion!)
@@ -36,24 +36,23 @@ def response_for_download_zip(folder):
     zipFilename = "%s.zip" % folder.name
     sio = BytesIO()  # Open StringIO to grab in-memory ZIP contents
     zipFile = zipfile.ZipFile(sio, "w")    # The zip compressor
-    maxFileSize = 200000000
     zipFileSize = 0
     msg = ""
     for report in Report.objects.filter(parent_id=folder.id):
         zipFileSize += report.file.size         #
         if zipFileSize > maxFileSize:
             msg = 'Завеликий zip. Решту файлів відкинуто'
-            print(msg)
+            # print(msg)
             break
         filename = report.filename              # "людська" назва файла
         filepath = report.file.name             # шлях до файла на диску
         abs_path = os.path.join(MEDIA_ROOT, filepath)
         zipPath = os.path.join(zipSubdir, filename) # шлях в архіві
-        print("%-3s %-7s %-20s %-20s %-20s" % (report.id, filename, filepath, abs_path, zipPath))
+        # print("%-3s %-7s %-20s %-20s %-20s" % (report.id, filename, filepath, abs_path, zipPath))
         zipFile.write(abs_path, zipPath)            # add file to zip
-    print('цикл закінчено')
+    # print('цикл закінчено')
     zipFile.close() # Must close zip for all contents to be written
-    print('zipfile closed')
+    # print('zipfile closed')
     fileExt  = ".zip"
     ct = mimeType.get(fileExt.lower(), "application/octet-stream")
     fn = '; filename="%s"' % zipFilename
@@ -66,27 +65,26 @@ def response_for_download_zip(folder):
 
 tab = ' '*4
 
-def wrap_li(level, folder):
+def wrap_li(folder, level=0, tab=' '*4):
     indent = tab * level
     li = indent + '<li id="%s">%s\n' % (folder.id, folder.name)
     qs = folder.children.all().order_by('name'.lower())
     if qs:
-        li = li + wrap_ul(level, qs)
+        li = li + wrap_ul(qs, level, tab)
     li = li + indent + '</li>\n'
     return li
 
-def wrap_ul(level, qs):
+def wrap_ul(qs, level=0, tab=' '*4):
     indent = tab * level
     ul = indent + tab + '<ul>\n'
     for f in qs:
-        ul = ul + wrap_li(level+2, f)
+        ul = ul + wrap_li(f, level+2, tab)
     ul = ul + indent + tab + '</ul>\n'
     return ul
 
-def get_folders_tree_HTML(parent_qs=None):
-    level = 0
+def get_folders_tree_HTML(parent_qs=None, level=0, tab=' '*4):
     qs = parent_qs or Folder.objects.filter(parent=None).order_by('name'.lower())
-    html = wrap_ul(level, qs)
+    html = wrap_ul(qs, level, tab)
     return html
 
 

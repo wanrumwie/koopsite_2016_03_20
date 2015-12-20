@@ -3,6 +3,7 @@ import inspect
 from unittest.case import skip, skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
+from flats.tests.test_base import DummyFlat
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.settings import SKIP_TEST
 
@@ -53,7 +54,7 @@ class FlatListPageAuthenticatedVisitorTest(FlatListPageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        self.create_dummy_building()
+        DummyFlat().create_dummy_building()
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -85,7 +86,7 @@ class FlatListPageAnonymousVisitorTest(FlatListPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        self.create_dummy_building()
+        DummyFlat().create_dummy_building()
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -106,7 +107,7 @@ class FlatListPageVisitorCanFindFlatTest(FlatListPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        self.create_dummy_building()
+        DummyFlat().create_dummy_building()
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))

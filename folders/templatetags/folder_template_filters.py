@@ -23,21 +23,13 @@ def fileext(f):
     except: e = ""
     return e
 
-# @register.filter
-# def filetype(f):
-    # Фільтр для типу файла (відповідно до розширення)
-    # try:    e = os.path.splitext(f.filename)[1]  # [0] returns path+filename
-    # except: e = ""
-    # t = fileTypeByFileExt(e)
-    # return t
-
 # Фільтр для назви файла-іконки (для моделей folder і report)
 @register.filter
 def iconpath(f):
     m = f._meta.model_name
     if m == 'folder':
         p = get_iconPathForFolder()
-    elif m == 'report':
+    elif m == 'report' and f.file:
         try:    e = os.path.splitext(f.filename)[1]  # [0] returns path+filename
         except: e = ""
         p = get_iconPathByFileExt(e)

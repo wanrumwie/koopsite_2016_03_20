@@ -2,7 +2,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import *
 from django.shortcuts import render
-from django.core.urlresolvers import reverse, resolve
+from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -86,7 +86,7 @@ class FolderCreateInFolder(CreateView):
 
     @method_decorator(permission_required('folders.add_folder'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = self.kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(FolderCreateInFolder, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
@@ -146,7 +146,7 @@ class FolderUpdate(UpdateView):
 
     @method_decorator(permission_required('folders.add_folder'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = self.kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(FolderUpdate, self).dispatch(*args, **kwargs)
 
 
@@ -158,7 +158,9 @@ class ReportUpdate(UpdateView):
 
     @method_decorator(permission_required('folders.change_report'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = self.kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        print('     kwargs =', kwargs)
+        print('self.kwargs =', kwargs)
+        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(ReportUpdate, self).dispatch(*args, **kwargs)
 
 
@@ -169,7 +171,7 @@ class ReportUpload(CreateView):
 
     @method_decorator(permission_required('folders.add_report'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = self.kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(ReportUpload, self).dispatch(*args, **kwargs)
 
 
@@ -184,7 +186,7 @@ class ReportUploadInFolder(CreateView):
 
     @method_decorator(permission_required('folders.add_report'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = self.kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        self.parent_id = kwargs.get('parent') or 1  # ОТРИМАННЯ даних з URLconf
         return super(ReportUploadInFolder, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
@@ -210,18 +212,11 @@ def reportDownload(request, pk):
     response = response_for_download(report)
     return response
 
-def success(request):
-    # obtain the context for the user's request.
-    # context = RequestContext(request)
-
-    # If the request is a HTTP POST, try to pull out
-    # the relevant information.
-    if request.method == 'POST':
-        pass
-    else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-        return render(request, 'folders/folder_success.html')
+# def success(request):
+#     if request.method == 'POST':
+#         pass
+#     else:
+#         return render(request, 'folders/folder_success.html')
 
 
 class FolderParentList(ListView):

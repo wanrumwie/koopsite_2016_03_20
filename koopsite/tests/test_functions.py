@@ -3,8 +3,9 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from flats.models import Flat
+from flats.tests.test_base import DummyFlat
 from folders.models import Folder
-from functional_tests_koopsite.ft_base import DummyUser, DummyData
+from functional_tests_koopsite.ft_base import DummyUser
 from koopsite.functions import round_up_division, AllFieldsMixin, get_namespace_from_dict, get_iconPathForFolder, \
     get_iconPathByFileExt, fileNameCheckInsert, scale_height, scale_width, getSelections, getSelElementFromSession, \
     setSelElementToSession, parseClientRequest, parseXHRClientRequest, get_user_full_name, get_user_flat_No, \
@@ -29,13 +30,13 @@ class DifferentFunctionsTest(TestCase):
         self.assertEqual(get_iconPathByFileExt(".doc"), 'img/file-icons/32px/doc.png')
 
     def test_get_or_none(self):
-        flat = DummyData().create_dummy_flat(id=1, flat_No="1")
+        flat = DummyFlat().create_dummy_flat(id=1, flat_No="1")
         self.assertEqual(get_or_none(Flat, id=1), flat)
         self.assertEqual(get_or_none(Flat, id=1, flat_No="1"), flat)
         self.assertFalse(get_or_none(Flat, id=1, flat_No="2"))
 
     def test_get_or_none_gives_error_if_multiple(self):
-        DummyData().create_dummy_building()
+        DummyFlat().create_dummy_building()
         with self.assertRaises(MultipleObjectsReturned):
             f = get_or_none(Flat, floor_No="2")
 
@@ -370,7 +371,7 @@ class UserDifferentAttributesTest(TestCase):
         self.assertEqual(get_user_flat_No(self.user), "")
 
     def test_get_user_flat_No_gives_proper_value(self):
-        flat = DummyData().create_dummy_flat(flat_No='11a')
+        flat = DummyFlat().create_dummy_flat(flat_No='11a')
         DummyUser().create_dummy_profile(self.user, flat=flat)
         self.assertEqual(get_user_flat_No(self.user), "11a")
 

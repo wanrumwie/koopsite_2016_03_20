@@ -1,6 +1,9 @@
 import inspect
 from unittest.case import skip, skipIf
 from django.contrib.auth.models import AnonymousUser
+from flats.tests.test_base import DummyFlat
+from folders.models import Folder
+from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.functions import print_list
 from koopsite.settings import SKIP_TEST
@@ -14,7 +17,8 @@ class IndexPageAuthenticatedVisitorTest(PageVisitTest):
     def setUp(self):
         self.browser.implicitly_wait(20)
         self.dummy_user = self.create_dummy_user()
-        self.create_dummy_folder()
+        DummyFolder().create_dummy_catalogue()
+        DummyFlat().create_dummy_building()
         self.add_user_cookie_to_browser(self.dummy_user)
         self.data_links_number = 0   # кількість лінків, які приходять в шаблон з даними
 
@@ -44,9 +48,10 @@ class IndexPageAuthenticatedVisitorWithFlatTest(PageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        self.create_dummy_folder()
+        DummyFolder().create_dummy_catalogue()
+        DummyFlat().create_dummy_building()
         profile = self.create_dummy_profile(user=self.dummy_user)
-        flat = self.create_dummy_flat()
+        flat = DummyFlat().create_dummy_flat()
         profile.flat=flat
         profile.save()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -67,7 +72,8 @@ class IndexPageAuthenticatedVisitorWithPermissionTest(PageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        self.create_dummy_folder()
+        DummyFolder().create_dummy_catalogue()
+        DummyFlat().create_dummy_building()
         self.add_dummy_permission(self.dummy_user,
                                   name='Can activate/deactivate account')
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -87,7 +93,8 @@ class IndexPageAnonymousVisitorTest(PageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        self.create_dummy_folder()
+        DummyFolder().create_dummy_catalogue()
+        DummyFlat().create_dummy_building()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):

@@ -1,8 +1,8 @@
-import html.entities
 import inspect
 from unittest.case import skip, skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
+from flats.tests.test_base import DummyFlat
 from flats.views import FlatDetail
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.functions import round_up_division
@@ -74,7 +74,7 @@ class FlatDetailPageAuthenticatedVisitorTest(FlatDetailPageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        flat = self.create_dummy_flat(flat_No='1')
+        flat = DummyFlat().create_dummy_flat(flat_No='1')
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -102,10 +102,10 @@ class FlatDetailPageAuthenticatedVisitorWithFlatTest(FlatDetailPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
-        self.create_dummy_flat(flat_No='1')
+        DummyFlat().create_dummy_flat(flat_No='1')
         self.add_user_cookie_to_browser(self.dummy_user)
         profile = self.create_dummy_profile(user=self.dummy_user)
-        flat = self.create_dummy_flat()
+        flat = DummyFlat().create_dummy_flat()
         profile.flat=flat
         profile.save()
         self.get_data_links_number()
@@ -125,7 +125,7 @@ class FlatDetailPageAnonymousVisitorTest(FlatDetailPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        self.create_dummy_flat(flat_No='1')
+        DummyFlat().create_dummy_flat(flat_No='1')
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -145,7 +145,7 @@ class FlatDetailPageDataTest(FlatDetailPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        self.create_dummy_flat(flat_No='1')
+        DummyFlat().create_dummy_flat(flat_No='1')
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -228,7 +228,7 @@ class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        flat = self.create_dummy_flat(flat_No='1')
+        flat = DummyFlat().create_dummy_flat(flat_No='1')
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк "В одну колонку"
         self.data_links_number += 1 # лінк javascript:history.back()
@@ -261,7 +261,7 @@ class FlatDetail_h_PageAnonymousVisitorTest(FlatDetail_h_PageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        self.create_dummy_flat(flat_No='1')
+        DummyFlat().create_dummy_flat(flat_No='1')
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк "В одну колонку"
         self.data_links_number += 1 # лінк javascript:history.back()

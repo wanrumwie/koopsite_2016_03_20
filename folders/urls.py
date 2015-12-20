@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from folders.views import folderDownload, ReportPreview
-from .views import success, \
-                    FolderCreate, \
+from .views import  FolderCreate, \
                     FolderCreateInFolder, \
                     FolderUpdate, \
                     FolderDelete, \
@@ -35,7 +34,7 @@ from .viewsajaxfolder import \
 
 urlpatterns = [
     url(r'^create/$',       FolderCreate.as_view(), name='folder-create'),
-    url(r'^success/$',      success,                name='success'),
+    # url(r'^success/$',      success,                name='success'),
     url(r'^list/$',         FolderList.as_view(),   name='folder-list'),
 
     url(r'^(?P<pk>[0-9]+)/$',                   FolderDetail.as_view(), name='folder-detail'),

@@ -6,43 +6,43 @@ from django.test import TestCase
 from django.utils.timezone import now
 from folders.models import Folder, Report, get_recursive_path, get_parents, get_subfolders, get_subreports, \
     get_report_path
-from folders.tests.test_base import DummyData
+from folders.tests.test_base import DummyFolder
 
 
 class DifferentFunctionsTest(TestCase):
 
     def test_get_recursive_path(self):
-        root = DummyData().create_dummy_root_folder()
-        f2 = DummyData().create_dummy_folder(parent=root)
-        f3 = DummyData().create_dummy_folder(parent=f2)
-        report = DummyData().create_dummy_report(parent=f3)
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        report = DummyFolder().create_dummy_report(parent=f3)
         expected = '%s\\%s\\%s\\' % (root.id, f2.id, f3.id)
         self.assertEqual(get_recursive_path(report), expected)
 
     def test_get_parents(self):
-        root = DummyData().create_dummy_root_folder()
-        f2 = DummyData().create_dummy_folder(parent=root)
-        f3 = DummyData().create_dummy_folder(parent=f2)
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
         self.assertEqual(get_parents(root), [])
         self.assertEqual(get_parents(f2), [root])
         self.assertEqual(get_parents(f3), [root, f2])
 
     def test_get_subfolders(self):
-        root = DummyData().create_dummy_root_folder()
-        f2 = DummyData().create_dummy_folder(parent=root)
-        f3 = DummyData().create_dummy_folder(parent=f2)
-        f4 = DummyData().create_dummy_folder(parent=f2, name='f4')
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        f4 = DummyFolder().create_dummy_folder(parent=f2, name='f4')
         self.assertEqual(list(get_subfolders(root)), [f2])
         self.assertEqual(list(get_subfolders(f2)), [f3, f4])
         self.assertEqual(list(get_subfolders(f3)), [])
 
     def test_get_subreports(self):
-        root = DummyData().create_dummy_root_folder()
-        f2 = DummyData().create_dummy_folder(parent=root)
-        f3 = DummyData().create_dummy_folder(parent=f2)
-        r2 = DummyData().create_dummy_report(parent=f2)
-        r3 = DummyData().create_dummy_report(parent=f3)
-        r4 = DummyData().create_dummy_report(parent=f3)
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        r2 = DummyFolder().create_dummy_report(parent=f2)
+        r3 = DummyFolder().create_dummy_report(parent=f3)
+        r4 = DummyFolder().create_dummy_report(parent=f3)
         self.assertEqual(list(get_subreports(root)), [])
         self.assertEqual(list(get_subreports(f2)), [r2])
         self.assertEqual(list(get_subreports(f3)), [r3, r4])
@@ -63,10 +63,10 @@ class FolderModelTest(TestCase):
         self.assertEqual(folder.get_absolute_url(), expected)
 
     def test_name_unique_name_gives_error(self):
-        root = DummyData().create_dummy_root_folder()
-        f2 = DummyData().create_dummy_folder(parent=root, name='f')
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root, name='f')
         with self.assertRaises(IntegrityError):
-            f3 = DummyData().create_dummy_folder(parent=root, name='f')
+            f3 = DummyFolder().create_dummy_folder(parent=root, name='f')
 
     def test_name_no_name_gives_error(self):
         f = Folder(name=None)
@@ -88,10 +88,10 @@ class ReportModelTest(TestCase):
             r.save()
 
     def test_saving_and_retrieving_files(self):
-        root = DummyData().create_dummy_root_folder()
+        root = DummyFolder().create_dummy_root_folder()
         file = SimpleUploadedFile("file.txt", b"file_content")
         expected = file.read()
-        DummyData().create_dummy_report(root, file=file)
+        DummyFolder().create_dummy_report(root, file=file)
         saved_report = Report.objects.first()
         # Перевіряємо, чи збереглася первинна назва файла
         self.assertEqual(saved_report.filename, "file.txt")
