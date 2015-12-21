@@ -1,8 +1,7 @@
-from datetime import datetime
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import *
-from django.shortcuts import render
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -80,6 +79,7 @@ class FolderCreateInFolder(CreateView):
     model = Folder
     form_class = FolderFormInFolder
     template_name = 'folders/folder_create.html'
+    kwargs = {}
 
     @method_decorator(permission_required('folders.add_folder'))
     def dispatch(self, *args, **kwargs):
@@ -94,9 +94,8 @@ class FolderCreateInFolder(CreateView):
         folder = form.save(commit=False)    # збережений ще "сирий" примірник
         parent = Folder.objects.get(id=self.kwargs.get('parent'))
         folder.parent = parent              # foreignkey
-        folder.created_on = datetime.now()  # не використовуємо auto_now
+        folder.created_on = timezone.now()  # не використовуємо auto_now
         folder.save()                       # остаточне збереження
-        print('form saved')
         return HttpResponseRedirect(self.get_success_url())
 
 

@@ -67,7 +67,7 @@ class Folder(models.Model):
                                       null=True,
                                       blank=True)
     created_on  = models.DateTimeField(verbose_name='Дата створення',
-                                      auto_now_add=True,
+                                      # auto_now_add=True,
                                       null=True,
                                       blank=True)
     def __str__(self):

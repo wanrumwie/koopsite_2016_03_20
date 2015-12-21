@@ -1,12 +1,12 @@
 import os
 import json
-from datetime import datetime
 from itertools import chain
 import types
 from django.contrib.auth.decorators import permission_required
 from django.core.files.base import ContentFile
 from django.http.response import HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
@@ -305,7 +305,7 @@ class AjaxTableRowView(View):
             folder            = Folder()
             folder.name       = rqst.name
             folder.parent     = Folder.objects.get(id=rqst.parent_id)
-            folder.created_on = datetime.now()  # не використовуємо auto_now
+            folder.created_on = timezone.now()  # не використовуємо auto_now
             folder.save()                       # остаточне збереження
             msg.title   = folder.name
             msg.type    = msgType.NewRow
@@ -344,7 +344,7 @@ class AjaxFolderCreate(AjaxTableRowView):
             folder            = Folder()        # новий примірник
             folder.name       = rqst.name
             folder.parent     = Folder.objects.get(id=rqst.parent_id)
-            folder.created_on = datetime.now()  # не використовуємо auto_now
+            folder.created_on = timezone.now()  # не використовуємо auto_now
             folder.save()                       # остаточне збереження
             msg.title   = folder.name
             msg.type    = msgType.NewRow
@@ -738,7 +738,7 @@ class XHRReportUpload(XHRTableRowView):
 
                 if fileSizeFact == rqst.fileSize:
                     # Файл завантажено повністю
-                    report.uploaded_on = rqst.fileLastModifiedDate or datetime.now()
+                    report.uploaded_on = rqst.fileLastModifiedDate or timezone.now()
 
                     report.save()    # остаточне збереження примірника моделі
 
