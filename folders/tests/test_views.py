@@ -1,18 +1,21 @@
 from unittest.case import skip
+from datetime import timedelta
 from django.contrib.auth.models import AnonymousUser
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, reverse
 from django.http.request import HttpRequest
+from django.template.context_processors import request
 from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.html import escape
+from django.utils.timezone import now
 from folders.forms import FolderForm, FolderFormInFolder
 from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
 from folders.views import FolderCreate, FolderList, FolderDetail, ReportList, ReportDetail, ReportPreview, \
     FolderCreateInFolder
+from koopsite.settings import LOGIN_URL
 from koopsite.tests.test_base import DummyUser
-from koopsite.tests.test_views import setup_view
 
 
 class FolderListTest(TestCase):
@@ -80,6 +83,11 @@ class FolderDetailTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+        # Перевіряємо response.url.startswith(), бо перевірка:
+        # self.assertRedirects(response, LOGIN_URL)
+        # дає помилку:
+        # AttributeError: 'HttpResponseRedirect' object has no attribute 'client'
 
     def test_view_gives_response_status_code_200(self):
         DummyFolder().create_dummy_root_folder()
@@ -158,6 +166,7 @@ class ReportDetailTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
         root = DummyFolder().create_dummy_root_folder()
@@ -207,6 +216,7 @@ class ReportPreviewTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
         root = DummyFolder().create_dummy_root_folder()
@@ -261,6 +271,7 @@ class FolderCreateTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_302_simple_User(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
@@ -270,6 +281,7 @@ class FolderCreateTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
@@ -281,6 +293,25 @@ class FolderCreateTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_post(self):
+        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
+        self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+        root = DummyFolder().create_dummy_root_folder()
+        data = {
+            'name' : 'dummy_folder_post',
+        }
+        request = RequestFactory().post(self.path, data)
+        request.user = dummy_user
+        response = self.cls_view.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        # Витягаємо з бази щойно створений запис:
+        f = self.cls_view.model.objects.last()
+        self.assertEqual(f.name, data['name'])
+        expected_url = f.get_absolute_url()
+        self.assertEqual(response.url, expected_url)
+
+
 
 class FolderCreateInFolderTest(TestCase):
 
@@ -288,6 +319,7 @@ class FolderCreateInFolderTest(TestCase):
         self.cls_view = FolderCreateInFolder
         self.path = '/folders/1/create/'
         self.template = 'folders/folder_create.html'
+        self.parent_folder = DummyFolder().create_dummy_root_folder()
 
     def test_view_model_and_attributes(self):
         view = self.cls_view()
@@ -323,6 +355,7 @@ class FolderCreateInFolderTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_302_simple_User(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
@@ -332,6 +365,7 @@ class FolderCreateInFolderTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
@@ -343,27 +377,37 @@ class FolderCreateInFolderTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
-    # TODO-не вдається отримати self.parent_id для перевірки
-    @skip
-    def test_view_gives_success_url(self):
+    # def test_get(self):
+    #     dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
+    #     self.client.login(username='fred', password='secret')
+    #     DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+    #     request = RequestFactory().get(self.path)
+    #     request.user = dummy_user
+    #     kwargs = {'parent': 1}
+    #     response = self.cls_view.as_view()(request, **kwargs)
+    #     self.assertEqual(response.status_code, 200)
+    #
+    def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
-        request = RequestFactory().get(self.path)
+        data = {
+            'name' : 'dummy_folder_post'
+        }
+        request = RequestFactory().post(self.path, data)
         request.user = dummy_user
-        view = self.cls_view.as_view()
-        view = setup_view(self.cls_view, request, pk=1)
-        v = view()
-        response = v.dispatch(request, *view.args, **view.kwargs)
-        print(v.__dict__)
-        s = v.get_success_url()
-        print(s)
-        # view().dispatch(request, pk=1)
-        # self.assertEqual(view.get_success_url(), "1")
-        # self.assertEqual(view.parent_id, 1)
+        kwargs = {'parent': 1}
+        response = self.cls_view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        # self.assertEqual(response.url, "/folders/1/contents/")
+        # Витягаємо з бази щойно створений запис:
+        f = self.cls_view.model.objects.last()
+        # Перевіряємо поля:
+        self.assertEqual(f.name, data['name'])
+        self.assertEqual(f.parent, self.parent_folder)
+        # Час створення (до секунди) співпадає з поточним?
+        self.assertAlmostEqual(f.created_on, now(), delta=timedelta(minutes=1))
+        expected_url = self.parent_folder.get_absolute_url()
+        # expected_url = reverse('folders:folder-contents', {'pk': self.parent_folder.id})
+        self.assertEqual(response.url, expected_url)
 
-
-        # request = RequestFactory().get('/fake-path')
-        # view = HelloView(template_name='hello.html')
-        # view = setup_view(view, request, name='bob')
-        # response = view.dispatch(view.request, *view.args, **view.kwargs)

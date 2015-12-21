@@ -83,18 +83,20 @@ class FolderCreateInFolder(CreateView):
 
     @method_decorator(permission_required('folders.add_folder'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        self.kwargs.update({'parent': kwargs.get('parent') or 1}) # ОТРИМАННЯ даних з URLconf
         return super(FolderCreateInFolder, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
-        return reverse('folder-contents', kwargs={'pk': self.parent_id})
+        # return reverse('folder-contents', kwargs={'pk': self.parent_id})
+        return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
 
     def form_valid(self, form):
         folder = form.save(commit=False)    # збережений ще "сирий" примірник
-        parent = Folder.objects.get(id=self.parent_id)
+        parent = Folder.objects.get(id=self.kwargs.get('parent'))
         folder.parent = parent              # foreignkey
         folder.created_on = datetime.now()  # не використовуємо auto_now
         folder.save()                       # остаточне збереження
+        print('form saved')
         return HttpResponseRedirect(self.get_success_url())
 
 
