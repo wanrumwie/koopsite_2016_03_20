@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.views.generic.base import TemplateView
 from folders.views import folderDownload, ReportPreview
 from .views import  FolderCreate, \
                     FolderCreateInFolder, \
@@ -69,6 +70,9 @@ urlpatterns = [
     url(r'^ajax-report-download$',          XHRReportDownload.as_view(),name='ajax-report-download'),
     url(r'^ajax-report-upload$',            XHRReportUpload.as_view(),  name='ajax-report-upload$'),
 
+    url(r'^folder-not-empty/$',
+        TemplateView.as_view(template_name='folder_not_empty.html'),
+                                        name='folder-not-empty'),
 ]
 
 # urlpatterns += staticfiles_urlpatterns()

@@ -37,3 +37,13 @@ class ReportFormInFolder(forms.ModelForm):
         model = Report
         fields = ('file',)
 
+
+class ReportUpdateForm(forms.ModelForm):
+    # Форма для вводу даних про файл
+    required_css_class  = 'required'
+    error_css_class     = 'error'
+    class Meta:
+        model = Report
+        fields = ('parent', 'filename', 'file')
+
+

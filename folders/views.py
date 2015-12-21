@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from folders.forms import ReportUpdateForm
 from folders.functions import response_for_download, response_for_download_zip
 from koopsite.views import AllFieldsView
 from .models import Folder, Report, \
@@ -87,7 +88,6 @@ class FolderCreateInFolder(CreateView):
         return super(FolderCreateInFolder, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
-        # return reverse('folder-contents', kwargs={'pk': self.parent_id})
         return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
 
     def form_valid(self, form):
@@ -99,42 +99,44 @@ class FolderCreateInFolder(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ReportDelete(DeleteView):
-    model = Report
-    form_class = ReportForm
-    template_name = 'folders/report_delete.html'
-
-    def get_success_url(self):
-        return reverse('report-list')
-
-    @method_decorator(permission_required('folders.delete_report'))
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        print(self.object)
-        self.object.file.delete()
-        print('file deleted')
-        self.object.delete()
-        return HttpResponseRedirect(self.get_success_url())
-
-
 class FolderDelete(DeleteView):
     model = Folder
     form_class = FolderForm
     template_name = 'folders/folder_delete.html'
 
-    def get_success_url(self):
-        return reverse('folder-list')
-
     @method_decorator(permission_required('folders.delete_folder'))
+    def dispatch(self, *args, **kwargs):
+        return super(FolderDelete, self).dispatch(*args, **kwargs)
+
     def delete(self, request, *args, **kwargs):
         folder = self.get_object()
-        print(folder)
         if get_subfolders(folder) or get_subreports(folder):
-            return HttpResponseRedirect('folder_not_empty')
+            return HttpResponseRedirect(reverse('folders:folder-not-empty'))
         else:
             folder.delete()
-            print('file deleted')
             return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('folders:folder-list')
+
+
+class ReportDelete(DeleteView):
+    model = Report
+    form_class = ReportForm
+    template_name = 'folders/report_delete.html'
+
+    @method_decorator(permission_required('folders.delete_report'))
+    def dispatch(self, *args, **kwargs):
+        return super(ReportDelete, self).dispatch(*args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.file.delete()
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('folders:report-list')
 
 
 class FolderUpdate(UpdateView):
@@ -142,23 +144,23 @@ class FolderUpdate(UpdateView):
     form_class = FolderForm
     template_name = 'folders/folder_update.html'
 
-    @method_decorator(permission_required('folders.add_folder'))
+    @method_decorator(permission_required('folders.change_folder'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        # self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(FolderUpdate, self).dispatch(*args, **kwargs)
 
 
 class ReportUpdate(UpdateView):
     model = Report
-    # form_class = ReportForm
-    fields = ('parent', 'filename', 'file')
+    form_class = ReportUpdateForm
+    # fields = ('parent', 'filename', 'file')
     template_name = 'folders/report_update.html'
 
     @method_decorator(permission_required('folders.change_report'))
     def dispatch(self, *args, **kwargs):
-        print('     kwargs =', kwargs)
-        print('self.kwargs =', kwargs)
-        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        # print('     kwargs =', kwargs)
+        # print('self.kwargs =', kwargs)
+        # self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(ReportUpdate, self).dispatch(*args, **kwargs)
 
 
@@ -169,7 +171,7 @@ class ReportUpload(CreateView):
 
     @method_decorator(permission_required('folders.add_report'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
+        # self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(ReportUpload, self).dispatch(*args, **kwargs)
 
 
@@ -178,21 +180,23 @@ class ReportUploadInFolder(CreateView):
     model = Report
     form_class = ReportFormInFolder
     template_name = 'folders/report_upload.html'
-
-    def get_success_url(self):
-        return reverse('folder-contents', kwargs={'pk': self.parent_id})
+    kwargs = {}
 
     @method_decorator(permission_required('folders.add_report'))
     def dispatch(self, *args, **kwargs):
-        self.parent_id = kwargs.get('parent') or 1  # ОТРИМАННЯ даних з URLconf
+        self.kwargs.update({'parent': kwargs.get('parent') or 1}) # ОТРИМАННЯ даних з URLconf
+        # self.parent_id = kwargs.get('parent') or 1  # ОТРИМАННЯ даних з URLconf
         return super(ReportUploadInFolder, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         report = form.save(commit=False)    # збережений ще "сирий" примірник, щоб отримати id
-        parent = Folder.objects.get(id=self.parent_id)
+        parent = Folder.objects.get(id=self.kwargs.get('parent'))
         report.parent = parent              # foreignkey
         report.save()                       # остаточне збереження
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
 
 
 @permission_required('folders.download_folder')
