@@ -6,10 +6,12 @@ from django.forms.fields import Field
 from koopsite.functions import has_group_member, add_group, remove_group
 from .models import UserProfile
 
+EMPTY_FIELD_ERROR = "Це поле обов'язкове:"
+INVALID_FIELD_ERROR = "Невірне значення:"
 # ця змінна використовується всіма аплікаціями
 Field.default_error_messages = {
-    'required'  : "Це поле обов'язкове:",
-    'invalid'   : "Невірне значення:",
+    'required'  : EMPTY_FIELD_ERROR,
+    'invalid'   : INVALID_FIELD_ERROR,
 }
 '''
 ДЛЯ ПЕРЕКЛАДУ:
