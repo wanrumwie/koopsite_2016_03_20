@@ -22,14 +22,10 @@ class DummyUser():
         trace_print('created user:', user)
         return user
 
-    def add_dummy_permission(self, user, name='Can activate/deactivate account'):
-        permission = Permission.objects.get(name=name)
+    def add_dummy_permission(self, user, codename='activate_account'):
+        permission = Permission.objects.get(codename=codename)
         user.user_permissions.add(permission)
         user.save()
-        # print('-'*50)
-        # print('permission =', permission)
-        #
-        # user.is_staff = True
         trace_print('added permission:', permission, 'for user:', user)
         return permission
 

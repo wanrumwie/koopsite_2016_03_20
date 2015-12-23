@@ -1,7 +1,7 @@
 from asyncio.tasks import sleep
 from unittest.case import skip
 from datetime import timedelta
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import AnonymousUser, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
@@ -12,7 +12,7 @@ from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
 from folders.views import FolderCreate, FolderList, FolderDetail, ReportList, ReportDetail, ReportPreview, \
     FolderCreateInFolder, FolderDelete, ReportDelete, FolderUpdate, ReportUpdate, ReportUpload, ReportUploadInFolder, \
-    reportDownload, folderDownload
+    reportDownload, folderDownload, FolderParentList
 from koopsite.settings import LOGIN_URL
 from koopsite.tests.test_base import DummyUser
 
@@ -260,7 +260,7 @@ class FolderCreateTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -285,7 +285,7 @@ class FolderCreateTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         view = self.cls_view.as_view()
@@ -295,7 +295,7 @@ class FolderCreateTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
         root = DummyFolder().create_dummy_root_folder()
         data = {
             'name' : 'dummy_folder_post',
@@ -343,7 +343,7 @@ class FolderCreateInFolderTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -368,7 +368,7 @@ class FolderCreateInFolderTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         view = self.cls_view.as_view()
@@ -378,7 +378,7 @@ class FolderCreateInFolderTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add folder')
+        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
         data = {
             'name' : 'dummy_folder_post'
         }
@@ -431,7 +431,7 @@ class FolderDeleteTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete folder')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_folder')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -456,7 +456,7 @@ class FolderDeleteTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete folder')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_folder')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         kwargs = {'pk': 1}
@@ -466,7 +466,7 @@ class FolderDeleteTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete folder')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_folder')
         request = RequestFactory().post(self.path)
         request.user = dummy_user
         kwargs = {'pk': 1}
@@ -482,7 +482,7 @@ class FolderDeleteTest(TestCase):
     def test_post_redirect_if_folder_not_empty(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete folder')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_folder')
         # Створюємо теку в тій, яку хочемо видалити
         DummyFolder().create_dummy_folder(parent=self.root)
         request = RequestFactory().post(self.path)
@@ -500,7 +500,7 @@ class FolderDeleteTest(TestCase):
     def test_post_redirect_if_folder_not_empty_2(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete folder')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_folder')
         # Створюємо документ в теці, яку хочемо видалити
         DummyFolder().create_dummy_report(parent=self.root)
         request = RequestFactory().post(self.path)
@@ -549,7 +549,7 @@ class ReportDeleteTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete report')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_report')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -574,7 +574,7 @@ class ReportDeleteTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete report')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         kwargs = {'pk': 1}
@@ -584,7 +584,7 @@ class ReportDeleteTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete report')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_report')
         request = RequestFactory().post(self.path)
         request.user = dummy_user
         kwargs = {'pk': 1}
@@ -600,7 +600,7 @@ class ReportDeleteTest(TestCase):
     def test_post_if_report_has_file(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can delete report')
+        DummyUser().add_dummy_permission(dummy_user, 'delete_report')
         file = SimpleUploadedFile("file.txt", b"file_content")
         report = DummyFolder().create_dummy_report(self.root, file=file)
 
@@ -615,6 +615,7 @@ class ReportDeleteTest(TestCase):
         ff = self.cls_view.model.objects.all()
         # Перевіряємо поля:
         self.assertEqual(len(ff), 1) # залишився один документ
+        report.file.delete()
 
 
 class FolderUpdateTest(TestCase):
@@ -649,7 +650,7 @@ class FolderUpdateTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can change folder')
+        DummyUser().add_dummy_permission(dummy_user, 'change_folder')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -674,7 +675,7 @@ class FolderUpdateTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can change folder')
+        DummyUser().add_dummy_permission(dummy_user, 'change_folder')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         kwargs = {'pk': 1}
@@ -684,7 +685,7 @@ class FolderUpdateTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can change folder')
+        DummyUser().add_dummy_permission(dummy_user, 'change_folder')
         data = {
             'name' : 'new_dummy_folder_post',
         }
@@ -737,7 +738,7 @@ class ReportUpdateTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can change report')
+        DummyUser().add_dummy_permission(dummy_user, 'change_report')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -762,7 +763,7 @@ class ReportUpdateTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can change report')
+        DummyUser().add_dummy_permission(dummy_user, 'change_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         kwargs = {'pk': 1}
@@ -774,7 +775,7 @@ class ReportUpdateTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can change report')
+        DummyUser().add_dummy_permission(dummy_user, 'change_report')
         data = {
             'filename' : 'new_dummy_file_name_post'
         }
@@ -829,7 +830,7 @@ class ReportUploadTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add report')
+        DummyUser().add_dummy_permission(dummy_user, 'add_report')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -854,7 +855,7 @@ class ReportUploadTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add report')
+        DummyUser().add_dummy_permission(dummy_user, 'add_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         view = self.cls_view.as_view()
@@ -866,7 +867,7 @@ class ReportUploadTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add report')
+        DummyUser().add_dummy_permission(dummy_user, 'add_report')
         root = DummyFolder().create_dummy_root_folder()
         data = {
             'name' : 'dummy_folder_post',
@@ -913,7 +914,7 @@ class ReportUploadInFolderTest(TestCase):
     def test_view_renders_proper_template(self):
         dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add report')
+        DummyUser().add_dummy_permission(dummy_user, 'add_report')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -938,7 +939,7 @@ class ReportUploadInFolderTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add report')
+        DummyUser().add_dummy_permission(dummy_user, 'add_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         view = self.cls_view.as_view()
@@ -950,7 +951,7 @@ class ReportUploadInFolderTest(TestCase):
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can add report')
+        DummyUser().add_dummy_permission(dummy_user, 'add_report')
         root = DummyFolder().create_dummy_root_folder()
         data = {
             'filename' : 'dummy_filename_post',
@@ -976,17 +977,19 @@ class ReportDownloadTest(TestCase):
         file = SimpleUploadedFile("file.txt", b"file_content")
         self.report = DummyFolder().create_dummy_report(self.root, file=file)
 
+    # TODO-чомусь не видаляється файл
     def tearDown(self):
         # Видалення dummy-файла із затримкою на час його завантаження
         deleted = False
         i = 0
-        while not deleted and i<30:
+        while not deleted and i<100:
             try:
                 self.report.file.delete()
                 deleted = True
             except:
-                sleep(1)
+                sleep(10)
                 i += 1
+        if not deleted: print('1 file not deleted')
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -1011,7 +1014,7 @@ class ReportDownloadTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can download report')
+        DummyUser().add_dummy_permission(dummy_user, 'download_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         response = self.view(request, pk=1)
@@ -1039,6 +1042,7 @@ class FolderDownloadTest(TestCase):
             except:
                 sleep(1)
                 i += 1
+        if not deleted: print('2 file not deleted')
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -1063,11 +1067,38 @@ class FolderDownloadTest(TestCase):
     def test_view_gives_response_status_code_200(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'Can download folder')
+        DummyUser().add_dummy_permission(dummy_user, 'download_folder')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         response = self.view(request, pk=1)
         self.assertEqual(response.status_code, 200)
         sleep(3)
+
+
+class FolderParentListTest(TestCase):
+
+    def setUp(self):
+        self.cls_view = FolderParentList
+        self.path = '/folders/parents/'
+        self.template = 'folders/folder_parents.html'
+
+    def test_view_model_and_attributes(self):
+        DummyFolder().create_dummy_root_folder()
+        view = self.cls_view()
+        self.assertEqual(list(view.queryset), list(Folder.objects.filter(parent=None)))
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__)
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        view = self.cls_view.as_view()
+        response = view(request)
+        self.assertEqual(response.status_code, 200)
 
 

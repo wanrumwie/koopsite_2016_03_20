@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import NON_FIELD_ERRORS
 from .models import Folder, Report
 
 
@@ -39,7 +40,7 @@ class ReportFormInFolder(forms.ModelForm):
 
 
 class ReportUpdateForm(forms.ModelForm):
-    # Форма для вводу даних про файл
+    # Форма для редагування даних про файл
     required_css_class  = 'required'
     error_css_class     = 'error'
     class Meta:

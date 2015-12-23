@@ -33,6 +33,10 @@ class Flat(models.Model):
     def __str__(self):
         return "%-3s" % self.flat_No
 
+    class Meta:
+        verbose_name = ('квартира')
+        verbose_name_plural = ('квартири')
+
     mdbTable = "Таблиця Квартири"
     mdbFields = {
                 'flat_No'    : "Квартира №",
@@ -153,6 +157,10 @@ class Person(models.Model):
 
     def __str__(self):
         return "Кв.%3s %s" % (self.flat.flat_No, self.full_name)
+
+    class Meta:
+        verbose_name = ('особа')
+        verbose_name_plural = ('особи')
 
     mdbTable = "Таблиця Особи"
     mdbFields = {

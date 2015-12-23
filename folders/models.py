@@ -76,6 +76,8 @@ class Folder(models.Model):
         return reverse('folders:folder-contents', kwargs={'pk': self.pk})
 
     class Meta:
+        verbose_name = ('тека')
+        verbose_name_plural = ('теки')
         unique_together = (("parent", "name"),)
         permissions = (
                         ('view_folder', 'Can view folder'),
@@ -135,7 +137,7 @@ class Report(models.Model):
                                       blank=True)
     filename = models.CharField(verbose_name='Назва файлу',
                                       max_length=512,
-                                      null=True,
+                                      # null=True,
                                       blank=True)
     uploaded_on  = models.DateTimeField(verbose_name='Дата заладування',
                                       auto_now_add=True,
@@ -148,6 +150,8 @@ class Report(models.Model):
         return reverse('folders:report-detail', kwargs={'pk': self.pk})
 
     class Meta:
+        verbose_name = ('документ')
+        verbose_name_plural = ('документи')
         permissions = (
                         ('view_report', 'Can view report'),
                         ('download_report', 'Can download report'),

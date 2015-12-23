@@ -2,23 +2,9 @@ from random import randrange
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
-from django.forms.fields import Field
 from koopsite.functions import has_group_member, add_group, remove_group
 from .models import UserProfile
 
-EMPTY_FIELD_ERROR = "Це поле обов'язкове:"
-INVALID_FIELD_ERROR = "Невірне значення:"
-# ця змінна використовується всіма аплікаціями
-Field.default_error_messages = {
-    'required'  : EMPTY_FIELD_ERROR,
-    'invalid'   : INVALID_FIELD_ERROR,
-}
-'''
-ДЛЯ ПЕРЕКЛАДУ:
-Field.default_error_messages = {
-    'required': ugettext_lazy("This field is mandatory."),
-}
-'''
 # TODO-Запустити переклад verbose_name хоча б для моделі User
 # Тимчасове рішення для перекладу назв полів моделі User:
 user_verbose_names_uk = {

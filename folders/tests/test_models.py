@@ -57,16 +57,25 @@ class DifferentFunctionsTest(TestCase):
 
 class FolderModelTest(TestCase):
 
-    def test_folder_get_absolute_url(self):
+    def test_get_absolute_url(self):
         folder = Folder.objects.create()
         expected = reverse('folders:folder-contents', kwargs={'pk': folder.pk})
         self.assertEqual(folder.get_absolute_url(), expected)
 
-    def test_name_unique_name_gives_error(self):
+    def test_Meta(self):
+        self.assertEqual(Folder._meta.verbose_name, ('тека'))
+        self.assertEqual(Folder._meta.verbose_name_plural, ('теки'))
+        self.assertEqual(Folder._meta.unique_together, (("parent", "name"),))
+        self.assertEqual(Folder._meta.permissions, (
+                        ('view_folder', 'Can view folder'),
+                        ('download_folder', 'Can download folder'),
+                        ))
+
+    def test_name_unique_together_gives_error(self):
         root = DummyFolder().create_dummy_root_folder()
-        f2 = DummyFolder().create_dummy_folder(parent=root, name='f')
+        DummyFolder().create_dummy_folder(parent=root, name='f')
         with self.assertRaises(IntegrityError):
-            f3 = DummyFolder().create_dummy_folder(parent=root, name='f')
+            DummyFolder().create_dummy_folder(parent=root, name='f')
 
     def test_name_no_name_gives_error(self):
         f = Folder(name=None)
@@ -149,6 +158,13 @@ class ReportModelTest(TestCase):
         expected = reverse('folders:report-detail', kwargs={'pk': report.pk})
         self.assertEqual(report.get_absolute_url(), expected)
 
+    def test_Meta(self):
+        self.assertEqual(Report._meta.verbose_name, ('документ'))
+        self.assertEqual(Report._meta.verbose_name_plural, ('документи'))
+        self.assertEqual(Report._meta.permissions, (
+                        ('view_report', 'Can view report'),
+                        ('download_report', 'Can download report'),
+                        ))
 
 
 

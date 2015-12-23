@@ -11,7 +11,18 @@
               enctype="multipart/form-data">
             {% csrf_token %}
             <table>
-                {{ form }}
+                {% for field in form.visible_fields %}
+                    {% if field.errors %}
+                        <tr><td colspan=2>{{ field.errors }}   </td></tr>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <tr><td colspan=2>{{ field.help_text }}</td></tr>
+                    {% endif %}
+                    <tr>
+                        <th>{{ field.label }}</th>
+                        <td>{{ field }}      </td>
+                    </tr>
+                {% endfor %}
             </table>
             <input type="submit" value="Створити" />
             <input type="button" value="Скасувати" onclick="javascript:history.back()" />

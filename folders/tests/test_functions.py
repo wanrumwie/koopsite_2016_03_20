@@ -3,7 +3,6 @@ from django.test import TestCase
 from folders.functions import response_for_download, response_for_download_zip, get_folders_tree_HTML, wrap_li, wrap_ul
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
-# import html.parser
 from bs4 import BeautifulSoup
 
 

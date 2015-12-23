@@ -69,6 +69,8 @@ class UserProfile(models.Model):
         return self.user.username + ' (профіль)'
 
     class Meta:
+        verbose_name = ('профіль користувача')
+        verbose_name_plural = ('профілі користувачів')
         permissions = (
                         ('activate_account', 'Can activate/deactivate account'),
         )
