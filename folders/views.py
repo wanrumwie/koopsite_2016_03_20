@@ -1,3 +1,4 @@
+from itertools import chain
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import *
 from django.core.urlresolvers import reverse
@@ -6,18 +7,16 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from folders.forms import ReportUpdateForm
-from folders.functions import response_for_download, response_for_download_zip
+from folders.forms import ReportUpdateForm, FolderForm, FolderFormInFolder, ReportForm, ReportFormInFolder
+from folders.functions import response_for_download, response_for_download_zip, get_subfolders, get_subreports, \
+    get_full_named_path
+from folders.models import Folder, Report
 from koopsite.views import AllFieldsView
-from .models import Folder, Report, \
-                    get_subfolders, get_subreports
-from .forms import FolderForm, ReportForm, \
-                    FolderFormInFolder, ReportFormInFolder
 
 
 class FolderList(ListView):
     model = Folder
-    paginate_by = 5
+    # paginate_by = 5
     ordering = 'name'
     template_name = 'folders/folder_list.html'
 
@@ -88,7 +87,8 @@ class FolderCreateInFolder(CreateView):
         return super(FolderCreateInFolder, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
-        return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
+        return reverse('folders:folder-list')
+        # return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
 
     def form_valid(self, form):
         folder = form.save(commit=False)    # збережений ще "сирий" примірник
@@ -196,7 +196,8 @@ class ReportUploadInFolder(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
+        return reverse('folders:report-list')
+        # return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
 
 
 @permission_required('folders.download_folder')
@@ -214,17 +215,31 @@ def reportDownload(request, pk):
     response = response_for_download(report)
     return response
 
-# def success(request):
-#     if request.method == 'POST':
-#         pass
-#     else:
-#         return render(request, 'folders/folder_success.html')
-
 
 class FolderParentList(ListView):
     # Перегляд тек, які не є дочірніми (тобто, кореневих тек)
     queryset = Folder.objects.filter(parent=None)
     # paginate_by = 20
     template_name = 'folders/folder_parents.html'
+
+
+class FolderReportList(ListView):
+    paginate_by = 15
+    template_name = 'folders/folder_list_all.html'
+    context_object_name = "all_list" # додатковий ідентифікатор для списку self.object_list
+
+    def get_queryset(self):
+        # Дочірні об'єкти:
+        # два queryset з різних моделей об'єднується в один qs,
+        # який обробляється в template як одне ціле (в т.ч. з Paginator'ом)
+        fs = Folder.objects.all()
+        rs = Report.objects.all()
+        frs = list(chain(fs, rs))
+        names = []
+        for fr in frs:
+            names.append(get_full_named_path(fr))
+        qs = [(fr, n,) for fr, n in zip(frs, names)]
+        qs = sorted(qs, key=lambda x: x[1])
+        return qs
 
 

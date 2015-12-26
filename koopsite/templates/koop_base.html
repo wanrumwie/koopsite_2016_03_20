@@ -44,7 +44,7 @@
             <li><a href="{% url 'flats:flat-scheme' %}">Квартири</a></li>
         {% endblock %}
         {% block href-folders %}
-            <li><a href="{% url 'folders:folder-contents' 1 %}">Документи</a></li>
+            <li><a href="{% url 'folders:folder-contents' 1 %}">Картотека</a></li>
         {% endblock %}
         {% block href-login %}
             {% if not user.is_authenticated %}

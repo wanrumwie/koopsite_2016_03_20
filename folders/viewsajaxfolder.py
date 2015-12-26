@@ -20,11 +20,10 @@ from koopsite.functions import  getSelElementFromSession, \
                         parseClientRequest, \
                         parseXHRClientRequest
 from koopsite.viewsajax import msgType, BrowseTableArray
-from folders.models import Folder, Report, get_parents, \
-                        get_subfolders, get_subreports
+from folders.models import Folder, Report
 from folders.functions import response_for_download, \
                         response_for_download_zip, \
-                        get_folders_tree_HTML
+                        get_folders_tree_HTML, get_parents, get_subfolders, get_subreports
 
 
 #################################################################

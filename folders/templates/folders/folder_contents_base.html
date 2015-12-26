@@ -36,11 +36,11 @@
             <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
         {% block href-folder-contents %}
-            <li><a href="{% url 'folders:folder-contents' 1 %}">Документи</a></li>
+            <li><a href="{% url 'folders:folder-contents' 1 %}">Картотека</a></li>
         {% endblock %}
-        {% block href-folder-list %}
-            <li><a href="{% url 'folders:folder-list' %}">Список тек</a></li>
-       {% endblock %}
+        {% block href-folder-list-all %}
+            <li><a href="{% url 'folders:folder-list-all' %}">Картотека (ст.)</a></li>
+        {% endblock %}
         {% block href-back %}
             <li><a href="javascript:history.back()">Назад</a></li>
         {% endblock %}

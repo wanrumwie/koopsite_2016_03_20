@@ -1,10 +1,69 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
-from folders.functions import response_for_download, response_for_download_zip, get_folders_tree_HTML, wrap_li, wrap_ul
+from folders.functions import response_for_download, response_for_download_zip, get_folders_tree_HTML, wrap_li, wrap_ul, \
+    get_recursive_path, get_parents, get_subfolders, get_subreports, get_full_named_path
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from bs4 import BeautifulSoup
 
+
+class DifferentFunctionsTest(TestCase):
+
+    def test_get_recursive_path(self):
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        report = DummyFolder().create_dummy_report(parent=f3)
+        expected = '%s\\%s\\%s\\' % (root.id, f2.id, f3.id)
+        self.assertEqual(get_recursive_path(report), expected)
+
+    def test_get_parents(self):
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        r1 = DummyFolder().create_dummy_report(parent=root)
+        r2 = DummyFolder().create_dummy_report(parent=f2)
+        r3 = DummyFolder().create_dummy_report(parent=f3)
+        self.assertEqual(get_parents(root), [])
+        self.assertEqual(get_parents(f2), [root])
+        self.assertEqual(get_parents(f3), [root, f2])
+        self.assertEqual(get_parents(r1), [root])
+        self.assertEqual(get_parents(r2), [root, f2])
+        self.assertEqual(get_parents(r3), [root, f2, f3])
+
+    def test_get_full_named_path(self):
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        r1 = DummyFolder().create_dummy_report(parent=root, filename="r1")
+        r2 = DummyFolder().create_dummy_report(parent=f2, filename="r2")
+        r3 = DummyFolder().create_dummy_report(parent=f3, filename="r3")
+        self.assertEqual(get_full_named_path(root), "dummy_root_folder")
+        self.assertEqual(get_full_named_path(f2), "dummy_root_folder/dummy_folder")
+        self.assertEqual(get_full_named_path(f3), "dummy_root_folder/dummy_folder/dummy_folder")
+        self.assertEqual(get_full_named_path(r1), "dummy_root_folder/r1")
+        self.assertEqual(get_full_named_path(r2), "dummy_root_folder/dummy_folder/r2")
+        self.assertEqual(get_full_named_path(r3), "dummy_root_folder/dummy_folder/dummy_folder/r3")
+
+    def test_get_subfolders(self):
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        f4 = DummyFolder().create_dummy_folder(parent=f2, name='f4')
+        self.assertEqual(list(get_subfolders(root)), [f2])
+        self.assertEqual(list(get_subfolders(f2)), [f3, f4])
+        self.assertEqual(list(get_subfolders(f3)), [])
+
+    def test_get_subreports(self):
+        root = DummyFolder().create_dummy_root_folder()
+        f2 = DummyFolder().create_dummy_folder(parent=root)
+        f3 = DummyFolder().create_dummy_folder(parent=f2)
+        r2 = DummyFolder().create_dummy_report(parent=f2)
+        r3 = DummyFolder().create_dummy_report(parent=f3)
+        r4 = DummyFolder().create_dummy_report(parent=f3)
+        self.assertEqual(list(get_subreports(root)), [])
+        self.assertEqual(list(get_subreports(f2)), [r2])
+        self.assertEqual(list(get_subreports(f3)), [r3, r4])
 
 
 class Response_for_download_Test(TestCase):

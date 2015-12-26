@@ -1,8 +1,8 @@
 from django.contrib import admin
 import os
+from folders.functions import get_recursive_path
 from folders.models import get_report_path
 from koopsite.settings import MEDIA_ROOT
-from .models import get_recursive_path
 
 # Register your models here.
 

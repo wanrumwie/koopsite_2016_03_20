@@ -3,55 +3,6 @@ from django.db import models
 from django.core.urlresolvers import reverse
 
 
-def get_recursive_path(report):
-    # Отримуємо шлях, який складається з вкладених каталогів:
-    # "1/5/7/", де числа - це значення Folder.id починаючи з батьківського
-    # Використовується ТІЛЬКИ для друку (напр. в  admin.py).
-    id = report.parent.id
-    path = ''
-    # цикл починається з найглибшого каталога
-    while id:
-        path = os.path.join(str(id), path)
-        # print('id = %2s   path = %s' % (id, path))
-        folder = Folder.objects.get(id=id)
-        if folder.parent:   id = folder.parent.id
-        else:               break
-    return path
-
-'''
-    Вирішено відмовитися від рекурсивних каталогів, оскільки
-    1 - всі каталоги все одно мають унікальні назви, а саме  folder.id
-    2 - зміна батьківського каталога для Report або Folder
-        не потребуватиме фізичного переміщення каталогів і файлів,
-        а означатиме лише зміни в базі даних моделей.
-'''
-
-def get_parents(folder):
-    # Отримуємо список - ланцюжок тек,
-    # батьківських відносно теки folder
-    parents_list = []
-    # цикл починається з теки, безпосередньо материнської до folder
-    parent = folder.parent
-    while parent:                   # якщо материнська тека існує,
-        parents_list.append(parent) # додаємо її до списку
-        parent = parent.parent      # і перевіряємо "бабусю"
-    # print('parents_list=', parents_list)
-    parents_list.reverse()
-    return parents_list
-
-def get_subfolders(parent):
-    # Отримуємо список, який складається з тек,
-    # безпосередньо дочірніх відносно parent
-    queryset = Folder.objects.filter(parent=parent)
-    return queryset
-
-def get_subreports(parent):
-    # Отримуємо список, який складається з файлів,
-    # безпосередньо дочірніх відносно parent
-    queryset = Report.objects.filter(parent=parent)
-    return queryset
-
-
 class Folder(models.Model):
     name        = models.CharField(max_length=256,
                                       verbose_name='Тека',

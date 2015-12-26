@@ -3,15 +3,21 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <div class="padding-y-05">
-        Список тек
+    {% load koop_template_filters %}
+    <div id="page-name"
+         class="padding-y-05">
+        Список тек і файлів
     </div>
     <div class="wrapper">
         <div class="main">
             <ul id="body-list"
-                class="column-list">
-                {% for f in object_list %}
-                    <li><a href="{% url 'folders:folder-detail' f.id %}">{{ f }}</a></li>
+                class="column-list column-count-1">
+                {% for f, n in all_list %}
+                    {% if f|model_name == 'folder' %}
+                        <li><a class="padding-y-0" href="{% url 'folders:folder-detail' f.id %}">{{ n }}</a></li>
+                    {% else %}
+                        <li><a class="padding-y-0" href="{% url 'folders:report-detail' f.id %}">{{ n }}</a></li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
@@ -20,10 +26,7 @@
     </div>
 {% endblock %}
 
-{% block href-folder-list %}
-{% endblock %}
-
-{% block href-report-upload %}
+{% block href-folder-list-all %}
 {% endblock %}
 
 {% block href-folder-create-in %}

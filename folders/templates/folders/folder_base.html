@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>ЖК "Пасічний" (Django)</title>
 
     {% block load_style %}
         {% load staticfiles %}
@@ -30,31 +30,32 @@
   </div>
 
   <div class="site-body">
-    <ul class="navigation">
+    <ul id="body-navigation"
+        class="navigation">
         {# У дочірньому шаблоні можна переозначити тільки самопосилання #}
         {% block href-report-reload %}
         {% endblock %}
         {% block href-index %}
             <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
-        {% block href-folder-contents %}
-            <li><a href="{% url 'folders:folder-contents' 1 %}">Документи</a></li>
+        {% block href-folder-list-all %}
+            <li><a href="{% url 'folders:folder-list-all' %}">Картотека (ст.)</a></li>
         {% endblock %}
         {% block href-folder-list %}
-            <li><a href="{% url 'folders:folder-list' %}">Список тек</a></li>
+            <li><a href="{% url 'folders:folder-list' %}">Теки</a></li>
         {% endblock %}
         {% block href-folder-parent %}
             <li><a href="{% url 'folders:folder-parents' %}">Материнські теки</a></li>
         {% endblock %}
         {% block href-report-list %}
-            <li><a href="{% url 'folders:report-list' %}">Список файлів</a></li>
+            <li><a href="{% url 'folders:report-list' %}">Файли</a></li>
         {% endblock %}
 
         {% block href-folder-create %}
-            <li><a href="{% url 'folders:folder-create' %}">Створити теку</a></li>
+            <li><a href="{% url 'folders:folder-create' %}">Нова тека</a></li>
         {% endblock %}
         {% block href-report-upload %}
-            <li><a href="{% url 'folders:report-upload' %}">Заладувати файл</a></li>
+            <li><a href="{% url 'folders:report-upload' %}">Новий файл</a></li>
         {% endblock %}
 
         {% block href-folder-create-in %}
@@ -86,6 +87,9 @@
             <li><a href="{% url 'folders:report-delete' report.id %}">Видалити файл</a></li>
         {% endblock %}
 
+        {% block href-folder-contents %}
+            <li><a href="{% url 'folders:folder-contents' 1 %}">Картотека (js)</a></li>
+        {% endblock %}
         {% block href-back %}
             <li><a href="javascript:history.back()">Назад</a></li>
         {% endblock %}
@@ -128,7 +132,7 @@
 
 {% block href-index %}
 {% endblock %}
-{% block href-folder-contents %}
+{% block href-folder-list-all %}
 {% endblock %}
 {% block href-folder-list %}
 {% endblock %}
@@ -162,6 +166,8 @@
 {% block href-report-delete %}
 {% endblock %}
 
+{% block href-folder-contents %}
+{% endblock %}
 {% block href-back %}
 {% endblock %}
 

@@ -74,7 +74,7 @@ class FlatDetailPageAuthenticatedVisitorTest(FlatDetailPageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        flat = DummyFlat().create_dummy_flat(flat_No='1')
+        DummyFlat().create_dummy_flat(flat_No='1')
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 

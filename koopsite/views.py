@@ -2,28 +2,22 @@ import os
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.paginator import Paginator
-from django.core.urlresolvers import reverse, resolve
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import update_session_auth_hash
-from django.template import Template
-from django.template.loader import get_template, render_to_string
 from django.utils.decorators import method_decorator
-from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView, MultipleObjectMixin
-import parser
-from flats.models import Flat
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                             UserPermsActivateForm, \
-                            ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm
+                            ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm, UserRegistrationForm, \
+    UserPersonDataForm
 from koopsite.functions import AllFieldsMixin, print_list, print_dict
+from koopsite.models import UserProfile
 from koopsite.settings import BASE_DIR
-from .models import User, UserProfile
-from .forms import UserRegistrationForm, UserPersonDataForm
 
 
 class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
@@ -398,6 +392,7 @@ class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
     one_img_fields = None
     two_img_fields = ('picture',)
     template_name = 'koop_adm_user_prof.html'
+    kwargs = None
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):

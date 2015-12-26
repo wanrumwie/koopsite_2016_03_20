@@ -6,6 +6,58 @@ from folders.models import Report, Folder
 from koopsite.fileExtMimeTypes import mimeType
 from koopsite.settings import MEDIA_ROOT
 
+def get_recursive_path(report):
+    # Отримуємо шлях, який складається з вкладених каталогів:
+    # "1/5/7/", де числа - це значення Folder.id починаючи з батьківського
+    # Використовується ТІЛЬКИ для друку (напр. в  admin.py).
+    id = report.parent.id
+    path = ''
+    # цикл починається з найглибшого каталога
+    while id:
+        path = os.path.join(str(id), path)
+        # print('id = %2s   path = %s' % (id, path))
+        folder = Folder.objects.get(id=id)
+        if folder.parent:   id = folder.parent.id
+        else:               break
+    return path
+
+def get_parents(folder_or_report):
+    # Отримуємо список - ланцюжок тек,
+    # батьківських відносно теки folder або документа report
+    parents_list = []
+    # цикл починається з теки, безпосередньо материнської до folder_or_report
+    parent = folder_or_report.parent
+    while parent:                   # якщо материнська тека існує,
+        parents_list.append(parent) # додаємо її до списку
+        parent = parent.parent      # і перевіряємо "бабусю"
+    # print('parents_list=', parents_list)
+    parents_list.reverse()
+    return parents_list
+
+def get_full_named_path(folder_or_report):
+    parents_list = get_parents(folder_or_report)
+    name_list = []
+    for p in parents_list:
+        name_list.append(p.name)
+    m = folder_or_report._meta.model_name
+    if m == 'folder': n = folder_or_report.name
+    if m == 'report': n = folder_or_report.filename
+    name_list.append(n)
+    path = '/'.join(name_list)
+    return path
+
+def get_subfolders(parent):
+    # Отримуємо список, який складається з тек,
+    # безпосередньо дочірніх відносно parent
+    queryset = Folder.objects.filter(parent=parent)
+    return queryset
+
+def get_subreports(parent):
+    # Отримуємо список, який складається з файлів,
+    # безпосередньо дочірніх відносно parent
+    queryset = Report.objects.filter(parent=parent)
+    return queryset
+
 def response_for_download(report):
     """
     Preparing response for downloading file

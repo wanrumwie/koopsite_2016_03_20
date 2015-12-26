@@ -1,4 +1,5 @@
 import inspect
+from time import sleep
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, \
                        HASH_SESSION_KEY
@@ -6,9 +7,11 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
 import time
+from selenium.webdriver.support.wait import WebDriverWait
 from koopsite.tests.test_base import DummyUser
 
 
@@ -38,6 +41,21 @@ class wait_for_page_load(object):
 
     def __exit__(self, *_):
         wait_for(self.page_has_loaded)
+
+def find_css(self, css_selector):
+    """Shortcut to find elements by CSS. Returns either a list or singleton"""
+    elems = self.find_elements_by_css_selector(css_selector)
+    found = len(elems)
+    if found == 1:
+        return elems[0]
+    elif not elems:
+        raise NoSuchElementException(css_selector)
+    return elems
+
+def wait_for_css(self, css_selector, timeout=7):
+    """ Shortcut for WebDriverWait"""
+    return WebDriverWait(self, timeout).until(lambda driver : driver.find_css(css_selector))
+
 
 def create_user_session(user):
     # Then create the authenticated session using the new user credentials
@@ -116,7 +134,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
 
     def check_go_to_link(self, this_url, link_parent_selector, link_text,
                         url_name=None, kwargs=None, expected_regex=None,
-                        partial=False, href_itself=None):
+                        partial=False, href_itself=None, sleep_time=None):
         """
         Допоміжна функція для функц.тесту. Викликається в циклі for
         для кожного лінка на сторінці.
@@ -128,12 +146,15 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         :param url_name: назва, з якої ф-цією reverse отримується url переходу
         :param kwargs: евентуальні параметри url
         :param expected_regex: очікуваний url - задавати при переадресації, бо тоді він інакший, ніж reverse(url_name)
+        :param partial: часткове чи повне співпадіння тексту лінка
+        :param href_itself: атрибут href, за яким йде пошук, якщо не задано link_text
+        :param sleep_time: час очікування вкінці на завершення процесів на відвіданій сторінці
         :return:
         """
         self.browser.get('%s%s' % (self.server_url, this_url))
         # print(link_parent_selector, link_text, expected_regex)
         #
-        # TODO-виловити помилку при очікуванні на сторінку "Документи" головної сторінки.
+        # TODO-виловити помилку при очікуванні на сторінку "Картотека" головної сторінки.
         # Помилка виникає часом.
         # Trace:
         # selenium.common.exceptions.UnexpectedAlertPresentException: Alert Text: xhrErrorAlert:
@@ -164,6 +185,8 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # print('passing_url =', passing_url)
         # print('expected_regex =', expected_regex)
         self.assertRegex(passing_url, expected_regex)
+        if sleep_time:
+            sleep(sleep_time)   # чекаємо на завершення обміну даними на деяких сторінках
 
     def get_link_location(self, link_parent_selector, link_text):
         parent = self.browser.find_element_by_css_selector(
@@ -206,10 +229,11 @@ class PageVisitTest(DummyUser, FunctionalTest):
 
     def links_in_template(self, user):
         # Перелік лінків, важливих для сторінки.
-        # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
+        # Повертає список словників, які поступають як параметри до функції
         #     def check_go_to_link(self, this_url, link_parent_selector, link_text,
-        #                           expected_regex=None, url_name=None, kwargs=None):
-        # Ключі словників скорочені до 2-х літер: ls lt er un kw
+        #                           expected_regex=None, url_name=None, kwargs=None,
+        #                           sleep_time=0):
+        # Ключі словників скорочені до 2-х літер: ls lt er un kw st
         # плюс cd - condition для перевірки видимості лінка (буде аргументом ф-ції eval() ).
         # Спочатку визначаються деякі параметри:
         username, flat_id, flat_No = self.get_user_name_flat(user)
@@ -218,7 +242,7 @@ class PageVisitTest(DummyUser, FunctionalTest):
             {'ls':'#body-aside-1-navigation'  , 'lt': 'Зареєструватися'  , 'un': 'register'    , 'cd': "not user.is_authenticated()"},
             # {'ls':'#body-navigation'          , 'lt': 'Головна сторінка' , 'un': 'index'},##########
             {'ls':'#body-navigation'          , 'lt': 'Квартири'         , 'un': 'flats:flat-scheme'},
-            {'ls':'#body-navigation'          , 'lt': 'Документи'        , 'un': 'folders:folder-contents', 'kw': {'pk': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Картотека'        , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
             {'ls':'#body-navigation'          , 'lt': 'Увійти'           , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
             {'ls':'#body-navigation'          , 'lt': 'Зареєструватися'  , 'un': 'register'    , 'cd': "not user.is_authenticated()"},
             {'ls':'#body-navigation'          , 'lt': 'Мій профіль'      , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
@@ -259,8 +283,10 @@ class PageVisitTest(DummyUser, FunctionalTest):
             url_name             = d.get('un')
             kwargs               = d.get('kw')
             expected_regex       = d.get('er')
-            self.check_go_to_link(self.this_url, link_parent_selector, link_text,
-                url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
+            sleep_time           = d.get('st')
+            self.check_go_to_link(self.this_url, link_parent_selector,
+                link_text, url_name=url_name, kwargs=kwargs,
+                expected_regex=expected_regex, sleep_time=sleep_time)
 
     def layout_and_styling_page(self):
         # Користувач відвідує сторінку

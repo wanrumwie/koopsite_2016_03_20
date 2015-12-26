@@ -4,48 +4,11 @@ from django.core.urlresolvers import reverse
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils.timezone import now
-from folders.models import Folder, Report, get_recursive_path, get_parents, get_subfolders, get_subreports, \
-    get_report_path
+from folders.models import Folder, Report, get_report_path
 from folders.tests.test_base import DummyFolder
 
 
 class DifferentFunctionsTest(TestCase):
-
-    def test_get_recursive_path(self):
-        root = DummyFolder().create_dummy_root_folder()
-        f2 = DummyFolder().create_dummy_folder(parent=root)
-        f3 = DummyFolder().create_dummy_folder(parent=f2)
-        report = DummyFolder().create_dummy_report(parent=f3)
-        expected = '%s\\%s\\%s\\' % (root.id, f2.id, f3.id)
-        self.assertEqual(get_recursive_path(report), expected)
-
-    def test_get_parents(self):
-        root = DummyFolder().create_dummy_root_folder()
-        f2 = DummyFolder().create_dummy_folder(parent=root)
-        f3 = DummyFolder().create_dummy_folder(parent=f2)
-        self.assertEqual(get_parents(root), [])
-        self.assertEqual(get_parents(f2), [root])
-        self.assertEqual(get_parents(f3), [root, f2])
-
-    def test_get_subfolders(self):
-        root = DummyFolder().create_dummy_root_folder()
-        f2 = DummyFolder().create_dummy_folder(parent=root)
-        f3 = DummyFolder().create_dummy_folder(parent=f2)
-        f4 = DummyFolder().create_dummy_folder(parent=f2, name='f4')
-        self.assertEqual(list(get_subfolders(root)), [f2])
-        self.assertEqual(list(get_subfolders(f2)), [f3, f4])
-        self.assertEqual(list(get_subfolders(f3)), [])
-
-    def test_get_subreports(self):
-        root = DummyFolder().create_dummy_root_folder()
-        f2 = DummyFolder().create_dummy_folder(parent=root)
-        f3 = DummyFolder().create_dummy_folder(parent=f2)
-        r2 = DummyFolder().create_dummy_report(parent=f2)
-        r3 = DummyFolder().create_dummy_report(parent=f3)
-        r4 = DummyFolder().create_dummy_report(parent=f3)
-        self.assertEqual(list(get_subreports(root)), [])
-        self.assertEqual(list(get_subreports(f2)), [r2])
-        self.assertEqual(list(get_subreports(f3)), [r3, r4])
 
     def test_get_report_path(self):
         patt = 'uploads\\folders\\%s\\%s.data'

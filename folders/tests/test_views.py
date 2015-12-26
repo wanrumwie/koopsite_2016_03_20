@@ -12,7 +12,7 @@ from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
 from folders.views import FolderCreate, FolderList, FolderDetail, ReportList, ReportDetail, ReportPreview, \
     FolderCreateInFolder, FolderDelete, ReportDelete, FolderUpdate, ReportUpdate, ReportUpload, ReportUploadInFolder, \
-    reportDownload, folderDownload, FolderParentList
+    reportDownload, folderDownload, FolderParentList, FolderReportList
 from koopsite.settings import LOGIN_URL
 from koopsite.tests.test_base import DummyUser
 
@@ -27,7 +27,7 @@ class FolderListTest(TestCase):
     def test_view_model_and_attributes(self):
         view = self.cls_view()
         self.assertEqual(view.model, Folder)
-        self.assertEqual(view.paginate_by, 5)
+        self.assertIsNone(view.paginate_by)
         self.assertEqual(view.ordering, 'name')
 
     def test_url_resolves_to_proper_view(self):
@@ -395,7 +395,7 @@ class FolderCreateInFolderTest(TestCase):
         self.assertEqual(f.parent, self.parent_folder)
         # Час створення (до секунди) співпадає з поточним?
         self.assertAlmostEqual(f.created_on, now(), delta=timedelta(minutes=1))
-        expected_url = reverse('folders:folder-contents', kwargs={'pk': self.parent_folder.id})
+        expected_url = reverse('folders:folder-list')
         self.assertEqual(response.url, expected_url)
 
 
@@ -1101,4 +1101,44 @@ class FolderParentListTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
+
+
+class FolderReportListTest(TestCase):
+
+    def setUp(self):
+        self.cls_view = FolderReportList
+        self.path = '/folders/list-all/'
+        self.template = 'folders/folder_list_all.html'
+
+    def test_view_model_and_attributes(self):
+        view = self.cls_view()
+        self.assertEqual(view.paginate_by, 15)
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__)
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        view = self.cls_view.as_view()
+        response = view(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_queryset(self):
+        f1 = DummyFolder().create_dummy_root_folder(name='f1')
+        self.assertEqual(self.cls_view().get_queryset(), [(f1, "f1")])
+        f2 = DummyFolder().create_dummy_folder(parent=f1, name="f2")
+        self.assertEqual(self.cls_view().get_queryset()[1], (f2, "f1/f2"))
+        f3 = DummyFolder().create_dummy_folder(parent=f2, name="f3")
+        self.assertEqual(self.cls_view().get_queryset()[2], (f3, "f1/f2/f3"))
+        r1 = DummyFolder().create_dummy_report(parent=f1, filename="r1")
+        self.assertEqual(self.cls_view().get_queryset()[3], (r1, "f1/r1"))
+        r2 = DummyFolder().create_dummy_report(parent=f2, filename="r2")
+        self.assertEqual(self.cls_view().get_queryset()[3], (r2, "f1/f2/r2"))
+        r3 = DummyFolder().create_dummy_report(parent=f3, filename="r3")
+        self.assertEqual(self.cls_view().get_queryset()[3], (r3, "f1/f2/f3/r3"))
 

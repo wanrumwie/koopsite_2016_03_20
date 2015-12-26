@@ -371,8 +371,8 @@ a:focus     {outline-style: none;}
 
 /*=======================================================================*/
 .column-list {
-    list-style-type:        none; /* because Mozilla break line after mark
-        -webkit-column-width:   10em; /* Chrome, Safari, Opera */
+    list-style-type:        none; /* because Mozilla break line after mark*/
+    -webkit-column-width:   10em; /* Chrome, Safari, Opera */
        -moz-column-width:   10em; /* Firefox */
             column-width:   10em;
     -webkit-column-gap:     3px; /* Chrome, Safari, Opera */
@@ -398,6 +398,14 @@ a:focus     {outline-style: none;}
     -webkit-column-count:   3; /* Chrome, Safari, Opera */
        -moz-column-count:   3; /* Firefox */
             column-count:   3;
+}
+.column-count-1 {
+    -webkit-column-width:   100%; /* Chrome, Safari, Opera */
+       -moz-column-width:   100%; /* Firefox */
+            column-width:   100%;
+    -webkit-column-count:   1; /* Chrome, Safari, Opera */
+       -moz-column-count:   1; /* Firefox */
+            column-count:   1;
 }
 ul.column-list {
     list-style-position:    inside;
