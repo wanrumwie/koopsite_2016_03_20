@@ -3,7 +3,8 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <div class="padding-y-05">
+    <div id="page-name"
+         class="padding-y-05">
         Список тек
     </div>
     <div class="wrapper">
@@ -46,3 +47,5 @@
 {% block href-report-delete %}
 {% endblock %}
 
+{% block href-folder-contents %}
+{% endblock %}

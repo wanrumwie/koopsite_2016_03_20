@@ -22,16 +22,19 @@ class DummyFolder():
         # print('created folder:', folder)
         return folder
 
-    def create_children(self, parent, d, deep, wide):
+    def create_children(self, parent, d, deep, wide, report):
         if d < deep:
             for w in range(wide):
                 folder = self.create_dummy_folder(parent=parent,
-                            name='dummy_folder_%s_%s' % (d, w))
-                self.create_children(folder, d+1, deep, wide)
+                            name='%s_%s_%s' % (parent.name, d, w))
+                if report:
+                    self.create_dummy_report(parent=folder,
+                            filename='%s_%s' % ('report', folder.name))
+                self.create_children(folder, d+1, deep, wide, report)
 
-    def create_dummy_catalogue(self, deep=2, wide=2):
-        parent = self.create_dummy_root_folder()
-        self.create_children(parent, 0, deep, wide)
+    def create_dummy_catalogue(self, deep=2, wide=2, report=False):
+        parent = self.create_dummy_root_folder(name="dummy_folder_0")
+        self.create_children(parent, 0, deep, wide, report)
 
     def create_dummy_report(self, parent, file=None,
                             filename=None, uploaded_on=None):

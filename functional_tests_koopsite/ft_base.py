@@ -179,6 +179,8 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         if url_name and not expected_regex:
             expected_regex = reverse(url_name, kwargs=kwargs)
         expected_regex = expected_regex.lstrip('^')
+        # print('link_parent_selector =', link_parent_selector)
+        # print('link_text =', link_text)
         # print('href =', href)
         # print('url_name =', url_name)
         # print('kwargs =', kwargs)

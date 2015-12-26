@@ -1,27 +1,25 @@
 import inspect
 from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
-from folders.functions import get_full_named_path
-from folders.models import Folder, Report
+from folders.models import Report, Folder
 from folders.tests.test_base import DummyFolder
-from folders.views import FolderReportList
+from folders.views import ReportList
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.functions import round_up_division
 from koopsite.settings import SKIP_TEST
 
 
-
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderReportListPageVisitTest(PageVisitTest):
+class ReportListPageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки одної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування цієї сторінки з іншими користувачами.
     """
-    this_url    = '/folders/list-all/'
+    this_url    = '/folders/report/list/'
     page_title  = 'Пасічний'
-    page_name   = 'Список тек і файлів'
+    page_name   = 'Список файлів'
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -33,13 +31,13 @@ class FolderReportListPageVisitTest(PageVisitTest):
         username, flat_id, flat_No = self.get_user_name_flat(user)
         s = [
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка', 'un': 'index'},
-            # {'ls':'#body-navigation'          , 'lt': 'Картотека (ст.)' , 'un': 'folders:folder-list-all'},
+            {'ls':'#body-navigation'          , 'lt': 'Картотека (ст.)' , 'un': 'folders:folder-list-all'},
             {'ls':'#body-navigation'          , 'lt': 'Теки'            , 'un': 'folders:folder-list'},
-            {'ls':'#body-navigation'          , 'lt': 'Кореневі теки'   , 'un': 'folders:folder-parents'},
-            {'ls':'#body-navigation'          , 'lt': 'Файли'           , 'un': 'folders:report-list'},
-            {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
+            # {'ls':'#body-navigation'          , 'lt': 'Кореневі теки'   , 'un': 'folders:folder-parents'},
+            # {'ls':'#body-navigation'          , 'lt': 'Файли'           , 'un': 'folders:report-list'},
+            # {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
-            {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
+            # {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
             # {'ls':'#body-navigation'          , 'lt': 'Назад'           , 'un': "javascript:history.back()"},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
@@ -49,13 +47,12 @@ class FolderReportListPageVisitTest(PageVisitTest):
         return s
 
     def get_data_length(self):
-        self.data_length = len(Folder.objects.all()) + \
-                           len(Report.objects.all())# довжина списку з даними
+        self.data_length = len(Report.objects.all())# довжина списку з даними
         return self.data_length
 
     def get_num_page_links(self):
         # Повертає к-ть сторінок і к-ть лінків пейджінатора
-        paginate_by = FolderReportList.paginate_by
+        paginate_by = ReportList.paginate_by
         if paginate_by:
             num_pages = round_up_division(self.get_data_length(), paginate_by)
             if   num_pages == 1: page_links_number = 0
@@ -74,7 +71,7 @@ class FolderReportListPageVisitTest(PageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderReportListPageAuthenticatedVisitorTest(FolderReportListPageVisitTest):
+class ReportListPageAuthenticatedVisitorTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
@@ -83,7 +80,7 @@ class FolderReportListPageAuthenticatedVisitorTest(FolderReportListPageVisitTest
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        DummyFolder().create_dummy_catalogue()
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -106,7 +103,7 @@ class FolderReportListPageAuthenticatedVisitorTest(FolderReportListPageVisitTest
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderReportListPageAnonymousVisitorTest(FolderReportListPageVisitTest):
+class ReportListPageAnonymousVisitorTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -114,7 +111,7 @@ class FolderReportListPageAnonymousVisitorTest(FolderReportListPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue()
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -125,7 +122,7 @@ class FolderReportListPageAnonymousVisitorTest(FolderReportListPageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPageVisitTest):
+class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -134,21 +131,8 @@ class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPa
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue()
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    def test_visitor_can_find_folder(self):
-        # Користувач може  перейти по лінку потрібні дані
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-        for f in Folder.objects.all():
-            link_parent_selector = '#body-list'
-            link_text            = get_full_named_path(f)
-            url_name             = 'folders:folder-detail'
-            kwargs               = {'pk': f.id}
-            expected_regex       = ""
-            self.check_go_to_link(self.this_url, link_parent_selector, link_text,
-                url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_find_report(self):
@@ -156,7 +140,7 @@ class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPa
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Report.objects.all():
             link_parent_selector = '#body-list'
-            link_text            = get_full_named_path(f)
+            link_text            = f.filename
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = ""
@@ -166,7 +150,7 @@ class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPa
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderReportListPageAnonymousVisitorCanFindLinkTest(FolderReportListPageVisitTest):
+class ReportListPageAnonymousVisitorCanFindLinkTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -175,21 +159,8 @@ class FolderReportListPageAnonymousVisitorCanFindLinkTest(FolderReportListPageVi
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue()
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    def test_visitor_can_find_folder(self):
-        # Користувач може  перейти по лінку потрібні дані
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-        for f in Folder.objects.all():
-            link_parent_selector = '#body-list'
-            link_text            = get_full_named_path(f)
-            url_name             = 'folders:folder-detail'
-            kwargs               = {'pk': f.id}
-            expected_regex       = "/noaccess/"
-            self.check_go_to_link(self.this_url, link_parent_selector, link_text,
-                url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_find_report(self):
@@ -197,7 +168,7 @@ class FolderReportListPageAnonymousVisitorCanFindLinkTest(FolderReportListPageVi
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Report.objects.all():
             link_parent_selector = '#body-list'
-            link_text            = get_full_named_path(f)
+            link_text            = f.filename
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = "/noaccess/"

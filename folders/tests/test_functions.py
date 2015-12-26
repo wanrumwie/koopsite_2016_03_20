@@ -172,21 +172,21 @@ class Get_folders_tree_HTML_Test(TestCase):
 
     def test_get_folders_tree_HTML(self):
         expected ='''<ul>
-<li id="1">dummy_root_folder
+<li id="1">dummy_folder_0
 <ul>
-<li id="2">dummy_folder_0_0
+<li id="2">dummy_folder_0_0_0
 <ul>
-<li id="3">dummy_folder_1_0
+<li id="3">dummy_folder_0_0_0_1_0
 </li>
-<li id="4">dummy_folder_1_1
+<li id="4">dummy_folder_0_0_0_1_1
 </li>
 </ul>
 </li>
-<li id="5">dummy_folder_0_1
+<li id="5">dummy_folder_0_0_1
 <ul>
-<li id="6">dummy_folder_1_0
+<li id="6">dummy_folder_0_0_1_1_0
 </li>
-<li id="7">dummy_folder_1_1
+<li id="7">dummy_folder_0_0_1_1_1
 </li>
 </ul>
 </li>

@@ -75,7 +75,7 @@ class IndexPageAuthenticatedVisitorWithPermissionTest(PageVisitTest):
         DummyFolder().create_dummy_catalogue()
         DummyFlat().create_dummy_building()
         self.add_dummy_permission(self.dummy_user,
-                                  name='Can activate/deactivate account')
+                                  codename='activate_account')
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):

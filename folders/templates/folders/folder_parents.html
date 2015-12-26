@@ -3,14 +3,16 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <div class="padding-y-05">
+    <div id="page-name"
+         class="padding-y-05">
         Список кореневих тек
     </div>
     <div class="wrapper">
         <div class="main">
-            <ul class="column-list">
+            <ul id="body-list"
+                class="column-list">
                 {% for f in object_list %}
-                    <li><a href="{% url 'folders:folder-contents' f.id %}">{{ f }}</a></li>
+                    <li><a href="{% url 'folders:folder-detail' f.id %}">{{ f }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -47,6 +49,5 @@
 {% block href-report-delete %}
 {% endblock %}
 
-{% block href-back %}
+{% block href-folder-contents %}
 {% endblock %}
-

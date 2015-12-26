@@ -3,12 +3,14 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону folder_base.html #}
 
 {% block body %}
-    <div class="padding-y-05">
+    <div id="page-name"
+         class="padding-y-05">
         Список файлів
     </div>
     <div class="wrapper">
         <div class="main">
-            <ul class="column-list">
+            <ul id="body-list"
+                class="column-list">
                 {% for f in object_list %}
                     <li><a href="{% url 'folders:report-detail' f.id %}">{{ f }}</a></li>
                 {% endfor %}
@@ -48,3 +50,5 @@
 {% block href-report-delete %}
 {% endblock %}
 
+{% block href-folder-contents %}
+{% endblock %}
