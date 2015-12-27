@@ -1,5 +1,7 @@
-$( document ).ready(function ( $ ) {
-    $( '.errorlist' ).siblings().on( 'keypress', function () {
-        $( '.errorlist' ).hide();
+$( document ).ready( function ( $ ) {
+    $( '.error' ).each( function () {
+        $( this ).on( 'keypress', function () {
+            $( this ).$( '.errorlist' ).hide();
+        });
     });
 });
