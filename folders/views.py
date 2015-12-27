@@ -73,6 +73,9 @@ class FolderCreate(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(FolderCreate, self).dispatch(*args, **kwargs)
 
+    def get_success_url(self):
+        return reverse('folders:folder-list')
+
 
 class FolderCreateInFolder(CreateView):
     # Створюємо теку у відомій материнській теці

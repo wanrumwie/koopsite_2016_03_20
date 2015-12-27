@@ -18,5 +18,3 @@ QUnit.test('getSelRowIndex', function ( assert ) {
     assert.strictEqual( getSelRowIndex(  0 ), 0, 'sel row index must be 0 if rowsNumber=0');
     assert.strictEqual( getSelRowIndex( 10 ), 0, 'sel row index must be 0 if rowsNumber=0');
 });
-
-

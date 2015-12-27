@@ -3,10 +3,12 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <h3>Створення теки</h3>
-
+    <div id="page-name"
+         class="padding-y-05">
+         Створення теки
+    </div>
     <div align="center">
-        <form id="folder_create_form" method="post" action=""
+        <form id="body_form" method="post" action=""
               class="tableform"
               enctype="multipart/form-data">
             {% csrf_token %}
@@ -17,6 +19,16 @@
             <input type="button" value="Скасувати" onclick="javascript:history.back()" />
         </form>
     </div>
+
+
+
+    {% load staticfiles %}
+    <!-- Спочатку завантажуємо jquery! -->
+    {% include "block_js_jquery.html" %}
+
+    <script src="{% static 'js/functions.js' %}"></script>
+
+
 {% endblock %}
 
 {% block href-folder-contents %}

@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Permission, Group
+from django.contrib.contenttypes.models import ContentType
 from koopsite.functions import trace_print
 from koopsite.models import UserProfile
 
@@ -22,8 +23,13 @@ class DummyUser():
         trace_print('created user:', user)
         return user
 
-    def add_dummy_permission(self, user, codename='activate_account'):
-        permission = Permission.objects.get(codename=codename)
+    def add_dummy_permission(self, user, codename='activate_account', model=None):
+        perms = Permission.objects.all()
+        if model:
+            content_type =  ContentType.objects.get(model=model)
+            permission = Permission.objects.get(codename=codename, content_type=content_type)
+        else:
+            permission = Permission.objects.get(codename=codename)
         user.user_permissions.add(permission)
         user.save()
         trace_print('added permission:', permission, 'for user:', user)

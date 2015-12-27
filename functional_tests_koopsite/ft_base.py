@@ -198,6 +198,9 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         size = href.size
         return location, size
 
+    def get_error_element(self, selector=".error"):
+        return self.browser.find_element_by_css_selector(selector)
+
 
 class PageVisitTest(DummyUser, FunctionalTest):
     """
@@ -212,13 +215,20 @@ class PageVisitTest(DummyUser, FunctionalTest):
     data_links_number = 0   # кількість лінків, які приходять в шаблон з даними
 
     def can_visit_page(self):
-        # Користувач може відвідати головну сторінку сайта
+        # Користувач може відвідати сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         # Ця сторінка справді є сторінкою потрібного сайту
         self.assertIn(self.page_title, self.browser.title)
-        # Цe головна сторінка
+        # Цe потрібна сторінка
         header_text = self.browser.find_element_by_id('page-name').text
         self.assertIn(self.page_name, header_text)
+
+    def can_not_visit_page(self, expected_regex='/noaccess/'):
+        # Користувач НЕ може відвідати сторінку і буде переадресований
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+        passing_url = self.browser.current_url  # url після переходу
+        expected_regex = expected_regex.lstrip('^')
+        self.assertRegex(passing_url, expected_regex)
 
     def get_user_name_flat(self, user):
         try:    username = user.username

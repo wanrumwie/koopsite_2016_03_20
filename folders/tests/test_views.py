@@ -241,6 +241,10 @@ class FolderCreateTest(TestCase):
         self.assertEqual(view.model, Folder)
         self.assertEqual(view.form_class, FolderForm)
 
+    def test_view_success_url(self):
+        view = self.cls_view()
+        self.assertEqual(view.get_success_url(), reverse('folders:folder-list'))
+
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.cls_view.__name__) #
@@ -307,7 +311,7 @@ class FolderCreateTest(TestCase):
         # Витягаємо з бази щойно створений запис:
         f = self.cls_view.model.objects.last()
         self.assertEqual(f.name, data['name'])
-        expected_url = f.get_absolute_url()
+        expected_url = self.cls_view().get_success_url()
         self.assertEqual(response.url, expected_url)
 
 
