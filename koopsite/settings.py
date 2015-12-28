@@ -134,6 +134,7 @@ MEDIA_URL = '/media/'
 # Список каталогів, де collectstatic та тег шаблону {% static %} будуть шукати статичні файли
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "js_tests"), # для посилання на js-тести
     # os.path.join(BASE_DIR, "static/koopsite"),
     # os.path.join(BASE_DIR, "static/folders"),
     # os.path.join(BASE_DIR, "static/flats"),
