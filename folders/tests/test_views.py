@@ -1,7 +1,7 @@
 from asyncio.tasks import sleep
 from unittest.case import skip
 from datetime import timedelta
-from django.contrib.auth.models import AnonymousUser, Permission
+from django.contrib.auth.models import AnonymousUser
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
@@ -32,7 +32,7 @@ class FolderListTest(TestCase):
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
-        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
+        self.assertEqual(found.func.__name__, self.cls_view.__name__)
 
     def test_view_renders_proper_template(self):
         response = self.client.get(self.path)
@@ -61,7 +61,7 @@ class FolderDetailTest(TestCase):
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
-        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
+        self.assertEqual(found.func.__name__, self.cls_view.__name__)
 
     def test_view_renders_no_template_AnonymousUser(self):
         DummyFolder().create_dummy_root_folder()
@@ -243,7 +243,7 @@ class FolderCreateTest(TestCase):
 
     def test_view_success_url(self):
         view = self.cls_view()
-        self.assertEqual(view.get_success_url(), reverse('folders:folder-list'))
+        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -300,7 +300,7 @@ class FolderCreateTest(TestCase):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'add_folder')
-        root = DummyFolder().create_dummy_root_folder()
+        DummyFolder().create_dummy_root_folder()
         data = {
             'name' : 'dummy_folder_post',
         }
@@ -723,6 +723,10 @@ class ReportUpdateTest(TestCase):
         self.assertEqual(view.model, Report)
         self.assertEqual(view.form_class, ReportUpdateForm)
 
+    def test_view_success_url(self):
+        view = self.cls_view()
+        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
+
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.cls_view.__name__) #
@@ -814,6 +818,10 @@ class ReportUploadTest(TestCase):
         view = self.cls_view()
         self.assertEqual(view.model, Report)
         self.assertEqual(view.form_class, ReportForm)
+
+    def test_view_success_url(self):
+        view = self.cls_view()
+        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)

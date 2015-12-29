@@ -74,7 +74,7 @@ class FolderCreate(CreateView):
         return super(FolderCreate, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
-        return reverse('folders:folder-list')
+        return reverse('folders:folder-list-all')
 
 
 class FolderCreateInFolder(CreateView):
@@ -166,6 +166,10 @@ class ReportUpdate(UpdateView):
         # self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(ReportUpdate, self).dispatch(*args, **kwargs)
 
+    # TODO-2015 12 29 Впорядкувати success_url для різних views
+    def get_success_url(self):
+        return reverse('folders:folder-list-all')
+
 
 class ReportUpload(CreateView):
     model = Report
@@ -174,8 +178,10 @@ class ReportUpload(CreateView):
 
     @method_decorator(permission_required('folders.add_report'))
     def dispatch(self, *args, **kwargs):
-        # self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(ReportUpload, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('folders:folder-list-all')
 
 
 class ReportUploadInFolder(CreateView):

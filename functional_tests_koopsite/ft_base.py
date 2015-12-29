@@ -221,16 +221,6 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         xpath = "preceding-sibling::ul[@class='%s']" % error_class
         return field.find_elements_by_xpath(xpath)
 
-    def get_preceding_siblings(self, element):
-        # return element.find_elements_by_xpath(".//*")
-        # return element.find_elements_by_xpath(".//ancestor::*")
-        # return element.find_elements_by_xpath("preceding::input")
-        return element.find_elements_by_xpath("preceding-sibling::*")
-        # return self.browser.find_elements_by_xpath("//form//*")
-        # return element.find_elements_by_xpath("//ancestor::*")
-        # return element.find_elements_by_xpath("./following::*")
-        # return element.find_elements_by_xpath("./preceding-sibling::*")
-
 
 class PageVisitTest(DummyUser, FunctionalTest):
     """
@@ -311,9 +301,9 @@ class PageVisitTest(DummyUser, FunctionalTest):
                 visible_links.append(d)
         expected = len(visible_links)
         expected += self.data_links_number # + лінки в таблицях з даними. Ці лінки даних не входять до словника links_in_template.
-        # print_list('links', links)
-        # print_list('visible_links', visible_links)
-        # print_list('expected =', expected)
+        # print_list(links, 'links')
+        # print_list(visible_links, 'visible_links')
+        # print('expected =', expected)
         self.assertEqual(len(elements), expected,
               msg="Кількість лінків на сторінці не відповідає очікуваній")
         # Користувач може перейти по всіх лінках на сторінці
