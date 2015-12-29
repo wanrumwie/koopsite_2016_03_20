@@ -17,18 +17,13 @@
             font-weight:        normal;
         }
     </style>
+    {% include "block_paginator.html" %}
 {% endblock %}
 
 {% block body %}
                 person_list.html
     {% load render_table from django_tables2 %}
     {% render_table table %}
-{% endblock %}
-
-{% block paginator %}
-{% endblock %}
-
-{% block paginator-detail %}
 {% endblock %}
 
 {% block href-table %}

@@ -16,11 +16,12 @@
                 {{ form }}
             </table>
             <input type="submit" value="Створити" />
-            <input type="button" value="Скасувати" onclick="javascript:history.back()" />
+            {% with cancel_url='folders:folder-list-all' %}
+                <input type="button" value="Скасувати"
+                       onclick="location.href='{% url cancel_url %}'" />
+            {% endwith %}
         </form>
     </div>
-
-
 
     {% load staticfiles %}
     <!-- Спочатку завантажуємо jquery! -->

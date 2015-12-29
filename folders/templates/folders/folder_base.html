@@ -99,12 +99,6 @@
         {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
     {% endblock %}
 
-    {% block paginator %}
-        {# Для CBV з вбудованим paginator'ом навігація: "?page=3" #}
-        {# Для view без вбудованого paginator'а навігація: "/.../page3/" #}
-        {% include "block_paginator.html" %}
-    {% endblock %}
-
     {% block load_js %}
         {# У дочірньому шаблоні можна переозначити script #}
     {% endblock %}

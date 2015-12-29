@@ -132,6 +132,21 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # print('user =', user, 'cd =', condition, 'eval =', c)
         return c
 
+    def check_passed_link(self, url_name=None, kwargs=None, expected_regex=None):
+        """
+        Допоміжна функція для функц.тесту.
+        Перевіряє, здійснено перехід по лінку, заданому url_name
+        :param url_name: назва, з якої ф-цією reverse отримується url переходу
+        :param kwargs: евентуальні параметри url
+        :param expected_regex: очікуваний url - альтернатива reverse(url_name, kwargs)
+        :return:
+        """
+        passing_url = self.browser.current_url  # url після переходу
+        if url_name and not expected_regex:
+            expected_regex = reverse(url_name, kwargs=kwargs)
+        expected_regex = expected_regex.lstrip('^')
+        self.assertRegex(passing_url, expected_regex)
+
     def check_go_to_link(self, this_url, link_parent_selector, link_text,
                         url_name=None, kwargs=None, expected_regex=None,
                         partial=False, href_itself=None, sleep_time=None):
@@ -200,6 +215,21 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
 
     def get_error_element(self, selector=".error"):
         return self.browser.find_element_by_css_selector(selector)
+
+    def get_error_elements_for_field(self, css_selector, error_class='errorlist'):
+        field = self.browser.find_element_by_css_selector(css_selector)
+        xpath = "preceding-sibling::ul[@class='%s']" % error_class
+        return field.find_elements_by_xpath(xpath)
+
+    def get_preceding_siblings(self, element):
+        # return element.find_elements_by_xpath(".//*")
+        # return element.find_elements_by_xpath(".//ancestor::*")
+        # return element.find_elements_by_xpath("preceding::input")
+        return element.find_elements_by_xpath("preceding-sibling::*")
+        # return self.browser.find_elements_by_xpath("//form//*")
+        # return element.find_elements_by_xpath("//ancestor::*")
+        # return element.find_elements_by_xpath("./following::*")
+        # return element.find_elements_by_xpath("./preceding-sibling::*")
 
 
 class PageVisitTest(DummyUser, FunctionalTest):

@@ -4,8 +4,17 @@ from koopsite.urls import urlpatterns
 
 
 class WalkURL():
-    def __init__(self, urlpatterns):
+    def __init__(self, urlpatterns, exclude_namespace=None):
         self.urlpatterns = urlpatterns
+        if exclude_namespace:
+            if isinstance(exclude_namespace, list):
+                self.exclude_namespace = exclude_namespace
+            else:
+                self.exclude_namespace = [exclude_namespace]
+        else:
+            self.exclude_namespace = []
+        print("type(exclude_namespace) =", type(exclude_namespace))
+        print(self.exclude_namespace)
         self.all_url_names = []
         self.get_all_url_names()
 
@@ -19,7 +28,8 @@ class WalkURL():
                 self.all_url_names.append((s, '%s%s' % (ns, u.name)))
             if type(u) == RegexURLResolver:
                 ns = u.namespace or '--'
-                self.url_walk(u.url_patterns, prefix=u.regex.pattern, namespace=u.namespace)
+                if ns not in self.exclude_namespace:
+                    self.url_walk(u.url_patterns, prefix=u.regex.pattern, namespace=u.namespace)
 
     def get_all_url_names(self):
         self.url_walk(self.urlpatterns, prefix='^', namespace=None)
@@ -46,7 +56,8 @@ def get_duplicates_in_tuple_list(lst):
 class UrlNameSpaceTest(TestCase):
 
     def test_no_duplicate_urls(self):
-        all_url = WalkURL(urlpatterns).all_url_names
+        all_url = WalkURL(urlpatterns,
+                          exclude_namespace=['js_tests']).all_url_names
         # print('all_urls:')
         # for u, n in sorted(all_url):
         #     print('%-60s %s' % (u, n))

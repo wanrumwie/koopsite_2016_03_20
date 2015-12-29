@@ -136,6 +136,7 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         DummyFolder().create_dummy_catalogue()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
+    @skip
     def test_visitor_can_create_folder(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -170,6 +171,7 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+    @skip
     def test_visitor_can_create_folder_in_parent(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -202,6 +204,7 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+    @skip
     def test_visitor_can_create_folder_in_parent_submit_button(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -240,29 +243,28 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
         # НЕ вводить у полі дані
-        inputbox = self.browser.find_element_by_id('id_name')
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
 
-        # Натискає ENTER
-        inputbox.send_keys(Keys.ENTER)
-
-        error = self.get_error_element(".errorlist")
+        error = self.get_error_elements_for_field('#id_name')[0]
+        self.assertTrue(error.is_displayed())
         self.assertEqual(error.text, "Це поле обов'язкове.")
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    # TODO-виправити functions.js - стирати помилку над тим полем, де почався ввід.
-    @skip
-    def test_error_messages_are_cleared_on_input(self):
+
+    def test_error_message_if_empty_name_is_cleared_on_input(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
-        # НЕ вводить у полі дані
-        inputbox = self.browser.find_element_by_id('id_name')
 
-        # Натискає ENTER
-        inputbox.send_keys(Keys.ENTER)
+        # НЕ вводить у полі дані
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
 
         # Виникає помилка
-        error = self.get_error_element('.errorlist')
+        error = self.get_error_elements_for_field('#id_name')[0]
         self.assertTrue(error.is_displayed())
 
         # Починає вводити щоб виправити помилку
@@ -270,8 +272,39 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         inputbox.send_keys('a')
 
         # Повідомлення про помилку зникає
-        error = self.get_error_element('.errorlist')
+        error = self.get_error_elements_for_field('#id_name')[0]
         self.assertFalse(error.is_displayed())
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+    def test_error_message_if_fail_date(self):
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Вводить у полі неправильні дані
+        inputbox = self.browser.find_element_by_id('id_created_on')
+        inputbox.send_keys('qwerty')
+
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
+
+        error = self.get_error_elements_for_field('#id_created_on')[0]
+        self.assertTrue(error.is_displayed())
+        self.assertEqual(error.text, "Введіть коректну дату/час.")
+
+        # Починає вводити щоб виправити помилку
+        inputbox = self.browser.find_element_by_id('id_created_on')
+        inputbox.send_keys('a')
+
+        # Повідомлення про помилку зникає
+        error = self.get_error_elements_for_field('#id_created_on')[0]
+        self.assertFalse(error.is_displayed())
+
+        # Повідомлення про помилку в іншому полі залишається
+        error = self.get_error_elements_for_field('#id_name')[0]
+        self.assertTrue(error.is_displayed())
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -300,6 +333,32 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
 
         error = self.get_error_element(".errorlist")
         self.assertEqual(error.text, "Тека з таким Материнська тека та Тека вже існує.")
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+    def test_cancel_button_go_to_proper_page(self):
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Вводить у полі неправильні дані
+        inputbox = self.browser.find_element_by_id('id_created_on')
+        inputbox.send_keys('qwerty')
+
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
+
+        # Через помилку залишається на тій же сторінці
+        header_text = self.browser.find_element_by_id('page-name').text
+        self.assertIn(self.page_name, header_text)
+
+        # Натискає кнопку cancel
+        button = self.browser.find_element_by_css_selector('form input[type=button]')
+        button.click()
+
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(url_name='folders:folder-list-all')
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
