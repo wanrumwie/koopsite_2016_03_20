@@ -11,6 +11,9 @@ function set_listeners(){
     $( 'input' ).on( 'keypress', function () {
         $( this ).siblings( '.errorlist' ).hide();
     });
+    $( 'select' ).on( 'change', function () {
+        $( this ).siblings( '.errorlist' ).hide();
+    });
 }
 
     
@@ -20,4 +23,3 @@ $( 'table' ).on( 'keypress', '.error', function () {
     $( this ).find( '.errorlist' ).hide();
   });
 */
-

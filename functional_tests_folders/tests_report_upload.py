@@ -146,7 +146,6 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
 
         # Бачить у полі очікувану інформацію
         inputbox = self.browser.find_element_by_id('id_parent')
-
         all_options = inputbox.find_elements_by_tag_name("option")
         for option in all_options:
             if option.is_selected():
@@ -154,18 +153,12 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
 
         # Вибирає значення
         inputbox = self.browser.find_element_by_id('id_parent')
+        self.choose_option_in_select(inputbox, val='1')
 
-        all_options = inputbox.find_elements_by_tag_name("option")
-        for option in all_options:
-            if option.get_attribute('value') == "1" :
-                option.click()
-                parent_name = option.text
-        parent = Folder.objects.get(id=1)
+        # Для прикладу беремо цей файл:
+        cwd = os.getcwd()   # поточний каталог (в ньому є manage.py)
+        full_path = os.path.join(cwd, 'output.txt') # повний шлях
 
-        cwd = os.getcwd()
-        full_path = os.path.join(cwd, 'output.txt')
-        print('      cwd =', cwd)
-        print('full_path =', full_path)
         # Натискає кнопку Browse - емулюється шляхом посилання в цей елемент шляху до файла.
         inputbox = self.browser.find_element_by_css_selector('input[type=file]')
         inputbox.send_keys(full_path)
@@ -179,90 +172,20 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
 
         # Завантажено той файл?
         report = Report.objects.last()
-        print('report =', report.id, report)
         self.assertEqual(report.filename, 'output.txt')
-        self.assertEqual(report.parent, parent)
+        self.assertEqual(report.parent.id, 1)
         report_file = report.file.read()
         with open(full_path, 'rb') as f:
             expected_file = f.read()
-        print('  report.file:--------------------------------')
-        print(report_file)
-        print('expected_file:--------------------------------')
-        print(expected_file)
-        print('----------------------------------------------')
         self.assertEqual(report_file, expected_file)
 
         # Час створення (до секунди) співпадає з поточним?
-        print('report.upload_on =', report.uploaded_on, now())
         self.assertAlmostEqual(report.uploaded_on, now(), delta=timedelta(minutes=1))
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    @skip
-    def test_visitor_can_create_folder_in_parent(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # Вибирає значення
-        inputbox = self.browser.find_element_by_id('id_parent')
-
-        all_options = inputbox.find_elements_by_tag_name("option")
-        for option in all_options:
-            if option.get_attribute('value') == "1" :
-                option.click()
-                parent_name = option.text
-
-        # Вводить у полі дані
-        inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('New_folder')
-
-        # Натискає ENTER
-        inputbox.send_keys(Keys.ENTER)
-
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
-
-        folder = Folder.objects.last()
-        print('folder =', folder)
-        self.assertEqual(folder.name, 'New_folder')
-        self.assertEqual(folder.parent.id, 1)
-
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    @skip
-    def test_visitor_can_create_folder_in_parent_submit_button(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # Вибирає значення
-        inputbox = self.browser.find_element_by_id('id_parent')
-
-        all_options = inputbox.find_elements_by_tag_name("option")
-        for option in all_options:
-            if option.get_attribute('value') == "1" :
-                option.click()
-                parent_name = option.text
-
-        # Вводить у полі дані
-        inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('New_folder')
-
-        # Натискає кнопку submit
-        button = self.browser.find_element_by_css_selector('input[type=submit]')
-        button.click()
-
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
-
-        folder = Folder.objects.last()
-        print('folder =', folder)
-        self.assertEqual(folder.name, 'New_folder')
-        self.assertEqual(folder.parent.id, 1)
-
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    @skip
-    def test_error_message_if_empty_name(self):
+    def test_error_message_if_empty_parent(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
@@ -271,14 +194,14 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
-        error = self.get_error_elements_for_field('#id_name')[0]
+        error = self.get_error_elements_for_field('#id_parent')[0]
         self.assertTrue(error.is_displayed())
         self.assertEqual(error.text, "Це поле обов'язкове.")
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    @skip
-    def test_error_message_if_empty_name_is_cleared_on_input(self):
+
+    def test_error_message_if_empty_parent_is_cleared_on_input(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
@@ -288,86 +211,26 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
         button.click()
 
         # Виникає помилка
-        error = self.get_error_elements_for_field('#id_name')[0]
+        error = self.get_error_elements_for_field('#id_parent')[0]
         self.assertTrue(error.is_displayed())
 
-        # Починає вводити щоб виправити помилку
-        inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('a')
-
-        # Повідомлення про помилку зникає
-        error = self.get_error_elements_for_field('#id_name')[0]
-        self.assertFalse(error.is_displayed())
-
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    @skip
-    def test_error_message_if_fail_date(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # Вводить у полі неправильні дані
-        inputbox = self.browser.find_element_by_id('id_created_on')
-        inputbox.send_keys('qwerty')
-
-        # Натискає кнопку submit
-        button = self.browser.find_element_by_css_selector('input[type=submit]')
-        button.click()
-
-        error = self.get_error_elements_for_field('#id_created_on')[0]
-        self.assertTrue(error.is_displayed())
-        self.assertEqual(error.text, "Введіть коректну дату/час.")
-
-        # Починає вводити щоб виправити помилку
-        inputbox = self.browser.find_element_by_id('id_created_on')
-        inputbox.send_keys('a')
-
-        # Повідомлення про помилку зникає
-        error = self.get_error_elements_for_field('#id_created_on')[0]
-        self.assertFalse(error.is_displayed())
-
-        # Повідомлення про помилку в іншому полі залишається
-        error = self.get_error_elements_for_field('#id_name')[0]
-        self.assertTrue(error.is_displayed())
-
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    @skip
-    def test_error_message_if_parent_name_not_unique_together(self):
-        parent = Folder.objects.get(id=1)
-        DummyFolder().create_dummy_folder(parent=parent, name="double_name")
-
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # Вибирає значення
+        # Вибирає дані, щоб виправити помилку
         inputbox = self.browser.find_element_by_id('id_parent')
+        self.choose_option_in_select(inputbox, val='1')
 
-        all_options = inputbox.find_elements_by_tag_name("option")
-        for option in all_options:
-            if option.get_attribute('value') == "1" :
-                option.click()
-
-        # Вводить у полі дані
-        inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('double_name')
-
-        # Натискає ENTER
-        inputbox.send_keys(Keys.ENTER)
-
-        error = self.get_error_element(".errorlist")
-        self.assertEqual(error.text, "Тека з таким Материнська тека та Тека вже існує.")
+        # Повідомлення про помилку зникає
+        error = self.get_error_elements_for_field('#id_parent')[0]
+        self.assertFalse(error.is_displayed())
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    @skip
+
+
     def test_cancel_button_go_to_proper_page(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # Вводить у полі неправильні дані
-        inputbox = self.browser.find_element_by_id('id_created_on')
-        inputbox.send_keys('qwerty')
+        # Нічого не вводить
 
         # Натискає кнопку submit
         button = self.browser.find_element_by_css_selector('input[type=submit]')

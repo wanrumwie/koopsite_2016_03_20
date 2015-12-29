@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py" />
+    <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="KoopSite: FT for ReportUpload - ready">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/templates/folders/folder_create.html" afterPath="$PROJECT_DIR$/folders/templates/folders/folder_create.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_koopsite/ft_base.py" afterPath="$PROJECT_DIR$/functional_tests_koopsite/ft_base.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/templates/folders/report_upload.html" afterPath="$PROJECT_DIR$/folders/templates/folders/report_upload.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/tests/test_views.py" afterPath="$PROJECT_DIR$/folders/tests/test_views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/tests_folder_create.py" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_folder_create.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/views.py" afterPath="$PROJECT_DIR$/folders/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/functions.js" afterPath="$PROJECT_DIR$/static/js/functions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/models.py" afterPath="$PROJECT_DIR$/folders/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/koopsite/test_koopsite_functions.js" afterPath="$PROJECT_DIR$/js_tests/koopsite/test_koopsite_functions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -37,8 +35,8 @@
       <file leaf-file-name="tests_report_upload.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4290429" vertical-offset="4420" max-vertical-offset="9984">
-              <caret line="186" column="35" selection-start-line="186" selection-start-column="35" selection-end-line="186" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6422">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -63,7 +61,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/functional_tests_folders/tests_folder_parent_list.py" />
         <option value="$PROJECT_DIR$/functional_tests_folders/tests_folder_list_all.py" />
         <option value="$PROJECT_DIR$/functional_tests_folders/tests_folder_list.py" />
         <option value="$PROJECT_DIR$/functional_tests_folders/tests_folder_parent.py" />
@@ -113,6 +110,7 @@
         <option value="$PROJECT_DIR$/folders/views.py" />
         <option value="$PROJECT_DIR$/folders/tests/test_views.py" />
         <option value="$PROJECT_DIR$/functional_tests_koopsite/ft_base.py" />
+        <option value="$PROJECT_DIR$/folders/models.py" />
         <option value="$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py" />
       </list>
     </option>
@@ -676,8 +674,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.manageform" />
-        <item index="1" class="java.lang.String" itemvalue="Python.manage-test-UT-folders" />
+        <item index="0" class="java.lang.String" itemvalue="Python.manage-test-UT-folders" />
+        <item index="1" class="java.lang.String" itemvalue="Python.manageform" />
         <item index="2" class="java.lang.String" itemvalue="Python.manage-test" />
         <item index="3" class="java.lang.String" itemvalue="Python.manage-test-FT-folders" />
         <item index="4" class="java.lang.String" itemvalue="Python.manage-test-UT-koopsite" />
@@ -989,7 +987,11 @@
       <created>1451401210302</created>
       <updated>1451401210303</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="KoopSite: FT for ReportUpload - almost ready">
+      <created>1451409208893</created>
+      <updated>1451409208893</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -1026,7 +1028,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.53587115" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53587115" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1051,8 +1053,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="KoopSite: Працюють test_views для FlatScheme." />
-    <MESSAGE value="KoopSite: Готовий test_views для FlatScheme." />
     <MESSAGE value="KoopSite: Готовий FT &amp; test_views для FlatScheme." />
     <MESSAGE value="KoopSite: FT упорядкував пари setUp і tearDown для методів і класів ==&gt; зникла помилка WinError 10053!" />
     <MESSAGE value="KoopSite: UT for AllFieldsView + FT for FlatDetail" />
@@ -1076,7 +1076,9 @@
     <MESSAGE value="KoopSite: FT for Folders: FolderCreate" />
     <MESSAGE value="KoopSite: Подолав js_test for .on(keypress...)" />
     <MESSAGE value="KoopSite: FT for FolderCreate ready" />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite: FT for FolderCreate ready" />
+    <MESSAGE value="KoopSite: FT for ReportUpload - almost ready" />
+    <MESSAGE value="KoopSite: FT for ReportUpload - ready" />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite: FT for ReportUpload - ready" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1101,17 +1103,11 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lists/static/tests/tests.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.91875" vertical-offset="270" max-vertical-offset="1014">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js_tests/koopsite/test_koopsite_functions.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.91925466" vertical-offset="1098" max-vertical-offset="1846">
           <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1119,6 +1115,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.757764" vertical-offset="110" max-vertical-offset="754">
           <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1492,16 +1489,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/functional_tests_koopsite/ft_base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7359736" vertical-offset="2429" max-vertical-offset="8814">
-          <caret line="102" column="12" selection-start-line="102" selection-start-column="12" selection-end-line="102" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.49476832" vertical-offset="5103" max-vertical-offset="8632">
+          <caret line="223" column="0" selection-start-line="209" selection-start-column="0" selection-end-line="209" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/folders/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.038863976" vertical-offset="2210" max-vertical-offset="3458">
+          <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4290429" vertical-offset="4420" max-vertical-offset="9984">
-          <caret line="186" column="35" selection-start-line="186" selection-start-column="35" selection-end-line="186" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6422">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse
 class Folder(models.Model):
     name        = models.CharField(max_length=256,
                                       verbose_name='Тека',
-                                      # unique=True,
                                       error_messages={
                                          # інші помилки переозначені на поч. цього модуля
                                       'unique': "Така назва вже існує!"},
@@ -78,8 +77,6 @@ class Report(models.Model):
 
     parent   = models.ForeignKey(Folder,
                                       verbose_name='Тека',
-                                      # null=True,
-                                      # blank=True,
                                       related_name='reports',
                                       default=None)
     file     = models.FileField(verbose_name='Файл',

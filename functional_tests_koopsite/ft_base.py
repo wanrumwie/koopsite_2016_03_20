@@ -221,6 +221,13 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         xpath = "preceding-sibling::ul[@class='%s']" % error_class
         return field.find_elements_by_xpath(xpath)
 
+    def choose_option_in_select(self, inputbox, val='1'):
+        all_options = inputbox.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_attribute('value') == val :
+                option.click()
+
+
 
 class PageVisitTest(DummyUser, FunctionalTest):
     """

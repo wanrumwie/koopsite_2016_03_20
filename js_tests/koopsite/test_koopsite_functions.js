@@ -5,6 +5,8 @@ console.log('start loading test_koopsite_functions.js');
 
 /********************************************************************/
 
+//TODO-create test for on("change") listener
+
 QUnit.test( "error message not be hidden unless there is a keypress", function ( assert ) {
 set_listeners(); 
     expect( 2 );
