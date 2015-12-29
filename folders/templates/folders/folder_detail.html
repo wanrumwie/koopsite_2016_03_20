@@ -3,8 +3,12 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <p>Деталі теки: {{ folder }}</p>
-    <table class="tabledetail">
+    <div id="page-name"
+         class="padding-y-05">
+        Деталі теки: {{ folder }}
+    </div>
+    <table id="body-table"
+        class="tabledetail">
         <tr>
             <th>Параметр</th>
             <th>Значення</th>

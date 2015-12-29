@@ -1,15 +1,13 @@
-from asyncio.tasks import sleep
 import inspect
 import os
-from unittest.case import skipIf, skip
+from unittest.case import skipIf
 from datetime import timedelta
 from django.contrib.auth.models import AnonymousUser
 from django.utils.timezone import now
-from folders.models import Folder, Report
+from folders.models import Report
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.settings import SKIP_TEST
-from selenium.webdriver.common.keys import Keys
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
