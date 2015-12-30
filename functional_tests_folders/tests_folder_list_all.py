@@ -142,7 +142,7 @@ class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPa
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Folder.objects.all():
-            link_parent_selector = '#body-list'
+            link_parent_selector = '#body-table'
             link_text            = get_full_named_path(f)
             url_name             = 'folders:folder-detail'
             kwargs               = {'pk': f.id}
@@ -155,7 +155,7 @@ class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPa
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Report.objects.all():
-            link_parent_selector = '#body-list'
+            link_parent_selector = '#body-table'
             link_text            = get_full_named_path(f)
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}
@@ -183,7 +183,7 @@ class FolderReportListPageAnonymousVisitorCanFindLinkTest(FolderReportListPageVi
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Folder.objects.all():
-            link_parent_selector = '#body-list'
+            link_parent_selector = '#body-table'
             link_text            = get_full_named_path(f)
             url_name             = 'folders:folder-detail'
             kwargs               = {'pk': f.id}
@@ -196,7 +196,7 @@ class FolderReportListPageAnonymousVisitorCanFindLinkTest(FolderReportListPageVi
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Report.objects.all():
-            link_parent_selector = '#body-list'
+            link_parent_selector = '#body-table'
             link_text            = get_full_named_path(f)
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}

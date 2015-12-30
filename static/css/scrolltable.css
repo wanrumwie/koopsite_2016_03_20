@@ -82,6 +82,10 @@ table.scrolltable {
     border-right:   0 none;
 /*    padding-left:   0;*/
 }
+.scrolltable th span {
+    line-height:    2em;
+    padding:        0 0.3em;
+}
 .scrolltable td > * {
     line-height:    2em;
 }
@@ -175,6 +179,14 @@ table.scrolltable {
 .folders4 td:nth-child(3)     { text-align: center; }
 .folders4 th:nth-child(4)     { text-align: center; }
 .folders4 td:nth-child(4)     { text-align: right; }
+.folders4-wide th:nth-child(1), 
+.folders4-wide td:nth-child(1)     { width: 5%; } /* Type */
+.folders4-wide th:nth-child(2), 
+.folders4-wide td:nth-child(2)     { width: 75%; } /* Name */
+.folders4-wide th:nth-child(3), 
+.folders4-wide td:nth-child(3)     { width: 10%; } /* Date */
+.folders4-wide th:nth-child(4), 
+.folders4-wide td:nth-child(4)     { width: 10%; } /* Size */
 /********************************************************************/
 
 

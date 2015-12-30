@@ -477,6 +477,16 @@ ul.column-list {
     text-align: right;
 /*  background: hotpink;*/
 }
+.aside-1-5 {
+    padding:    0.5em;
+    text-align: left;
+/*  background: gold;*/
+}
+.aside-2-5 {
+    padding:    0.5em;
+    text-align: right;
+/*  background: hotpink;*/
+}
 
 @media all and (min-width: 400px) {
   .aside {
@@ -500,9 +510,16 @@ ul.column-list {
     order:      3;
     max-width:  20%;
   }
-
   .footer {
     order:      4;
+  }
+  .aside-1-5 {
+    order:      1;
+    max-width:  5%;
+  }
+  .aside-2-5 {
+    order:      3;
+    max-width:  5%;
   }
 }
 @media all and (min-width: 800px) {
@@ -511,6 +528,12 @@ ul.column-list {
   }
   .aside-2 {
     max-width:      20%;
+  }
+  .aside-1-5 {
+    max-width:      5%;
+  }
+  .aside-2-5 {
+    max-width:      5%;
   }
 }
 /* Trick for correct calculating of width for EMPTY floating element.
@@ -526,6 +549,13 @@ ul.column-list {
     padding-bottom:     0;
     min-height:         1px;
 }
+.aside-empty-5 {
+    width:              5em;
+    padding-top:        0;
+    padding-bottom:     0;
+    min-height:         1px;
+}
+
 
 /*=======================================================================*/
 /* Mixins for changing some parameters of style: */

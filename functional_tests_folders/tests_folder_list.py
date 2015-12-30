@@ -1,6 +1,7 @@
 import inspect
 from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
+from folders.functions import get_full_named_path
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from folders.views import FolderList
@@ -141,8 +142,8 @@ class FolderListPageAuthenticatedVisitorCanFindLinkTest(FolderListPageVisitTest)
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Folder.objects.all():
-            link_parent_selector = '#body-list'
-            link_text            = f.name
+            link_parent_selector = '#body-table'
+            link_text            = get_full_named_path(f)
             url_name             = 'folders:folder-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = ""
@@ -169,8 +170,8 @@ class FolderListPageAnonymousVisitorCanFindLinkTest(FolderListPageVisitTest):
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Folder.objects.all():
-            link_parent_selector = '#body-list'
-            link_text            = f.name
+            link_parent_selector = '#body-table'
+            link_text            = get_full_named_path(f)
             url_name             = 'folders:folder-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = "/noaccess/"

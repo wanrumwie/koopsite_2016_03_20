@@ -186,6 +186,11 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         else:
             href = None
 
+        print('href =', href)
+        print('href.location_once_scrolled_into_view =', href.location_once_scrolled_into_view)
+
+        sleep(2)
+
         actions = ActionChains(self.browser)
         actions.move_to_element(href)
         actions.click(href)

@@ -1,6 +1,8 @@
 import inspect
+from time import sleep
 from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
+from folders.functions import get_full_named_path
 from folders.models import Report, Folder
 from folders.tests.test_base import DummyFolder
 from folders.views import ReportList
@@ -33,11 +35,11 @@ class ReportListPageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка', 'un': 'index'},
             {'ls':'#body-navigation'          , 'lt': 'Картотека (ст.)' , 'un': 'folders:folder-list-all'},
             {'ls':'#body-navigation'          , 'lt': 'Теки'            , 'un': 'folders:folder-list'},
-            # {'ls':'#body-navigation'          , 'lt': 'Кореневі теки'   , 'un': 'folders:folder-parents'},
+            {'ls':'#body-navigation'          , 'lt': 'Кореневі теки'   , 'un': 'folders:folder-parents'},
             # {'ls':'#body-navigation'          , 'lt': 'Файли'           , 'un': 'folders:report-list'},
-            # {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
+            {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
-            # {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
+            {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
             # {'ls':'#body-navigation'          , 'lt': 'Назад'           , 'un': "javascript:history.back()"},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
@@ -121,7 +123,7 @@ class ReportListPageAnonymousVisitorTest(ReportListPageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -137,15 +139,28 @@ class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest)
 
     def test_visitor_can_find_report(self):
         # Користувач може  перейти по лінку потрібні дані
+        self.browser.set_window_size(1024, 800)
         self.browser.get('%s%s' % (self.server_url, self.this_url))
+        print('length=', len(Report.objects.all()))
         for f in Report.objects.all():
-            link_parent_selector = '#body-list'
-            link_text            = f.filename
+            link_parent_selector = '#body-table'
+            link_text            = get_full_named_path(f)
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = ""
+            print(f.id, f)
+
+            # TODO-виправити помилку 6228:
+            # selenium.common.exceptions.MoveTargetOutOfBoundsException: Message: Offset within element cannot be scrolled into view: (219, 25.5): http://localhost:8081/folders/report/2/
+            # https://code.google.com/p/selenium/issues/detail?id=6228
+            # The reason of this is that
+            # target coordinates of mouse move are calculated in window viewport
+            # but viewport size is calculated inside frame (so it's just size of frame).
+            # During comparing of these the execption is raised.
+
             self.check_go_to_link(self.this_url, link_parent_selector, link_text,
                 url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
+        sleep(50)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
@@ -167,11 +182,12 @@ class ReportListPageAnonymousVisitorCanFindLinkTest(ReportListPageVisitTest):
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Report.objects.all():
-            link_parent_selector = '#body-list'
-            link_text            = f.filename
+            link_parent_selector = '#body-table'
+            link_text            = get_full_named_path(f)
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = "/noaccess/"
+            print(f.id, f)
             self.check_go_to_link(self.this_url, link_parent_selector, link_text,
                 url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))

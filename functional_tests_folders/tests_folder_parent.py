@@ -1,6 +1,7 @@
 import inspect
 from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
+from folders.functions import get_full_named_path
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from folders.views import FolderParentList
@@ -36,9 +37,9 @@ class FolderParentListPageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Теки'            , 'un': 'folders:folder-list'},
             # {'ls':'#body-navigation'          , 'lt': 'Кореневі теки'   , 'un': 'folders:folder-parents'},
             {'ls':'#body-navigation'          , 'lt': 'Файли'           , 'un': 'folders:report-list'},
-            # {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
-            # {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
-            # {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
+            {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
+            {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
+            {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
             # {'ls':'#body-navigation'          , 'lt': 'Назад'           , 'un': "javascript:history.back()"},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
@@ -141,8 +142,8 @@ class FolderParentListPageAuthenticatedVisitorCanFindLinkTest(FolderParentListPa
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Folder.objects.filter(parent=None):
-            link_parent_selector = '#body-list'
-            link_text            = f.name
+            link_parent_selector = '#body-table'
+            link_text            = get_full_named_path(f)
             url_name             = 'folders:folder-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = ""
@@ -169,8 +170,8 @@ class FolderParentListPageAnonymousVisitorCanFindLinkTest(FolderParentListPageVi
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         for f in Folder.objects.filter(parent=None):
-            link_parent_selector = '#body-list'
-            link_text            = f.name
+            link_parent_selector = '#body-table'
+            link_text            = get_full_named_path(f)
             url_name             = 'folders:folder-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = "/noaccess/"
