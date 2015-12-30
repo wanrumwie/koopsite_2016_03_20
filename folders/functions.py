@@ -42,6 +42,7 @@ def get_full_named_path(folder_or_report):
     m = folder_or_report._meta.model_name
     if m == 'folder': n = folder_or_report.name
     if m == 'report': n = folder_or_report.filename
+    if not n: n = '--no-name--'
     name_list.append(n)
     path = '/'.join(name_list)
     return path

@@ -4,6 +4,7 @@
 
 import os
 from django import template
+from folders.functions import get_full_named_path
 from koopsite.functions import get_iconPathForFolder, \
                                get_iconPathByFileExt
 
@@ -36,3 +37,12 @@ def iconpath(f):
     else:
         p = ''
     return p
+
+@register.filter
+def full_named_path(f):
+    # Фільтр для повного шляху файла чи теки у структурі каталогу
+    # Імена беруться з folder.name i report.filename
+    try:    n = get_full_named_path(f)
+    except: n = ""
+    return n
+

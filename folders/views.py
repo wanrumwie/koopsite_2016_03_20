@@ -11,6 +11,7 @@ from folders.forms import ReportUpdateForm, FolderForm, FolderFormInFolder, Repo
 from folders.functions import response_for_download, response_for_download_zip, get_subfolders, get_subreports, \
     get_full_named_path
 from folders.models import Folder, Report
+from koopsite.functions import print_list
 from koopsite.views import AllFieldsView
 
 
@@ -235,8 +236,24 @@ class FolderParentList(ListView):
 class FolderReportList(ListView):
     paginate_by = 15
     template_name = 'folders/folder_list_all.html'
-    context_object_name = "all_list" # додатковий ідентифікатор для списку self.object_list
+    # context_object_name = "all_list" # додатковий ідентифікатор для списку self.object_list
 
+    def get_queryset(self):
+        # Дочірні об'єкти:
+        # два queryset з різних моделей об'єднується в один qs,
+        # який обробляється в template як одне ціле (в т.ч. з Paginator'ом)
+        fs = Folder.objects.all()
+        rs = Report.objects.all()
+        qs = list(chain(fs, rs))
+        print('qs =', qs)
+        print_list(qs, 'qs')
+        qs = sorted(qs, key=lambda x: get_full_named_path(x))
+        print('sorted qs-----------------------------')
+        for f in qs:
+            print('%3d %-8s %-30s %s' % (f.id, f._meta.model_name, f, get_full_named_path(f)))
+        return qs
+
+    '''
     def get_queryset(self):
         # Дочірні об'єкти:
         # два queryset з різних моделей об'єднується в один qs,
@@ -250,5 +267,5 @@ class FolderReportList(ListView):
         qs = [(fr, n,) for fr, n in zip(frs, names)]
         qs = sorted(qs, key=lambda x: x[1])
         return qs
-
+    '''
 

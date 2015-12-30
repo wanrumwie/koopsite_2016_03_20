@@ -1,6 +1,7 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
-from folders.templatetags.folder_template_filters import fileext, filename, iconpath
+from folders.functions import get_full_named_path
+from folders.templatetags.folder_template_filters import fileext, filename, iconpath, full_named_path
 from folders.tests.test_base import DummyFolder
 from koopsite.functions import get_iconPathForFolder, get_iconPathByFileExt
 
@@ -29,4 +30,10 @@ class TemplateFiltersTest(TestCase):
         self.assertEqual(iconpath(self.report), get_iconPathByFileExt('.txt'))
         self.assertEqual(iconpath(r0), "")
         self.assertEqual(fileext(''), '')
+
+    def test_full_named_path(self):
+        r0 = DummyFolder().create_dummy_report(self.root)
+        self.assertEqual(full_named_path(self.root), get_full_named_path(self.root))
+        print('r0=', r0)
+        self.assertEqual(full_named_path(r0), get_full_named_path(r0))
 
