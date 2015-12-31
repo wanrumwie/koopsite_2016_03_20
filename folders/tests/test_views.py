@@ -204,8 +204,9 @@ class ReportPreviewTest(TestCase):
     def test_view_renders_proper_template(self):
         root = DummyFolder().create_dummy_root_folder()
         DummyFolder().create_dummy_report(root)
-        DummyUser().create_dummy_user(username='fred', password='secret')
+        dummy_user = DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(dummy_user, 'view_report')
         response = self.client.get(self.path)
         self.assertTemplateUsed(response, self.template)
 
@@ -217,11 +218,22 @@ class ReportPreviewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
+    def test_view_gives_response_status_code_302_Authorized_w_o_permission(self):
+        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
+        self.client.login(username='fred', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = dummy_user
+        view = self.cls_view.as_view()
+        response = view(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
     def test_view_gives_response_status_code_200(self):
         root = DummyFolder().create_dummy_root_folder()
         DummyFolder().create_dummy_report(root)
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(dummy_user, 'view_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         view = self.cls_view.as_view()

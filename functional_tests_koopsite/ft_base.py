@@ -177,7 +177,20 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         #  xhr.statusText=error
         #  xhr.responseText={"server_response": {"selRowIndex": 0, "model": null, "id": null}}
         #
+        # TODO-2015 12 31 помилка при
+        # selenium.common.exceptions.UnexpectedAlertPresentException: Alert Text: xhrErrorAlert:
+        #  xhr.status=0
+        #  xhr.statusText=error
+        #  xhr.responseText=
+        # <super: <class 'WebDriverException'>, <UnexpectedAlertPresentException object>>
+
+        print('link_parent_selector =', link_parent_selector)
+        print('link_text =', link_text)
+
         parent = self.browser.find_element_by_css_selector(link_parent_selector)
+
+        print('parent =', parent)
+
         if link_text:
             if partial: href = parent.find_element_by_partial_link_text(link_text)
             else:       href = parent.find_element_by_link_text(link_text)
@@ -186,10 +199,10 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         else:
             href = None
 
-        print('href =', href)
+        # print('href =', href)
         print('href.location_once_scrolled_into_view =', href.location_once_scrolled_into_view)
-
-        sleep(2)
+        #
+        # sleep(2)
 
         actions = ActionChains(self.browser)
         actions.move_to_element(href)

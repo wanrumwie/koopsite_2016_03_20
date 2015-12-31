@@ -60,7 +60,7 @@ class ReportPreview(DetailView):
     template_name = 'folders/report_preview.html'
     # url_name='report-preview'
 
-    @method_decorator(login_required)
+    @method_decorator(permission_required('folders.view_report'))
     def dispatch(self, request, *args, **kwargs):
         return super(ReportPreview, self).dispatch(request, *args, **kwargs)
 
@@ -168,6 +168,9 @@ class ReportUpdate(UpdateView):
         return super(ReportUpdate, self).dispatch(*args, **kwargs)
 
     # TODO-2015 12 29 Впорядкувати success_url для різних views
+    # Використати в шаблоні:
+    # a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+
     def get_success_url(self):
         return reverse('folders:folder-list-all')
 

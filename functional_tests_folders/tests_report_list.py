@@ -72,7 +72,7 @@ class ReportListPageVisitTest(PageVisitTest):
         return self.data_links_number
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "2015 12 31 тест проходить")
 class ReportListPageAuthenticatedVisitorTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -104,7 +104,7 @@ class ReportListPageAuthenticatedVisitorTest(ReportListPageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "2015 12 31 тест проходить")
 class ReportListPageAnonymousVisitorTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -123,6 +123,7 @@ class ReportListPageAnonymousVisitorTest(ReportListPageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+# TODO-2015 12 31 Помилка
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest):
     """
@@ -132,8 +133,9 @@ class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest)
     Параметри сторінки описані в суперкласі, тому не потребують переозначення.
     """
     def setUp(self):
-        self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue(report=True)
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        DummyFolder().create_dummy_catalogue(deep=1, wide=1, report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -150,7 +152,7 @@ class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest)
             expected_regex       = ""
             print(f.id, f)
 
-            # TODO-виправити помилку 6228:
+            # TODO-2015 12 31 виправити помилку 6228:
             # selenium.common.exceptions.MoveTargetOutOfBoundsException: Message: Offset within element cannot be scrolled into view: (219, 25.5): http://localhost:8081/folders/report/2/
             # https://code.google.com/p/selenium/issues/detail?id=6228
             # The reason of this is that
@@ -160,7 +162,7 @@ class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest)
 
             self.check_go_to_link(self.this_url, link_parent_selector, link_text,
                 url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
-        sleep(50)
+        # sleep(50)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
@@ -174,10 +176,11 @@ class ReportListPageAnonymousVisitorCanFindLinkTest(ReportListPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue(report=True)
+        DummyFolder().create_dummy_catalogue(deep=1, wide=1, report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
+    # TODO-2015 12 31 виправити помилку 6228:
     def test_visitor_can_find_report(self):
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))

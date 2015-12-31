@@ -34,6 +34,5 @@ class TemplateFiltersTest(TestCase):
     def test_full_named_path(self):
         r0 = DummyFolder().create_dummy_report(self.root)
         self.assertEqual(full_named_path(self.root), get_full_named_path(self.root))
-        print('r0=', r0)
         self.assertEqual(full_named_path(r0), get_full_named_path(r0))
 
