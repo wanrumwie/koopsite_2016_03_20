@@ -135,7 +135,7 @@ class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest)
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        DummyFolder().create_dummy_catalogue(deep=1, wide=1, report=True)
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -143,26 +143,14 @@ class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest)
         # Користувач може  перейти по лінку потрібні дані
         self.browser.set_window_size(1024, 800)
         self.browser.get('%s%s' % (self.server_url, self.this_url))
-        print('length=', len(Report.objects.all()))
         for f in Report.objects.all():
             link_parent_selector = '#body-table'
             link_text            = get_full_named_path(f)
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = ""
-            print(f.id, f)
-
-            # TODO-2015 12 31 виправити помилку 6228:
-            # selenium.common.exceptions.MoveTargetOutOfBoundsException: Message: Offset within element cannot be scrolled into view: (219, 25.5): http://localhost:8081/folders/report/2/
-            # https://code.google.com/p/selenium/issues/detail?id=6228
-            # The reason of this is that
-            # target coordinates of mouse move are calculated in window viewport
-            # but viewport size is calculated inside frame (so it's just size of frame).
-            # During comparing of these the execption is raised.
-
             self.check_go_to_link(self.this_url, link_parent_selector, link_text,
                 url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
-        # sleep(50)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
@@ -176,11 +164,10 @@ class ReportListPageAnonymousVisitorCanFindLinkTest(ReportListPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue(deep=1, wide=1, report=True)
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    # TODO-2015 12 31 виправити помилку 6228:
     def test_visitor_can_find_report(self):
         # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -190,7 +177,6 @@ class ReportListPageAnonymousVisitorCanFindLinkTest(ReportListPageVisitTest):
             url_name             = 'folders:report-detail'
             kwargs               = {'pk': f.id}
             expected_regex       = "/noaccess/"
-            print(f.id, f)
             self.check_go_to_link(self.this_url, link_parent_selector, link_text,
                 url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))

@@ -83,7 +83,7 @@ class FolderReportListPageAuthenticatedVisitorTest(FolderReportListPageVisitTest
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        DummyFolder().create_dummy_catalogue()
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -114,7 +114,7 @@ class FolderReportListPageAnonymousVisitorTest(FolderReportListPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue()
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -133,8 +133,9 @@ class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPa
     Параметри сторінки описані в суперкласі, тому не потребують переозначення.
     """
     def setUp(self):
-        self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue()
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -165,7 +166,7 @@ class FolderReportListPageAuthenticatedVisitorCanFindLinkTest(FolderReportListPa
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderReportListPageAnonymousVisitorCanFindLinkTest(FolderReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -175,7 +176,7 @@ class FolderReportListPageAnonymousVisitorCanFindLinkTest(FolderReportListPageVi
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_catalogue()
+        DummyFolder().create_dummy_catalogue(report=True)
         self.get_data_links_number()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 

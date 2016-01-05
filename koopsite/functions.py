@@ -1,6 +1,7 @@
+import json
 import os
 import re
-import json
+import string
 from urllib.parse import unquote
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
@@ -14,6 +15,7 @@ except ImportError:
     print('from PIL import Image, ImageOps: ImportError')
     import Image
     import ImageOps
+
 
 def trace_print(*args):
     """
@@ -410,4 +412,139 @@ class AllFieldsMixin():
         :return: [(k, v), ...]
         """
         return [(k, v) for k, v in zip(keys, values)]
+
+
+def transliterate(s, lang_from='uk', lang_to='en'):
+    """
+    Функція транслітерації. За промовчанням призначена для
+    запису українських літер латинськими за правилами,
+    встановленими постановою КМУ від 2010р.
+    :param s: вхідна стрічка
+    :param lang_from: мова вхідної стрічки
+    :param lang_to: мова вихідної стрічки
+    :return: транслітерована стрічка
+    Параметри мов вставлені на перспективу. Потрібно буде змінити
+    значення map, diphthong_map та word_start_map.
+    Неукраїнські літери і символи, які не входять до складу
+    списку string.printable будуть замінені на символ підкреслення '_'.
+    """
+    # Загальні правила заміни літер:
+    map = {
+            'А': 'A',
+            'Б': 'B',
+            'В': 'V',
+            'Г': 'H',
+            'Д': 'D',
+            'Е': 'E',
+            'Ж': 'Zh',
+            'З': 'Z',
+            'И': 'Y',
+            'Й': 'I',
+            'К': 'K',
+            'Л': 'L',
+            'М': 'M',
+            'Н': 'N',
+            'О': 'O',
+            'П': 'P',
+            'Р': 'R',
+            'С': 'S',
+            'Т': 'T',
+            'У': 'U',
+            'Ф': 'F',
+            'Х': 'Kh',
+            'Ц': 'Ts',
+            'Ч': 'Ch',
+            'Ш': 'Sh',
+            'Щ': 'Shch',
+            'Ь': '',
+            'Ю': 'Iu',
+            'Я': 'Ia',
+            'Є': 'Ie',
+            'І': 'I',
+            'Ї': 'I',
+            'Ґ': 'G',
+            'а': 'a',
+            'б': 'b',
+            'в': 'v',
+            'г': 'h',
+            'д': 'd',
+            'е': 'e',
+            'ж': 'zh',
+            'з': 'z',
+            'и': 'y',
+            'й': 'i',
+            'к': 'k',
+            'л': 'l',
+            'м': 'm',
+            'н': 'n',
+            'о': 'o',
+            'п': 'p',
+            'р': 'r',
+            'с': 's',
+            'т': 't',
+            'у': 'u',
+            'ф': 'f',
+            'х': 'kh',
+            'ц': 'ts',
+            'ч': 'ch',
+            'ш': 'sh',
+            'щ': 'shch',
+            'ь': '',
+            'ю': 'iu',
+            'я': 'ia',
+            'є': 'ie',
+            'і': 'i',
+            'ї': 'i',
+            'ґ': 'g',
+    }
+    # Правила заміни літер на початку слова:
+    word_start_map = {
+            'Й': 'Y',
+            'Ю': 'Yu',
+            'Я': 'Ya',
+            'Є': 'Ye',
+            'Ї': 'Yi',
+            'й': 'y',
+            'ю': 'yu',
+            'я': 'ya',
+            'є': 'ye',
+            'ї': 'yi',
+    }
+    # Правила заміни дифтонгів (в українській мові для цілей
+    # транслітерації під дифтонгом розуміється лише буквосполучення 'зг'.
+    diphthong_map = {
+            'ЗГ': 'ZGh',
+            'Зг': 'Zgh',
+            'зг': 'zgh',
+    }
+    if lang_from == 'uk' and lang_to == 'en':
+        # Спочатку обробка дифтонгів:
+        for a in diphthong_map:
+            s = s.replace(a, diphthong_map[a])
+
+        # Обробка початків слів:
+        words = s.split()
+        for i in range(len(words)):
+            word = words[i]
+            for a in word_start_map:
+                if word.startswith(a):
+                    b = word_start_map[a]
+                    word = word.replace(a, b, 1)
+                    words[i] = word
+                    break
+        s = ' '.join(words)
+
+        # Обробка основної маси літер:
+        trans = []
+        for a in s:
+            if a in map:
+                b = map[a]
+            elif not a in string.printable:
+                b = '_'
+            else:
+                b = a
+            trans.append(b)
+        s = ''.join(trans)
+    return s
+
 

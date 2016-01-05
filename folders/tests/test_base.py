@@ -29,11 +29,11 @@ class DummyFolder():
                             name='%s_%s_%s' % (parent.name, d, w))
                 if report:
                     self.create_dummy_report(parent=folder,
-                            filename='%s_%s' % ('report', folder.name))
+                            filename='%s_%s' % ('r', folder.name))
                 self.create_children(folder, d+1, deep, wide, report)
 
     def create_dummy_catalogue(self, deep=2, wide=2, report=False):
-        parent = self.create_dummy_root_folder(name="dummy_folder_0")
+        parent = self.create_dummy_root_folder(name="dum_f_0")
         self.create_children(parent, 0, deep, wide, report)
 
     def create_dummy_report(self, parent, file=None,

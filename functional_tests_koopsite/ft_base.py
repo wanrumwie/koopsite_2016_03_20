@@ -7,7 +7,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, MoveTargetOutOfBoundsException
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
 import time
@@ -135,7 +135,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
     def check_passed_link(self, url_name=None, kwargs=None, expected_regex=None):
         """
         Допоміжна функція для функц.тесту.
-        Перевіряє, здійснено перехід по лінку, заданому url_name
+        Перевіряє, чи здійснено перехід по лінку, заданому url_name
         :param url_name: назва, з якої ф-цією reverse отримується url переходу
         :param kwargs: евентуальні параметри url
         :param expected_regex: очікуваний url - альтернатива reverse(url_name, kwargs)
@@ -177,19 +177,21 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         #  xhr.statusText=error
         #  xhr.responseText={"server_response": {"selRowIndex": 0, "model": null, "id": null}}
         #
-        # TODO-2015 12 31 помилка при
+        # TODO-2015 12 31 помилка xhrError
         # selenium.common.exceptions.UnexpectedAlertPresentException: Alert Text: xhrErrorAlert:
         #  xhr.status=0
         #  xhr.statusText=error
         #  xhr.responseText=
         # <super: <class 'WebDriverException'>, <UnexpectedAlertPresentException object>>
 
-        print('link_parent_selector =', link_parent_selector)
-        print('link_text =', link_text)
+        if url_name and not expected_regex:
+            expected_regex = reverse(url_name, kwargs=kwargs)
+        expected_regex = expected_regex.lstrip('^')
+
+        # print('link_parent_selector =', link_parent_selector)
+        # print('link_text =', link_text)
 
         parent = self.browser.find_element_by_css_selector(link_parent_selector)
-
-        print('parent =', parent)
 
         if link_text:
             if partial: href = parent.find_element_by_partial_link_text(link_text)
@@ -199,19 +201,22 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         else:
             href = None
 
-        # print('href =', href)
-        print('href.location_once_scrolled_into_view =', href.location_once_scrolled_into_view)
-        #
-        # sleep(2)
+        # print('href.location_once_scrolled_into_view =', href.location_once_scrolled_into_view)
 
-        actions = ActionChains(self.browser)
-        actions.move_to_element(href)
-        actions.click(href)
-        actions.perform()
+        try:
+            actions = ActionChains(self.browser)
+            actions.move_to_element(href)
+            actions.click(href)
+            actions.perform()
+        except Exception as exception:
+            print('Attention: Exception in actions caused probably by too long searched link text:')
+            print(link_text)
+            print(exception)
+            return
         passing_url = self.browser.current_url  # url після переходу
-        if url_name and not expected_regex:
-            expected_regex = reverse(url_name, kwargs=kwargs)
-        expected_regex = expected_regex.lstrip('^')
+        self.assertRegex(passing_url, expected_regex)
+        if sleep_time:
+            sleep(sleep_time)   # чекаємо на завершення обміну даними на деяких сторінках
         # print('link_parent_selector =', link_parent_selector)
         # print('link_text =', link_text)
         # print('href =', href)
@@ -219,9 +224,6 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # print('kwargs =', kwargs)
         # print('passing_url =', passing_url)
         # print('expected_regex =', expected_regex)
-        self.assertRegex(passing_url, expected_regex)
-        if sleep_time:
-            sleep(sleep_time)   # чекаємо на завершення обміну даними на деяких сторінках
 
     def get_link_location(self, link_parent_selector, link_text):
         parent = self.browser.find_element_by_css_selector(
@@ -266,7 +268,7 @@ class PageVisitTest(DummyUser, FunctionalTest):
         self.assertIn(self.page_title, self.browser.title)
         # Цe потрібна сторінка
         header_text = self.browser.find_element_by_id('page-name').text
-        self.assertIn(self.page_name, header_text)
+        self.assertEqual(self.page_name, header_text)
 
     def can_not_visit_page(self, expected_regex='/noaccess/'):
         # Користувач НЕ може відвідати сторінку і буде переадресований

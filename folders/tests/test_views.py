@@ -1,5 +1,5 @@
 from asyncio.tasks import sleep
-from unittest.case import skip
+from unittest.case import skip, skipIf
 from datetime import timedelta
 from django.contrib.auth.models import AnonymousUser
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -13,10 +13,11 @@ from folders.tests.test_base import DummyFolder
 from folders.views import FolderCreate, FolderList, FolderDetail, ReportList, ReportDetail, ReportPreview, \
     FolderCreateInFolder, FolderDelete, ReportDelete, FolderUpdate, ReportUpdate, ReportUpload, ReportUploadInFolder, \
     reportDownload, folderDownload, FolderParentList, FolderReportList
-from koopsite.settings import LOGIN_URL
+from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_base import DummyUser
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderListTest(TestCase):
 
     def setUp(self):
@@ -45,6 +46,7 @@ class FolderListTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderDetailTest(TestCase):
 
     def setUp(self):
@@ -99,6 +101,7 @@ class FolderDetailTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportListTest(TestCase):
 
     def setUp(self):
@@ -126,6 +129,7 @@ class ReportListTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportDetailTest(TestCase):
 
     def setUp(self):
@@ -179,6 +183,7 @@ class ReportDetailTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportPreviewTest(TestCase):
 
     def setUp(self):
@@ -241,6 +246,7 @@ class ReportPreviewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderCreateTest(TestCase):
 
     def setUp(self):
@@ -327,6 +333,7 @@ class FolderCreateTest(TestCase):
         self.assertEqual(response.url, expected_url)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderCreateInFolderTest(TestCase):
 
     def setUp(self):
@@ -415,6 +422,7 @@ class FolderCreateInFolderTest(TestCase):
         self.assertEqual(response.url, expected_url)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderDeleteTest(TestCase):
 
     def setUp(self):
@@ -532,6 +540,7 @@ class FolderDeleteTest(TestCase):
         self.assertEqual(len(ff), 1+0)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportDeleteTest(TestCase):
 
     def setUp(self):
@@ -634,6 +643,7 @@ class ReportDeleteTest(TestCase):
         report.file.delete()
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderUpdateTest(TestCase):
 
     def setUp(self):
@@ -717,6 +727,7 @@ class FolderUpdateTest(TestCase):
         self.assertEqual(response.url, expected_url)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportUpdateTest(TestCase):
 
     def setUp(self):
@@ -819,6 +830,7 @@ class ReportUpdateTest(TestCase):
         self.assertEqual(response.url, expected_url)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportUploadTest(TestCase):
 
     def setUp(self):
@@ -907,6 +919,7 @@ class ReportUploadTest(TestCase):
         self.assertEqual(response.url, expected_url)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportUploadInFolderTest(TestCase):
 
     def setUp(self):
@@ -992,6 +1005,7 @@ class ReportUploadInFolderTest(TestCase):
         self.assertEqual(response.url, expected_url)
 
 
+
 class ReportDownloadTest(TestCase):
 
     def setUp(self):
@@ -1006,8 +1020,10 @@ class ReportDownloadTest(TestCase):
         # Видалення dummy-файла із затримкою на час його завантаження
         deleted = False
         i = 0
-        while not deleted and i<100:
+        print('self.report.file=', self.report.file)
+        while not deleted and i<30:
             try:
+                print(i, end=' ')
                 self.report.file.delete()
                 deleted = True
             except:
@@ -1015,18 +1031,24 @@ class ReportDownloadTest(TestCase):
                 i += 1
         if not deleted: print('1 file not deleted')
 
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
     def test_url_resolves_to_proper_view(self):
+        print('test RD 1')
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.view.__name__)
 
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
     def test_view_gives_response_status_code_302_AnonymousUser(self):
+        print('test RD 2')
         request = RequestFactory().get(self.path)
         request.user = AnonymousUser()
         response = self.view(request)
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
     def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        print('test RD 3')
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         request = RequestFactory().get(self.path)
@@ -1036,6 +1058,7 @@ class ReportDownloadTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
+        print('test RD 4')
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'download_report')
@@ -1046,6 +1069,7 @@ class ReportDownloadTest(TestCase):
         sleep(3)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderDownloadTest(TestCase):
 
     def setUp(self):
@@ -1059,8 +1083,10 @@ class FolderDownloadTest(TestCase):
         # Видалення dummy-файла із затримкою на час його завантаження
         deleted = False
         i = 0
+        print('self.report.file=', self.report.file)
         while not deleted and i<30:
             try:
+                print(i, end=' ')
                 self.report.file.delete()
                 deleted = True
             except:
@@ -1069,10 +1095,12 @@ class FolderDownloadTest(TestCase):
         if not deleted: print('2 file not deleted')
 
     def test_url_resolves_to_proper_view(self):
+        print('test 1')
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.view.__name__)
 
     def test_view_gives_response_status_code_302_AnonymousUser(self):
+        print('test 2')
         request = RequestFactory().get(self.path)
         request.user = AnonymousUser()
         response = self.view(request)
@@ -1080,6 +1108,7 @@ class FolderDownloadTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        print('test 3')
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         request = RequestFactory().get(self.path)
@@ -1089,6 +1118,7 @@ class FolderDownloadTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
+        print('test 4')
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'download_folder')
@@ -1099,6 +1129,7 @@ class FolderDownloadTest(TestCase):
         sleep(3)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderParentListTest(TestCase):
 
     def setUp(self):
@@ -1127,6 +1158,7 @@ class FolderParentListTest(TestCase):
 
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FolderReportListTest(TestCase):
 
     def setUp(self):

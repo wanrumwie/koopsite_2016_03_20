@@ -9,7 +9,8 @@ from functional_tests_koopsite.ft_base import DummyUser
 from koopsite.functions import round_up_division, AllFieldsMixin, get_namespace_from_dict, get_iconPathForFolder, \
     get_iconPathByFileExt, fileNameCheckInsert, scale_height, scale_width, getSelections, getSelElementFromSession, \
     setSelElementToSession, parseClientRequest, parseXHRClientRequest, get_user_full_name, get_user_flat_No, \
-    get_user_is_recognized, is_staff_only, get_or_none, has_group_member, has_group, add_group, remove_group
+    get_user_is_recognized, is_staff_only, get_or_none, has_group_member, has_group, add_group, remove_group, \
+    transliterate
 
 
 class DifferentFunctionsTest(TestCase):
@@ -436,4 +437,75 @@ class UserDifferentAttributesTest(TestCase):
     def test_remove_group_gives_false_if_no_group(self):
         remove_group(self.user, 'members')
         self.assertFalse(has_group(self.user, 'members'))
+
+
+class TestTransliterate(TestCase):
+
+    def setUp(self):
+        self.examples_KMU = [
+            ('Алушта      ', 'Alushta'),
+            ('Борщагівка  ', 'Borshchahivka'),
+            ('Вишгород    ', 'Vyshhorod'),
+            ('Гадяч       ', 'Hadiach'),
+            ('Згорани     ', 'Zghorany'),
+            ('Ґалаґан     ', 'Galagan'),
+            ('Дон         ', 'Don'),
+            ('Рівне       ', 'Rivne'),
+            ('Єнакієве    ', 'Yenakiieve'),
+            ('Наєнко      ', 'Naienko'),
+            ('Житомир     ', 'Zhytomyr'),
+            ('Закарпаття  ', 'Zakarpattia'),
+            ('Медвин      ', 'Medvyn'),
+            ('Іршава      ', 'Irshava'),
+            ('Їжакевич    ', 'Yizhakevych'),
+            ('Кадіївка    ', 'Kadiivka'),
+            ('Йосипівка   ', 'Yosypivka'),
+            ('Стрий       ', 'Stryi'),
+            ('Київ        ', 'Kyiv'),
+            ('Лебедин     ', 'Lebedyn'),
+            ('Миколаїв    ', 'Mykolaiv'),
+            ('Ніжин       ', 'Nizhyn'),
+            ('Одеса       ', 'Odesa'),
+            ('Полтава     ', 'Poltava'),
+            ('Ромни       ', 'Romny'),
+            ('Суми        ', 'Sumy'),
+            ('Тетерів     ', 'Teteriv'),
+            ('Ужгород     ', 'Uzhhorod'),
+            ('Фастів      ', 'Fastiv'),
+            ('Харків      ', 'Kharkiv'),
+            ('Біла Церква ', 'Bila Tserkva'),
+            ('Чернівці    ', 'Chernivtsi'),
+            ('Шостка      ', 'Shostka'),
+            ('Гоща        ', 'Hoshcha'),
+            ('Юрій        ', 'Yurii'),
+            ('Крюківка    ', 'Kriukivka'),
+            ('Яготин      ', 'Yahotyn'),
+            ('Ічня        ', 'Ichnia'),
+        ]
+        self.examples = [
+            ('йцукенгшщзхї',    'ytsukenhshshchzkhi'),
+            ('ЙЦУКЕНГШЩЗХЇ',    'YTsUKENHShShchZKhI'),
+            ('фівапролджє',     'fivaproldzhie'),
+            ('ФІВАПРОЛДЖЄ',     'FIVAPROLDZhIe'),
+            ('ячсмитьбюґ',      'yachsmytbiug'),
+            ('ЯЧСМИТЬБЮҐ',      'YaChSMYTBIuG'),
+            ('"`1234567890-=',  '"`1234567890-='),
+            ('~!@#$%^&*()_+',   '~!@#$%^&*()_+'),
+            (";:',<.>/?|",       ";:',<.>/?|"),
+            ('ЪъЫыЭэ',          '______'),
+        ]
+
+    def test_KMU_examples(self):
+        for e in self.examples_KMU:
+            ukr = e[0].strip()
+            eng = e[1]
+            trans = transliterate(ukr)
+            self.assertEqual(trans, eng)
+
+    def test_other_examples(self):
+        for e in self.examples:
+            ukr = e[0].strip()
+            eng = e[1]
+            trans = transliterate(ukr)
+            self.assertEqual(trans, eng)
 

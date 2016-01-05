@@ -8,10 +8,10 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from folders.forms import ReportUpdateForm, FolderForm, FolderFormInFolder, ReportForm, ReportFormInFolder
-from folders.functions import response_for_download, response_for_download_zip, get_subfolders, get_subreports, \
+from folders.functions import response_for_download, \
+    response_for_download_zip, get_subfolders, get_subreports, \
     get_full_named_path
 from folders.models import Folder, Report
-from koopsite.functions import print_list
 from koopsite.views import AllFieldsView
 
 
@@ -225,6 +225,7 @@ def folderDownload(request, pk):
 def reportDownload(request, pk):
     report_id = pk
     report = Report.objects.get(id=report_id)
+    print('report=', report.id, report.filename, report.file)
     response = response_for_download(report)
     return response
 

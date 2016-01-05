@@ -3,6 +3,10 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 {# Є одночасно базовим шаблоном для групи шаблонів #}
 
+{% load koop_template_filters %}
+{% load folder_template_filters %}
+{% load staticfiles %}
+
 {% block style %}
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css"
@@ -11,14 +15,11 @@
 {% endblock %}
 
 {% block body %}
-    {% load koop_template_filters %}
-    {% load folder_template_filters %}
-    {% load staticfiles %}
     <div id="page-name"
          class="padding-y-05">
 
         {% block page-name %}
-            Список тек і файлів
+            {# Переозначити тут назву сторінки, наприклад: Список файлів #}
         {% endblock %}
 
     </div>

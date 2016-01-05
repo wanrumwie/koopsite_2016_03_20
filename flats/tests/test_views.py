@@ -37,7 +37,6 @@ class FlatSchemeTest(TestCase):
         block_scheme = {0: {1: [flat, ]}}
         # {0: {1: [flat, ], 2: [flat, ]}, 1: {1: [flat, ], 2: [flat, ]},}
         block_length = {1: 1}
-        # TODO-
         kwargs = {'block_scheme': block_scheme,
                   'block_length': block_length,
                   'floors'      : floors,

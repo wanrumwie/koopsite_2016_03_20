@@ -171,8 +171,8 @@ else:
 TRACE_CONDITION = False
 
 # Умова для декоратора @unittest.skipIf()
-# SKIP_TEST = True
-SKIP_TEST = False
+SKIP_TEST = True
+# SKIP_TEST = False
 
 # Якщо запущено всі тести:
 if sys.argv == ['C:/PyPrograms/Django/koopsite/manage-test.py']\

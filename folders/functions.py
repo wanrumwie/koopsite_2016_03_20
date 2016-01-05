@@ -1,7 +1,9 @@
+import mimetypes
 import os
 import zipfile
 from io import BytesIO
 from django.http.response import HttpResponse
+from django.utils.http import urlquote
 from folders.models import Report, Folder
 from koopsite.fileExtMimeTypes import mimeType
 from koopsite.settings import MEDIA_ROOT
@@ -66,14 +68,28 @@ def response_for_download(report):
     :param:     report - instance of Report model
     :return:    HttpResponse with report.file and some parameters
     """
+    type, encoding = mimetypes.guess_type(report.filename)
+    print('type=', type)
+    print('encoding=', encoding)
     fileExt  = os.path.splitext(report.filename)[1]  # [0] returns path+filename
     ct = mimeType.get(fileExt.lower(), "application/octet-stream")
-    fn = '; filename="%s"' % report.filename
-    md = '; modification-date="%s"' % report.uploaded_on
+    rfn = report.filename
+    rfn = urlquote(rfn)
+    print(rfn)
+    fn = ' filename="%s";' % report.filename
+    fn = ' filename="EURO rates";'
+    fns = ' filename*=UTF-8"%s";' % report.filename
+    fns = " filename*=utf-8''%e2%82%ac%20rates"
+    fns = " filename*=utf-8''КУКУ.docx"
+    fns = " filename*=utf-8''%s;" % rfn
+    md = ' modification-date="%s";' % report.uploaded_on
     response = HttpResponse(report.file, content_type=ct)
-    response['Content-Disposition'] = 'attachment' + fn + md
+    # response['Content-Encoding'] = "utf-8"
+    response['Content-Disposition'] = 'attachment;' + fn + fns + md
     response['Content-Length'] = report.file.size
-    # print('response_for_download = ', response)
+    print('response_for_download = ', response)
+    print("response['Content-Disposition'] =", response['Content-Disposition'])
+    print("response['Content-Length'] =", response['Content-Length'])
     return response
 
 def response_for_download_zip(folder, maxFileSize = 200000000):

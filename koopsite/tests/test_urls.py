@@ -13,8 +13,7 @@ class WalkURL():
                 self.exclude_namespace = [exclude_namespace]
         else:
             self.exclude_namespace = []
-        print("type(exclude_namespace) =", type(exclude_namespace))
-        print(self.exclude_namespace)
+        print("WalkURL(exclude_namespace =", self.exclude_namespace)
         self.all_url_names = []
         self.get_all_url_names()
 
