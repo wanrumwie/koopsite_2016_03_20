@@ -16,7 +16,7 @@ class FolderDetailPageVisitTest(PageVisitTest):
     """
     this_url    = '/folders/1/'
     page_title  = 'Пасічний'
-    page_name   = 'Деталі теки:' # assertIn(self.page_name, header_text)
+    page_name   = 'Деталі теки: dum_f_0'
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)

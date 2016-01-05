@@ -6,6 +6,7 @@ from django.http.response import HttpResponse
 from django.utils.http import urlquote
 from folders.models import Report, Folder
 from koopsite.fileExtMimeTypes import mimeType
+from koopsite.functions import transliterate
 from koopsite.settings import MEDIA_ROOT
 
 def get_recursive_path(report):
@@ -68,28 +69,18 @@ def response_for_download(report):
     :param:     report - instance of Report model
     :return:    HttpResponse with report.file and some parameters
     """
-    type, encoding = mimetypes.guess_type(report.filename)
-    print('type=', type)
-    print('encoding=', encoding)
     fileExt  = os.path.splitext(report.filename)[1]  # [0] returns path+filename
     ct = mimeType.get(fileExt.lower(), "application/octet-stream")
-    rfn = report.filename
-    rfn = urlquote(rfn)
-    print(rfn)
-    fn = ' filename="%s";' % report.filename
-    fn = ' filename="EURO rates";'
-    fns = ' filename*=UTF-8"%s";' % report.filename
-    fns = " filename*=utf-8''%e2%82%ac%20rates"
-    fns = " filename*=utf-8''КУКУ.docx"
-    fns = " filename*=utf-8''%s;" % rfn
+    filename = report.filename
+    fn = ' filename="%s";' % transliterate(filename)
+    fns = " filename*=utf-8''%s;" % urlquote(filename)
     md = ' modification-date="%s";' % report.uploaded_on
-    response = HttpResponse(report.file, content_type=ct)
-    # response['Content-Encoding'] = "utf-8"
+    response = HttpResponse(content_type=ct)
+    content = report.file.read()
+    report.file.close()
+    response.write(content)
     response['Content-Disposition'] = 'attachment;' + fn + fns + md
     response['Content-Length'] = report.file.size
-    print('response_for_download = ', response)
-    print("response['Content-Disposition'] =", response['Content-Disposition'])
-    print("response['Content-Length'] =", response['Content-Length'])
     return response
 
 def response_for_download_zip(folder, maxFileSize = 200000000):
@@ -108,26 +99,23 @@ def response_for_download_zip(folder, maxFileSize = 200000000):
     zipFileSize = 0
     msg = ""
     for report in Report.objects.filter(parent_id=folder.id):
-        zipFileSize += report.file.size         #
+        zipFileSize += report.file.size
         if zipFileSize > maxFileSize:
             msg = 'Завеликий zip. Решту файлів відкинуто'
-            # print(msg)
             break
         filename = report.filename              # "людська" назва файла
         filepath = report.file.name             # шлях до файла на диску
         abs_path = os.path.join(MEDIA_ROOT, filepath)
         zipPath = os.path.join(zipSubdir, filename) # шлях в архіві
-        # print("%-3s %-7s %-20s %-20s %-20s" % (report.id, filename, filepath, abs_path, zipPath))
         zipFile.write(abs_path, zipPath)            # add file to zip
-    # print('цикл закінчено')
     zipFile.close() # Must close zip for all contents to be written
-    # print('zipfile closed')
     fileExt  = ".zip"
     ct = mimeType.get(fileExt.lower(), "application/octet-stream")
-    fn = '; filename="%s"' % zipFilename
+    fn = ' filename="%s";' % transliterate(zipFilename)
+    fns = " filename*=utf-8''%s;" % urlquote(zipFilename)
     # Grab ZIP file from in-memory, make response with correct MIME-type
     response = HttpResponse(sio.getvalue(), content_type=ct)
-    response['Content-Disposition'] = 'attachment' + fn
+    response['Content-Disposition'] = 'attachment' + fn + fns
     response['Content-Length'] = len(sio.getbuffer())
     return response, zipFilename, msg
 

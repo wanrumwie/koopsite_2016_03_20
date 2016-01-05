@@ -1,10 +1,12 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from django.utils.http import urlquote
 from folders.functions import response_for_download, response_for_download_zip, get_folders_tree_HTML, wrap_li, wrap_ul, \
     get_recursive_path, get_parents, get_subfolders, get_subreports, get_full_named_path
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from bs4 import BeautifulSoup
+from koopsite.functions import transliterate
 
 
 class DifferentFunctionsTest(TestCase):
@@ -71,14 +73,12 @@ class DifferentFunctionsTest(TestCase):
 class Response_for_download_Test(TestCase):
 
     def setUp(self):
-        self.root = DummyFolder().create_dummy_root_folder()
-        self.file = SimpleUploadedFile("file.txt", b"file_content")
+        self.root = DummyFolder().create_dummy_root_folder("Тека документів")
+        self.file = SimpleUploadedFile("Текстовий файл.txt", b"file_content")
         self.report = DummyFolder().create_dummy_report(self.root, file=self.file)
 
     def tearDown(self):
         self.report.file.delete()
-
-    # response_for_download:
 
     def test_response_for_download_gives_error_if_no_file(self):
         rep0 = DummyFolder().create_dummy_report(parent=self.root)
@@ -86,9 +86,11 @@ class Response_for_download_Test(TestCase):
             response_for_download(rep0)
 
     def test_response_for_download_gives_proper_value(self):
-        fn = '; filename="%s"' % self.report.filename
-        md = '; modification-date="%s"' % self.report.uploaded_on
-        expected_content_disposition = 'attachment' + fn + md
+        filename = self.report.filename
+        fn = ' filename="%s";' % transliterate(filename)
+        fns = " filename*=utf-8''%s;" % urlquote(filename)
+        md = ' modification-date="%s";' % self.report.uploaded_on
+        expected_content_disposition = 'attachment;' + fn + fns + md
 
         resp = response_for_download(self.report)
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
@@ -96,7 +98,16 @@ class Response_for_download_Test(TestCase):
         self.assertEqual(resp.get('Content-Type'), 'text/plain')
         self.assertEqual(resp.content, b'file_content')
 
-    # response_for_download_zip:
+
+class Response_for_download_zip_Test(TestCase):
+
+    def setUp(self):
+        self.root = DummyFolder().create_dummy_root_folder("Тека документів")
+        self.file = SimpleUploadedFile("Текстовий файл.txt", b"file_content")
+        self.report = DummyFolder().create_dummy_report(self.root, file=self.file)
+
+    def tearDown(self):
+        self.report.file.delete()
 
     def test_response_for_download_zip_gives_error_if_no_file(self):
         DummyFolder().create_dummy_report(parent=self.root)
@@ -104,15 +115,17 @@ class Response_for_download_Test(TestCase):
             response_for_download_zip(self.root)
 
     def test_response_for_download_zip_gives_proper_value(self):
-        fn = '; filename="%s.zip"' % self.root.name
-        expected_content_disposition = 'attachment' + fn
+        zipFilename = "%s.zip" % self.root.name
+        fn = ' filename="%s";' % transliterate(zipFilename)
+        fns = " filename*=utf-8''%s;" % urlquote(zipFilename)
+        expected_content_disposition = 'attachment' + fn + fns
 
         resp, zipFilename, msg = response_for_download_zip(self.root)
 
-        self.assertEqual(zipFilename, 'dummy_root_folder.zip')
+        self.assertEqual(zipFilename, 'Тека документів.zip')
         self.assertEqual(msg, "")
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
-        self.assertEqual(resp.get('Content-Length'), '162')
+        self.assertEqual(resp.get('Content-Length'), '232')
         self.assertEqual(resp.get('Content-Type'), 'application/zip')
         # TODO-перевірити response.content для zip
         # self.assertEqual(resp.content, b'file_content')
@@ -121,15 +134,17 @@ class Response_for_download_Test(TestCase):
         file2 = SimpleUploadedFile("file2.txt", b"file_content")
         report2 = DummyFolder().create_dummy_report(self.root, file=file2)
 
-        fn = '; filename="%s.zip"' % self.root.name
-        expected_content_disposition = 'attachment' + fn
+        zipFilename = "%s.zip" % self.root.name
+        fn = ' filename="%s";' % transliterate(zipFilename)
+        fns = " filename*=utf-8''%s;" % urlquote(zipFilename)
+        expected_content_disposition = 'attachment' + fn + fns
 
         resp, zipFilename, msg = response_for_download_zip(self.root)
 
-        self.assertEqual(zipFilename, 'dummy_root_folder.zip')
+        self.assertEqual(zipFilename, 'Тека документів.zip')
         self.assertEqual(msg, "")
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
-        self.assertEqual(resp.get('Content-Length'), '304')
+        self.assertEqual(resp.get('Content-Length'), '398')
         self.assertEqual(resp.get('Content-Type'), 'application/zip')
         # self.assertEqual(resp.content, b'file_content')
 
@@ -140,15 +155,17 @@ class Response_for_download_Test(TestCase):
         file2 = SimpleUploadedFile("file2.txt", b"file_content")
         report2 = DummyFolder().create_dummy_report(self.root, file=file2)
 
-        fn = '; filename="%s.zip"' % self.root.name
-        expected_content_disposition = 'attachment' + fn
+        zipFilename = "%s.zip" % self.root.name
+        fn = ' filename="%s";' % transliterate(zipFilename)
+        fns = " filename*=utf-8''%s;" % urlquote(zipFilename)
+        expected_content_disposition = 'attachment' + fn + fns
 
         resp, zipFilename, msg = response_for_download_zip(self.root, 15)
 
-        self.assertEqual(zipFilename, 'dummy_root_folder.zip')
+        self.assertEqual(zipFilename, 'Тека документів.zip')
         self.assertEqual(msg, 'Завеликий zip. Решту файлів відкинуто')
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
-        self.assertEqual(resp.get('Content-Length'), '162')
+        self.assertEqual(resp.get('Content-Length'), '232')
         self.assertEqual(resp.get('Content-Type'), 'application/zip')
         # self.assertEqual(resp.content, b'file_content')
 
