@@ -22,8 +22,11 @@ class Folder(models.Model):
                                       blank=True)
     def __str__(self):
         return self.name
+
     def get_absolute_url(self):
-        return reverse('folders:folder-contents', kwargs={'pk': self.pk})
+        return reverse('folders:folder-detail', kwargs={'pk': self.pk})
+        # return reverse('folders:folder-contents', kwargs={'pk': self.pk})
+        # return reverse('folders:folder-list-all')
 
     class Meta:
         verbose_name = ('тека')
@@ -96,6 +99,7 @@ class Report(models.Model):
         return s
     def get_absolute_url(self):
         return reverse('folders:report-detail', kwargs={'pk': self.pk})
+        # return reverse('folders:folder-list-all')
 
     class Meta:
         verbose_name = ('документ')

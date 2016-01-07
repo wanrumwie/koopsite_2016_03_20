@@ -253,10 +253,6 @@ class FolderCreateTest(TestCase):
         self.assertEqual(view.model, Folder)
         self.assertEqual(view.form_class, FolderForm)
 
-    def test_view_success_url(self):
-        view = self.cls_view()
-        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
-
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.cls_view.__name__) #
@@ -307,24 +303,6 @@ class FolderCreateTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 200)
-
-    def test_post(self):
-        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
-        self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
-        DummyFolder().create_dummy_root_folder()
-        data = {
-            'name' : 'dummy_folder_post',
-        }
-        request = RequestFactory().post(self.path, data)
-        request.user = dummy_user
-        response = self.cls_view.as_view()(request)
-        self.assertEqual(response.status_code, 302)
-        # Витягаємо з бази щойно створений запис:
-        f = self.cls_view.model.objects.last()
-        self.assertEqual(f.name, data['name'])
-        expected_url = self.cls_view().get_success_url()
-        self.assertEqual(response.url, expected_url)
 
 
 class FolderCreateInFolderTest(TestCase):
@@ -411,7 +389,7 @@ class FolderCreateInFolderTest(TestCase):
         self.assertEqual(f.parent, self.parent_folder)
         # Час створення (до секунди) співпадає з поточним?
         self.assertAlmostEqual(f.created_on, now(), delta=timedelta(minutes=1))
-        expected_url = reverse('folders:folder-list')
+        expected_url = f.get_absolute_url()
         self.assertEqual(response.url, expected_url)
 
 
@@ -427,6 +405,10 @@ class FolderDeleteTest(TestCase):
         view = self.cls_view()
         self.assertEqual(view.model, Folder)
         self.assertEqual(view.form_class, FolderForm)
+
+    def test_view_success_url(self):
+        view = self.cls_view()
+        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -545,6 +527,10 @@ class ReportDeleteTest(TestCase):
         view = self.cls_view()
         self.assertEqual(view.model,   Report)
         self.assertEqual(view.form_class, ReportForm)
+
+    def test_view_success_url(self):
+        view = self.cls_view()
+        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -698,24 +684,6 @@ class FolderUpdateTest(TestCase):
         response = self.cls_view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
 
-    def test_post(self):
-        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
-        self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'change_folder')
-        data = {
-            'name' : 'new_dummy_folder_post',
-        }
-        request = RequestFactory().post(self.path, data)
-        request.user = dummy_user
-        kwargs = {'pk': 1}
-        response = self.cls_view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 302)
-        # Витягаємо з бази щойно оновлений запис:
-        f = self.cls_view.model.objects.get(id=1)
-        self.assertEqual(f.name, data['name'])
-        expected_url = f.get_absolute_url()
-        self.assertEqual(response.url, expected_url)
-
 
 class ReportUpdateTest(TestCase):
 
@@ -735,10 +703,6 @@ class ReportUpdateTest(TestCase):
         self.assertEqual(view.model, Report)
         self.assertEqual(view.form_class, ReportUpdateForm)
 
-    def test_view_success_url(self):
-        view = self.cls_view()
-        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
-
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.cls_view.__name__) #
@@ -789,34 +753,6 @@ class ReportUpdateTest(TestCase):
         kwargs = {'pk': 1}
         response = self.cls_view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
-
-    # TODO-не працює UT ReportUpdateTest.test_post, хоча точнісінько такий самий для FolderUpdate працює.
-    @skip
-    def test_post(self):
-        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
-        self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'change_report')
-        data = {
-            'filename' : 'new_dummy_file_name_post'
-        }
-        print('before request:')
-        for f in Report.objects.all():
-            print(f.id, f)
-        request = RequestFactory().post(self.path, data)
-        request.user = dummy_user
-        kwargs = {'pk': 1}
-        response = self.cls_view.as_view()(request, **kwargs)
-        print('response =', response.__dict__)
-        print('after request:')
-        # self.assertEqual(self.report.filename, data['filename'])
-        for f in Report.objects.all():
-            print(f.id, f)
-        # self.assertEqual(response.status_code, 302)
-        # Витягаємо з бази щойно оновлений запис:
-        f = self.cls_view.model.objects.get(id=1)
-        # self.assertEqual(f.filename, data['filename'])
-        expected_url = f.get_absolute_url()
-        self.assertEqual(response.url, expected_url)
 
 
 class ReportUploadTest(TestCase):
@@ -831,10 +767,6 @@ class ReportUploadTest(TestCase):
         self.assertEqual(view.model, Report)
         self.assertEqual(view.form_class, ReportForm)
 
-    def test_view_success_url(self):
-        view = self.cls_view()
-        self.assertEqual(view.get_success_url(), reverse('folders:folder-list-all'))
-
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.cls_view.__name__) #
@@ -885,26 +817,6 @@ class ReportUploadTest(TestCase):
         view = self.cls_view.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 200)
-
-    # TODO-не знаю як і чи перевіряти ReportUpload.post
-    @skip
-    def test_post(self):
-        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
-        self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'add_report')
-        root = DummyFolder().create_dummy_root_folder()
-        data = {
-            'name' : 'dummy_folder_post',
-        }
-        request = RequestFactory().post(self.path, data)
-        request.user = dummy_user
-        response = self.cls_view.as_view()(request)
-        self.assertEqual(response.status_code, 302)
-        # Витягаємо з бази щойно створений запис:
-        f = self.cls_view.model.objects.last()
-        self.assertEqual(f.name, data['name'])
-        expected_url = f.get_absolute_url()
-        self.assertEqual(response.url, expected_url)
 
 
 class ReportUploadInFolderTest(TestCase):
@@ -970,7 +882,7 @@ class ReportUploadInFolderTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
-    # TODO-не знаю як і чи перевіряти ReportUpload.post
+    # TODO-перевірити ReportUpload.post form_valid
     @skip
     def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
@@ -990,59 +902,6 @@ class ReportUploadInFolderTest(TestCase):
         self.assertEqual(f.filename, data['filename'])
         expected_url = f.get_absolute_url()
         self.assertEqual(response.url, expected_url)
-
-
-
-class ReportDownloadTest(TestCase):
-
-    def setUp(self):
-        self.view = reportDownload
-        self.path = '/folders/report/1/download/'
-        self.root = DummyFolder().create_dummy_root_folder()
-        file = SimpleUploadedFile("file.txt", b"file_content")
-        self.report = DummyFolder().create_dummy_report(self.root, file=file)
-
-    def tearDown(self):
-        # Видалення dummy-файла із затримкою на час його завантаження
-        deleted = False
-        i = 0
-        while not deleted and i<30:
-            try:
-                self.report.file.delete()
-                deleted = True
-            except:
-                sleep(10)
-                i += 1
-        if not deleted: print('file not deleted')
-
-    def test_url_resolves_to_proper_view(self):
-        found = resolve(self.path)
-        self.assertEqual(found.func.__name__, self.view.__name__)
-
-    def test_view_gives_response_status_code_302_AnonymousUser(self):
-        request = RequestFactory().get(self.path)
-        request.user = AnonymousUser()
-        response = self.view(request)
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(LOGIN_URL))
-
-    def test_view_gives_response_status_code_302_user_w_o_permission(self):
-        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
-        self.client.login(username='fred', password='secret')
-        request = RequestFactory().get(self.path)
-        request.user = dummy_user
-        response = self.view(request, pk=1)
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(LOGIN_URL))
-
-    def test_view_gives_response_status_code_200(self):
-        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
-        self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(dummy_user, 'download_report')
-        request = RequestFactory().get(self.path)
-        request.user = dummy_user
-        response = self.view(request, pk=1)
-        self.assertEqual(response.status_code, 200)
 
 
 class FolderDownloadTest(TestCase):
@@ -1091,6 +950,58 @@ class FolderDownloadTest(TestCase):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'download_folder')
+        request = RequestFactory().get(self.path)
+        request.user = dummy_user
+        response = self.view(request, pk=1)
+        self.assertEqual(response.status_code, 200)
+
+
+class ReportDownloadTest(TestCase):
+
+    def setUp(self):
+        self.view = reportDownload
+        self.path = '/folders/report/1/download/'
+        self.root = DummyFolder().create_dummy_root_folder()
+        file = SimpleUploadedFile("file.txt", b"file_content")
+        self.report = DummyFolder().create_dummy_report(self.root, file=file)
+
+    def tearDown(self):
+        # Видалення dummy-файла із затримкою на час його завантаження
+        deleted = False
+        i = 0
+        while not deleted and i<30:
+            try:
+                self.report.file.delete()
+                deleted = True
+            except:
+                sleep(10)
+                i += 1
+        if not deleted: print('file not deleted')
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.view.__name__)
+
+    def test_view_gives_response_status_code_302_AnonymousUser(self):
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        response = self.view(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
+        self.client.login(username='fred', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = dummy_user
+        response = self.view(request, pk=1)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_200(self):
+        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
+        self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(dummy_user, 'download_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
         response = self.view(request, pk=1)

@@ -1,6 +1,8 @@
+import zipfile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils.http import urlquote
+from io import BytesIO
 from folders.functions import response_for_download, response_for_download_zip, get_folders_tree_HTML, wrap_li, wrap_ul, \
     get_recursive_path, get_parents, get_subfolders, get_subreports, get_full_named_path
 from folders.models import Folder
@@ -127,8 +129,12 @@ class Response_for_download_zip_Test(TestCase):
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
         self.assertEqual(resp.get('Content-Length'), '232')
         self.assertEqual(resp.get('Content-Type'), 'application/zip')
-        # TODO-перевірити response.content для zip
-        # self.assertEqual(resp.content, b'file_content')
+        expected_namelist = ['Тека документів/Текстовий файл.txt']
+        bio = BytesIO()  # Open ByteIO to grab in-memory file
+        bio.write(resp.content)         # записуємо вміст у "файл"
+        zipFile = zipfile.ZipFile(bio)  # "файл" як zipfile
+        self.assertIsNone(zipFile.testzip())
+        self.assertEqual(zipFile.namelist(), expected_namelist)
 
     def test_response_for_download_zip_gives_proper_value_2(self):
         file2 = SimpleUploadedFile("file2.txt", b"file_content")

@@ -22,7 +22,7 @@ class FolderModelTest(TestCase):
 
     def test_get_absolute_url(self):
         folder = Folder.objects.create()
-        expected = reverse('folders:folder-contents', kwargs={'pk': folder.pk})
+        expected = reverse('folders:folder-detail', kwargs={'pk': folder.pk})
         self.assertEqual(folder.get_absolute_url(), expected)
 
     def test_Meta(self):

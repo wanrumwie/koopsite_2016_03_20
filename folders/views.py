@@ -74,8 +74,8 @@ class FolderCreate(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(FolderCreate, self).dispatch(*args, **kwargs)
 
-    def get_success_url(self):
-        return reverse('folders:folder-list-all')
+    # def get_success_url(self):
+    #     return reverse('folders:folder-list-all')
 
 
 class FolderCreateInFolder(CreateView):
@@ -90,18 +90,14 @@ class FolderCreateInFolder(CreateView):
         self.kwargs.update({'parent': kwargs.get('parent') or 1}) # ОТРИМАННЯ даних з URLconf
         return super(FolderCreateInFolder, self).dispatch(*args, **kwargs)
 
-    def get_success_url(self):
-        return reverse('folders:folder-list')
-        # return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
-
     def form_valid(self, form):
         folder = form.save(commit=False)    # збережений ще "сирий" примірник
         parent = Folder.objects.get(id=self.kwargs.get('parent'))
         folder.parent = parent              # foreignkey
         folder.created_on = timezone.now()  # не використовуємо auto_now
         folder.save()                       # остаточне збереження
-        return HttpResponseRedirect(self.get_success_url())
-
+        # return HttpResponseRedirect(self.get_success_url())
+        return super(FolderCreateInFolder, self).form_valid(form)
 
 class FolderDelete(DeleteView):
     model = Folder
@@ -121,7 +117,7 @@ class FolderDelete(DeleteView):
             return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('folders:folder-list')
+        return reverse('folders:folder-list-all')
 
 
 class ReportDelete(DeleteView):
@@ -140,7 +136,7 @@ class ReportDelete(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('folders:report-list')
+        return reverse('folders:folder-list-all')
 
 
 class FolderUpdate(UpdateView):
@@ -157,22 +153,11 @@ class FolderUpdate(UpdateView):
 class ReportUpdate(UpdateView):
     model = Report
     form_class = ReportUpdateForm
-    # fields = ('parent', 'filename', 'file')
     template_name = 'folders/report_update.html'
 
     @method_decorator(permission_required('folders.change_report'))
     def dispatch(self, *args, **kwargs):
-        # print('     kwargs =', kwargs)
-        # print('self.kwargs =', kwargs)
-        # self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(ReportUpdate, self).dispatch(*args, **kwargs)
-
-    # TODO-2015 12 29 Впорядкувати success_url для різних views
-    # Використати в шаблоні:
-    # a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-
-    def get_success_url(self):
-        return reverse('folders:folder-list-all')
 
 
 class ReportUpload(CreateView):
@@ -183,9 +168,6 @@ class ReportUpload(CreateView):
     @method_decorator(permission_required('folders.add_report'))
     def dispatch(self, *args, **kwargs):
         return super(ReportUpload, self).dispatch(*args, **kwargs)
-
-    def get_success_url(self):
-        return reverse('folders:folder-list-all')
 
 
 class ReportUploadInFolder(CreateView):
@@ -206,11 +188,8 @@ class ReportUploadInFolder(CreateView):
         parent = Folder.objects.get(id=self.kwargs.get('parent'))
         report.parent = parent              # foreignkey
         report.save()                       # остаточне збереження
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('folders:report-list')
-        # return reverse('folders:folder-contents', kwargs={'pk': self.kwargs.get('parent')})
+        return super(ReportUploadInFolder, self).form_valid(form)
+        # return HttpResponseRedirect(self.get_success_url())
 
 
 @permission_required('folders.download_folder')
@@ -225,7 +204,7 @@ def folderDownload(request, pk):
 def reportDownload(request, pk):
     report_id = pk
     report = Report.objects.get(id=report_id)
-    print('report=', report.id, report.filename, report.file)
+    # print('report=', report.id, report.filename, report.file)
     response = response_for_download(report)
     return response
 
