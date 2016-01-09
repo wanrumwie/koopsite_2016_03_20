@@ -882,16 +882,15 @@ class ReportUploadInFolderTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
-    # TODO-перевірити ReportUpload.post form_valid
-    @skip
-    def test_post(self):
+    def test_post_valid_form(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'add_report')
         root = DummyFolder().create_dummy_root_folder()
-        data = {
-            'filename' : 'dummy_filename_post',
-        }
+
+        # Передаємо у форму значення:
+        file = SimpleUploadedFile("file.txt", b"file_content")
+        data = {'file': file}
         request = RequestFactory().post(self.path, data)
         request.user = dummy_user
         kwargs = {'parent': 1}
@@ -899,10 +898,13 @@ class ReportUploadInFolderTest(TestCase):
         self.assertEqual(response.status_code, 302)
         # Витягаємо з бази щойно створений запис:
         f = self.cls_view.model.objects.last()
-        self.assertEqual(f.filename, data['filename'])
+        fcont = f.file.read()
+        self.assertEqual(f.parent, root)
+        self.assertEqual(f.filename, "file.txt")
+        self.assertEqual(fcont, b"file_content")
         expected_url = f.get_absolute_url()
         self.assertEqual(response.url, expected_url)
-
+        f.file.delete()
 
 class FolderDownloadTest(TestCase):
 

@@ -153,15 +153,18 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         inputbox.send_keys('New_folder')
 
         # Натискає ENTER
-        inputbox.send_keys(Keys.ENTER)
-
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
+        # inputbox.send_keys(Keys.ENTER)
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
 
         folder = Folder.objects.last()
         print('folder =', folder)
         self.assertEqual(folder.name, 'New_folder')
         self.assertIsNone(folder.parent)
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(expected_regex=folder.get_absolute_url())
+
         # Час створення (до секунди) співпадає з поточним?
         # print('folder.created_on =', folder.created_on, now())
         # self.assertAlmostEqual(folder.created_on, now(), delta=timedelta(minutes=1))
@@ -187,15 +190,17 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         inputbox.send_keys('New_folder')
 
         # Натискає ENTER
-        inputbox.send_keys(Keys.ENTER)
-
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
+        # inputbox.send_keys(Keys.ENTER)
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
 
         folder = Folder.objects.last()
-        print('folder =', folder)
+        # print('folder =', folder)
         self.assertEqual(folder.name, 'New_folder')
         self.assertEqual(folder.parent.id, 1)
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(expected_regex=folder.get_absolute_url())
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -221,13 +226,13 @@ class FolderCreatePageAuthenticatedVisitorCanCreateFolderTest(FolderCreatePageVi
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
-
         folder = Folder.objects.last()
-        print('folder =', folder)
+        # print('folder =', folder)
         self.assertEqual(folder.name, 'New_folder')
         self.assertEqual(folder.parent.id, 1)
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(expected_regex=folder.get_absolute_url())
+
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 

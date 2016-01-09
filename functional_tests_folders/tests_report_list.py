@@ -123,7 +123,6 @@ class ReportListPageAnonymousVisitorTest(ReportListPageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-# TODO-2015 12 31 Помилка
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportListPageAuthenticatedVisitorCanFindLinkTest(ReportListPageVisitTest):
     """

@@ -165,17 +165,17 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
-
         # Завантажено той файл?
         report = Report.objects.last()
         self.assertEqual(report.filename, 'output.txt')
         self.assertEqual(report.parent.id, 1)
-        report_file = report.file.read()
+        report_file_content = report.file.read()
         with open(full_path, 'rb') as f:
-            expected_file = f.read()
-        self.assertEqual(report_file, expected_file)
+            expected_file_content = f.read()
+        self.assertEqual(report_file_content, expected_file_content)
+
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(expected_regex=report.get_absolute_url())
 
         # Час створення (до секунди) співпадає з поточним?
         self.assertAlmostEqual(report.uploaded_on, now(), delta=timedelta(minutes=1))

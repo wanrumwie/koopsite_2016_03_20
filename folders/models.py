@@ -97,6 +97,7 @@ class Report(models.Model):
     def __str__(self):
         s = self.filename or ''
         return s
+
     def get_absolute_url(self):
         return reverse('folders:report-detail', kwargs={'pk': self.pk})
         # return reverse('folders:folder-list-all')

@@ -180,7 +180,6 @@ class ReportUploadInFolder(CreateView):
     @method_decorator(permission_required('folders.add_report'))
     def dispatch(self, *args, **kwargs):
         self.kwargs.update({'parent': kwargs.get('parent') or 1}) # ОТРИМАННЯ даних з URLconf
-        # self.parent_id = kwargs.get('parent') or 1  # ОТРИМАННЯ даних з URLconf
         return super(ReportUploadInFolder, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
