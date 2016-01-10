@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.db.utils import IntegrityError
@@ -45,11 +46,13 @@ class FolderModelTest(TestCase):
         with self.assertRaises(IntegrityError):
             f.save()
 
-    # TODO-Folder чомусь дозволяє створити запис з name=""
-    # def test_name_empty_name_gives_error(self):
-    #     f = Folder(name="")
-    #     with self.assertRaises(IntegrityError):
-    #         f.save()
+    # Тест save() з name="" не працює, бо Django не перевіряє
+    # порожніх текстових полів!
+    # full_clean заставить провести валідацію.
+    def test_name_empty_name_gives_error(self):
+        f = Folder(name="")
+        with self.assertRaises(ValidationError):
+            f.full_clean()
 
 
 class ReportModelTest(TestCase):
@@ -74,7 +77,6 @@ class ReportModelTest(TestCase):
         # Видляємо з диска (бо файл по-чесному записався в /uploads/folders/0/1.data)
         saved_report.file.delete()
         # self.client.post(reverse('app:some_view'), {'video': video})
-
 
     def test_saving_and_retrieving_reports(self):
         folder = Folder()
@@ -112,6 +114,24 @@ class ReportModelTest(TestCase):
     #         report.save()
     #         report.full_clean()   # Django не перевіряє порожніх текстових полів!
                                 # full_clean заставить провести валідацію.
+
+    def test_name_no_parent_gives_error(self):
+        r = Report()
+        with self.assertRaises(IntegrityError):
+            r.save()
+
+    def test_name_no_name_gives_error(self):
+        r = Report(filename=None)
+        with self.assertRaises(IntegrityError):
+            r.save()
+
+    # Тест save() з name="" не працює, бо Django не перевіряє
+    # порожніх текстових полів!
+    # full_clean заставить провести валідацію.
+    def test_name_empty_name_gives_error(self):
+        r = Report(filename="")
+        with self.assertRaises(ValidationError):
+            r.full_clean()
 
 
     def test_report_get_absolute_url(self):
