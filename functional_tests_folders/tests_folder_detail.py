@@ -30,16 +30,16 @@ class FolderDetailPageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка', 'un': 'index'},
             {'ls':'#body-navigation'          , 'lt': 'Картотека (ст.)' , 'un': 'folders:folder-list-all'},
             {'ls':'#body-navigation'          , 'lt': 'Теки'            , 'un': 'folders:folder-list'},
-            {'ls':'#body-navigation'          , 'lt': 'Створити теку в цій', 'un': 'folders:folder-create-in', 'kw': {'parent': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Нова тека в цій' , 'un': 'folders:folder-create-in', 'kw': {'parent': 1}},
             {'ls':'#body-navigation'          , 'lt': 'Редагувати деталі теки', 'un': 'folders:folder-update', 'kw': {'pk': 1}},
-            {'ls':'#body-navigation'          , 'lt': "Завантажити вміст теки на мій комп'ютер", 'un': 'folders:folder-download', 'kw': {'pk': 1}},
+            {'ls':'#body-navigation'          , 'lt': "Завантажити теку", 'un': 'folders:folder-download', 'kw': {'pk': 1}},
             {'ls':'#body-navigation'          , 'lt': "Видалити теку", 'un': 'folders:folder-delete', 'kw': {'pk': 1}},
-            {'ls':'#body-navigation'          , 'lt': 'Заладувати файл в цю теку', 'un': 'folders:report-upload-in', 'kw': {'parent': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Новий файл в цю теку', 'un': 'folders:report-upload-in', 'kw': {'parent': 1}},
             # {'ls':'#body-navigation'          , 'lt': 'Файли'           , 'un': 'folders:report-list'},
             # {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             # {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
             # {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
-            # {'ls':'#body-navigation'          , 'lt': 'Назад'           , 'un': "javascript:history.back()"},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'           , 'un': "folders:folder-list-all"},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'           , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -50,7 +50,6 @@ class FolderDetailPageVisitTest(PageVisitTest):
     def get_data_links_number(self):
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 0 # Кнопки
-        self.data_links_number += 1 # лінк javascript:history.back()
         return self.data_links_number
 
 

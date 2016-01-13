@@ -40,7 +40,7 @@ class FolderParentListPageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
             {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
-            # {'ls':'#body-navigation'          , 'lt': 'Назад'           , 'un': "javascript:history.back()"},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'           , 'un': "folders:folder-list-all"},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'           , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -68,7 +68,6 @@ class FolderParentListPageVisitTest(PageVisitTest):
     def get_data_links_number(self):
         self.data_links_number = self.get_data_length() # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += self.get_num_page_links()[1]
-        self.data_links_number += 1 # лінк javascript:history.back()
         return self.data_links_number
 
 
@@ -91,13 +90,11 @@ class FolderParentListPageAuthenticatedVisitorTest(FolderParentListPageVisitTest
         self.can_visit_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    # @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    # @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()

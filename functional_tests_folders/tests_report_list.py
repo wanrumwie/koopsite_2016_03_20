@@ -1,9 +1,8 @@
 import inspect
-from time import sleep
 from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
 from folders.functions import get_full_named_path
-from folders.models import Report, Folder
+from folders.models import Report
 from folders.tests.test_base import DummyFolder
 from folders.views import ReportList
 from functional_tests_koopsite.ft_base import PageVisitTest
@@ -40,7 +39,7 @@ class ReportListPageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
             {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
-            # {'ls':'#body-navigation'          , 'lt': 'Назад'           , 'un': "javascript:history.back()"},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'           , 'un': "folders:folder-list-all"},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'           , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -68,11 +67,9 @@ class ReportListPageVisitTest(PageVisitTest):
     def get_data_links_number(self):
         self.data_links_number = self.get_data_length() # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += self.get_num_page_links()[1]
-        self.data_links_number += 1 # лінк javascript:history.back()
         return self.data_links_number
 
 
-@skipIf(SKIP_TEST, "2015 12 31 тест проходить")
 class ReportListPageAuthenticatedVisitorTest(ReportListPageVisitTest):
     """
     Тест відвідання сторінки сайту
