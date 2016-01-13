@@ -5,7 +5,7 @@ from flats.tests.test_base import DummyFlat
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
-from koopsite.functions import print_list
+from koopsite.functions import list_print
 from koopsite.settings import SKIP_TEST
 
 

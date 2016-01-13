@@ -1,5 +1,5 @@
 import inspect
-from unittest.case import skipIf, skip
+from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder

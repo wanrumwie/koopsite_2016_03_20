@@ -15,7 +15,7 @@ from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                             UserPermsActivateForm, \
                             ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm, UserRegistrationForm, \
     UserPersonDataForm
-from koopsite.functions import AllFieldsMixin, print_list, print_dict
+from koopsite.functions import AllFieldsMixin
 from koopsite.models import UserProfile
 from koopsite.settings import BASE_DIR
 
@@ -54,12 +54,12 @@ class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
         context = super(AllFieldsView, self).get_context_data(**kwargs)
         if self.context_self_object_name:
             context[self.context_self_object_name] = self.object
-        # print_list(key_list, name='key_list')
-        # print_list(verbname_list, name='vn_list')
-        # print_list(value_list, name='value_list from model')
-        # print_list(nv_list, name='label_value_list from model')
+        # list_print(key_list, name='key_list')
+        # list_print(verbname_list, name='vn_list')
+        # list_print(value_list, name='value_list from model')
+        # list_print(nv_list, name='label_value_list from model')
         # print('context :------------------------')
-        # print_dict(context, 'context')
+        # dict_print(context, 'context')
         return context
 
 
@@ -101,12 +101,15 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(AllRecordsAllFieldsView, self).get_context_data(**kwargs)
         context[self.context_verbose_list_name] = self.get_field_keys_verbnames()[1] # назви полів
-        # print_list(key_list, name='key_list')
-        # print_list(verbname_list, name='vn_list')
-        # print_list(self.object_list, name='self.object_list')
+        # list_print(key_list, name='key_list')
+        # list_print(verbname_list, name='vn_list')
+        # list_print(self.object_list, name='self.object_list')
         # print('context :------------------------')
-        # print_dict(context, 'context')
+        # dict_print(context, 'context')
         return context
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
+# ( крім того, протестовано ф-цію index() )
 
 
 #################################################################
@@ -457,7 +460,7 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     def get_one(self, request, *args, **kwargs):
         one_id = request.user.id # залогінений користувач
         one = self.ModelOne.objects.get(id=one_id)
-        # print_user_permissions(one)
+        # user_permissions_print(one)
         return one
 
 

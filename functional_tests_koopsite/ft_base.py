@@ -328,8 +328,8 @@ class PageVisitTest(DummyUser, FunctionalTest):
                 visible_links.append(d)
         expected = len(visible_links)
         expected += self.data_links_number # + лінки в таблицях з даними. Ці лінки даних не входять до словника links_in_template.
-        # print_list(links, 'links')
-        # print_list(visible_links, 'visible_links')
+        # list_print(links, 'links')
+        # list_print(visible_links, 'visible_links')
         # print('expected =', expected)
         self.assertEqual(len(elements), expected,
               msg="Кількість лінків на сторінці не відповідає очікуваній")

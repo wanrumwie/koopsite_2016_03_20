@@ -9,13 +9,6 @@ from math import ceil
 from koopsite.fileExtIconPath import iconPath
 from koopsite.settings import EMAIL_HOST_USER, TRACE_CONDITION
 
-try:
-    from PIL import Image, ImageOps
-except ImportError:
-    print('from PIL import Image, ImageOps: ImportError')
-    import Image
-    import ImageOps
-
 
 def trace_print(*args):
     """
@@ -26,13 +19,28 @@ def trace_print(*args):
     if TRACE_CONDITION:
         print(*args)
 
-def print_list(list, name=''):
+def list_print(list, name=''):
     print(name, 'len =', len(list))
     for i in list: print(i)
 
-def print_dict(d, name=''):
+def dict_print(d, name=''):
     print(name, 'len =', len(d))
     for k,v in sorted(d.items()): print('%-20s : %s' % (k,v))
+
+def user_permissions_print(user):
+    print('='*50)
+    print('user:', user)
+    print('-'*50)
+    print('get_all_permissions:')
+    user_permissions = user.get_all_permissions()
+    for p in sorted(user_permissions):
+        print(p)
+    print('-'*50)
+    print('groups:')
+    for g in user.groups.all():
+        print(g.name)
+    print('-'*50)
+
 
 def get_or_none(classmodel, **kwargs):
     try:
@@ -48,24 +56,6 @@ def round_up_division(a, b):
     """
     r = ceil(float(a)/b)
     return r
-
-def get_namespace_from_dict(d, ns, extend=False):
-    """
-    Функція, яка заповнює простір імен типу SimpleNameSpace
-    даними звичайного словника.
-    :param d: словник з даними
-    :param ns: простір імен, який слід заповнити
-    :param extend: при True простір імен доповнюється ключами з d
-    :return: ns - заповнений даними словника простір імен,
-            з яким можна оперувати у такий спосіб: ns.key замість d['key']
-    """
-    if extend:  # namespace will extend by dict fields
-        keys = d.keys()
-    else:       # namespace will not extend by dict fields
-        keys = vars(ns).keys()
-    for k in keys:
-        vars(ns)[k] = d.get(k)
-    return ns
 
 def get_iconPathForFolder(openFlag=False):
     if openFlag: p = 'img/open_folder.png'
@@ -107,12 +97,6 @@ def fileNameCheckInsert(fileName, fileNameList):
     fileNameList.append(fileName)
     return fileName
 
-def sendMailToUser(user, subject="KoopSite administrator", message=""):
-    email    = user.email
-    send_mail(subject, message, EMAIL_HOST_USER, [email])
-    # send_mail('Subject', 'Message.', 'from@example.com',
-    #             ['john@example.com', 'jane@example.com'])
-
 def scale_height(width, height, hmax):
     if height > hmax or hmax == 0:
         ratio = hmax*1./height if height != 0 else 0
@@ -126,7 +110,6 @@ def scale_width(width, height, wmax):
         width = int(width*ratio)
         height = int(height*ratio)
     return (width, height)
-
 
 emptyElement = {'model'       : None,
                 'id'          : None,
@@ -283,6 +266,23 @@ def parseXHRClientRequest(requestMETA):
     # print('parseXHRClientRequest: d=', d)
     return d
 
+def get_namespace_from_dict(d, ns, extend=False):
+    """
+    Функція, яка заповнює простір імен типу SimpleNameSpace
+    даними звичайного словника.
+    :param d: словник з даними
+    :param ns: простір імен, який слід заповнити
+    :param extend: при True простір імен доповнюється ключами з d
+    :return: ns - заповнений даними словника простір імен,
+            з яким можна оперувати у такий спосіб: ns.key замість d['key']
+    """
+    if extend:  # namespace will extend by dict fields
+        keys = d.keys()
+    else:       # namespace will not extend by dict fields
+        keys = vars(ns).keys()
+    for k in keys:
+        vars(ns)[k] = d.get(k)
+    return ns
 
 def get_user_full_name(user):
     fn = (x.strip().capitalize() for x in (user.last_name, user.first_name))
@@ -302,20 +302,6 @@ def get_user_is_recognized(user):
     except:
         s = ""
     return s
-
-def print_user_permissions(user):
-    print('='*50)
-    print('user:', user)
-    print('-'*50)
-    print('get_all_permissions:')
-    user_permissions = user.get_all_permissions()
-    for p in sorted(user_permissions):
-        print(p)
-    print('-'*50)
-    print('groups:')
-    for g in user.groups.all():
-        print(g.name)
-    print('-'*50)
 
 def is_staff_only(user):
     groups = user.groups.all()
@@ -546,5 +532,14 @@ def transliterate(s, lang_from='uk', lang_to='en'):
             trans.append(b)
         s = ''.join(trans)
     return s
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
+
+
+def sendMailToUser(user, subject="KoopSite administrator", message=""):
+    email    = user.email
+    send_mail(subject, message, EMAIL_HOST_USER, [email])
+    # send_mail('Subject', 'Message.', 'from@example.com',
+    #             ['john@example.com', 'jane@example.com'])
 
 

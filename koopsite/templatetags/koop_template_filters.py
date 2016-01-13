@@ -4,13 +4,8 @@
 
 import os
 from django.template import Library
-from koopsite.functions import get_user_full_name, \
-                                get_user_flat_No
-try:
-    from PIL import Image
-except ImportError:
-    print('ImportError: from PIL import Image')
-    import Image
+from koopsite.functions import get_user_full_name, get_user_flat_No
+from PIL import Image
 
 register = Library()
 
@@ -105,3 +100,4 @@ def icon_yes_no_unknown(bool_val):
     else:                   miniature_url = 'admin/img/icon-unknown.gif'
     return miniature_url
 
+#---------------- Кінець коду, охопленого тестуванням ------------------

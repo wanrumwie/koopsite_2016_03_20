@@ -1,4 +1,3 @@
-import mimetypes
 import os
 import zipfile
 from io import BytesIO
@@ -43,6 +42,7 @@ def get_full_named_path(folder_or_report):
     for p in parents_list:
         name_list.append(p.name)
     m = folder_or_report._meta.model_name
+    n = None
     if m == 'folder': n = folder_or_report.name
     if m == 'report': n = folder_or_report.filename
     if not n: n = '--no-name--'
@@ -145,3 +145,4 @@ def get_folders_tree_HTML(parent_qs=None, level=0, tab=' '*4):
     return html
 
 
+#---------------- Кінець коду, охопленого тестуванням ------------------

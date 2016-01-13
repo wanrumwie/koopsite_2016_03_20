@@ -10,8 +10,25 @@ import flats.views
 from koopsite.tests.test_views import setup_view
 
 
+class FlatListTest(TestCase):
+
+    def test_flat_list_model_and_attributes(self):
+        view = FlatList()
+        self.assertEqual(view.model,                Flat)
+        self.assertEqual(view.context_object_name, 'flat_list')
+
+    def test_flat_list_page_renders_proper_template(self):
+        response = self.client.get('/flats/list/')
+        self.assertTemplateUsed(response, 'flats/flat_list.html')
+
+    def test_flat_list_gives_response_status_code_200(self):
+        request = RequestFactory().get('/flats/list/')
+        view = FlatList.as_view()
+        response = view(request)
+        self.assertEqual(response.status_code, 200)
+
+
 class FlatSchemeTest(TestCase):
-    TView = FlatScheme
 
     def test_flat_scheme_model(self):
         view = FlatScheme()
@@ -28,7 +45,6 @@ class FlatSchemeTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_context_data(self):
-        """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з одної квартири:
         floors = [0]
         entrances = [1]
@@ -55,7 +71,6 @@ class FlatSchemeTest(TestCase):
         self.assertEqual(context['entrances']   , entrances)
 
     def test_context_data_2(self):
-        """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з кількох квартир:
         flat1 = Flat(floor_No=1, entrance_No=1)
         flat1.save()
@@ -87,7 +102,6 @@ class FlatSchemeTest(TestCase):
         self.assertEqual(context['entrances']   , entrances)
 
     def test_context_data_3(self):
-        """TView.get_context_data() sets proper values in context."""
         # Імітуємо будинок з кількох квартир:
         floors = (1, 2)
         entrances = (1, 2)
@@ -100,7 +114,7 @@ class FlatSchemeTest(TestCase):
                 'floors'       : floors,
                 'entrances'    : entrances,
         }
-        # print_dict(kwargs, 'kwargs')
+        # dict_print(kwargs, 'kwargs')
         # Setup request and view.
         request = RequestFactory().get('/flats/scheme/')
         view = FlatScheme()
@@ -160,24 +174,6 @@ class FlatDetailHorizontalTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class FlatListTest(TestCase):
-
-    def test_flat_list_model_and_attributes(self):
-        view = FlatList()
-        self.assertEqual(view.model,                Flat)
-        self.assertEqual(view.context_object_name, 'flat_list')
-
-    def test_flat_list_page_renders_proper_template(self):
-        response = self.client.get('/flats/list/')
-        self.assertTemplateUsed(response, 'flats/flat_list.html')
-
-    def test_flat_list_gives_response_status_code_200(self):
-        request = RequestFactory().get('/flats/list/')
-        view = FlatList.as_view()
-        response = view(request)
-        self.assertEqual(response.status_code, 200)
-
-
 class FlatTableTest(TestCase):
 
     def test_flat_table_model_and_attributes(self):
@@ -198,3 +194,4 @@ class FlatTableTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
+#---------------- Кінець коду, охопленого тестуванням ------------------

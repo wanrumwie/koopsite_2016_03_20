@@ -48,3 +48,4 @@ class ReportUpdateForm(forms.ModelForm):
         fields = ('parent', 'filename', 'file')
 
 
+#---------------- Кінець коду, охопленого тестуванням ------------------

@@ -75,3 +75,4 @@ class UserProfile(models.Model):
                         ('activate_account', 'Can activate/deactivate account'),
         )
 
+#---------------- Кінець коду, охопленого тестуванням ------------------

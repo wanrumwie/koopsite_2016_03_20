@@ -1,5 +1,5 @@
 import inspect
-from unittest.case import skip, skipIf
+from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
 from flats.tests.test_base import DummyFlat
@@ -93,6 +93,7 @@ class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):

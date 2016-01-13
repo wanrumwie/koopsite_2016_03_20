@@ -223,6 +223,26 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+    def test_error_message_if_no_file(self):
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Вибирає значення parent
+        inputbox = self.browser.find_element_by_id('id_parent')
+        self.choose_option_in_select(inputbox, val='1')
+
+        # НЕ вибирає файл
+
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
+
+        error = self.get_error_elements_for_field('#id_file')[0]
+        self.assertTrue(error.is_displayed())
+        self.assertEqual(error.text, "Це поле обов'язкове.")
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
 
     def test_cancel_button_go_to_proper_page(self):
         # Користувач відкриває сторінку

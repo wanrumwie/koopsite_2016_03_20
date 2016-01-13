@@ -1,4 +1,5 @@
 from datetime import timedelta
+import os
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
@@ -35,13 +36,13 @@ class FolderModelTest(TestCase):
                         ('download_folder', 'Can download folder'),
                         ))
 
-    def test_name_unique_together_gives_error(self):
+    def test_unique_together_gives_error(self):
         root = DummyFolder().create_dummy_root_folder()
         DummyFolder().create_dummy_folder(parent=root, name='f')
         with self.assertRaises(IntegrityError):
             DummyFolder().create_dummy_folder(parent=root, name='f')
 
-    def test_name_no_name_gives_error(self):
+    def test_no_name_gives_error(self):
         f = Folder(name=None)
         with self.assertRaises(IntegrityError):
             f.save()
@@ -49,18 +50,13 @@ class FolderModelTest(TestCase):
     # Тест save() з name="" не працює, бо Django не перевіряє
     # порожніх текстових полів!
     # full_clean заставить провести валідацію.
-    def test_name_empty_name_gives_error(self):
+    def test_empty_name_gives_error(self):
         f = Folder(name="")
         with self.assertRaises(ValidationError):
             f.full_clean()
 
 
 class ReportModelTest(TestCase):
-
-    def test_empty_parent_gives_error(self):
-        r = Report()
-        with self.assertRaises(IntegrityError):
-            r.save()
 
     def test_saving_and_retrieving_files(self):
         root = DummyFolder().create_dummy_root_folder()
@@ -70,6 +66,9 @@ class ReportModelTest(TestCase):
         saved_report = Report.objects.first()
         # Перевіряємо, чи збереглася первинна назва файла
         self.assertEqual(saved_report.filename, "file.txt")
+        # Чи правильний фактичний шлях до файла
+        basename = os.path.basename(saved_report.file.path)
+        self.assertEqual(basename, "1.data")
         # Час створення (до секунди) співпадає з поточним?
         self.assertAlmostEqual(saved_report.uploaded_on, now(), delta=timedelta(minutes=1))
         # Вмісти збереженого файда і первинного співпадають?
@@ -106,35 +105,28 @@ class ReportModelTest(TestCase):
         self.assertEqual(second_saved_report.filename, 'Report the second')
         self.assertEqual(second_saved_report.parent, folder)
 
-    # TODO-переробити цей тест для випадку відсутнього файла і назви
-    # def test_cannot_save_empty_report(self):
-    #     folder = Folder.objects.create()
-    #     report = Report(parent=folder, filename='')
-    #     with self.assertRaises(ValidationError):
-    #         report.save()
-    #         report.full_clean()   # Django не перевіряє порожніх текстових полів!
-                                # full_clean заставить провести валідацію.
-
-    def test_name_no_parent_gives_error(self):
+    def test_empty_parent_gives_error(self):
         r = Report()
         with self.assertRaises(IntegrityError):
             r.save()
 
-    def test_name_no_name_gives_error(self):
+    def test_no_filename_gives_error(self):
         r = Report(filename=None)
         with self.assertRaises(IntegrityError):
             r.save()
 
-    # Тест save() з name="" не працює, бо Django не перевіряє
-    # порожніх текстових полів!
-    # full_clean заставить провести валідацію.
-    def test_name_empty_name_gives_error(self):
+    def test_empty_filename_gives_error(self):
         r = Report(filename="")
         with self.assertRaises(ValidationError):
             r.full_clean()
 
+    def test_no_file_gives_error(self):
+        root = DummyFolder().create_dummy_root_folder()
+        r = Report(parent=root, file=None)
+        with self.assertRaises(ValidationError):
+            r.full_clean()
 
-    def test_report_get_absolute_url(self):
+    def test_get_absolute_url(self):
         folder = Folder.objects.create()
         report = Report(parent=folder)
         report.save()

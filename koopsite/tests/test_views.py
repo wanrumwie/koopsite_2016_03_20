@@ -1,11 +1,8 @@
-from unittest.case import skip
 from django.core.urlresolvers import resolve
 from django.http.request import HttpRequest
 from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.views.generic.base import TemplateView
-from django.views.generic.list import ListView
 from flats.models import Flat
 from koopsite.views import index, AllFieldsView, AllRecordsAllFieldsView
 

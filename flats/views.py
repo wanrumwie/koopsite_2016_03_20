@@ -76,7 +76,7 @@ class FlatScheme(ListView):
         kwargs['block_length'] = l
         kwargs['floors']       = floors
         kwargs['entrances']    = entrances
-        # print_dict(kwargs, 'kwargs')
+        # dict_print(kwargs, 'kwargs')
         return kwargs
 
 
@@ -102,3 +102,4 @@ class FlatTable(AllRecordsAllFieldsView):
     context_object_name = "field_vals"
     context_verbose_list_name = "field_names"
 
+#---------------- Кінець коду, охопленого тестуванням ------------------

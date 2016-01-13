@@ -3,8 +3,10 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils.http import urlquote
 from io import BytesIO
-from folders.functions import response_for_download, response_for_download_zip, get_folders_tree_HTML, wrap_li, wrap_ul, \
-    get_recursive_path, get_parents, get_subfolders, get_subreports, get_full_named_path
+from folders.functions import response_for_download, \
+    response_for_download_zip, get_folders_tree_HTML, \
+    wrap_li, wrap_ul, get_recursive_path, get_parents, \
+    get_subfolders, get_subreports, get_full_named_path
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from bs4 import BeautifulSoup
@@ -228,8 +230,5 @@ class Get_folders_tree_HTML_Test(TestCase):
         # print(soup.li['id'])
         # print(soup.li.text)
         # print(soup.prettify())
-
-
-
 
 

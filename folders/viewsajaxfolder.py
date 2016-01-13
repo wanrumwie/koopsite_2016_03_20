@@ -103,6 +103,9 @@ class FolderContentsArray(BrowseTableArray):
         # для зміни / створення нового рядка в таблиці
         if f:
             data = {}
+            fileExt  = None
+            fileType = None
+            iconPath = None
             m = f._meta.model_name
             if m == 'folder':
                 fileExt  = ""

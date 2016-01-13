@@ -1,6 +1,11 @@
+import os
 from django.test import TestCase
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
-from koopsite.templatetags.koop_template_filters import get_at_index, get_item_by_key, range_of
+from flats.tests.test_base import DummyFlat
+from folders.models import Folder
+from koopsite.templatetags.koop_template_filters import get_at_index, get_item_by_key, range_of, model_name, \
+    user_full_name, user_flat_No, thumbnail, icon_yes_no_unknown
+from koopsite.tests.test_base import DummyUser
 from koopsite.urls import urlpatterns
 
 """
@@ -38,4 +43,35 @@ class TemplateFiltersTest(TestCase):
         self.assertEqual(range_of(1), range(1))
         self.assertEqual(range_of(-2), range(-2))
         self.assertIsNone(range_of((1,)))
+
+    def test_model_name(self):
+        self.assertEqual(model_name(Folder), "folder")
+        self.assertEqual(model_name(Folder()), "folder")
+
+    def test_user_full_name(self):
+        user = DummyUser().create_dummy_user(first_name="ringo", last_name="starr")
+        self.assertEqual(user_full_name(user), "Starr Ringo")
+
+    def test_user_flat_No(self):
+        user = DummyUser().create_dummy_user()
+        flat = DummyFlat().create_dummy_flat(flat_No="55")
+        DummyUser().create_dummy_profile(user, flat=flat)
+        self.assertEqual(user_flat_No(user), "55")
+
+    def test_thumbnail(self):
+        user = DummyUser().create_dummy_user()
+        picture_path="koopsite/tests/profile_image.jpg"
+        DummyUser().create_dummy_profile(user, picture_path=picture_path)
+        mini_url = thumbnail(user.userprofile.picture)
+        self.assertEqual(mini_url, '/media/profile_images/1_30x24.jpg')
+        mini_url = thumbnail(user.userprofile.picture, "200x100")
+        self.assertEqual(mini_url, '/media/profile_images/1_200x100.jpg')
+        os.remove('media/profile_images/1.jpg')
+        os.remove('media/profile_images/1_30x24.jpg')
+        os.remove('media/profile_images/1_200x100.jpg')
+
+    def test_icon_yes_no_unknown(self):
+        self.assertEqual(icon_yes_no_unknown(True),  'admin/img/icon-yes.gif')
+        self.assertEqual(icon_yes_no_unknown(False), 'admin/img/icon-no.gif')
+        self.assertEqual(icon_yes_no_unknown(None),  'admin/img/icon-unknown.gif')
 

@@ -1,6 +1,5 @@
-import html.entities
 import inspect
-from unittest.case import skip, skipIf
+from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
 from flats.models import Flat
 from flats.tests.test_base import DummyFlat

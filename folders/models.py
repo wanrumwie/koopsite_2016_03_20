@@ -63,7 +63,7 @@ class Report(models.Model):
         # upload_to=/uploads/folders/id/filename - СТАРИЙ ВАРІАНТ
         # upload_to=/uploads/folders/folder_id/file_id - НОВИЙ ВАРІАНТ
         # upload_to=/uploads/folders/k/file_id - НОВІШИЙ ВАРІАНТ,
-        #   де k=id//512 - для кожних 512 файлів відкриватимемо нову теку
+        #   де k=id mod 512 - для кожних 512 файлів відкриватимемо нову теку
         # Але id визначається базою даних при збереженні, тому
         # для новоствореного запису id=None
         instance.filename = filename # в БД запишеться первинне ім'я файла
@@ -84,12 +84,13 @@ class Report(models.Model):
                                       default=None)
     file     = models.FileField(verbose_name='Файл',
                                       upload_to=get_file_path,
-                                      null=True,
-                                      blank=True)
+                                      # null=True,
+                                      # blank=True)
+                                      default=None)
     filename = models.CharField(verbose_name='Назва файлу',
                                       max_length=512,
-                                      # null=True,
-                                      blank=True)
+                                      null=True)
+                                      # blank=True)
     uploaded_on  = models.DateTimeField(verbose_name='Дата заладування',
                                       auto_now_add=True,
                                       null=True,
@@ -110,23 +111,4 @@ class Report(models.Model):
                         ('download_report', 'Can download report'),
         )
 
-
-
-'''
-@receiver(post_delete, sender=Report)
-def report_postdelete(sender, instance, *args, **kwargs):
-    instance.file.delete(save=False)
-    def __str__(self):
-        return self.filename
-
-
-# Receive the pre_delete signal
-# and delete the file associated with the model instance.
-from django.db.models.signals import pre_delete
-from django.dispatch.dispatcher import receiver
-
-@receiver(pre_delete, sender=Report)
-def report_delete(sender, instance, **kwargs):
-    # Pass false so FileField doesn't save the model.
-    instance.file.delete(False)
-'''
+#---------------- Кінець коду, охопленого тестуванням ------------------

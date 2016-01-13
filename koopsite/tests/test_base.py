@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Permission, Group
 from django.contrib.contenttypes.models import ContentType
+from django.core.files.uploadedfile import SimpleUploadedFile
 from koopsite.functions import trace_print
 from koopsite.models import UserProfile
 
@@ -46,7 +47,12 @@ class DummyUser():
         return group
 
     def create_dummy_profile(self, user, flat=None, picture=None,
-                              is_recognized=None):
+                             picture_path=None,
+                             is_recognized=None):
+        if picture_path and not picture:
+            # створимо picture з файла на диску:
+            with open(picture_path, 'rb') as file:
+                picture = SimpleUploadedFile(picture_path, file.read())
         profile = UserProfile(user=user, flat=flat, picture=picture,
                               is_recognized=is_recognized)
         profile.save()
