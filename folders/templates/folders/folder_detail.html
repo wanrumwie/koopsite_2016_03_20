@@ -1,40 +1,12 @@
-{% extends "folders/folder_base.html" %}
+{% extends "folders/base_folder_detail.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
-{% block body %}
-    <div id="page-name"
-         class="padding-y-05">
-        Деталі теки: {{ folder }}
-    </div>
-    <table id="body-table"
-        class="tabledetail">
-        <tr>
-            <th>Параметр</th>
-            <th>Значення</th>
-        </tr>
-        {% for k, v in obj_details %}
-            <tr>
-                <td>{{ k }}</td>
-                <td class="text-align-left">{{ v }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-
-    {% include "block_paginator.html" %}
-
+{% block page-name %}
+    Деталі теки: {{ folder }}
 {% endblock %}
 
-{% block href-folder-contents %}
-{% endblock %}
-{% block href-folder-parent %}
-{% endblock %}
 {% block href-report-list %}
-{% endblock %}
-
-{% block href-folder-create %}
-{% endblock %}
-{% block href-report-upload %}
 {% endblock %}
 
 {% block href-report-preview %}

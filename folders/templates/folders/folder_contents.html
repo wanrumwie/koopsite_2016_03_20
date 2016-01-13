@@ -1,4 +1,4 @@
-{% extends "folders/folder_contents_base.html" %}
+{% extends "folders/base_folder_contents.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
@@ -159,9 +159,6 @@
 
 {% endblock %}
 
-{# Переозначуємо тільки непотрібні посилання #}
-{% block href-folder-contents %}
-{% endblock %}
 
 {% block load_js %}
 
