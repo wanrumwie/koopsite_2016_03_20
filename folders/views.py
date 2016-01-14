@@ -90,14 +90,29 @@ class FolderCreateInFolder(CreateView):
         self.kwargs.update({'parent': kwargs.get('parent') or 1}) # ОТРИМАННЯ даних з URLconf
         return super(FolderCreateInFolder, self).dispatch(*args, **kwargs)
 
-    def form_valid(self, form):
-        folder = form.save(commit=False)    # збережений ще "сирий" примірник
+    def get_initial(self):
+        # Початкові дані, які відомі наперед:
         parent = Folder.objects.get(id=self.kwargs.get('parent'))
-        folder.parent = parent              # foreignkey
-        folder.created_on = timezone.now()  # не використовуємо auto_now
-        folder.save()                       # остаточне збереження
-        # return HttpResponseRedirect(self.get_success_url())
-        return super(FolderCreateInFolder, self).form_valid(form)
+        self.initial = {'parent': parent, }
+        return self.initial.copy()
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        # POST не передає поля disabled (яким є наше поле parent типу select)
+        # Тому форма створюється вручну із даних request + initial
+        # спеціально для валідації:
+        data = request.POST.copy()
+        parent = Folder.objects.get(id=self.kwargs.get('parent'))
+        data['parent'] = parent.id
+        form = self.form_class(data=data)
+        if form.is_valid():
+            folder = form.save(commit=False)    # збережений ще "сирий" примірник
+            folder.created_on = timezone.now()  # не використовуємо auto_now
+            folder.save()                       # остаточне збереження
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
 
 class FolderDelete(DeleteView):
     model = Folder
@@ -182,13 +197,27 @@ class ReportUploadInFolder(CreateView):
         self.kwargs.update({'parent': kwargs.get('parent') or 1}) # ОТРИМАННЯ даних з URLconf
         return super(ReportUploadInFolder, self).dispatch(*args, **kwargs)
 
-    def form_valid(self, form):
-        report = form.save(commit=False)    # збережений ще "сирий" примірник, щоб отримати id
+    def get_initial(self):
+        # Початкові дані, які відомі наперед:
         parent = Folder.objects.get(id=self.kwargs.get('parent'))
-        report.parent = parent              # foreignkey
-        report.save()                       # остаточне збереження
-        return super(ReportUploadInFolder, self).form_valid(form)
-        # return HttpResponseRedirect(self.get_success_url())
+        self.initial = {'parent': parent, }
+        return self.initial.copy()
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        # POST не передає поля disabled (яким є наше поле parent типу select)
+        # Тому форма створюється вручну із даних request + initial
+        # спеціально для валідації:
+        data = request.POST.copy()
+        parent = Folder.objects.get(id=self.kwargs.get('parent'))
+        data['parent'] = parent.id
+        form = self.form_class(data=data, files=request.FILES)
+        if form.is_valid():
+            report = form.save(commit=False)    # збережений ще "сирий" примірник
+            report.save()                       # остаточне збереження
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 @permission_required('folders.download_folder')

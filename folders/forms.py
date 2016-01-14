@@ -16,9 +16,19 @@ class FolderFormInFolder(forms.ModelForm):
     # Форма для створення теки у материнській теці
     required_css_class  = 'required'
     error_css_class     = 'error'
+
+    # Трюк з полями readonly:
+    READONLY_FIELDS = ('parent',)
+
+    def __init__(self, *args, **kwargs):
+        super(FolderFormInFolder, self).__init__(*args, **kwargs)
+        for field in self.READONLY_FIELDS:
+            self.fields[field].widget.attrs['readonly'] = True
+            self.fields[field].widget.attrs['disabled'] = True
+
     class Meta:
         model  = Folder
-        fields = ('name',)
+        fields = ('parent', 'name',)
 
 
 class ReportForm(forms.ModelForm):
@@ -34,9 +44,19 @@ class ReportFormInFolder(forms.ModelForm):
     # Форма для вводу даних про файл у відомій теці
     required_css_class  = 'required'
     error_css_class     = 'error'
+
+    # Трюк з полями readonly:
+    READONLY_FIELDS = ('parent',)
+
+    def __init__(self, *args, **kwargs):
+        super(ReportFormInFolder, self).__init__(*args, **kwargs)
+        for field in self.READONLY_FIELDS:
+            self.fields[field].widget.attrs['readonly'] = True
+            self.fields[field].widget.attrs['disabled'] = True
+
     class Meta:
         model = Report
-        fields = ('file',)
+        fields = ('parent', 'file',)
 
 
 class ReportUpdateForm(forms.ModelForm):

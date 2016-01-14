@@ -18,7 +18,7 @@
               enctype="multipart/form-data">
             {% csrf_token %}
             <table>
-                {{ form }}
+                  {{ form }}
             </table>
             <input type="submit" value="Створити" />
             {% if object.get_absolute_url %}

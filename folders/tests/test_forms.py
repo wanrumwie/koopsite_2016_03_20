@@ -79,7 +79,6 @@ class FolderFormTest(TestCase):
 
 
 class FolderFormInFolderTest(TestCase):
-    # Перевіряю лише атрибути, бо FolderFormInFolder така ж як FolderForm
     def setUp(self):
         self.cls_form = FolderFormInFolder
 
@@ -87,8 +86,14 @@ class FolderFormInFolderTest(TestCase):
         form = self.cls_form
         self.assertEqual(form.required_css_class, 'required')
         self.assertEqual(form.error_css_class   , 'error')
+        self.assertEqual(form.READONLY_FIELDS   , ('parent',))
         self.assertEqual(form.Meta.model, Folder)
-        self.assertEqual(form.Meta.fields, ('name',))
+        self.assertEqual(form.Meta.fields, ('parent', 'name',))
+
+    def test_init(self):
+        form = self.cls_form()
+        self.assertTrue(form.fields['parent'].widget.attrs['readonly'])
+        self.assertTrue(form.fields['parent'].widget.attrs['disabled'])
 
 
 class ReportUpdateFormTest(TestCase):
@@ -139,7 +144,6 @@ class ReportFormTest(TestCase):
 
 
 class ReportFormInFolderTest(TestCase):
-    # Перевіряю лише атрибути, бо ReportFormInFolder така ж як ReportUpdateForm
 
     def setUp(self):
         self.cls_form = ReportFormInFolder
@@ -148,6 +152,11 @@ class ReportFormInFolderTest(TestCase):
         form = self.cls_form
         self.assertEqual(form.required_css_class, 'required')
         self.assertEqual(form.error_css_class   , 'error')
+        self.assertEqual(form.READONLY_FIELDS   , ('parent',))
         self.assertEqual(form.Meta.model, Report)
-        self.assertEqual(form.Meta.fields, ('file',))
+        self.assertEqual(form.Meta.fields, ('parent', 'file',))
 
+    def test_init(self):
+        form = self.cls_form()
+        self.assertTrue(form.fields['parent'].widget.attrs['readonly'])
+        self.assertTrue(form.fields['parent'].widget.attrs['disabled'])

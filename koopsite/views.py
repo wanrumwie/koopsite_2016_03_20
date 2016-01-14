@@ -243,12 +243,16 @@ class OneToOneUpdate(UpdateView):
         return render(request, self.template_name, data)
 
     def post(self, request, *args, **kwargs):
+
+        data = request.POST.copy()
+        print('data=', data)
+
         one = self.get_one(request, *args, **kwargs)
         two = self.get_two(one)
         form_one = self.FormOne(data=request.POST, files=request.FILES, instance=one)
         form_two = self.FormTwo(data=request.POST, files=request.FILES, instance=two)
-        # print('form_one =', form_one)
-        # print('form_two =', form_two)
+        print('form_one =', form_one.as_p())
+        print('form_two =', form_two.as_p())
         if form_one.is_valid() and form_two.is_valid():
             one = form_one.save()    # одночасно в базі зберігається примірник моделі
             two = form_two.save()

@@ -7,16 +7,16 @@ from koopsite.settings import SKIP_TEST
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderDetailPageVisitTest(PageVisitTest):
+class ReportDetailPageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки одної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування цієї сторінки з іншими користувачами.
     """
-    this_url    = '/folders/1/'
+    this_url    = '/folders/report/1/'
     page_title  = 'Пасічний'
-    page_name   = 'Деталі теки: dum_f_0'
+    page_name   = 'Деталі файла: dummy_file_name'
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -29,13 +29,17 @@ class FolderDetailPageVisitTest(PageVisitTest):
         s = [
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка', 'un': 'index'},
             {'ls':'#body-navigation'          , 'lt': 'Картотека (ст.)' , 'un': 'folders:folder-list-all'},
-            {'ls':'#body-navigation'          , 'lt': 'Теки'            , 'un': 'folders:folder-list'},
-            {'ls':'#body-navigation'          , 'lt': 'Нова тека в цій' , 'un': 'folders:folder-create-in', 'kw': {'parent': 1}},
-            {'ls':'#body-navigation'          , 'lt': 'Редагувати деталі теки', 'un': 'folders:folder-update', 'kw': {'pk': 1}},
-            {'ls':'#body-navigation'          , 'lt': "Завантажити теку", 'un': 'folders:folder-download', 'kw': {'pk': 1}},
-            {'ls':'#body-navigation'          , 'lt': "Видалити теку", 'un': 'folders:folder-delete', 'kw': {'pk': 1}},
-            {'ls':'#body-navigation'          , 'lt': 'Новий файл в цю теку', 'un': 'folders:report-upload-in', 'kw': {'parent': 1}},
-            # {'ls':'#body-navigation'          , 'lt': 'Файли'           , 'un': 'folders:report-list'},
+            # {'ls':'#body-navigation'          , 'lt': 'Теки'            , 'un': 'folders:folder-list'},
+            # {'ls':'#body-navigation'          , 'lt': 'Нова тека в цій' , 'un': 'folders:folder-create-in', 'kw': {'parent': 1}},
+            # {'ls':'#body-navigation'          , 'lt': 'Редагувати деталі теки', 'un': 'folders:folder-update', 'kw': {'pk': 1}},
+            # {'ls':'#body-navigation'          , 'lt': "Завантажити теку", 'un': 'folders:folder-download', 'kw': {'pk': 1}},
+            # {'ls':'#body-navigation'          , 'lt': "Видалити теку", 'un': 'folders:folder-delete', 'kw': {'pk': 1}},
+            # {'ls':'#body-navigation'          , 'lt': 'Новий файл в цю теку', 'un': 'folders:report-upload-in', 'kw': {'parent': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Файли'           , 'un': 'folders:report-list'},
+            {'ls':'#body-navigation'          , 'lt': 'Попередній перегляд', 'un': 'folders:report-preview', 'kw': {'pk': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Редагувати деталі файла', 'un': 'folders:report-update', 'kw': {'pk': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Завантажити файл', 'un': 'folders:report-download', 'kw': {'pk': 1}},
+            {'ls':'#body-navigation'          , 'lt': 'Видалити файл'   , 'un': 'folders:report-delete', 'kw': {'pk': 1}},
             # {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             # {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
             # {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
@@ -54,7 +58,7 @@ class FolderDetailPageVisitTest(PageVisitTest):
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderDetailPageAuthenticatedVisitorTest(FolderDetailPageVisitTest):
+class ReportDetailPageAuthenticatedVisitorTest(ReportDetailPageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
@@ -64,7 +68,8 @@ class FolderDetailPageAuthenticatedVisitorTest(FolderDetailPageVisitTest):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
         self.get_data_links_number()
-        DummyFolder().create_dummy_catalogue()
+        parent = DummyFolder().create_dummy_folder()
+        DummyFolder().create_dummy_report(parent=parent, filename='dummy_file_name')
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
@@ -72,13 +77,11 @@ class FolderDetailPageAuthenticatedVisitorTest(FolderDetailPageVisitTest):
         self.can_visit_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    # @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
-    # @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
@@ -86,7 +89,7 @@ class FolderDetailPageAuthenticatedVisitorTest(FolderDetailPageVisitTest):
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderDetailPageAnonymousVisitorTest(FolderDetailPageVisitTest):
+class ReportDetailPageAnonymousVisitorTest(ReportDetailPageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем

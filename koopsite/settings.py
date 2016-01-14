@@ -170,7 +170,7 @@ else:
 # TRACE_CONDITION = True
 TRACE_CONDITION = False
 
-# Умова для декоратора @unittest.skipIf()
+# Умова для декоратора @unittest.skipIf(SKIPTEST)
 # SKIP_TEST = True
 SKIP_TEST = False
 

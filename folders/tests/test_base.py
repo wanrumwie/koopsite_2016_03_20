@@ -14,10 +14,10 @@ class DummyFolder():
         # print('created folder:', folder)
         return folder
 
-    def create_dummy_folder(self, name="dummy_folder",
+    def create_dummy_folder(self, id=None, name="dummy_folder",
                             parent=None, created_on=None):
         # створюємо теку:
-        folder = Folder(name=name, parent=parent, created_on=created_on)
+        folder = Folder(id=id, name=name, parent=parent, created_on=created_on)
         folder.save()
         # print('created folder:', folder)
         return folder
@@ -36,10 +36,10 @@ class DummyFolder():
         parent = self.create_dummy_root_folder(name="dum_f_0")
         self.create_children(parent, 0, deep, wide, report)
 
-    def create_dummy_report(self, parent, file=None,
+    def create_dummy_report(self, parent, id=None, file=None,
                             filename=None, uploaded_on=None):
         # створюємо документ:
-        report = Report(parent=parent, file=file,
+        report = Report(parent=parent, id=id, file=file,
                         filename=filename, uploaded_on=uploaded_on)
         report.save()
         # print('created report:', report)

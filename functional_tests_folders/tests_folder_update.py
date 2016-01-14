@@ -1,26 +1,26 @@
 import inspect
-import os
 from unittest.case import skipIf
-from datetime import timedelta
+from datetime import datetime
 from django.contrib.auth.models import AnonymousUser
-from django.utils.timezone import now
-from folders.models import Report
+from pytz import UTC
+from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.settings import SKIP_TEST
+from selenium.webdriver.common.keys import Keys
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class ReportUploadPageVisitTest(PageVisitTest):
+class FolderUpdatePageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки одної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування цієї сторінки з іншими користувачами.
     """
-    this_url    = '/folders/report/upload/'
+    this_url    = '/folders/1/update/'
     page_title  = 'Пасічний'
-    page_name   = 'Вивантаження файла'
+    page_name   = 'Редагування даних про теку'
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -39,7 +39,7 @@ class ReportUploadPageVisitTest(PageVisitTest):
             # {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             # {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
             # {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
-            {'ls':'#body-navigation'          , 'lt': 'Уверх'           , 'un': "folders:folder-list-all"},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'           , 'un': "folders:folder-detail", 'kw':{'pk': 1}},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'           , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -54,7 +54,7 @@ class ReportUploadPageVisitTest(PageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class ReportUploadPageAuthenticatedVisitorTest(ReportUploadPageVisitTest):
+class FolderUpdatePageAuthenticatedVisitorTest(FolderUpdatePageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
@@ -63,8 +63,9 @@ class ReportUploadPageAuthenticatedVisitorTest(ReportUploadPageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        self.add_dummy_permission(self.dummy_user, codename='add_report', model='report')
+        self.add_dummy_permission(self.dummy_user, codename='change_folder', model='folder')
         self.get_data_links_number()
+        DummyFolder().create_dummy_folder(id=1)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
@@ -86,7 +87,7 @@ class ReportUploadPageAuthenticatedVisitorTest(ReportUploadPageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class ReportUploadPageAnonymousVisitorTest(ReportUploadPageVisitTest):
+class FolderUpdatePageAnonymousVisitorTest(FolderUpdatePageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -103,7 +104,7 @@ class ReportUploadPageAnonymousVisitorTest(ReportUploadPageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class ReportUploadPageAuthenticatedVisitorWoPermissionTest(ReportUploadPageVisitTest):
+class FolderUpdatePageAuthenticatedVisitorWoPermissionTest(FolderUpdatePageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем без належного доступу
@@ -122,7 +123,7 @@ class ReportUploadPageAuthenticatedVisitorWoPermissionTest(ReportUploadPageVisit
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVisitTest):
+class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVisitTest):
     """
     Тест відвідання сторінки сайту
     користувачем
@@ -132,124 +133,241 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        self.add_dummy_permission(self.dummy_user, codename='add_report', model='report')
+        self.add_dummy_permission(self.dummy_user, codename='change_folder', model='folder')
+        DummyFolder().create_dummy_folder(id=1)
         DummyFolder().create_dummy_catalogue()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-    def test_visitor_can_upload_report(self):
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_visitor_can_update_folder(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
         # Бачить у полі очікувану інформацію
         inputbox = self.browser.find_element_by_id('id_parent')
+
         all_options = inputbox.find_elements_by_tag_name("option")
         for option in all_options:
             if option.is_selected():
                 self.assertEqual(option.get_attribute('value'), '')
 
-        # Вибирає значення
-        inputbox = self.browser.find_element_by_id('id_parent')
-        self.choose_option_in_select(inputbox, val='1')
+        # Вводить у полі дані
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.clear()
+        inputbox.send_keys('New_folder_name')
 
-        # Для прикладу беремо цей файл:
-        cwd = os.getcwd()   # поточний каталог (в ньому є manage.py)
-        full_path = os.path.join(cwd, 'output.txt') # повний шлях
-
-        # Натискає кнопку Browse - емулюється шляхом посилання в цей елемент шляху до файла.
-        inputbox = self.browser.find_element_by_css_selector('input[type=file]')
-        inputbox.send_keys(full_path)
-
+        # Натискає ENTER
+        # inputbox.send_keys(Keys.ENTER)
         # Натискає кнопку submit
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
-        # Завантажено той файл?
-        report = Report.objects.last()
-        self.assertEqual(report.filename, 'output.txt')
-        self.assertEqual(report.parent.id, 1)
-        report_file_content = report.file.read()
-        with open(full_path, 'rb') as f:
-            expected_file_content = f.read()
-        self.assertEqual(report_file_content, expected_file_content)
-
+        folder = Folder.objects.get(id=1)
+        print('folder =', folder)
+        self.assertEqual(folder.name, 'New_folder_name')
+        self.assertIsNone(folder.parent)
         # Має бути перехід на потрібну сторінку
-        self.check_passed_link(expected_regex=report.get_absolute_url())
+        self.check_passed_link(expected_regex=folder.get_absolute_url())
 
-        # Час створення (до секунди) співпадає з поточним?
-        self.assertAlmostEqual(report.uploaded_on, now(), delta=timedelta(minutes=1))
-
-        # Чистимо після тесту - видаляємо з диска файл
-        report.file.delete()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-    def test_error_message_if_empty_parent(self):
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_visitor_can_update_folder_parent(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # НЕ вводить у полі дані
+        # Вибирає значення
+        inputbox = self.browser.find_element_by_id('id_parent')
+
+        all_options = inputbox.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_attribute('value') == "1" :
+                option.click()
+                parent_name = option.text
+
+        # Вводить у полі дані
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.clear()
+        inputbox.send_keys('New_folder_name')
+
         # Натискає кнопку submit
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
-        error = self.get_error_elements_for_field('#id_parent')[0]
+        folder = Folder.objects.get(id=1)
+        # print('folder =', folder)
+        self.assertEqual(folder.name, 'New_folder_name')
+        self.assertEqual(folder.parent.id, 1)
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(expected_regex=folder.get_absolute_url())
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+    # @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_visitor_can_update_folder_time_submit_button(self):
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Вибирає значення
+        inputbox = self.browser.find_element_by_id('id_parent')
+
+        all_options = inputbox.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_attribute('value') == "1" :
+                option.click()
+                parent_name = option.text
+
+        # Вводить у полі дані
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.clear()
+        inputbox.send_keys('New_folder_name')
+
+        # Вводить у полі дані
+        inputbox = self.browser.find_element_by_id('id_created_on')
+        inputbox.clear()
+        inputbox.send_keys('2015-12-25')
+
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
+
+        folder = Folder.objects.get(id=1)
+        # print('folder =', folder)
+        self.assertEqual(folder.name, 'New_folder_name')
+        self.assertEqual(folder.parent.id, 1)
+        # self.assertEqual(folder.created_on, datetime(2015,12,25, tzinfo=UTC))
+        self.assertEqual(folder.created_on.isoformat(), datetime(2015,12,25,tzinfo=UTC).isoformat())
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(expected_regex=folder.get_absolute_url())
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_error_message_if_empty_name(self):
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Видаляє з поля дані
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.clear()
+
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
+
+        error = self.get_error_elements_for_field('#id_name')[0]
         self.assertTrue(error.is_displayed())
         self.assertEqual(error.text, "Це поле обов'язкове.")
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-    def test_error_message_if_empty_parent_is_cleared_on_input(self):
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_error_message_if_empty_name_is_cleared_on_input(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # НЕ вводить у полі дані
+        # Видаляє з поля дані
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.clear()
+
         # Натискає кнопку submit
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
         # Виникає помилка
-        error = self.get_error_elements_for_field('#id_parent')[0]
+        error = self.get_error_elements_for_field('#id_name')[0]
         self.assertTrue(error.is_displayed())
 
-        # Вибирає дані, щоб виправити помилку
-        inputbox = self.browser.find_element_by_id('id_parent')
-        self.choose_option_in_select(inputbox, val='1')
+        # Починає вводити щоб виправити помилку
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.send_keys('a')
 
         # Повідомлення про помилку зникає
-        error = self.get_error_elements_for_field('#id_parent')[0]
+        error = self.get_error_elements_for_field('#id_name')[0]
         self.assertFalse(error.is_displayed())
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-    def test_error_message_if_no_file(self):
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_error_message_if_fail_date(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # Вибирає значення parent
-        inputbox = self.browser.find_element_by_id('id_parent')
-        self.choose_option_in_select(inputbox, val='1')
+        # Видаляє з поля дані
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.clear()
 
-        # НЕ вибирає файл
+        # Вводить у полі неправильні дані
+        inputbox = self.browser.find_element_by_id('id_created_on')
+        inputbox.send_keys('qwerty')
 
         # Натискає кнопку submit
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
-        error = self.get_error_elements_for_field('#id_file')[0]
+        error = self.get_error_elements_for_field('#id_created_on')[0]
         self.assertTrue(error.is_displayed())
-        self.assertEqual(error.text, "Це поле обов'язкове.")
+        self.assertEqual(error.text, "Введіть коректну дату/час.")
+
+        # Починає вводити щоб виправити помилку
+        inputbox = self.browser.find_element_by_id('id_created_on')
+        inputbox.send_keys('a')
+
+        # Повідомлення про помилку зникає
+        error = self.get_error_elements_for_field('#id_created_on')[0]
+        self.assertFalse(error.is_displayed())
+
+        # Повідомлення про помилку в іншому полі залишається
+        error = self.get_error_elements_for_field('#id_name')[0]
+        self.assertTrue(error.is_displayed())
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_error_message_if_parent_name_not_unique_together(self):
+        parent = Folder.objects.get(id=1)
+        DummyFolder().create_dummy_folder(parent=parent, name="double_name")
+
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Вибирає значення
+        inputbox = self.browser.find_element_by_id('id_parent')
+
+        all_options = inputbox.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_attribute('value') == "1" :
+                option.click()
+
+        # Вводить у полі дані
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.clear()
+        inputbox.send_keys('double_name')
+
+        # Натискає ENTER
+        inputbox.send_keys(Keys.ENTER)
+
+        error = self.get_error_element(".errorlist")
+        self.assertEqual(error.text, "Тека з таким Материнська тека та Тека вже існує.")
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
     def test_cancel_button_go_to_proper_page(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # Нічого не вводить
+        # Вводить у полі неправильні дані
+        inputbox = self.browser.find_element_by_id('id_created_on')
+        inputbox.send_keys('qwerty')
 
         # Натискає кнопку submit
         button = self.browser.find_element_by_css_selector('input[type=submit]')
@@ -264,7 +382,7 @@ class ReportUploadPageAuthenticatedVisitorCanUploadReportTest(ReportUploadPageVi
         button.click()
 
         # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
+        self.check_passed_link(url_name='folders:folder-detail', kwargs={'pk': '1'})
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 

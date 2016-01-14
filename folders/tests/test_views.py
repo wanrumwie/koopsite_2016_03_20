@@ -317,6 +317,7 @@ class FolderCreateInFolderTest(TestCase):
         view = self.cls_view()
         self.assertEqual(view.model, Folder)
         self.assertEqual(view.form_class, FolderFormInFolder)
+        self.assertEqual(view.kwargs, {})
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -391,6 +392,29 @@ class FolderCreateInFolderTest(TestCase):
         self.assertAlmostEqual(f.created_on, now(), delta=timedelta(minutes=1))
         expected_url = f.get_absolute_url()
         self.assertEqual(response.url, expected_url)
+
+    def test_post_name_parent_not_unique(self):
+        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
+        self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(dummy_user, 'add_folder')
+        DummyFolder().create_dummy_folder(parent=self.parent_folder, name='double')
+        expected = len(self.cls_view.model.objects.all())
+
+        data = {
+            'name' : 'double'
+        }
+        request = RequestFactory().post(self.path, data)
+        request.user = dummy_user
+        kwargs = {'parent': 1}
+        response = self.cls_view.as_view()(request, **kwargs)
+
+        # Новий запис не має бути створено:
+        self.assertEqual(len(self.cls_view.model.objects.all()), expected)
+
+        # Через помилку залишаємося на тій же сторінці
+        self.assertEqual(response.status_code, 200)
+        # expected_url = self.path
+        # self.assertEqual(response.url, expected_url)
 
 
 class FolderDeleteTest(TestCase):
@@ -825,11 +849,13 @@ class ReportUploadInFolderTest(TestCase):
         self.cls_view = ReportUploadInFolder
         self.path = '/folders/1/report/upload/'
         self.template = 'folders/report_upload.html'
+        self.parent_folder = DummyFolder().create_dummy_root_folder()
 
     def test_view_model_and_attributes(self):
         view = self.cls_view()
         self.assertEqual(view.model, Report)
         self.assertEqual(view.form_class, ReportFormInFolder)
+        self.assertEqual(view.kwargs, {})
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -882,7 +908,7 @@ class ReportUploadInFolderTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_post_valid_form(self):
+    def test_post(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'add_report')
@@ -896,6 +922,7 @@ class ReportUploadInFolderTest(TestCase):
         kwargs = {'parent': 1}
         response = self.cls_view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 302)
+
         # Витягаємо з бази щойно створений запис:
         f = self.cls_view.model.objects.last()
         fcont = f.file.read()

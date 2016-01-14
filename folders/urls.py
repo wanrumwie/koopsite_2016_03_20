@@ -39,24 +39,23 @@ urlpatterns = [
     url(r'^list/$',     FolderList.as_view(),       name='folder-list'),
     url(r'^list-all/$', FolderReportList.as_view(), name='folder-list-all'),
     url(r'^parents/$',  FolderParentList.as_view(), name='folder-parents'),
-#--------- Кінець коду, охопленого функціональними тестами ------------
 
     url(r'^(?P<pk>[0-9]+)/$',                   FolderDetail.as_view(), name='folder-detail'),
     url(r'^(?P<pk>[0-9]+)/update/$',            FolderUpdate.as_view(), name='folder-update'),
+#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^(?P<pk>[0-9]+)/delete/$',            FolderDelete.as_view(), name='folder-delete'),
     url(r'^(?P<pk>[0-9]+)/download/$',          folderDownload,         name='folder-download'),
 
+#--------- ПОЧАТОК коду, охопленого функціональними тестами ------------
     url(r'^(?P<parent>\d+)/create/$',           FolderCreateInFolder.as_view(), name='folder-create-in'),
     url(r'^(?P<parent>\d+)/report/upload/$',    ReportUploadInFolder.as_view(), name='report-upload-in'),
 
-#--------- ПОЧАТОК коду, охопленого функціональними тестами ------------
     url(r'^report/upload/$',                    ReportUpload.as_view(), name='report-upload'),
     url(r'^report/list/$',                      ReportList.as_view(),   name='report-list'),
-#--------- Кінець коду, охопленого функціональними тестами ------------
 
     url(r'^report/(?P<pk>[0-9]+)/$',            ReportDetail.as_view(), name='report-detail'),
+#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^report/(?P<pk>[0-9]+)/preview/$',    ReportPreview.as_view(), name='report-preview'),
-    # url(r'^report/(?P<pk>[0-9]+)/page(?P<page>\d+)/$', ReportDetail.as_view(), name='report-detail-page'),
     url(r'^report/(?P<pk>[0-9]+)/update/$',     ReportUpdate.as_view(), name='report-update'),
     url(r'^report/(?P<pk>[0-9]+)/download/$',   reportDownload,         name='report-download'),
     url(r'^report/(?P<pk>[0-9]+)/delete/$',     ReportDelete.as_view(), name='report-delete'),
