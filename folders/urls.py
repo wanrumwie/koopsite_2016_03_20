@@ -43,10 +43,8 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/$',                   FolderDetail.as_view(), name='folder-detail'),
     url(r'^(?P<pk>[0-9]+)/update/$',            FolderUpdate.as_view(), name='folder-update'),
     url(r'^(?P<pk>[0-9]+)/delete/$',            FolderDelete.as_view(), name='folder-delete'),
-#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^(?P<pk>[0-9]+)/download/$',          folderDownload,         name='folder-download'),
 
-#--------- ПОЧАТОК коду, охопленого функціональними тестами ------------
     url(r'^(?P<parent>\d+)/create/$',           FolderCreateInFolder.as_view(), name='folder-create-in'),
     url(r'^(?P<parent>\d+)/report/upload/$',    ReportUploadInFolder.as_view(), name='report-upload-in'),
 

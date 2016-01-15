@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_delete.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_download.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_update.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/forms.py" afterPath="$PROJECT_DIR$/folders/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manageform.data" afterPath="$PROJECT_DIR$/manageform.data" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/tests/test_forms.py" afterPath="$PROJECT_DIR$/folders/tests/test_forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/tests_folder_delete.py" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_folder_delete.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/tests_folder_update.py" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_folder_update.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/tests_report_detail.py" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_detail.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_upload.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_folder_download.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/tests_report_download.py" afterPath="$PROJECT_DIR$/functional_tests_folders/tests_report_download.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/urls.py" afterPath="$PROJECT_DIR$/folders/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -41,8 +32,8 @@
       <file leaf-file-name="urls.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/folders/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4290429" vertical-offset="0" max-vertical-offset="1768">
-              <caret line="33" column="2" selection-start-line="33" selection-start-column="2" selection-end-line="33" selection-end-column="2" />
+            <state vertical-scroll-proportion="0.922272" vertical-offset="943" max-vertical-offset="1716">
+              <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -67,7 +58,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/koopsite/functions.py" />
         <option value="$PROJECT_DIR$/koopsite/tests/test_models.py" />
         <option value="$PROJECT_DIR$/koopsite/models.py" />
         <option value="$PROJECT_DIR$/koopsite/tests/test_views.py" />
@@ -117,6 +107,7 @@
         <option value="$PROJECT_DIR$/folders/tests/test_forms.py" />
         <option value="$PROJECT_DIR$/functional_tests_folders/tests_report_delete.py" />
         <option value="$PROJECT_DIR$/functional_tests_folders/tests_report_download.py" />
+        <option value="$PROJECT_DIR$/functional_tests_folders/tests_folder_download.py" />
         <option value="$PROJECT_DIR$/folders/urls.py" />
       </list>
     </option>
@@ -953,7 +944,11 @@
       <created>1452855803068</created>
       <updated>1452855803068</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="KoopSite:  продовжую писати FT for Folder: report-download">
+      <created>1452878325492</created>
+      <updated>1452878325492</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -980,6 +975,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5488722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.56661785" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -988,13 +984,12 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17569546" sideWeight="0.50073206" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.53587115" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53587115" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -1015,7 +1010,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="KoopSite: UT for folder views: CreateFolderIn ready" />
     <MESSAGE value="KoopSite: UT for folder views: готово все крім ReportUploadTest.test_post  і ReportUploadInFolderTest.test_post" />
     <MESSAGE value="KoopSite: UT for folder forms: почав FolderForm" />
     <MESSAGE value="KoopSite: UT for Folders: готові всі" />
@@ -1040,7 +1034,8 @@
     <MESSAGE value="KoopSite:  DRY для шаблонів folders ==&gt; FT" />
     <MESSAGE value="KoopSite:  продовжую писати FT for Folder" />
     <MESSAGE value="KoopSite:  продовжую писати FT for Folder: folder-delete" />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  продовжую писати FT for Folder: folder-delete" />
+    <MESSAGE value="KoopSite:  продовжую писати FT for Folder: report-download" />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  продовжую писати FT for Folder: report-download" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1065,13 +1060,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/folders/templates/folders/folder_detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.390625" vertical-offset="36" max-vertical-offset="676">
-          <caret line="11" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/folders/templates/folders/report_detail.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="910">
@@ -1313,14 +1301,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functional_tests_koopsite/ft_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.68908817" vertical-offset="2061" max-vertical-offset="9152">
-          <caret line="111" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/folders/templates/folders/report_upload.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.29027113" vertical-offset="0" max-vertical-offset="627">
@@ -1416,24 +1396,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/functional_tests_folders/tests_report_update.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26158446" vertical-offset="5831" max-vertical-offset="10322">
-          <caret line="241" column="0" selection-start-line="230" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7425743" vertical-offset="6925" max-vertical-offset="10322">
+          <caret line="285" column="0" selection-start-line="272" selection-start-column="0" selection-end-line="275" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional_tests_koopsite/ft_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.82838285" vertical-offset="3129" max-vertical-offset="9152">
+          <caret line="144" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functional_tests_folders/tests_report_download.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48514852" vertical-offset="2141" max-vertical-offset="2548">
-          <caret line="97" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.39933994" vertical-offset="1777" max-vertical-offset="2704">
+          <caret line="80" column="20" selection-start-line="73" selection-start-column="20" selection-end-line="73" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional_tests_folders/tests_folder_download.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5907591" vertical-offset="367" max-vertical-offset="2886">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/folders/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4290429" vertical-offset="0" max-vertical-offset="1768">
-          <caret line="33" column="2" selection-start-line="33" selection-start-column="2" selection-end-line="33" selection-end-column="2" />
+        <state vertical-scroll-proportion="0.922272" vertical-offset="943" max-vertical-offset="1716">
+          <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
           <folding />
         </state>
       </provider>
