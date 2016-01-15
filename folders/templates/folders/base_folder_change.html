@@ -20,7 +20,12 @@
             <table>
                   {{ form }}
             </table>
-            <input type="submit" value="Створити" />
+
+            {% block input-submit %}
+                {# Переозначити тут кнопку і її назву #}
+                <input type="submit" value="Створити" />
+            {% endblock %}
+
             {% if object.get_absolute_url %}
                 <input type="button" value="Скасувати"
                        onclick="location.href='{{ object.get_absolute_url }}'" />

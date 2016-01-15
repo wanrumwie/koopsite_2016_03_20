@@ -42,8 +42,8 @@ urlpatterns = [
 
     url(r'^(?P<pk>[0-9]+)/$',                   FolderDetail.as_view(), name='folder-detail'),
     url(r'^(?P<pk>[0-9]+)/update/$',            FolderUpdate.as_view(), name='folder-update'),
-#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^(?P<pk>[0-9]+)/delete/$',            FolderDelete.as_view(), name='folder-delete'),
+#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^(?P<pk>[0-9]+)/download/$',          folderDownload,         name='folder-download'),
 
 #--------- ПОЧАТОК коду, охопленого функціональними тестами ------------
@@ -74,7 +74,7 @@ urlpatterns = [
     url(r'^ajax-report-upload$',            XHRReportUpload.as_view(),  name='ajax-report-upload$'),
 
     url(r'^folder-not-empty/$',
-        TemplateView.as_view(template_name='folder_not_empty.html'),
+        TemplateView.as_view(template_name='folders/folder_not_empty.html'),
                                         name='folder-not-empty'),
 ]
 

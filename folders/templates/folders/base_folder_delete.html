@@ -26,7 +26,7 @@
                         {% endblock %}
 
                     </th>
-                    <td>{{ object }}</td>
+                    <td id="id_name">{{ object }}</td>
                 </tr>
             </table>
             <input type="submit" value="Видалити" />
@@ -36,7 +36,9 @@
     </div>
 {% endblock %}
 
-{% block href-folder-contents %}
+{% block href-folder-list-all %}
+{% endblock %}
+{% block href-folder-list %}
 {% endblock %}
 {% block href-folder-parent %}
 {% endblock %}
@@ -68,6 +70,8 @@
 {% block href-report-delete %}
 {% endblock %}
 
+{% block href-folder-contents %}
+{% endblock %}
 {% block href-back %}
     <li><a href="{{ object.get_absolute_url }}">Уверх</a></li>
 {% endblock %}

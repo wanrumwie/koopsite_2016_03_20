@@ -18,29 +18,43 @@
     </div>
 {% endblock %}
 
-<!-- Всі href з батьківського шаблону: -->
-{% block href-register %}
+{% block href-folder-list-all %}
 {% endblock %}
-{% block href-index %}
+{% block href-folder-list %}
 {% endblock %}
-{% block href-folder-contents %}
+{% block href-folder-parent %}
 {% endblock %}
+{% block href-report-list %}
+{% endblock %}
+
 {% block href-folder-create %}
-{% endblock %}
-{% block href-folder-update %}
-{% endblock %}
-{% block href-folder-delete %}
 {% endblock %}
 {% block href-report-upload %}
 {% endblock %}
+
+{% block href-folder-create-in %}
+{% endblock %}
+{% block href-folder-update %}
+{% endblock %}
+{% block href-folder-download %}
+{% endblock %}
+{% block href-folder-delete %}
+{% endblock %}
+{% block href-report-upload-in %}
+{% endblock %}
+
+{% block href-report-preview %}
+{% endblock %}
 {% block href-report-update %}
+{% endblock %}
+{% block href-report-download %}
 {% endblock %}
 {% block href-report-delete %}
 {% endblock %}
-<!--{% block href-folder-list %}
-{% endblock %}-->
-{% block href-report-list %}
+
+{% block href-folder-contents %}
 {% endblock %}
-{% block href-folder-parent %}
+{% block href-back %}
+    <li><a href="{% url 'folders:folder-list-all' %}">Уверх</a></li>
 {% endblock %}
 

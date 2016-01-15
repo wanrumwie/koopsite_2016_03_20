@@ -1,7 +1,9 @@
 import inspect
-from time import sleep
 from unittest.case import skipIf
+from datetime import datetime
 from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import ObjectDoesNotExist
+from pytz import UTC
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
@@ -10,16 +12,16 @@ from selenium.webdriver.common.keys import Keys
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderCreateInPageVisitTest(PageVisitTest):
+class FolderDeletePageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки одної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування цієї сторінки з іншими користувачами.
     """
-    this_url    = '/folders/1/create/'
+    this_url    = '/folders/1/delete/'
     page_title  = 'Пасічний'
-    page_name   = 'Створення теки'
+    page_name   = 'Видалення теки'
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -38,7 +40,7 @@ class FolderCreateInPageVisitTest(PageVisitTest):
             # {'ls':'#body-navigation'          , 'lt': 'Нова тека'       , 'un': 'folders:folder-create'},
             # {'ls':'#body-navigation'          , 'lt': 'Новий файл'      , 'un': 'folders:report-upload'},
             # {'ls':'#body-navigation'          , 'lt': 'Картотека (js)'  , 'un': 'folders:folder-contents', 'kw': {'pk': 1}, 'st': 5},
-            {'ls':'#body-navigation'          , 'lt': 'Уверх'           , 'un': "folders:folder-list-all"},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'           , 'un': "folders:folder-detail", 'kw':{'pk': 1}},
             {'ls':'#header-aside-2-navigation', 'lt': username          , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No   , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'           , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -52,8 +54,8 @@ class FolderCreateInPageVisitTest(PageVisitTest):
         return self.data_links_number
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderCreateInPageAuthenticatedVisitorTest(FolderCreateInPageVisitTest):
+@skipIf(SKIP_TEST, "пропущено для економії часу")
+class FolderDeletePageAuthenticatedVisitorTest(FolderDeletePageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
@@ -62,7 +64,7 @@ class FolderCreateInPageAuthenticatedVisitorTest(FolderCreateInPageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        self.add_dummy_permission(self.dummy_user, codename='add_folder', model='folder')
+        self.add_dummy_permission(self.dummy_user, codename='delete_folder', model='folder')
         self.get_data_links_number()
         DummyFolder().create_dummy_folder(id=1)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -72,19 +74,21 @@ class FolderCreateInPageAuthenticatedVisitorTest(FolderCreateInPageVisitTest):
         self.can_visit_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
+    # @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
+    # @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderCreateInPageAnonymousVisitorTest(FolderCreateInPageVisitTest):
+@skipIf(SKIP_TEST, "пропущено для економії часу")
+class FolderDeletePageAnonymousVisitorTest(FolderDeletePageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -92,7 +96,6 @@ class FolderCreateInPageAnonymousVisitorTest(FolderCreateInPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFolder().create_dummy_folder(id=1)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
@@ -102,7 +105,7 @@ class FolderCreateInPageAnonymousVisitorTest(FolderCreateInPageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderCreateInPageAuthenticatedVisitorWoPermissionTest(FolderCreateInPageVisitTest):
+class FolderDeletePageAuthenticatedVisitorWoPermissionTest(FolderDeletePageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем без належного доступу
@@ -111,7 +114,6 @@ class FolderCreateInPageAuthenticatedVisitorWoPermissionTest(FolderCreateInPageV
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        DummyFolder().create_dummy_folder(id=1)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
@@ -121,8 +123,8 @@ class FolderCreateInPageAuthenticatedVisitorWoPermissionTest(FolderCreateInPageV
 
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
-class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPageVisitTest):
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
+class FolderDeletePageAuthenticatedVisitorCanDeleteFolderTest(FolderDeletePageVisitTest):
     """
     Тест відвідання сторінки сайту
     користувачем
@@ -132,131 +134,55 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        self.add_dummy_permission(self.dummy_user, codename='add_folder', model='folder')
+        self.add_dummy_permission(self.dummy_user, codename='delete_folder', model='folder')
         DummyFolder().create_dummy_folder(id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    @skipIf(SKIP_TEST, "пропущено для економії часу")
-    def test_visitor_can_create_folder(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # Бачить у полі очікувану інформацію
-        inputbox = self.browser.find_element_by_id('id_parent')
-        all_options = inputbox.find_elements_by_tag_name("option")
-        for option in all_options:
-            if option.is_selected():
-                self.assertEqual(option.get_attribute('value'), '1')
-
-        # Вводить у полі дані
-        inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('New_folder')
-
-        # Натискає ENTER
-        inputbox.send_keys(Keys.ENTER)
-
-        # Після натискання ENTER база часом не встигає записати новий елемент.
-        # Тому доводиться придумувати в тесті штучні затримки.
-        # Без цього друку виникає "гонитва" з чудернацькими помилками:
-        print('ENTER:')
-        sleep(5)
-        ff = Folder.objects.all()
-        for f in ff: print('f.id=', f.id, f, f.parent)
-
-        folder = Folder.objects.last()
-        self.assertEqual(folder.name, 'New_folder')
-        self.assertEqual(folder.parent.id, 1)
-
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(expected_regex=folder.get_absolute_url())
-
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-
-    @skipIf(SKIP_TEST, "пропущено для економії часу")
-    def test_visitor_can_create_folder_submit_button(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # Вводить у полі дані
-        inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('New_folder')
-
-        # Натискає кнопку submit
-        button = self.browser.find_element_by_css_selector('input[type=submit]')
-        button.click()
-
-        folder = Folder.objects.last()
-        self.assertEqual(folder.name, 'New_folder')
-        self.assertEqual(folder.parent.id, 1)
-
-        # Має бути перехід на потрібну сторінку
-        self.check_passed_link(expected_regex=folder.get_absolute_url())
-
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-
-    @skipIf(SKIP_TEST, "пропущено для економії часу")
-    def test_error_message_if_empty_name(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # НЕ вводить у полі дані
-        # Натискає кнопку submit
-        button = self.browser.find_element_by_css_selector('input[type=submit]')
-        button.click()
-
-        error = self.get_error_elements_for_field('#id_name')[0]
-        self.assertTrue(error.is_displayed())
-        self.assertEqual(error.text, "Це поле обов'язкове.")
-
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-
-    @skipIf(SKIP_TEST, "пропущено для економії часу")
-    def test_error_message_if_empty_name_is_cleared_on_input(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # НЕ вводить у полі дані
-        # Натискає кнопку submit
-        button = self.browser.find_element_by_css_selector('input[type=submit]')
-        button.click()
-
-        # Виникає помилка
-        error = self.get_error_elements_for_field('#id_name')[0]
-        self.assertTrue(error.is_displayed())
-
-        # Починає вводити щоб виправити помилку
-        inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('a')
-
-        # Повідомлення про помилку зникає
-        error = self.get_error_elements_for_field('#id_name')[0]
-        self.assertFalse(error.is_displayed())
-
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
     # @skipIf(SKIP_TEST, "пропущено для економії часу")
-    def test_error_message_if_parent_name_not_unique_together(self):
-        parent = Folder.objects.get(id=1)
-
-        DummyFolder().create_dummy_folder(parent=parent, name="double_name")
-
+    def test_visitor_can_delete_folder(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # Вводить у полі дані
+        # Бачить у полі очікувану інформацію
         inputbox = self.browser.find_element_by_id('id_name')
-        inputbox.send_keys('double_name')
+
+        self.assertEqual(inputbox.text, 'dummy_folder')
+
+        # Натискає ENTER
+        # inputbox.send_keys(Keys.ENTER)
+        # Натискає кнопку submit
+        button = self.browser.find_element_by_css_selector('input[type=submit]')
+        button.click()
+
+        # Теки в базі повинно не стати
+        with self.assertRaises(ObjectDoesNotExist):
+            folder = Folder.objects.get(id=1)
+            print('folder =', folder)
+
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(url_name='folders:folder-list-all')
+
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+    @skipIf(SKIP_TEST, "пропущено для економії часу")
+    def test_error_message_if_not_empty_folder(self):
+        folder = Folder.objects.get(id=1)
+        DummyFolder().create_dummy_folder(parent=folder)
+
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
 
         # Натискає кнопку submit
         button = self.browser.find_element_by_css_selector('input[type=submit]')
         button.click()
 
-        error = self.get_error_element(".errorlist")
-        self.assertEqual(error.text, "Тека з таким Материнська тека та Тека вже існує.")
+        # Має бути перехід на потрібну сторінку
+        self.check_passed_link(url_name='folders:folder-not-empty')
+
+        # Перевіряємо чи не видалено з бази запис
+        self.assertEqual(Folder.objects.get(id=1), folder)
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -271,7 +197,7 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         button.click()
 
         # Має бути перехід на потрібну сторінку
-        self.check_passed_link(url_name='folders:folder-list-all')
+        self.check_passed_link(url_name='folders:folder-detail', kwargs={'pk': '1'})
 
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 

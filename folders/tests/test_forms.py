@@ -1,14 +1,15 @@
 from unittest.case import skip
 from django.test import TestCase
-from folders.forms import FolderForm, FolderFormInFolder, ReportUpdateForm, ReportForm, ReportFormInFolder
+from folders.forms import FolderForm, FolderFormInFolder, ReportUpdateForm, ReportForm, ReportFormInFolder, \
+    FolderFormBase, FolderDeleteForm
 from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
 
 
-class FolderFormTest(TestCase):
+class FolderFormBaseTest(TestCase):
 
     def setUp(self):
-        self.cls_form = FolderForm
+        self.cls_form = FolderFormBase
         self.parent_folder = DummyFolder().create_dummy_root_folder()
         self.initial_data = {'parent': self.parent_folder}
         self.empty_data = {'parent': "", 'name': "", 'created_on': ""}
@@ -17,14 +18,18 @@ class FolderFormTest(TestCase):
         form = self.cls_form
         self.assertEqual(form.required_css_class, 'required')
         self.assertEqual(form.error_css_class   , 'error')
+        self.assertEqual(form.READONLY_FIELDS   , [])
         self.assertEqual(form.Meta.model, Folder)
         self.assertEqual(form.Meta.fields, ('parent', 'name', 'created_on'))
 
+    def test_init(self):
+        form = self.cls_form()
+        for field in form.READONLY_FIELDS:
+            self.assertTrue(form.fields[field].widget.attrs['readonly'])
+            self.assertTrue(form.fields[field].widget.attrs['disabled'])
+
     def test_form_renders_blank(self):
         form = self.cls_form()
-        # print('-'*20)
-        # print(form.as_p())
-        # print('-'*20)
         self.assertIn('Материнська тека:', form.as_p())
         self.assertIn('Тека:', form.as_p())
         self.assertIn('Дата створення:', form.as_p())
@@ -58,18 +63,6 @@ class FolderFormTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['__all__'], ['Тека з таким Материнська тека та Тека вже існує.'])
 
-        # f2 = form.save()
-        # print('f1.parent =', f1.parent)
-        # print('f1.parent == None =', f1.parent == None)
-        # print('f2.parent =', f2.parent)
-        # print('f2.parent == None =', f2.parent == None)
-        # print('f1.parent == f2.parent =', f1.parent == f2.parent)
-        # print('f1.name == f2.name =', f1.name == f2.name)
-        # print('-'*20)
-        # print(form.as_p())
-        # print('-'*20)
-        # print("form.errors =", form.errors)
-
     def test_form_save(self):
         # Передаємо у форму значення parent і name:
         data = {'parent': str(self.parent_folder.id), 'name': "dummy"}
@@ -78,22 +71,35 @@ class FolderFormTest(TestCase):
         self.assertEqual(new_folder, Folder.objects.all()[1])
 
 
+class FolderFormTest(TestCase):
+
+    def setUp(self):
+        self.cls_form = FolderForm
+
+    def test_form_attributes(self):
+        form = self.cls_form
+        self.assertEqual(form.Meta.model, Folder)
+        self.assertEqual(form.Meta.fields, ('parent', 'name', 'created_on'))
+
+
 class FolderFormInFolderTest(TestCase):
     def setUp(self):
         self.cls_form = FolderFormInFolder
 
     def test_form_attributes(self):
         form = self.cls_form
-        self.assertEqual(form.required_css_class, 'required')
-        self.assertEqual(form.error_css_class   , 'error')
         self.assertEqual(form.READONLY_FIELDS   , ('parent',))
         self.assertEqual(form.Meta.model, Folder)
         self.assertEqual(form.Meta.fields, ('parent', 'name',))
 
-    def test_init(self):
-        form = self.cls_form()
-        self.assertTrue(form.fields['parent'].widget.attrs['readonly'])
-        self.assertTrue(form.fields['parent'].widget.attrs['disabled'])
+
+class FolderDeleteFormTest(TestCase):
+    def setUp(self):
+        self.cls_form = FolderDeleteForm
+
+    def test_form_attributes(self):
+        form = self.cls_form
+        self.assertEqual(form.READONLY_FIELDS, ('parent', 'name', 'created_on'))
 
 
 class ReportUpdateFormTest(TestCase):

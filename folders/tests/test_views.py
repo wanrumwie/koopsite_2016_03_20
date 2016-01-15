@@ -7,7 +7,8 @@ from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.timezone import now
-from folders.forms import FolderForm, FolderFormInFolder, ReportForm, ReportUpdateForm, ReportFormInFolder
+from folders.forms import FolderForm, FolderFormInFolder, ReportForm, ReportUpdateForm, ReportFormInFolder, \
+    FolderDeleteForm
 from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
 from folders.views import FolderCreate, FolderList, FolderDetail, ReportList, ReportDetail, ReportPreview, \
@@ -428,7 +429,7 @@ class FolderDeleteTest(TestCase):
     def test_view_model_and_attributes(self):
         view = self.cls_view()
         self.assertEqual(view.model, Folder)
-        self.assertEqual(view.form_class, FolderForm)
+        self.assertEqual(view.form_class, FolderDeleteForm)
 
     def test_view_success_url(self):
         view = self.cls_view()

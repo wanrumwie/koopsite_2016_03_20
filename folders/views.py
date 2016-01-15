@@ -7,7 +7,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from folders.forms import ReportUpdateForm, FolderForm, FolderFormInFolder, ReportForm, ReportFormInFolder
+from folders.forms import ReportUpdateForm, FolderForm, FolderFormInFolder, ReportForm, ReportFormInFolder, \
+    FolderDeleteForm
 from folders.functions import response_for_download, \
     response_for_download_zip, get_subfolders, get_subreports, \
     get_full_named_path
@@ -116,7 +117,7 @@ class FolderCreateInFolder(CreateView):
 
 class FolderDelete(DeleteView):
     model = Folder
-    form_class = FolderForm
+    form_class = FolderDeleteForm
     template_name = 'folders/folder_delete.html'
 
     @method_decorator(permission_required('folders.delete_folder'))
@@ -161,7 +162,6 @@ class FolderUpdate(UpdateView):
 
     @method_decorator(permission_required('folders.change_folder'))
     def dispatch(self, *args, **kwargs):
-        # self.parent_id = kwargs.get('parent') or 1 # ОТРИМАННЯ даних з URLconf
         return super(FolderUpdate, self).dispatch(*args, **kwargs)
 
 
