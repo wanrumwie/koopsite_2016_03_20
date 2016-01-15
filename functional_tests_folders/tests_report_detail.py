@@ -88,7 +88,7 @@ class ReportDetailPageAuthenticatedVisitorTest(ReportDetailPageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportDetailPageAnonymousVisitorTest(ReportDetailPageVisitTest):
     """
     Тест відвідання сторінки сайту

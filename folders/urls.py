@@ -54,11 +54,11 @@ urlpatterns = [
     url(r'^report/list/$',                      ReportList.as_view(),   name='report-list'),
 
     url(r'^report/(?P<pk>[0-9]+)/$',            ReportDetail.as_view(), name='report-detail'),
+    url(r'^report/(?P<pk>[0-9]+)/update/$',     ReportUpdate.as_view(), name='report-update'),
+    url(r'^report/(?P<pk>[0-9]+)/delete/$',     ReportDelete.as_view(), name='report-delete'),
+    url(r'^report/(?P<pk>[0-9]+)/download/$',   reportDownload,         name='report-download'),
 #--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^report/(?P<pk>[0-9]+)/preview/$',    ReportPreview.as_view(), name='report-preview'),
-    url(r'^report/(?P<pk>[0-9]+)/update/$',     ReportUpdate.as_view(), name='report-update'),
-    url(r'^report/(?P<pk>[0-9]+)/download/$',   reportDownload,         name='report-download'),
-    url(r'^report/(?P<pk>[0-9]+)/delete/$',     ReportDelete.as_view(), name='report-delete'),
 
     url(r'^(?P<pk>[0-9]+)/contents/$',  FolderContents.as_view(),   name='folder-contents'),
 

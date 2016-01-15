@@ -146,7 +146,6 @@ class FolderDeletePageAuthenticatedVisitorCanDeleteFolderTest(FolderDeletePageVi
 
         # Бачить у полі очікувану інформацію
         inputbox = self.browser.find_element_by_id('id_name')
-
         self.assertEqual(inputbox.text, 'dummy_folder')
 
         # Натискає ENTER
@@ -158,7 +157,6 @@ class FolderDeletePageAuthenticatedVisitorCanDeleteFolderTest(FolderDeletePageVi
         # Теки в базі повинно не стати
         with self.assertRaises(ObjectDoesNotExist):
             folder = Folder.objects.get(id=1)
-            print('folder =', folder)
 
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(url_name='folders:folder-list-all')

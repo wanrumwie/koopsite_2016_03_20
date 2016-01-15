@@ -1,5 +1,4 @@
 from django import forms
-from django.core.exceptions import NON_FIELD_ERRORS
 from .models import Folder, Report
 
 
@@ -43,39 +42,46 @@ class FolderDeleteForm(FolderFormBase):
     READONLY_FIELDS = ('parent', 'name', 'created_on')
 
 
-class ReportForm(forms.ModelForm):
-    # Форма для вводу даних про файл
-    required_css_class  = 'required'
-    error_css_class     = 'error'
-
-    class Meta:
-        model = Report
-        fields = ('parent', 'file')
-
-
-class ReportFormInFolder(forms.ModelForm):
+class ReportFormBase(forms.ModelForm):
     # Форма для вводу даних про файл у відомій теці
     required_css_class  = 'required'
     error_css_class     = 'error'
 
     # Трюк з полями readonly:
-    READONLY_FIELDS = ('parent',)
+    READONLY_FIELDS = []
 
     def __init__(self, *args, **kwargs):
-        super(ReportFormInFolder, self).__init__(*args, **kwargs)
+        super(ReportFormBase, self).__init__(*args, **kwargs)
         for field in self.READONLY_FIELDS:
             self.fields[field].widget.attrs['readonly'] = True
             self.fields[field].widget.attrs['disabled'] = True
 
     class Meta:
         model = Report
+        fields = ('parent', 'filename', 'file')
+
+
+class ReportForm(forms.ModelForm):
+    # Форма для вводу даних про файл
+    READONLY_FIELDS = []
+
+    class Meta:
+        model = Report
+        fields = ('parent', 'file')
+
+
+class ReportFormInFolder(ReportFormBase):
+    # Форма для вводу даних про файл у відомій теці
+    READONLY_FIELDS = ('parent',)
+
+    class Meta:
+        model = Report
         fields = ('parent', 'file',)
 
 
-class ReportUpdateForm(forms.ModelForm):
+class ReportUpdateForm(ReportFormBase):
     # Форма для редагування даних про файл
-    required_css_class  = 'required'
-    error_css_class     = 'error'
+    READONLY_FIELDS = []
 
     class Meta:
         model = Report

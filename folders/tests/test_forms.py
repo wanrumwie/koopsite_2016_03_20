@@ -1,7 +1,7 @@
 from unittest.case import skip
 from django.test import TestCase
 from folders.forms import FolderForm, FolderFormInFolder, ReportUpdateForm, ReportForm, ReportFormInFolder, \
-    FolderFormBase, FolderDeleteForm
+    FolderFormBase, FolderDeleteForm, ReportFormBase
 from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
 
@@ -102,11 +102,11 @@ class FolderDeleteFormTest(TestCase):
         self.assertEqual(form.READONLY_FIELDS, ('parent', 'name', 'created_on'))
 
 
-class ReportUpdateFormTest(TestCase):
+class ReportFormBaseTest(TestCase):
     # save не перевіряю, бо це зроблено у test_model
 
     def setUp(self):
-        self.cls_form = ReportUpdateForm
+        self.cls_form = ReportFormBase
         self.parent_folder = DummyFolder().create_dummy_root_folder()
         self.initial_data = {'parent': self.parent_folder}
         self.empty_data = {'parent': "", 'filename': "", 'file': ""}
@@ -115,8 +115,15 @@ class ReportUpdateFormTest(TestCase):
         form = self.cls_form
         self.assertEqual(form.required_css_class, 'required')
         self.assertEqual(form.error_css_class   , 'error')
+        self.assertEqual(form.READONLY_FIELDS   , [])
         self.assertEqual(form.Meta.model, Report)
         self.assertEqual(form.Meta.fields, ('parent', 'filename', 'file'))
+
+    def test_init(self):
+        form = self.cls_form()
+        for field in form.READONLY_FIELDS:
+            self.assertTrue(form.fields[field].widget.attrs['readonly'])
+            self.assertTrue(form.fields[field].widget.attrs['disabled'])
 
     def test_form_renders_blank(self):
         form = self.cls_form()
@@ -135,16 +142,25 @@ class ReportUpdateFormTest(TestCase):
         self.assertEqual(form.errors['parent'], ["Це поле обов'язкове."])
 
 
+class ReportUpdateFormTest(TestCase):
+
+    def setUp(self):
+        self.cls_form = ReportUpdateForm
+
+    def test_form_attributes(self):
+        form = self.cls_form
+        self.assertEqual(form.READONLY_FIELDS, [])
+        self.assertEqual(form.Meta.model, Report)
+        self.assertEqual(form.Meta.fields, ('parent', 'filename', 'file'))
+
 class ReportFormTest(TestCase):
-    # Перевіряю лише атрибути, бо ReportForm така ж як ReportUpdateForm
 
     def setUp(self):
         self.cls_form = ReportForm
 
     def test_form_attributes(self):
         form = self.cls_form
-        self.assertEqual(form.required_css_class, 'required')
-        self.assertEqual(form.error_css_class   , 'error')
+        self.assertEqual(form.READONLY_FIELDS, [])
         self.assertEqual(form.Meta.model, Report)
         self.assertEqual(form.Meta.fields, ('parent', 'file'))
 
@@ -156,13 +172,7 @@ class ReportFormInFolderTest(TestCase):
 
     def test_form_attributes(self):
         form = self.cls_form
-        self.assertEqual(form.required_css_class, 'required')
-        self.assertEqual(form.error_css_class   , 'error')
-        self.assertEqual(form.READONLY_FIELDS   , ('parent',))
+        self.assertEqual(form.READONLY_FIELDS, ('parent',))
         self.assertEqual(form.Meta.model, Report)
         self.assertEqual(form.Meta.fields, ('parent', 'file',))
 
-    def test_init(self):
-        form = self.cls_form()
-        self.assertTrue(form.fields['parent'].widget.attrs['readonly'])
-        self.assertTrue(form.fields['parent'].widget.attrs['disabled'])
