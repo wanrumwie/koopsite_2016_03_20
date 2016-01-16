@@ -170,9 +170,14 @@ else:
 # TRACE_CONDITION = True
 TRACE_CONDITION = False
 
-# Умова для декоратора @unittest.skipIf(SKIPTEST)
-# SKIP_TEST = True    # пропускаємо задекоровані тести
-SKIP_TEST = False   # виконуємо всі тести
+# Умова для декоратора @unittest.skipIf(SKIP_TEST)
+SKIP_TEST = True    # пропускаємо задекоровані тести
+# SKIP_TEST = False   # виконуємо всі тести
+
+# Умова для декоратора @unittest.skipIf(SKIP_VISUAL_TEST)
+# для тестів, які потребують візуального спостереження
+# SKIP_VISUAL_TEST = True    # пропускаємо "візуальні" тести
+SKIP_VISUAL_TEST = False   # виконуємо "візуальні" тести
 
 # Якщо запущено всі тести:
 if sys.argv == ['C:/PyPrograms/Django/koopsite/manage-test.py']\

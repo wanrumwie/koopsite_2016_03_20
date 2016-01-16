@@ -10,14 +10,18 @@
          class="padding-y-05">
             Попередній перегляд файла: {{ report }}
     </div>
-
+    <div>
+                    type= {{ report|file_media_type }}
+    </div>
     <div id="preview-box">
         {% if report|fileext in viewable_extension_list %}
             {% if report|fileext == ".jpg" %}
                 <img class="max-width-75pc"
                     src="{% static report.file %}"/>
             {% elif report|fileext in viewable_extension_list %}
-                <object width="400" height="400" data="{% static report.file %}"></object>
+                <object width="100%"
+                    data="{% static report.file %}"
+                    type="{{ report|file_media_type }}"></object>
             {% else %}
                 <div>На даний час неможливо переглянути файл цього типу</div>
             {% endif %}

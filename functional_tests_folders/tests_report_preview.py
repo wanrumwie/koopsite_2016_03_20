@@ -1,3 +1,4 @@
+from asyncio.tasks import sleep
 import inspect
 import os
 from unittest.case import skipIf
@@ -5,7 +6,8 @@ from django.contrib.auth.models import AnonymousUser
 from django.core.files.uploadedfile import SimpleUploadedFile
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
-from koopsite.settings import SKIP_TEST
+from koopsite.fileExtIconPath import viewable_extension_list
+from koopsite.settings import SKIP_TEST, SKIP_VISUAL_TEST
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -60,7 +62,7 @@ class ReportPreviewPageVisitTest(PageVisitTest):
         return self.data_links_number
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportPreviewPageAuthenticatedVisitorTest(ReportPreviewPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -135,7 +137,7 @@ class ReportPreviewPageAuthenticatedVisitorWoPermissionTest(ReportPreviewPageVis
 
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -172,4 +174,56 @@ class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPage
         self.visitor_can_go_to_links()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
+
+@skipIf(SKIP_VISUAL_TEST, "Тест потребує візуального спостереження")
+class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    аутентифікованим користувачем
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        self.add_dummy_permission(self.dummy_user, codename='view_report', model='report')
+        self.get_data_links_number()
+        self.parent = DummyFolder().create_dummy_folder()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def tearDown(self):
+        # sleep(10)
+        input()
+        self.report.file.delete()
+        super().tearDown()
+
+    def visit_page(self, file_name, expected_text=""):
+        fileExt = os.path.splitext(file_name)[1]
+        # Чи розширення цього файла входить до списку "previewable"?
+        if expected_text:
+            self.assertNotIn(fileExt, viewable_extension_list)
+        else:
+            self.assertIn(fileExt, viewable_extension_list)
+
+        # Створюємо запис з цим файлом:
+        full_path = os.path.join(os.getcwd(), file_name) # повний шлях
+        self.report = DummyFolder().create_dummy_report(parent=self.parent,
+                                                   id=1, path=full_path)
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Бачить у полі очікувану інформацію
+        div_box = self.browser.find_element_by_id('preview-box')
+        self.assertEqual(div_box.text, expected_text)
+
+    def test_jpg(self):
+        self.visit_page('example.jpg')
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_pdf(self):
+        self.visit_page('example.pdf')
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_txt(self):
+        self.visit_page('example.txt', "На даний час неможливо переглянути файл цього типу")
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
