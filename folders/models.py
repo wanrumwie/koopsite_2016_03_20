@@ -1,6 +1,7 @@
 import os
 from django.db import models
 from django.core.urlresolvers import reverse
+from koopsite.fileExtIconPath import viewable_extension_list
 
 
 class Folder(models.Model):
@@ -100,7 +101,15 @@ class Report(models.Model):
         return s
 
     def get_absolute_url(self):
-        return reverse('folders:report-detail', kwargs={'pk': self.pk})
+        try:
+            fileExt = os.path.splitext(self.filename)[1]  # [0] returns path+filename
+        except:
+            fileExt = ""
+        if fileExt in viewable_extension_list:
+            url_name = 'folders:report-preview'
+        else:
+            url_name = 'folders:report-detail'
+        return reverse(url_name, kwargs={'pk': self.pk})
         # return reverse('folders:folder-list-all')
 
     class Meta:

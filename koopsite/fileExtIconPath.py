@@ -1,3 +1,9 @@
+# Список розширень файлів, для яких можливе preview:
+viewable_extension_list = [
+    ".jpg",
+    ".pdf",
+]
+
 iconPath = {
     ".123"               : ""                    ,
     ".3dml"              : ""                    ,

@@ -14,8 +14,10 @@ from folders.tests.test_base import DummyFolder
 from folders.views import FolderCreate, FolderList, FolderDetail, ReportList, ReportDetail, ReportPreview, \
     FolderCreateInFolder, FolderDelete, ReportDelete, FolderUpdate, ReportUpdate, ReportUpload, ReportUploadInFolder, \
     reportDownload, folderDownload, FolderParentList, FolderReportList
+from koopsite.fileExtIconPath import viewable_extension_list
 from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_base import DummyUser
+from koopsite.tests.test_views import setup_view
 
 
 class FolderListTest(TestCase):
@@ -190,6 +192,19 @@ class ReportPreviewTest(TestCase):
     def test_view_model_and_attributes(self):
         view = self.cls_view()
         self.assertEqual(view.model, Report)
+
+    def test_get_context_data(self):
+        root = DummyFolder().create_dummy_root_folder()
+        report = DummyFolder().create_dummy_report(root, id=1)
+        request = RequestFactory().get('/folders/report/1/preview/')
+        kwargs = {'pk': 1}
+        view = self.cls_view()
+        view = setup_view(view, request, **kwargs)
+        view.model = Report
+        view.object = report
+        expected = viewable_extension_list
+        context = view.get_context_data()
+        self.assertEqual(context['viewable_extension_list'], expected)
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)

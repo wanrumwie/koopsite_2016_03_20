@@ -6,22 +6,37 @@
     {% load staticfiles %}
     {% load koop_template_filters %}
     {% load folder_template_filters %}
-    <p>Попередній перегляд файла: {{ report }}</p>
-    {% if report|fileext == ".jpg" %}
-        <img class="max-width-75pc"
-            src="{% static report.file %}"/>
-    {% else %}
-        <div>На даний час неможливо переглянути файл цього типу</div>
-    {% endif %}
+    <div id="page-name"
+         class="padding-y-05">
+            Попередній перегляд файла: {{ report }}
+    </div>
+
+    <div id="preview-box">
+        {% if report|fileext in viewable_extension_list %}
+            {% if report|fileext == ".jpg" %}
+                <img class="max-width-75pc"
+                    src="{% static report.file %}"/>
+            {% elif report|fileext in viewable_extension_list %}
+                <object width="400" height="400" data="{% static report.file %}"></object>
+            {% else %}
+                <div>На даний час неможливо переглянути файл цього типу</div>
+            {% endif %}
+        {% else %}
+            <div>На даний час неможливо переглянути файл цього типу</div>
+        {% endif %}
+    </div>
 
     <!--<img src="{{ report.file }}" style="width:304px;height:228px;">-->
 
-
 {% endblock %}
 
-{% block href-folder-contents %}
+{% block href-folder-list-all %}
+{% endblock %}
+{% block href-folder-list %}
 {% endblock %}
 {% block href-folder-parent %}
+{% endblock %}
+{% block href-report-list %}
 {% endblock %}
 
 {% block href-folder-create %}
@@ -42,13 +57,10 @@
 
 {% block href-report-preview %}
 {% endblock %}
-{% block href-report-update %}
+
+{% block href-folder-contents %}
 {% endblock %}
 
 {% block href-back %}
-    {% if object.get_absolute_url %}
-        <li><a href="{{ object.get_absolute_url }}">Уверх</a></li>
-    {% else %}
-        <li><a href="{% url 'folders:folder-list-all' %}">Уверх</a></li>
-    {% endif %}
+    <li><a href="{% url 'folders:folder-list-all' %}">Уверх</a></li>
 {% endblock %}

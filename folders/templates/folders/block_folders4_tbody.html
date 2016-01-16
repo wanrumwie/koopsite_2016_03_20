@@ -22,7 +22,8 @@
                    href="{% url 'folders:folder-detail' f.id %}">{{ f|full_named_path }}</a>
             {% else %}
                 <a id="report#{{ f.id }}"
-                   href="{% url 'folders:report-detail' f.id %}">{{ f|full_named_path }}</a>
+                   href="{{ f.get_absolute_url }}">{{ f|full_named_path }}</a>
+                   <!--href="{% url 'folders:report-detail' f.id %}">{{ f|full_named_path }}</a>-->
             {% endif %}
         </td>
         <td id="td3-{{ f|model_name }}#{{ f.id }}"
@@ -43,6 +44,7 @@
                 <span> </span>
             {% elif f.file %}
                 <span>{{ f.file.size|filesizeformat }}</span>
+                <span>{{ f.get_absolute_url }}</span>
             {% else %}
                 <span> </span>
             {% endif %}

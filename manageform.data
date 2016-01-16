@@ -1,1 +1,1 @@
-manage.py test functional_tests_folders.tests_report_download 
+manage.py test functional_tests_folders.tests_report_preview 

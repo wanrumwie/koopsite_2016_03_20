@@ -1,3 +1,4 @@
+import os
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from folders.models import Folder, Report
@@ -36,8 +37,14 @@ class DummyFolder():
         parent = self.create_dummy_root_folder(name="dum_f_0")
         self.create_children(parent, 0, deep, wide, report)
 
-    def create_dummy_report(self, parent, id=None, file=None,
-                            filename=None, uploaded_on=None):
+    def create_dummy_report(self, parent, id=None,
+                            filename=None, uploaded_on=None,
+                            file=None, path=None):
+        if path and not file: # вказано шлях до реального файла на диску:
+            with open(path, 'rb') as f:
+                file_content = f.read()
+            filename = filename or os.path.basename(path)
+            file = SimpleUploadedFile(filename, file_content)
         # створюємо документ:
         report = Report(parent=parent, id=id, file=file,
                         filename=filename, uploaded_on=uploaded_on)

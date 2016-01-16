@@ -13,6 +13,7 @@ from folders.functions import response_for_download, \
     response_for_download_zip, get_subfolders, get_subreports, \
     get_full_named_path
 from folders.models import Folder, Report
+from koopsite.fileExtIconPath import viewable_extension_list
 from koopsite.views import AllFieldsView
 
 
@@ -64,6 +65,12 @@ class ReportPreview(DetailView):
     @method_decorator(permission_required('folders.view_report'))
     def dispatch(self, request, *args, **kwargs):
         return super(ReportPreview, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportPreview, self).get_context_data(**kwargs)
+        # Значення передадуться в шаблон:
+        context['viewable_extension_list'] = viewable_extension_list
+        return context
 
 
 class FolderCreate(CreateView):

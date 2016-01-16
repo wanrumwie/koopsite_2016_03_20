@@ -1,10 +1,10 @@
 '''
 Означення власних "фільтрів", якими можна користатися в шаблонах
 '''
-
 import os
 from django import template
 from folders.functions import get_full_named_path
+from koopsite.fileExtMimeTypes import mimeType
 from koopsite.functions import get_iconPathForFolder, \
                                get_iconPathByFileExt
 
@@ -23,6 +23,15 @@ def fileext(f):
     try:    e = os.path.splitext(f.filename)[1]  # [0] returns path+filename
     except: e = ""
     return e
+
+@register.filter
+def file_media_type(f):
+    # Фільтр для медіатипу файла
+    try:
+        e = os.path.splitext(f.filename)[1]  # [0] returns path+filename
+        mt = mimeType.get(e.lower(), "")
+    except: mt = ""
+    return mt
 
 # Фільтр для назви файла-іконки (для моделей folder і report)
 @register.filter

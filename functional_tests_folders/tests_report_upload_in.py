@@ -153,7 +153,7 @@ class ReportUploadInPageAuthenticatedVisitorCanUploadReportTest(ReportUploadInPa
 
         # Для прикладу беремо цей файл:
         cwd = os.getcwd()   # поточний каталог (в цьому каталозі manage.py)
-        full_path = os.path.join(cwd, 'output.txt') # повний шлях
+        full_path = os.path.join(cwd, 'example.txt') # повний шлях
 
         # Натискає кнопку Browse - емулюється шляхом посилання в цей елемент шляху до файла.
         inputbox = self.browser.find_element_by_css_selector('input[type=file]')
@@ -165,7 +165,7 @@ class ReportUploadInPageAuthenticatedVisitorCanUploadReportTest(ReportUploadInPa
 
         # Завантажено той файл?
         report = Report.objects.last()
-        self.assertEqual(report.filename, 'output.txt')
+        self.assertEqual(report.filename, 'example.txt')
         self.assertEqual(report.parent.id, 1)
         report_file_content = report.file.read()
         with open(full_path, 'rb') as f:

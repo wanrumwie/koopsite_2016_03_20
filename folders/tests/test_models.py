@@ -126,9 +126,23 @@ class ReportModelTest(TestCase):
         with self.assertRaises(ValidationError):
             r.full_clean()
 
-    def test_get_absolute_url(self):
+    def test_get_absolute_url_viewable(self):
+        folder = Folder.objects.create()
+        report = Report(parent=folder, filename='example.jpg')
+        report.save()
+        expected = reverse('folders:report-preview', kwargs={'pk': report.pk})
+        self.assertEqual(report.get_absolute_url(), expected)
+
+    def test_get_absolute_url_not_viewable(self):
         folder = Folder.objects.create()
         report = Report(parent=folder)
+        report.save()
+        expected = reverse('folders:report-detail', kwargs={'pk': report.pk})
+        self.assertEqual(report.get_absolute_url(), expected)
+
+    def test_get_absolute_url_not_viewable_2(self):
+        folder = Folder.objects.create()
+        report = Report(parent=folder, filename="example.mdb")
         report.save()
         expected = reverse('folders:report-detail', kwargs={'pk': report.pk})
         self.assertEqual(report.get_absolute_url(), expected)
