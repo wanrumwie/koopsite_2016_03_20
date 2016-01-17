@@ -11,7 +11,9 @@
             Попередній перегляд файла: {{ report }}
     </div>
     <div>
-                    type= {{ report|file_media_type }}
+        viewable_extension_list= {{ viewable_extension_list }}
+        <br>fileext= {{ report|fileext }}
+        <br>type= {{ report|file_media_type }}
     </div>
     <div id="preview-box">
         {% if report|fileext in viewable_extension_list %}
@@ -19,9 +21,7 @@
                 <img class="max-width-75pc"
                     src="{% static report.file %}"/>
             {% elif report|fileext in viewable_extension_list %}
-                <object width="100%"
-                    data="{% static report.file %}"
-                    type="{{ report|file_media_type }}"></object>
+                <object height="500" width="75%" data="{% static report.file %}" type="application/pdf"></object>
             {% else %}
                 <div>На даний час неможливо переглянути файл цього типу</div>
             {% endif %}

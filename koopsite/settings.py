@@ -174,17 +174,22 @@ TRACE_CONDITION = False
 SKIP_TEST = True    # пропускаємо задекоровані тести
 # SKIP_TEST = False   # виконуємо всі тести
 
+print('SKIP_TEST =', SKIP_TEST)
+
 # Умова для декоратора @unittest.skipIf(SKIP_VISUAL_TEST)
 # для тестів, які потребують візуального спостереження
 # SKIP_VISUAL_TEST = True    # пропускаємо "візуальні" тести
 SKIP_VISUAL_TEST = False   # виконуємо "візуальні" тести
+
+if not SKIP_VISUAL_TEST:
+    print('SKIP_VISUAL_TEST =', SKIP_VISUAL_TEST)
+    print('Кожен тест чекатиме на натискання ENTER в консолі')
 
 # Якщо запущено всі тести:
 if sys.argv == ['C:/PyPrograms/Django/koopsite/manage-test.py']\
         or sys.argv == ['manage.py', 'test']:
     SKIP_TEST = False
 
-print('SKIP_TEST =', SKIP_TEST)
 # print('BASE_DIR=',BASE_DIR)
 
 '''

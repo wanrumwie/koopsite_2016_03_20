@@ -17,7 +17,6 @@ from django.conf.urls import include, url, static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.base import TemplateView
-from openpyxl.compat.strings import basestring
 from koopsite.views import UserPermsActivateUpdate, \
                     OwnProfileDetailShow, \
                     UserProfileDetailShow

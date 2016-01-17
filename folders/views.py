@@ -4,6 +4,7 @@ from django.http import *
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -268,3 +269,64 @@ class FolderReportList(ListView):
 
 
 #---------------- Кінець коду, охопленого тестуванням ------------------
+
+import csv
+from django.http import HttpResponse
+
+def txt_view(request):
+    '''
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    # response['Content-Disposition'] = 'inline; filename="somefilename.txt"'
+    response['Content-Disposition'] = 'render; filename="somefilename.txt"'
+    # response['Content-Disposition'] = 'inline;'
+    # response['Content-Disposition'] = 'attachment; filename="somefilename.txt"'
+
+    writer = csv.writer(response)
+    writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+    writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+    return response
+    '''
+
+    text_data = "Long-long text"
+    response = HttpResponse(text_data, content_type="text/plain")
+    response['Content-Disposition'] = 'inline; filename="somefilename.txt"'
+    print('response =', response)
+    print('response =', response.__dict__)
+    for i in response.__dict__:
+        print('%-30s : %s' % (i, getattr(response, i, None)))
+    return response
+
+
+class DisplayPDFView(View):
+
+    def get_context_data(self, **kwargs):  # Exec 1st
+        context = {}
+        # context logic here
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        image_data = open("example.pdf", "rb").read()
+        response = HttpResponse(image_data, content_type="application/pdf")
+        response['Content-Disposition'] = 'inline; filename="somefilename.txt"'
+        print('response =', response)
+        print('response =', response.__dict__)
+        for i in response.__dict__:
+            print('%-30s : %s' % (i, getattr(response, i, None)))
+        return response
+
+def some_view(request):
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    # response['Content-Disposition'] = 'inline; filename="somefilename.txt"'
+    response['Content-Disposition'] = 'render; filename="somefilename.txt"'
+    # response['Content-Disposition'] = 'inline;'
+    # response['Content-Disposition'] = 'attachment; filename="somefilename.txt"'
+
+    writer = csv.writer(response)
+    writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+    writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+
+    return response

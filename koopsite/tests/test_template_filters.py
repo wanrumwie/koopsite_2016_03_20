@@ -58,7 +58,7 @@ class TemplateFiltersTest(TestCase):
         DummyUser().create_dummy_profile(user, flat=flat)
         self.assertEqual(user_flat_No(user), "55")
 
-    def test_thumbnail(self):
+    def test_thumbnail_for_file(self):
         user = DummyUser().create_dummy_user()
         picture_path="koopsite/tests/profile_image.jpg"
         DummyUser().create_dummy_profile(user, picture_path=picture_path)
@@ -69,6 +69,16 @@ class TemplateFiltersTest(TestCase):
         os.remove('media/profile_images/1.jpg')
         os.remove('media/profile_images/1_30x24.jpg')
         os.remove('media/profile_images/1_200x100.jpg')
+
+    def test_thumbnail_for_path(self):
+        user = DummyUser().create_dummy_user()
+        picture_path="koopsite/tests/profile_image.jpg"
+        mini_url = thumbnail(picture_path)
+        self.assertEqual(mini_url, 'koopsite/tests/profile_image_30x24.jpg')
+        mini_url = thumbnail(picture_path, "200x100")
+        self.assertEqual(mini_url, 'koopsite/tests/profile_image_200x100.jpg')
+        os.remove('koopsite/tests/profile_image_30x24.jpg')
+        os.remove('koopsite/tests/profile_image_200x100.jpg')
 
     def test_icon_yes_no_unknown(self):
         self.assertEqual(icon_yes_no_unknown(True),  'admin/img/icon-yes.gif')

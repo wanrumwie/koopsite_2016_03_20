@@ -50,6 +50,7 @@ def user_flat_No(user):
     fn = get_user_flat_No(user)
     return fn
 
+# TODO 2016 01 17 не вдалося зробити thumbnail filter для path (а не тільки для file)
 @register.filter()
 def thumbnail(file, size='30x24'):
     """
@@ -65,18 +66,25 @@ def thumbnail(file, size='30x24'):
     # defining the size
     x, y = [int(x) for x in size.split('x')]
     # defining the filename and the miniature filename
-    filename = file.path
+    if isinstance(file, str):   # вхідним параметром є url == path (relative)
+        filename = file
+        fileurl  = file
+    else:
+        filename = file.path
+        fileurl  = file.url
+
     filehead, filetail = os.path.split(filename)
     basename, format = os.path.splitext(filetail)
     miniature = basename + '_' + size + format
     miniature_filename = os.path.join(filehead, miniature)
-    fileurl = file.url
+
     filehead, filetail = os.path.split(fileurl)
     miniature_url = filehead + '/' + miniature
+
+    # remove a miniature file if miniature is older then main image file:
     if os.path.exists(miniature_filename) and \
-                                os.path.getmtime(filename) > \
-                                os.path.getmtime(miniature_filename):
-        os.unlink(miniature_filename)
+            os.path.getmtime(filename) > os.path.getmtime(miniature_filename):
+        os.unlink(miniature_filename) # unlink() == remove()
     # if the image wasn't already resized, resize it
     if not os.path.exists(miniature_filename):
         try:

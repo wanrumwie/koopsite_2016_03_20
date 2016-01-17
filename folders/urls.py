@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.views.generic.base import TemplateView
-from folders.views import folderDownload, ReportPreview, FolderReportList
+from folders.views import folderDownload, ReportPreview, FolderReportList, some_view, DisplayPDFView, txt_view
 from .views import  FolderCreate, \
                     FolderCreateInFolder, \
                     FolderUpdate, \
@@ -74,6 +74,11 @@ urlpatterns = [
     url(r'^folder-not-empty/$',
         TemplateView.as_view(template_name='folders/folder_not_empty.html'),
                                         name='folder-not-empty'),
+
+    # TODO-зробити preview уніфіковану для jpg, pdf, txt на основі CBV + повідомлення про неможливість перегляду
+    url(r'^txt/$',   txt_view,         name='txt_view'),
+    url(r'^some_view/$',   some_view,         name='some_view'),
+    url(r'^pdf/$',     DisplayPDFView.as_view(), name='pdf_view'),
 ]
 
 # urlpatterns += staticfiles_urlpatterns()

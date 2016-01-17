@@ -1120,3 +1120,4 @@ class FolderReportListTest(TestCase):
         r3 = DummyFolder().create_dummy_report(parent=f3, filename="r3")
         self.assertEqual(self.cls_view().get_queryset()[3], r3)
 
+

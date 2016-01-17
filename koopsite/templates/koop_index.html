@@ -3,12 +3,14 @@
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
+
+    {% load staticfiles %}
+
     <div class="wrapper">
         <!--<div class="header">Header</div>-->
         <div class="main">
-            {% load staticfiles %}
-
-            <img class="fill-space" src="{% static 'img/koop_building.jpg' %}"
+            <img class="fill-space"
+                 src="{% static 'img/koop_building_750x400.jpg' %}"
                  alt="Будинок кооперативу" />
         </div>
         <div class="aside aside-1">
