@@ -2,17 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional_tests_folders/results_of_tests.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/fileExtIconPath.py" afterPath="$PROJECT_DIR$/koopsite/fileExtIconPath.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/templates/folders/folder_contents.html" afterPath="$PROJECT_DIR$/folders/templates/folders/folder_contents.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/koop_style.css" afterPath="$PROJECT_DIR$/static/css/koop_style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static_root/css/koop_style.css" afterPath="$PROJECT_DIR$/static_root/css/koop_style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/templates/folders/report_preview.html" afterPath="$PROJECT_DIR$/folders/templates/folders/report_preview.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/settings.py" afterPath="$PROJECT_DIR$/koopsite/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/urls.py" afterPath="$PROJECT_DIR$/folders/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/views.py" afterPath="$PROJECT_DIR$/folders/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/viewsajaxuser.py" afterPath="$PROJECT_DIR$/koopsite/viewsajaxuser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -40,7 +29,7 @@
       <file leaf-file-name="results_of_tests.txt" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functional_tests_folders/results_of_tests.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.11659193" vertical-offset="0" max-vertical-offset="1092">
+            <state vertical-scroll-proportion="0.25742576" vertical-offset="0" max-vertical-offset="1092">
               <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding />
             </state>
@@ -376,7 +365,7 @@
       <recent name="C:\PyPrograms\Django\koopsite" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.manage-collectstatic-clear">
+  <component name="RunManager" selected="Python.manage-collectstatic-noinput">
     <configuration default="false" name="manageform" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -635,8 +624,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.manage-collectstatic-clear" />
-        <item index="1" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
+        <item index="0" class="java.lang.String" itemvalue="Python.manage-collectstatic-noinput" />
+        <item index="1" class="java.lang.String" itemvalue="Python.manage-collectstatic-clear" />
         <item index="2" class="java.lang.String" itemvalue="Python.manage-test-FT-lists" />
         <item index="3" class="java.lang.String" itemvalue="Python.manageform" />
         <item index="4" class="java.lang.String" itemvalue="Python.manage-test-FT-folders" />
@@ -1036,7 +1025,11 @@
       <created>1453109622427</created>
       <updated>1453109622427</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="KoopSite:  Завантажую на pythoneverywhere">
+      <created>1453120006152</created>
+      <updated>1453120006152</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1061,7 +1054,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1069,11 +1062,11 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.56661785" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16251831" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20790629" sideWeight="0.4966216" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20790629" sideWeight="0.4966216" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20790629" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53587115" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.53587115" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1098,7 +1091,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="KoopSite: FT for Folders: FolderCreate" />
     <MESSAGE value="KoopSite: Подолав js_test for .on(keypress...)" />
     <MESSAGE value="KoopSite: FT for FolderCreate ready" />
     <MESSAGE value="KoopSite: FT for ReportUpload - almost ready" />
@@ -1123,7 +1115,8 @@
     <MESSAGE value="KoopSite:  push to PythonEveryWhere&#10;" />
     <MESSAGE value="KoopSite:  preview pdf problem" />
     <MESSAGE value="KoopSite:  Впорядковано CSS. Беруся за preview" />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  Впорядковано CSS. Беруся за preview" />
+    <MESSAGE value="KoopSite:  Завантажую на pythoneverywhere" />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  Завантажую на pythoneverywhere" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1523,7 +1516,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/functional_tests_folders/results_of_tests.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11659193" vertical-offset="0" max-vertical-offset="1092">
+        <state vertical-scroll-proportion="0.25742576" vertical-offset="0" max-vertical-offset="1092">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding />
         </state>
