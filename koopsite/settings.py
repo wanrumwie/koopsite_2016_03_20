@@ -24,8 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'wzl%b&lwgnl1ng71(5%ru7tq5xx-x*@2qc+7&h4#y1&o(ptpns'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 # Needed when DEBUG=False
 ALLOWED_HOSTS = ['wanrumwie.pythonanywhere.com']
@@ -156,6 +156,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'adm.koopsite@gmail.com'
 EMAIL_HOST_PASSWORD = 'Gfcsxybq2000'
 
+# Адреса сайту, яка буде вказуватися в електронних листах:
+SITE_ADDRESS = "wanrumwie.pythonanywhere.com"
 
 # id сайтів в списку admin
 # 1 = production, 2 = localhost (на даний момент)

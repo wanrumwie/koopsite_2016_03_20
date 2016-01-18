@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.views.generic.list import ListView
 from koopsite.models import UserProfile
-from koopsite.settings import EMAIL_HOST_USER, STATIC_URL
+from koopsite.settings import EMAIL_HOST_USER, STATIC_URL, SITE_ADDRESS
 from koopsite.functions import has_group, add_group, \
                         remove_group, is_staff_only, sendMailToUser, \
                         get_user_full_name, get_user_flat_No, \
@@ -270,9 +270,9 @@ class AjaxAccountView(View):
         if self.sendMail:
             e_msg = "Шановний %s,\n" \
                     "%s\n" \
-                    "З повагою, адміністратор сайта %s.\n" \
+                    "З повагою, адміністратор сайта %s\n" \
                     "%s" % (user.username, e_msg_body, 
-                            "KoopSite", EMAIL_HOST_USER)
+                            SITE_ADDRESS, EMAIL_HOST_USER)
             sendMailToUser(user, 
                            subject="KoopSite administrator", 
                            message=e_msg)

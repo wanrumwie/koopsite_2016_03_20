@@ -123,6 +123,9 @@ a:focus     {outline-style: none;}
 .pre-line {
     white-space: pre-line;
 }
+.preview-box * {
+    background-color:   white;
+}
 
 /*=======================================================================*/
 .tabledetail {

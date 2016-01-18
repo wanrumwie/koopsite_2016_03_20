@@ -331,11 +331,12 @@ def some_view(request):
 
     return response
 
+
+@permission_required('folders.view_report')
 def reportPreview(request, pk):
     report_id = pk
     report = Report.objects.get(id=report_id)
     # print('report=', report.id, report.filename, report.file)
-    response = response_for_download(report)
+    response = response_for_download(report, cd_value='inline')
     return response
-
 

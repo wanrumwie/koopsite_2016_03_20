@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.views.generic.base import TemplateView
-from folders.views import folderDownload, ReportPreview, FolderReportList, some_view, DisplayPDFView, txt_view
+from folders.views import folderDownload, ReportPreview, FolderReportList, some_view, DisplayPDFView, txt_view, \
+    reportPreview
 from .views import  FolderCreate, \
                     FolderCreateInFolder, \
                     FolderUpdate, \
@@ -57,6 +58,7 @@ urlpatterns = [
     url(r'^report/(?P<pk>[0-9]+)/download/$',   reportDownload,         name='report-download'),
 #--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^report/(?P<pk>[0-9]+)/preview/$',    ReportPreview.as_view(), name='report-preview'),
+    url(r'^report/(?P<pk>[0-9]+)/view/$',       reportPreview,          name='report-view'),
 
     url(r'^(?P<pk>[0-9]+)/contents/$',  FolderContents.as_view(),   name='folder-contents'),
 

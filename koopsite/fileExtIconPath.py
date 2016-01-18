@@ -2,6 +2,13 @@
 viewable_extension_list = [
     ".jpg",
     ".pdf",
+    ".txt",
+]
+
+# Список типів файлів, для яких можливе preview:
+viewable_mimeType_list = [
+    "text/plain",
+    "text/",
 ]
 
 iconPath = {
