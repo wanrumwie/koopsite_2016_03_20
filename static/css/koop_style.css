@@ -3,6 +3,10 @@ CSS for koopsite
 common for all app
 */
 
+* { margin: 0; padding: 0; border: 0 none; position: relative; }
+*, *:before, *:after    { box-sizing: inherit; }
+html                    { box-sizing: border-box; }
+
 /*
  * CSS trick to force site footer down 
  */

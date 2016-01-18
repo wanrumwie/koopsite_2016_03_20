@@ -13,10 +13,6 @@ html{
 }
 */
 
-* { margin: 0; padding: 0; border: 0 none; position: relative; }
-*, *:before, *:after    { box-sizing: inherit; }
-html                    { box-sizing: border-box; }
-
 /*table.scrolltable * {height: auto; min-height: none;}*/ /* fixed ie9 & <*/
 
 table.scrolltable {

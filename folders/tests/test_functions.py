@@ -91,16 +91,24 @@ class Response_for_download_Test(TestCase):
 
     def test_response_for_download_gives_proper_value(self):
         filename = self.report.filename
-        fn = ' filename="%s";' % transliterate(filename)
-        fns = " filename*=utf-8''%s;" % urlquote(filename)
-        md = ' modification-date="%s";' % self.report.uploaded_on
-        expected_content_disposition = 'attachment;' + fn + fns + md
+        cd_value = "attachment"
+        cdv = '%s; ' % cd_value
+        fn = 'filename="%s"; ' % transliterate(filename)
+        fns = "filename*=utf-8''%s; " % urlquote(filename)
+        md = 'modification-date="%s"; ' % self.report.uploaded_on
+        expected_content_disposition = cdv + fn + fns + md
 
         resp = response_for_download(self.report)
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
         self.assertEqual(resp.get('Content-Length'), '12')
         self.assertEqual(resp.get('Content-Type'), 'text/plain')
         self.assertEqual(resp.content, b'file_content')
+
+        cd_value = "inline"
+        cdv = '%s; ' % cd_value
+        expected_content_disposition = cdv + fn + fns + md
+        resp = response_for_download(self.report, cd_value=cd_value)
+        self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
 
 
 class Response_for_download_zip_Test(TestCase):

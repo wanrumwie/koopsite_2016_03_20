@@ -62,24 +62,28 @@ def get_subreports(parent):
     queryset = Report.objects.filter(parent=parent)
     return queryset
 
-def response_for_download(report):
+def response_for_download(report, cd_value='attachment'):
     """
     Preparing response for downloading file
     Content-Disposition header field from http://tools.ietf.org/html/rfc2183
     :param:     report - instance of Report model
+    :param:     cd_value - Content Disposition Value:
+                    "attachment" - for download
+                    "inline" - for preview
     :return:    HttpResponse with report.file and some parameters
     """
     fileExt  = os.path.splitext(report.filename)[1]  # [0] returns path+filename
     ct = mimeType.get(fileExt.lower(), "application/octet-stream")
     filename = report.filename
-    fn = ' filename="%s";' % transliterate(filename)
-    fns = " filename*=utf-8''%s;" % urlquote(filename)
-    md = ' modification-date="%s";' % report.uploaded_on
+    cdv = '%s; ' % cd_value
+    fn = 'filename="%s"; ' % transliterate(filename)
+    fns = "filename*=utf-8''%s; " % urlquote(filename)
+    md = 'modification-date="%s"; ' % report.uploaded_on
     response = HttpResponse(content_type=ct)
     content = report.file.read()
-    report.file.close()
+    # report.file.close()
     response.write(content)
-    response['Content-Disposition'] = 'attachment;' + fn + fns + md
+    response['Content-Disposition'] = cdv + fn + fns + md
     response['Content-Length'] = report.file.size
     return response
 

@@ -241,7 +241,7 @@ def reportDownload(request, pk):
     report_id = pk
     report = Report.objects.get(id=report_id)
     # print('report=', report.id, report.filename, report.file)
-    response = response_for_download(report)
+    response = response_for_download(report, cd_value='attachment')
     return response
 
 
@@ -330,3 +330,12 @@ def some_view(request):
     writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
 
     return response
+
+def reportPreview(request, pk):
+    report_id = pk
+    report = Report.objects.get(id=report_id)
+    # print('report=', report.id, report.filename, report.file)
+    response = response_for_download(report)
+    return response
+
+
