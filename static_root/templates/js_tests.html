@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Javascript tests - KoopSite</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'js/qunit/qunit.css' %}">
+</head>
+
+<body>
+    <div>
+        <p>Лінки до тестування javascript:</p>
+        <p><a href="/js_tests/">KoopSite - всі тести сайту</a>
+        </p>
+        <p>Тести аплікацій:
+        <a href="/js_tests/koopsite/functions/">Koopsite app Functions</a>
+        <a href="/js_tests/koopsite/browtab/">Koopsite app BrowTab</a>
+        <a href="/js_tests/folders/">Folders app</a>
+        <a href="/js_tests/lists/">Lists app</a>
+        </p>
+    </div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+    </div>
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="{% static 'js/qunit/qunit.js' %}"     ></script>
+</body>
+</html>

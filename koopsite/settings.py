@@ -156,6 +156,16 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'adm.koopsite@gmail.com'
 EMAIL_HOST_PASSWORD = 'Gfcsxybq2000'
 
+# Поштовий сервер для сайту на pythonanywhere
+# python_any_where = True
+python_any_where = False
+if python_any_where:
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_HOST_USER = "wanrumwie@gmail.com"
+    EMAIL_HOST_PASSWORD = 'Protas'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
 # Адреса сайту, яка буде вказуватися в електронних листах:
 SITE_ADDRESS = "wanrumwie.pythonanywhere.com"
 

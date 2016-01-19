@@ -34,3 +34,23 @@ FireFox
         і для перегляду пропонує коректний застосунок
 -(6) - показує чорне пусте місце з повідомленням:
         A plugin is needed to display this content
+
+
+2015 01 18 15:35 не пройшов лист з pythoneverywhere на adm.koop@gmail.com
+
+2015 01 18 15:55 не пройшов лист з pythoneverywhere на wanrumwie@gmail.com
+2015 01 18 16:11 не пройшов лист з pythoneverywhere на wanrumwie@gmail.com
+pythoneverywhere = True
+if pythoneverywhere:
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_HOST_USER = "wanrumwie@gmail.com"
+    EMAIL_HOST_PASSWORD = "Jkzs>hrj314"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+SMTPAuthenticationError ... Please log in via your web browser and then try again
+
+2015 01 18 16:06 не пройшов лист з pythoneverywhere на wanrumwie@gmail.com
+Змінено пароль на пароль для акаунту в pythoneverywhere
+    EMAIL_HOST_PASSWORD = "Hopak1898pyth"
+SMTPAuthenticationError Username and Password not accepted
+
