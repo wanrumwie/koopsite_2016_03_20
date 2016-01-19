@@ -2,55 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/uploads/folders/0/128_u4cucrE.data" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/uploads/folders/0/129_02YkcpL.data" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/uploads/folders/0/138.data" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/uploads/folders/0/139.data" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/uploads/folders/0/140.data" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/fonts/glyphicons-halflings-regular.eot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/fonts/glyphicons-halflings-regular.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/fonts/glyphicons-halflings-regular.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/fonts/glyphicons-halflings-regular.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/uploads/folders/0/136.data" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/uploads/folders/0/137.data" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap-theme.css.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap-theme.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap-theme.min.css.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap-theme.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap.css.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/js/bootstrap.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap.min.css.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/css/bootstrap.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/js/bootstrap.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/example_pretty_date.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/example_pretty_date_2.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/example_pretty_date_3.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/example_pretty_date_4.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/functions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/fonts/glyphicons-halflings-regular.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/templates/js_tests.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/templates/js_tests_folders.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/templates/js_tests_koopsite_browtab.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/templates/js_tests_koopsite_functions.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/templates/js_tests_lists.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/list.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/bootstrap/js/npm.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/prettydate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/prettydate4.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/qunit.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/tests/qunit.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/js/qunit/qunit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/tests/qunit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/koopsite/test_koopsite.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/koopsite/test_koopsite_functions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/lists/test_lists.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/tests/tests.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_root/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional_tests_folders/results_of_tests.txt" afterPath="$PROJECT_DIR$/functional_tests_folders/results_of_tests.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/settings.py" afterPath="$PROJECT_DIR$/koopsite/settings.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/uploads/folders/0/128_u4cucrE.data" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/media/uploads/folders/0/129_02YkcpL.data" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -244,7 +197,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="static_root" />
+              <option name="myItemId" value="static" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -258,7 +211,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="static_root" />
+              <option name="myItemId" value="media" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -284,25 +237,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="koopsite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
+              <option name="myItemId" value="media" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1090,7 +1025,11 @@
       <created>1453120093287</created>
       <updated>1453120093287</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="KoopSite:  push to GIT =&gt; pythonanywhere">
+      <created>1453193388111</created>
+      <updated>1453193388111</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1117,6 +1056,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5488722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.56661785" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1131,7 +1071,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4816984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1152,7 +1091,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="KoopSite: Подолав js_test for .on(keypress...)" />
     <MESSAGE value="KoopSite: FT for FolderCreate ready" />
     <MESSAGE value="KoopSite: FT for ReportUpload - almost ready" />
     <MESSAGE value="KoopSite: FT for ReportUpload - ready" />
@@ -1177,7 +1115,8 @@
     <MESSAGE value="KoopSite:  preview pdf problem" />
     <MESSAGE value="KoopSite:  Впорядковано CSS. Беруся за preview" />
     <MESSAGE value="KoopSite:  Завантажую на pythoneverywhere" />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  Завантажую на pythoneverywhere" />
+    <MESSAGE value="KoopSite:  push to GIT =&gt; pythonanywhere" />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  push to GIT =&gt; pythonanywhere" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
