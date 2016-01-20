@@ -14,9 +14,7 @@ from folders.functions import response_for_download, \
     response_for_download_zip, get_subfolders, get_subreports, \
     get_full_named_path
 from folders.models import Folder, Report
-# from koopsite.decorators import owner_or_perm_required
 from koopsite.fileExtIconPath import viewable_extension_list
-from koopsite.functions import dict_print
 from koopsite.views import AllFieldsView
 
 
@@ -57,10 +55,12 @@ class ReportDetail(AllFieldsView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        print('request =', request.__dict__)
-        dict_print(request, 'request')
-        print('args =', args)
-        print('kwargs =', kwargs)
+        # print('request =', request.__dict__)
+        # print('request =', request.__dict__)
+        # dict_print(request, 'request')
+        # print('request.user =', request.user)
+        # print('args =', args)
+        # print('kwargs =', kwargs)
         return super(ReportDetail, self).dispatch(request, *args, **kwargs)
 
 
@@ -198,6 +198,17 @@ class ReportUpload(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(ReportUpload, self).dispatch(*args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        if form.is_valid():
+            report = form.save(commit=False)    # збережений ще "сирий" примірник
+            report.author = request.user
+            report.save()                       # остаточне збереження
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
 
 class ReportUploadInFolder(CreateView):
     # Завантажуємо файл у відому материнську теку
@@ -228,6 +239,7 @@ class ReportUploadInFolder(CreateView):
         form = self.form_class(data=data, files=request.FILES)
         if form.is_valid():
             report = form.save(commit=False)    # збережений ще "сирий" примірник
+            report.author = request.user
             report.save()                       # остаточне збереження
             return self.form_valid(form)
         else:
@@ -248,6 +260,7 @@ def reportDownload(request, pk):
     report = Report.objects.get(id=report_id)
     # print('report=', report.id, report.filename, report.file)
     response = response_for_download(report, cd_value='attachment')
+    report.file.close() # при тестуванні не вдавалося видалити файл без цього рядка
     return response
 
 

@@ -347,7 +347,7 @@ class PageVisitTest(DummyUser, FunctionalTest):
                 link_text, url_name=url_name, kwargs=kwargs,
                 expected_regex=expected_regex, sleep_time=sleep_time)
 
-    def layout_and_styling_page(self):
+    def layout_and_styling_page(self, delta=10):
         # Користувач відвідує сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
         self.browser.set_window_size(1024, 800)
@@ -355,6 +355,6 @@ class PageVisitTest(DummyUser, FunctionalTest):
         box = self.browser.find_element_by_id('site-header')
         real = box.location['x'] + box.size['width'] / 2
         expected = 512
-        self.assertAlmostEqual(real, expected, delta=10, msg="Не працює CSS.")
+        self.assertAlmostEqual(real, expected, delta=delta, msg="Не працює CSS.")
 
 

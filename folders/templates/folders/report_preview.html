@@ -15,9 +15,9 @@
         <br>fileext= {{ report|fileext }}
         <br>type= {{ report|file_media_type }}
     </div>
-    {% if report|fileext in viewable_extension_list %}
-        <div id="preview-box"
-             class="preview-box">
+    <div id="preview-box"
+         class="preview-box">
+        {% if report|fileext in viewable_extension_list %}
             {% if report|fileext == ".jpg" %}
                 <img class="max-width-75pc"
                     src="{% static report.file %}"/>
@@ -28,12 +28,12 @@
             {% elif report|fileext in viewable_extension_list %}
                 <object height="500" width="75%" data="{% static report.file %}"></object>
             {% else %}
-                <div>На даний час неможливо переглянути файл цього типу</div>
+                На даний час неможливо переглянути файл цього типу
             {% endif %}
-        </div>
-    {% else %}
-        <div>На даний час неможливо переглянути файл цього типу</div>
-    {% endif %}
+        {% else %}
+            На даний час неможливо переглянути файл цього типу
+        {% endif %}
+    </div>
 
     <!--<img src="{{ report.file }}" style="width:304px;height:228px;">-->
 

@@ -1,4 +1,5 @@
 import os
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
 from koopsite.fileExtIconPath import viewable_extension_list
@@ -96,6 +97,12 @@ class Report(models.Model):
                                       auto_now_add=True,
                                       null=True,
                                       blank=True)
+    author   = models.ForeignKey(User,
+                                      verbose_name='Автор',
+                                      related_name='reports',
+                                      null=True,
+                                      blank=True)
+
     def __str__(self):
         s = self.filename or ''
         return s

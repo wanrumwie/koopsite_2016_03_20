@@ -81,10 +81,10 @@ def response_for_download(report, cd_value='attachment'):
     md = 'modification-date="%s"; ' % report.uploaded_on
     response = HttpResponse(content_type=ct)
     content = report.file.read()
-    # report.file.close()
     response.write(content)
     response['Content-Disposition'] = cdv + fn + fns + md
     response['Content-Length'] = report.file.size
+    # report.file.close()
     return response
 
 def response_for_download_zip(folder, maxFileSize = 200000000):

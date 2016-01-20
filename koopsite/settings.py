@@ -149,7 +149,7 @@ LOGIN_URL = '/noaccess/'
 
 # Settings for using GMail as my SMTP server for django
 
-# TODO-купити акаунт на pythonanywhere.com оскільки "you cannot use SMTP on Free accounts"
+# TODO-2016 01 20 купити акаунт на pythonanywhere.com оскільки "you cannot use SMTP on Free accounts"
 # https://help.pythonanywhere.com/pages/SMTPForFreeUsers - нахабно стверджують, що вони зробили виняток для gmail.com
 # але мені вдалось "пропхати" пошту лише раз, решта були заблоковані gmail'ом.
 EMAIL_USE_TLS = True
@@ -186,8 +186,8 @@ else:
 TRACE_CONDITION = False
 
 # Умова для декоратора @unittest.skipIf(SKIP_TEST)
-SKIP_TEST = True    # пропускаємо задекоровані тести
-# SKIP_TEST = False   # виконуємо всі тести
+# SKIP_TEST = True    # пропускаємо задекоровані тести
+SKIP_TEST = False   # виконуємо всі тести
 
 if SKIP_TEST:
     print('SKIP_TEST =', SKIP_TEST)
@@ -208,54 +208,3 @@ if sys.argv == ['C:/PyPrograms/Django/koopsite/manage-test.py']\
 
 # print('BASE_DIR=',BASE_DIR)
 
-'''
-# Default logging for Django. This sends an email to the site admins on every
-# HTTP 500 error. Depending on DEBUG, all other log records are either sent to
-# the console (DEBUG=True) or discarded by mean of the NullHandler (DEBUG=False).
-
-DEFAULT_LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-        },
-        'null': {
-            'class': 'logging.NullHandler',
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-        },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'django.security': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'py.warnings': {
-            'handlers': ['console'],
-        },
-    }
-}
-'''

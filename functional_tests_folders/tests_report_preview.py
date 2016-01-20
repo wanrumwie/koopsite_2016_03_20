@@ -92,7 +92,7 @@ class ReportPreviewPageAuthenticatedVisitorTest(ReportPreviewPageVisitTest):
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
-        self.layout_and_styling_page()
+        self.layout_and_styling_page(delta=20) # враховуємо смужку скролінгу, через яку зображення зсувається з центру
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
@@ -164,6 +164,7 @@ class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPage
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
+        # TODO-2016 01 20 виловити помилку AssertionError: '' != 'На даний час неможливо переглянути файл цього типу'
         # Бачить у полі очікувану інформацію
         inputbox = self.browser.find_element_by_id('preview-box')
         self.assertEqual(inputbox.text, "На даний час неможливо переглянути файл цього типу")

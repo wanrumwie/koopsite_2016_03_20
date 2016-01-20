@@ -30,8 +30,6 @@ def range_of(n):
     except: val = None
     return val
 
-# TODO-доробити тести для всіх наступних фільтрів
-
 @register.filter()
 def model_name(f):
     # Фільтр для назви моделі

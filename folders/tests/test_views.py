@@ -1,4 +1,5 @@
 from asyncio.tasks import sleep
+import inspect
 from unittest.case import skip, skipIf
 from datetime import timedelta
 from django.contrib.auth.models import AnonymousUser
@@ -858,6 +859,35 @@ class ReportUploadTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_post(self):
+        dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
+        self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(dummy_user, 'add_report')
+        root = DummyFolder().create_dummy_root_folder()
+
+        # Передаємо у форму значення:
+        file = SimpleUploadedFile("file.txt", b"file_content")
+        data = {
+            'parent' : '1',
+            'file': file,
+        }
+        request = RequestFactory().post(self.path, data)
+        request.user = dummy_user
+        kwargs = {}
+        response = self.cls_view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+
+        # Витягаємо з бази щойно створений запис:
+        f = self.cls_view.model.objects.last()
+        fcont = f.file.read()
+        self.assertEqual(f.parent, root)
+        self.assertEqual(f.filename, "file.txt")
+        self.assertEqual(fcont, b"file_content")
+        self.assertEqual(f.author, dummy_user)
+        expected_url = f.get_absolute_url()
+        self.assertEqual(response.url, expected_url)
+        f.file.delete()
+
 
 class ReportUploadInFolderTest(TestCase):
 
@@ -945,6 +975,7 @@ class ReportUploadInFolderTest(TestCase):
         self.assertEqual(f.parent, root)
         self.assertEqual(f.filename, "file.txt")
         self.assertEqual(fcont, b"file_content")
+        self.assertEqual(f.author, dummy_user)
         expected_url = f.get_absolute_url()
         self.assertEqual(response.url, expected_url)
         f.file.delete()
@@ -969,7 +1000,7 @@ class FolderDownloadTest(TestCase):
             except:
                 sleep(1)
                 i += 1
-        if not deleted: print('file not deleted')
+        if not deleted: print('file not deleted in FolderDownloadTest')
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -1021,13 +1052,15 @@ class ReportDownloadTest(TestCase):
             except:
                 sleep(10)
                 i += 1
-        if not deleted: print('file not deleted')
+        if not deleted: print('file not deleted in ReportDownloadTest')
 
     def test_url_resolves_to_proper_view(self):
+        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.view.__name__)
 
     def test_view_gives_response_status_code_302_AnonymousUser(self):
+        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         request = RequestFactory().get(self.path)
         request.user = AnonymousUser()
         response = self.view(request)
@@ -1035,6 +1068,7 @@ class ReportDownloadTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         request = RequestFactory().get(self.path)
@@ -1044,6 +1078,7 @@ class ReportDownloadTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
+        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'download_report')

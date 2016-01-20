@@ -123,7 +123,6 @@ class ReportUploadInPageAuthenticatedVisitorWoPermissionTest(ReportUploadInPageV
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
-
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportUploadInPageAuthenticatedVisitorCanUploadReportTest(ReportUploadInPageVisitTest):
     """
@@ -171,6 +170,7 @@ class ReportUploadInPageAuthenticatedVisitorCanUploadReportTest(ReportUploadInPa
         with open(full_path, 'rb') as f:
             expected_file_content = f.read()
         self.assertEqual(report_file_content, expected_file_content)
+        self.assertEqual(report.author, self.dummy_user)
 
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(expected_regex=report.get_absolute_url())
