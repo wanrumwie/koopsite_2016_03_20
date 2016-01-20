@@ -14,7 +14,9 @@ from folders.functions import response_for_download, \
     response_for_download_zip, get_subfolders, get_subreports, \
     get_full_named_path
 from folders.models import Folder, Report
+# from koopsite.decorators import owner_or_perm_required
 from koopsite.fileExtIconPath import viewable_extension_list
+from koopsite.functions import dict_print
 from koopsite.views import AllFieldsView
 
 
@@ -55,6 +57,10 @@ class ReportDetail(AllFieldsView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        print('request =', request.__dict__)
+        dict_print(request, 'request')
+        print('args =', args)
+        print('kwargs =', kwargs)
         return super(ReportDetail, self).dispatch(request, *args, **kwargs)
 
 
@@ -337,6 +343,15 @@ def reportPreview(request, pk):
     report_id = pk
     report = Report.objects.get(id=report_id)
     # print('report=', report.id, report.filename, report.file)
+    response = response_for_download(report, cd_value='inline')
+    return response
+
+
+# @owner_or_perm_required('folders.view_report')
+def reportDecorView(request, pk):
+    report_id = pk
+    report = Report.objects.get(id=report_id)
+    print('report=', report.id, report)
     response = response_for_download(report, cd_value='inline')
     return response
 

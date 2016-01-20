@@ -149,6 +149,9 @@ LOGIN_URL = '/noaccess/'
 
 # Settings for using GMail as my SMTP server for django
 
+# TODO-купити акаунт на pythonanywhere.com оскільки "you cannot use SMTP on Free accounts"
+# https://help.pythonanywhere.com/pages/SMTPForFreeUsers - нахабно стверджують, що вони зробили виняток для gmail.com
+# але мені вдалось "пропхати" пошту лише раз, решта були заблоковані gmail'ом.
 EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.gmail.com'

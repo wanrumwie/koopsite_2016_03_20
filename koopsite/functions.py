@@ -24,8 +24,14 @@ def list_print(list, name=''):
     for i in list: print(i)
 
 def dict_print(d, name=''):
-    print(name, 'len =', len(d))
-    for k,v in sorted(d.items()): print('%-20s : %s' % (k,v))
+    try:    length = len(d)
+    except: length = len(d.__dict__)
+    print(name, 'len =', length)
+    try:
+        for k, v in sorted(d.items()): print('%-20s : %s' % (k, v))
+    except:
+        for k, v in sorted(d.__dict__.items()): print('%-20s : %s' % (k, v))
+
 
 def user_permissions_print(user):
     print('='*50)
