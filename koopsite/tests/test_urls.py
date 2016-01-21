@@ -1,11 +1,33 @@
+import importlib
+from unittest.mock import _get_class
 from django.test import TestCase
-from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
+from django.core.urlresolvers import RegexURLPattern, RegexURLResolver, reverse, resolve
 from koopsite.urls import urlpatterns
 
+def get_view_from_RegexURLPattern(u):
+    func = u._callback
+    module_name = func.__module__
+    func_name = func.__name__
+    module = importlib.import_module(module_name)
+    try:
+        view = getattr(module, func.__name__)
+        try:
+            templ_name = view.template_name
+        except:
+            templ_name = ''
+        try:
+            form_class = view.form_class
+        except:
+            form_class = ''
+    except:
+        templ_name = ''
+        form_class = ''
+    return module_name, func_name, templ_name, form_class
 
 class WalkURL():
-    def __init__(self, urlpatterns, exclude_namespace=None):
+    def __init__(self, urlpatterns, exclude_namespace=None, trace=False):
         self.urlpatterns = urlpatterns
+        self.trace = trace
         if exclude_namespace:
             if isinstance(exclude_namespace, list):
                 self.exclude_namespace = exclude_namespace
@@ -13,18 +35,28 @@ class WalkURL():
                 self.exclude_namespace = [exclude_namespace]
         else:
             self.exclude_namespace = []
-        print("WalkURL(exclude_namespace =", self.exclude_namespace)
+        if self.trace:
+            print("WalkURL(exclude_namespace =", self.exclude_namespace)
         self.all_url_names = []
         self.get_all_url_names()
 
     def url_walk(self, urlpatterns, prefix='^', namespace=None):
         for u in urlpatterns:
             if type(u) == RegexURLPattern:
+                # print(u._callback, u._callback.__module__, u._callback.__name__, u.__dict__)
                 s = u.regex.pattern
                 s = prefix + s.lstrip('^')
                 ns = ('%s:' % namespace) if namespace else ''
-                # print('%-50s %-15s %s' % (s, ns, u.name))
-                self.all_url_names.append((s, '%s%s' % (ns, u.name)))
+                ns_name = '%s%s' % (ns, u.name)
+                self.all_url_names.append((s, ns_name))
+                # x = get_view_from_name(ns_name)
+                if self.trace:
+                    module_name, func_name, templ_name, form_class = \
+                        get_view_from_RegexURLPattern(u)
+                    # print('%-50s, %-15s, %-20s, %-20s, %-20s, %-20s, %s' %
+                    #  (s, ns, u.name, module_name, func_name, templ_name, form_class))
+                    print('%s,%s,%s,%s,%s,%s,%s' %
+                     (s, ns, u.name, module_name, func_name, templ_name, form_class))
             if type(u) == RegexURLResolver:
                 ns = u.namespace or '--'
                 if ns not in self.exclude_namespace:
@@ -56,6 +88,7 @@ class UrlNameSpaceTest(TestCase):
 
     def test_no_duplicate_urls(self):
         all_url = WalkURL(urlpatterns,
+                          # trace=True,
                           exclude_namespace=['js_tests']).all_url_names
         # print('all_urls:')
         # for u, n in sorted(all_url):

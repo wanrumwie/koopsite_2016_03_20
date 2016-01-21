@@ -54,7 +54,7 @@ class ReportUpdatePageVisitTest(PageVisitTest):
         return self.data_links_number
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportUpdatePageAuthenticatedVisitorWithPermissionTest(ReportUpdatePageVisitTest):
     """
     Тест відвідання сторінки сайту

@@ -1,4 +1,5 @@
-import os
+from django import forms
+from django.db import models
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -138,35 +139,67 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
 #
 #################################################################
 
-# TODO-2016 01 20 може варто додати абстрактний клас OneToOneBase з атрибутами FormOne тощо?
-class OneToOneCreate(CreateView):
+class OneToOneBase:
     """
-    Абстрактний клас - основа CBV для створення нових записів
-    двох моделей, пов'язаних між собою через OneToOne.
+    Абстрактний клас - основа CBV для двох моделей,
+    пов'язаних між собою через OneToOne.
+    Означує лише атрибути. Вся логіка буде означена при змішуванні
+    з класами CreateView тощо.
     """
-    #
-    # Атрибути, які можна залишити в успадкованому класі:
     render_variant = "as_table"
     # render_variant = "as_ul"
     # render_variant = "as_p"
-    form_one_name = 'form_one'     # назви форм у шаблоні: {{ form_one }}
+    form_one_name = 'form_one'  # назви форм у шаблоні: {{ form_one }}
     form_two_name = 'form_two'
-    finished = False                # прапорець успішного завершення
+    finished = False            # прапорець успішного завершення
+    rel_name = ''               # userprofile - reverse name to User model
+    oto_name = ''               # user = models.OneToOneField(User) in UserProfile
+    capital_name  = ''          # поле моделі one, яке буде виведене в заголовку шаблона
+
+    FormOne = forms.ModelForm
+    FormTwo = forms.ModelForm
+    ModelTwo = models.Model
+    ModelOne = models.Model
+
+    one_fields = None
+    two_fields = None
+    one_img_fields = None
+    two_img_fields = None
+
+    def get_one(self, request, *args, **kwargs):
+        one_id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
+        one = self.ModelOne.objects.get(id=one_id)
+        return one
+
+    def get_two(self, one):
+        try:
+            two = getattr(one, self.rel_name)
+        except:
+            two = self.ModelTwo()
+            setattr(two, self.oto_name, one)
+        return two
 
     def set_one_outform_fields(self, one):
         """
         Встановлення значень полям моделі one, які не були присутні у формі
         Ця ф-ція має бути означена у дочірньому класі.
         """
-        assert False, 'Клас OneToOneCreate: потрібно означити метод: set_one_outform_fields'
+        assert False, 'Клас OneToOneBase: потрібно означити метод: set_one_outform_fields'
 
     def set_two_outform_fields(self, two):
         """
         Встановлення значень полям моделі two, які не були присутні у формі
         Ця ф-ція має бути означена у дочірньому класі.
         """
-        assert False, 'Клас OneToOneCreate: потрібно означити метод: set_two_outform_fields'
+        assert False, 'Клас OneToOneBase: потрібно означити метод: set_two_outform_fields'
 
+
+
+class OneToOneCreate(OneToOneBase, CreateView):
+    """
+    Абстрактний клас - основа CBV для створення двох моделей,
+    пов'язаних між собою через OneToOne.
+    """
     def get(self, request, *args, **kwargs):
         form_one = self.FormOne()
         form_two = self.FormTwo()
@@ -202,33 +235,11 @@ class OneToOneCreate(CreateView):
         return render(request, self.template_name, data)
 
 
-class OneToOneUpdate(UpdateView):
+class OneToOneUpdate(OneToOneBase, UpdateView):
     """
     Абстрактний клас - основа CBV для редагування двох моделей,
     пов'язаних між собою через OneToOne.
     """
-    #
-    # Атрибути, які можна залишити в успадкованому класі:
-    render_variant = "as_table"
-    # render_variant = "as_ul"
-    # render_variant = "as_p"
-    form_one_name = 'form_one'     # назви форм у шаблоні
-    form_two_name = 'form_two'
-    finished = False                # прапорець успішного завершення
-
-    def get_one(self, request, *args, **kwargs):
-        one_id = self.kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
-        one = self.ModelOne.objects.get(id=one_id)
-        return one
-
-    def get_two(self, one):
-        try:
-            two = getattr(one, self.rel_name)
-        except:
-            two = self.ModelTwo()
-            setattr(two, self.oto_name, one)
-        return two
-
     def get(self, request, *args, **kwargs):
         one = self.get_one(request, *args, **kwargs)
         two = self.get_two(one)
@@ -244,10 +255,6 @@ class OneToOneUpdate(UpdateView):
         return render(request, self.template_name, data)
 
     def post(self, request, *args, **kwargs):
-
-        data = request.POST.copy()
-        print('data=', data)
-
         one = self.get_one(request, *args, **kwargs)
         two = self.get_two(one)
         form_one = self.FormOne(data=request.POST, files=request.FILES, instance=one)
@@ -271,14 +278,13 @@ class OneToOneUpdate(UpdateView):
         return render(request, self.template_name, data)
 
 
-class OneToOneDetailShow(DetailView):
+class OneToOneDetailShow(OneToOneBase, DetailView):
     """
     Абстрактний клас - основа CBV для ПЕРЕГЛЯДУ двох моделей,
     пов'язаних між собою через OneToOne.
     """
-
     def get_one(self, request, *args, **kwargs):
-        one_id = self.kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
+        one_id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
         one = self.ModelOne.objects.get(id=one_id)
         return one
 
@@ -332,8 +338,6 @@ class UserProfileOneToOne:
     ModelTwo = UserProfile
     rel_name = 'userprofile'    # userprofile - reverse name to User model
     oto_name = 'user'           # user = models.OneToOneField(User) in UserProfile
-    # FormOne  = UserPermsFullForm
-    # FormTwo  = ProfileFullForm
     capital_name  = 'username' # поле моделі one, яке буде виведене в заголовку шаблона
 
 
@@ -366,7 +370,6 @@ class UserProfilePersonDataUpdate(UserProfileOneToOne, OneToOneUpdate):
     FormTwo  = ProfilePersonDataForm
     template_name = 'koop_adm_user_prof_update.html'
 
-    # TODO-додати право доступу для ВЛАСНИКА профілю
     # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
     # TODO-вилучити з форми можливість зміни ДОСТУПУ
     @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
