@@ -560,9 +560,10 @@ class ReportDeleteTest(TestCase):
     def setUp(self):
         self.cls_view = ReportDelete
         self.path = '/folders/report/1/delete/'
+        self.author = DummyUser().create_dummy_user(username='author', password='secret')
         self.template = 'folders/report_delete.html'
         self.root = DummyFolder().create_dummy_root_folder()
-        self.report = DummyFolder().create_dummy_report(parent=self.root)
+        self.report = DummyFolder().create_dummy_report(parent=self.root, user=self.author)
 
     def test_view_model_and_attributes(self):
         view = self.cls_view()
@@ -614,12 +615,20 @@ class ReportDeleteTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_200_user_with_permission(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'delete_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
+        kwargs = {'pk': 1}
+        response = self.cls_view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_gives_response_status_code_200_user_is_author(self):
+        self.client.login(username='author', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = self.author
         kwargs = {'pk': 1}
         response = self.cls_view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
@@ -732,9 +741,10 @@ class ReportUpdateTest(TestCase):
         self.cls_view = ReportUpdate
         self.path = '/folders/report/1/update/'
         self.template = 'folders/report_update.html'
+        self.author = DummyUser().create_dummy_user(username='author', password='secret')
         self.root = DummyFolder().create_dummy_root_folder()
         file = SimpleUploadedFile("file.txt", b"file_content")
-        self.report = DummyFolder().create_dummy_report(self.root, file=file)
+        self.report = DummyFolder().create_dummy_report(self.root, file=file, user=self.author)
 
     def tearDown(self):
         self.report.file.delete()
@@ -785,12 +795,20 @@ class ReportUpdateTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_200_with_permission(self):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'change_report')
         request = RequestFactory().get(self.path)
         request.user = dummy_user
+        kwargs = {'pk': 1}
+        response = self.cls_view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_gives_response_status_code_200_user_is_author(self):
+        self.client.login(username='author', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = self.author
         kwargs = {'pk': 1}
         response = self.cls_view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
@@ -883,7 +901,7 @@ class ReportUploadTest(TestCase):
         self.assertEqual(f.parent, root)
         self.assertEqual(f.filename, "file.txt")
         self.assertEqual(fcont, b"file_content")
-        self.assertEqual(f.author, dummy_user)
+        self.assertEqual(f.user, dummy_user)
         expected_url = f.get_absolute_url()
         self.assertEqual(response.url, expected_url)
         f.file.delete()
@@ -975,7 +993,7 @@ class ReportUploadInFolderTest(TestCase):
         self.assertEqual(f.parent, root)
         self.assertEqual(f.filename, "file.txt")
         self.assertEqual(fcont, b"file_content")
-        self.assertEqual(f.author, dummy_user)
+        self.assertEqual(f.user, dummy_user)
         expected_url = f.get_absolute_url()
         self.assertEqual(response.url, expected_url)
         f.file.delete()

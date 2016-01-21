@@ -170,7 +170,7 @@ class ReportUploadInPageAuthenticatedVisitorCanUploadReportTest(ReportUploadInPa
         with open(full_path, 'rb') as f:
             expected_file_content = f.read()
         self.assertEqual(report_file_content, expected_file_content)
-        self.assertEqual(report.author, self.dummy_user)
+        self.assertEqual(report.user, self.dummy_user)
 
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(expected_regex=report.get_absolute_url())

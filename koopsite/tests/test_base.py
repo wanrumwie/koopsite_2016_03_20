@@ -46,14 +46,14 @@ class DummyUser():
         user.groups.add(group)
         return group
 
-    def create_dummy_profile(self, user, flat=None, picture=None,
+    def create_dummy_profile(self, user, id=None, flat=None, picture=None,
                              picture_path=None,
                              is_recognized=None):
         if picture_path and not picture:
             # створимо picture з файла на диску:
             with open(picture_path, 'rb') as file:
                 picture = SimpleUploadedFile(picture_path, file.read())
-        profile = UserProfile(user=user, flat=flat, picture=picture,
+        profile = UserProfile(user=user, id=id, flat=flat, picture=picture,
                               is_recognized=is_recognized)
         profile.save()
         trace_print('created profile:', profile, 'for user:', user)

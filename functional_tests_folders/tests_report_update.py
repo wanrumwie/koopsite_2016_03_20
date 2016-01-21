@@ -55,7 +55,7 @@ class ReportUpdatePageVisitTest(PageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class ReportUpdatePageAuthenticatedVisitorTest(ReportUpdatePageVisitTest):
+class ReportUpdatePageAuthenticatedVisitorWithPermissionTest(ReportUpdatePageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
@@ -88,6 +88,46 @@ class ReportUpdatePageAuthenticatedVisitorTest(ReportUpdatePageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
+class ReportUpdatePageAuthenticatedVisitorAuthorTest(ReportUpdatePageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    аутентифікованим користувачем без дозволів але який є автором об'єкта
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        self.get_data_links_number()
+        parent = DummyFolder().create_dummy_folder(id=1)
+        DummyFolder().create_dummy_report(parent=parent, id=1, user=self.dummy_user)
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_can_visit_page(self):
+        # Заголовок і назва сторінки правильні
+        self.can_visit_page()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
+class ReportUpdatePageAuthenticatedVisitorWoPermissionNotAuthorTest(ReportUpdatePageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    аутентифікованим користувачем без належного доступу і не автором
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        parent = DummyFolder().create_dummy_folder(id=1)
+        report = DummyFolder().create_dummy_report(parent=parent, id=1)
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+    def test_can_not_visit_page(self):
+        # Користувач НЕ може відвідати сторінку і буде переадресований
+        self.can_not_visit_page()
+        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+
+
 @skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportUpdatePageAnonymousVisitorTest(ReportUpdatePageVisitTest):
     """
@@ -100,7 +140,7 @@ class ReportUpdatePageAnonymousVisitorTest(ReportUpdatePageVisitTest):
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
-        # Заголовок і назва сторінки правильні
+        # Користувач НЕ може відвідати сторінку і буде переадресований
         self.can_not_visit_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
@@ -118,7 +158,7 @@ class ReportUpdatePageAuthenticatedVisitorWoPermissionTest(ReportUpdatePageVisit
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
-        # Заголовок і назва сторінки правильні
+        # Користувач НЕ може відвідати сторінку і буде переадресований
         self.can_not_visit_page()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 

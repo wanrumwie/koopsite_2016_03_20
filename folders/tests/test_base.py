@@ -38,7 +38,7 @@ class DummyFolder():
         self.create_children(parent, 0, deep, wide, report)
 
     def create_dummy_report(self, parent, id=None,
-                            filename=None, uploaded_on=None,
+                            filename=None, uploaded_on=None, user=None,
                             file=None, path=None):
         if path and not file: # вказано шлях до реального файла на диску:
             with open(path, 'rb') as f:
@@ -46,7 +46,7 @@ class DummyFolder():
             filename = filename or os.path.basename(path)
             file = SimpleUploadedFile(filename, file_content)
         # створюємо документ:
-        report = Report(parent=parent, id=id, file=file,
+        report = Report(parent=parent, id=id, file=file, user=user,
                         filename=filename, uploaded_on=uploaded_on)
         report.save()
         # print('created report:', report)

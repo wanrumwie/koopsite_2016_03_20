@@ -14,6 +14,7 @@ from folders.functions import response_for_download, \
     response_for_download_zip, get_subfolders, get_subreports, \
     get_full_named_path
 from folders.models import Folder, Report
+from koopsite.decorators import author_or_permission_required
 from koopsite.fileExtIconPath import viewable_extension_list
 from koopsite.views import AllFieldsView
 
@@ -55,12 +56,6 @@ class ReportDetail(AllFieldsView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        # print('request =', request.__dict__)
-        # print('request =', request.__dict__)
-        # dict_print(request, 'request')
-        # print('request.user =', request.user)
-        # print('args =', args)
-        # print('kwargs =', kwargs)
         return super(ReportDetail, self).dispatch(request, *args, **kwargs)
 
 
@@ -155,7 +150,7 @@ class ReportDelete(DeleteView):
     form_class = ReportForm
     template_name = 'folders/report_delete.html'
 
-    @method_decorator(permission_required('folders.delete_report'))
+    @method_decorator(author_or_permission_required(model, 'folders.delete_report'))
     def dispatch(self, *args, **kwargs):
         return super(ReportDelete, self).dispatch(*args, **kwargs)
 
@@ -184,7 +179,7 @@ class ReportUpdate(UpdateView):
     form_class = ReportUpdateForm
     template_name = 'folders/report_update.html'
 
-    @method_decorator(permission_required('folders.change_report'))
+    @method_decorator(author_or_permission_required(model, 'folders.change_report'))
     def dispatch(self, *args, **kwargs):
         return super(ReportUpdate, self).dispatch(*args, **kwargs)
 
@@ -203,7 +198,7 @@ class ReportUpload(CreateView):
         form = self.get_form()
         if form.is_valid():
             report = form.save(commit=False)    # збережений ще "сирий" примірник
-            report.author = request.user
+            report.user = request.user
             report.save()                       # остаточне збереження
             return self.form_valid(form)
         else:
@@ -239,7 +234,7 @@ class ReportUploadInFolder(CreateView):
         form = self.form_class(data=data, files=request.FILES)
         if form.is_valid():
             report = form.save(commit=False)    # збережений ще "сирий" примірник
-            report.author = request.user
+            report.user = request.user
             report.save()                       # остаточне збереження
             return self.form_valid(form)
         else:
@@ -247,16 +242,16 @@ class ReportUploadInFolder(CreateView):
 
 
 @permission_required('folders.download_folder')
-def folderDownload(request, pk):
+def folderDownload(request, *args, **kwargs):
     # Завантаження zip-файла, який складається з всіх файлів теки
-    folder_id = pk
+    folder_id = kwargs.get('pk')
     folder = Folder.objects.get(id=folder_id)
     response, zipFilename, msg = response_for_download_zip(folder)
     return response
 
 @permission_required('folders.download_report')
-def reportDownload(request, pk):
-    report_id = pk
+def reportDownload(request, *args, **kwargs):
+    report_id = kwargs.get('pk')
     report = Report.objects.get(id=report_id)
     # print('report=', report.id, report.filename, report.file)
     response = response_for_download(report, cd_value='attachment')

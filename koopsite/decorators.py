@@ -39,7 +39,7 @@ def request_passes_test(test_func, login_url=None, redirect_field_name=REDIRECT_
     return decorator
 
 
-def owner_or_permission_required(model, perm, login_url=None, raise_exception=False):
+def author_or_permission_required(model, perm, login_url=None, raise_exception=False):
     """
     Decorator for views that checks whether a user is object owner
     or has a particular permission
@@ -48,7 +48,7 @@ def owner_or_permission_required(model, perm, login_url=None, raise_exception=Fa
     is raised.
     Функція майже повністю повторює стандартну permission_required()
     Додано тільки оператор:
-        if 'pk' in kwargs:
+        if 'pk' in kwargs: ...
     """
     def check_perms(request, *args, **kwargs):
         user = request.user
@@ -60,16 +60,16 @@ def owner_or_permission_required(model, perm, login_url=None, raise_exception=Fa
         if user.has_perms(perms):
             return True
         # Тепер перевіряємо чи user є власником (автором) об'єкта,
-        # pk якого має бути в request
-        # TODO-2016 01 20 скоректувати код, бо в модель Report додано вже поле author
-        # TODO-2016 01 20 чи буде цей же декоратор підходити для власника userprofile?
+        # pk якого має бути в kwargs
         if 'pk' in kwargs:
-            object_id = int(kwargs['pk'])
-            # object = get_object_or_404(model, pk=object_id)
-            # object = getattr(model, 'pk')
-            object = model[object_id]
-            if user == object.owner:
-                return True
+            object_id = kwargs['pk']
+            try:
+                object = get_object_or_404(model, pk=object_id)
+                if user == object.user:
+                    return True
+            except:
+                pass
+                print('except 404')
         # In case the 403 handler should be called raise the exception
         if raise_exception:
             raise PermissionDenied

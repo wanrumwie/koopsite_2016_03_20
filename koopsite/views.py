@@ -11,13 +11,13 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView, MultipleObjectMixin
+from koopsite.decorators import author_or_permission_required
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                             UserPermsActivateForm, \
                             ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm, UserRegistrationForm, \
     UserPersonDataForm
 from koopsite.functions import AllFieldsMixin
 from koopsite.models import UserProfile
-from koopsite.settings import BASE_DIR
 
 
 class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
@@ -138,6 +138,7 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
 #
 #################################################################
 
+# TODO-2016 01 20 може варто додати абстрактний клас OneToOneBase з атрибутами FormOne тощо?
 class OneToOneCreate(CreateView):
     """
     Абстрактний клас - основа CBV для створення нових записів
@@ -368,7 +369,7 @@ class UserProfilePersonDataUpdate(UserProfileOneToOne, OneToOneUpdate):
     # TODO-додати право доступу для ВЛАСНИКА профілю
     # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
     # TODO-вилучити з форми можливість зміни ДОСТУПУ
-    @method_decorator(permission_required('koopsite.change_userprofile'))
+    @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
         return super(UserProfilePersonDataUpdate, self).dispatch(request, *args, **kwargs)
 
@@ -455,9 +456,9 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     FormTwo  = ProfilePersonDataForm
     template_name = 'koop_own_prof_update.html'
 
-    # TODO-додати право доступу для ВЛАСНИКА профілю
     # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
     @method_decorator(login_required)
+    @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
         return super(OwnProfileUpdate, self).dispatch(request, *args, **kwargs)
 
@@ -574,13 +575,3 @@ def page_not_ready(request):
     else:
         return render(request, template_name, {})
 
-# def qunit_page(request):
-#     template_name = 'js_tests/js_tests.html'
-    template_name = os.path.join(BASE_DIR, "static/koopsite", "js_tests", "js_tests.html")
-    # if request.method == 'POST':
-    #     pass
-    # else:
-    #     return render(request, template_name, {})
-
-# class SeleniumCookieSetupView(TemplateView):
-#     template_name = 'selenium_cookie_page.html'

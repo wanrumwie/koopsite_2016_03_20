@@ -97,7 +97,7 @@ class Report(models.Model):
                                       auto_now_add=True,
                                       null=True,
                                       blank=True)
-    author   = models.ForeignKey(User,
+    user     = models.ForeignKey(User,
                                       verbose_name='Автор',
                                       related_name='reports',
                                       null=True,
