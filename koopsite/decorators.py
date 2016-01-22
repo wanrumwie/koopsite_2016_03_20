@@ -76,3 +76,6 @@ def author_or_permission_required(model, perm, login_url=None, raise_exception=F
         # As the last resort, show the login form
         return False
     return request_passes_test(check_perms, login_url=login_url)
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
+

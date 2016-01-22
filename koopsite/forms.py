@@ -70,6 +70,9 @@ class UserFullForm(forms.ModelForm):
                             label='Групи:',
                             required=False,
                             )
+    # У формі в тегах буде додано назву відповідного класу CSS:
+    required_css_class  = 'required'
+    error_css_class     = 'error'
 
     class Meta:
         model = User
@@ -83,16 +86,13 @@ class UserFullForm(forms.ModelForm):
 
 class UserRegistrationForm(UserFullForm):
     # Форма для реєстрації користувача
-    # У формі в тегах буде додано назву відповідного класу CSS:
-    required_css_class  = 'required'
-    error_css_class     = 'error'
     # Декларативно видаляємо деякі успадковані поля:
     date_joined = None
     last_login  = None
     is_active   = None
     is_staff    = None
     groups      = None
-    has_perm_member = None
+    # has_perm_member = None
 
     class Meta:
         model = User
@@ -138,6 +138,7 @@ class UserPermsFullForm(UserFullForm):
         super(UserPermsFullForm, self).__init__(*args, **kwargs)
         for field in self.READONLY_FIELDS:
             self.fields[field].widget.attrs['readonly'] = True
+            self.fields[field].widget.attrs['disabled'] = True
 
     class Meta:
         model = User
@@ -168,11 +169,11 @@ class UserPermsActivateForm(UserPermsFullForm):
     def __init__(self, *args, **kwargs):
         super(UserPermsActivateForm, self).__init__(*args, **kwargs)
         instance = kwargs.get('instance', None)
+        # instance - примірник збереженої форми, у даному випадку
+        # примірник моделі User
         self.is_member = None
         if instance:
             self.is_member = has_group_member(instance)
-            print('instance =', instance)
-            print('self.is_member =', self.is_member)
             self.fields['has_perm_member'].initial = self.is_member
 
     def get_is_member(self):
@@ -204,7 +205,12 @@ class ProfileFullForm(forms.ModelForm):
     is_recognized = forms.NullBooleanField(
                             label="Підтверджений",
                             widget=forms.CheckboxInput(),
+                            required=False,
                             )
+
+    # У формі в тегах буде додано назву відповідного класу CSS:
+    required_css_class  = 'required'
+    error_css_class     = 'error'
 
     class Meta:
         model = UserProfile
@@ -221,7 +227,8 @@ class ProfilePermForm(ProfileFullForm):
     def __init__(self, *args, **kwargs):
         super(ProfilePermForm, self).__init__(*args, **kwargs)
         for field in self.READONLY_FIELDS:
-            self.fields[field].widget.attrs['disabled'] = 'disabled'
+            self.fields[field].widget.attrs['readonly'] = True
+            self.fields[field].widget.attrs['disabled'] = True
 
     class Meta:
         model = UserProfile
@@ -273,11 +280,7 @@ class Human_Check:
         awords = answer.split()
         check = twords == awords
         if not check:
-            # print('"%s" is not correct answer' % answer)
             raise ValidationError("Помилка!")
-            # return HttpResponseRedirect('/index/')
-        else:
-            print('HumanCheck Ok')
 
 
 class ProfileRegistrationForm(ProfileFullForm):
@@ -291,10 +294,14 @@ class ProfileRegistrationForm(ProfileFullForm):
     human_check = forms.CharField(
                     label='Доведіть, що Ви - людина',
                     initial=hc.task,        # речення-завдання
-                    required=False,
                     validators=[hc.validator],
+                    required=True,
+                    # інакше валідатор пропустить порожнє поле
+                    # бо Django не перевіряє порожніх текстових полів!
                     )
+
     class Meta:
         model = UserProfile
         fields = ('flat', 'picture')
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
