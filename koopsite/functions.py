@@ -23,10 +23,10 @@ def list_print(list, name=''):
     print(name, 'len =', len(list))
     for i in list: print(i)
 
-def dict_print(d, name=''):
+def dict_print(d, name='', *args):
     try:    length = len(d)
     except: length = len(d.__dict__)
-    print(name, 'len =', length)
+    print(name, 'len =', length, *args)
     try:
         for k, v in sorted(d.items()): print('%-20s : %s' % (k, v))
     except:

@@ -15,13 +15,14 @@ from django.utils.timezone import now
 from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from koopsite.forms import UserRegistrationForm, ProfileRegistrationForm, Human_Check, UserPermsFullForm, \
-    ProfilePermForm, UserPersonDataForm, ProfilePersonDataForm
+    ProfilePermForm, UserPersonDataForm, ProfilePersonDataForm, UserPermsActivateForm
 from koopsite.functions import dict_print, has_group
 from koopsite.models import UserProfile
 from koopsite.settings import LOGIN_URL
 from koopsite.tests.test_base import DummyUser
 from koopsite.views import index, AllFieldsView, AllRecordsAllFieldsView, OneToOneBase, OneToOneCreate, \
-    UserProfileCreate, UserProfilePersonDataUpdate, UserPermsFullUpdate
+    UserProfileCreate, UserProfilePersonDataUpdate, UserPermsFullUpdate, UserPermsActivateUpdate, OwnProfileUpdate, \
+    UserProfileDetailShow
 
 
 def setup_view(view, request, *args, **kwargs):
@@ -405,16 +406,15 @@ class UserProfilePersonDataUpdateTest(TestCase):
     '''
 
     def setUp(self):
-        Human_Check.if_view_test = True
         self.cls_view = UserProfilePersonDataUpdate
         self.path = '/adm/users/1/profile/update/'
         self.template = 'koop_adm_user_prof_update.html'
         self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(self.dummy_user, 'change_userprofile')
 
-    def tearDown(self):
-        Human_Check.if_view_test = False
+        self.login_user =  DummyUser().create_dummy_user(username='john', password='secret', id=2)
+        self.client.login(username='john', password='secret')
+        DummyUser().add_dummy_permission(self.login_user, 'change_userprofile')
 
     def test_view_model_and_attributes(self):
         view = self.cls_view()
@@ -452,10 +452,10 @@ class UserProfilePersonDataUpdateTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_302_user_w_o_permission(self):
-        dummy_user =  DummyUser().create_dummy_user(username='john', password='secret')
-        self.client.login(username='john', password='secret')
+        login_user =  DummyUser().create_dummy_user(username='ringo', password='secret')
+        self.client.login(username='ringo', password='secret')
         request = RequestFactory().get(self.path)
-        request.user = dummy_user
+        request.user = login_user
         view = self.cls_view
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
@@ -464,7 +464,7 @@ class UserProfilePersonDataUpdateTest(TestCase):
 
     def test_view_gives_response_status_code_200(self):
         request = RequestFactory().get(self.path)
-        request.user = self.dummy_user
+        request.user = self.login_user
         view = self.cls_view
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
@@ -474,7 +474,7 @@ class UserProfilePersonDataUpdateTest(TestCase):
         view = self.cls_view
 
         request = RequestFactory().get(self.path)
-        request.user = self.dummy_user
+        request.user = self.login_user
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
@@ -497,12 +497,12 @@ class UserProfilePersonDataUpdateTest(TestCase):
             'picture'   : file,
             }
         request = RequestFactory().post(self.path, data)
-        request.user = self.dummy_user
+        request.user = self.login_user
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
 
         # Витягаємо з бази запис:
-        user = view.ModelOne.objects.last()
+        user = view.ModelOne.objects.get(id=1)
         self.assertEqual(user.username, 'fred')
         self.assertEqual(user.first_name, 'Fred')
         self.assertEqual(user.last_name, 'Stone')
@@ -530,12 +530,12 @@ class UserProfilePersonDataUpdateTest(TestCase):
             'email'     : 'fred@gmail.com',
             }
         request = RequestFactory().post(self.path, data)
-        request.user = self.dummy_user
+        request.user = self.login_user
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
 
         # Витягаємо з бази запис:
-        user = view.ModelOne.objects.last()
+        user = view.ModelOne.objects.get(id=1)
         self.assertEqual(user.username, 'fred')
         self.assertEqual(user.first_name, 'Fred')
         self.assertEqual(user.last_name, 'Stone')
@@ -563,12 +563,12 @@ class UserProfilePersonDataUpdateTest(TestCase):
             'flat'      : '1',
             }
         request = RequestFactory().post(self.path, data)
-        request.user = self.dummy_user
+        request.user = self.login_user
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
 
         # Витягаємо з бази запис:
-        user = view.ModelOne.objects.last()
+        user = view.ModelOne.objects.get(id=1)
         self.assertEqual(user.username, 'fred')
         self.assertEqual(user.first_name, 'Fred')
         self.assertEqual(user.last_name, 'Stone')
@@ -590,7 +590,7 @@ class UserProfilePersonDataUpdateTest(TestCase):
 
         # Передаємо у форму значення:
         request = RequestFactory().post(self.path, data)
-        request.user = self.dummy_user
+        request.user = self.login_user
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
 
@@ -610,7 +610,7 @@ class UserProfilePersonDataUpdateTest(TestCase):
 
         # Передаємо у форму значення:
         request = RequestFactory().post(self.path, data)
-        request.user = self.dummy_user
+        request.user = self.login_user
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
 
@@ -629,7 +629,6 @@ class UserPermsFullUpdateTest(TestCase):
     '''
 
     def setUp(self):
-        Human_Check.if_view_test = True
         self.cls_view = UserPermsFullUpdate
         self.path = '/adm/users/1/perms/update/'
         self.template = 'koop_adm_user_perm_update.html'
@@ -644,9 +643,6 @@ class UserPermsFullUpdateTest(TestCase):
         self.client.login(username='john', password='secret')
         DummyUser().add_dummy_permission(self.login_user, 'change_permission')
 
-
-    def tearDown(self):
-        Human_Check.if_view_test = False
 
     def test_view_model_and_attributes(self):
         print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -716,8 +712,6 @@ class UserPermsFullUpdateTest(TestCase):
     def test_post_success_for_maximum_needed_data(self):
         view = self.cls_view
 
-        flat = DummyFlat().create_dummy_flat(id=1)
-
         # Передаємо у форму значення
         # Слід вказати всі дані, в т.ч. і в полях readonly,
         # принаймні у тих, які проходять валідацію у формі:
@@ -736,7 +730,7 @@ class UserPermsFullUpdateTest(TestCase):
             'is_recognized' : True,
 
             # read only:
-            'flat'          : '1',
+            'flat'          : '',
             }
         request = RequestFactory().post(self.path, data)
         request.user = self.login_user
@@ -757,11 +751,444 @@ class UserPermsFullUpdateTest(TestCase):
 
         profile = view.ModelTwo.objects.get(user=user)
         self.assertEqual(profile.user, user)
-        self.assertEqual(profile.flat, flat)
+        self.assertEqual(profile.flat, None)
         self.assertEqual(profile.is_recognized, True)
 
         # Переадресовано на ту ж сторінку з прапорцем finished = True
         self.assertEqual(response.status_code, 200)
+
+
+class UserPermsActivateUpdateTest(TestCase):
+    '''
+    Цим тестом одночасно перевіряється OneToOneUpdate
+    '''
+
+    def setUp(self):
+        self.cls_view = UserPermsActivateUpdate
+        self.path = '/adm/users/1/perms/activate/'
+        self.template = 'koop_adm_user_perm_update.html'
+
+        self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+        DummyUser().create_dummy_group(group_name='members')
+        DummyUser().create_dummy_group(group_name='street')
+        # DummyUser().add_dummy_group(self.dummy_user, 'members')
+        self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
+
+        self.login_user =  DummyUser().create_dummy_user(username='john', password='secret', id=2)
+        self.client.login(username='john', password='secret')
+        DummyUser().add_dummy_permission(self.login_user, 'activate_account')
+
+    def test_view_model_and_attributes(self):
+        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        view = self.cls_view()
+        self.assertEqual(view.render_variant, "as_table")
+        self.assertEqual(view.form_one_name , 'form_one')
+        self.assertEqual(view.form_two_name , 'form_two')
+        self.assertEqual(view.finished      , False)
+        self.assertEqual(view.rel_name      , 'userprofile')
+        self.assertEqual(view.oto_name      , 'user')
+        self.assertEqual(view.capital_name  , 'username')
+        self.assertEqual(view.FormOne       , UserPermsActivateForm)
+        self.assertEqual(view.FormTwo       , ProfilePermForm)
+        self.assertEqual(view.ModelOne      , User)
+        self.assertEqual(view.ModelTwo      , UserProfile)
+        self.assertEqual(view.one_fields    , None)
+        self.assertEqual(view.two_fields    , None)
+        self.assertEqual(view.one_img_fields, None)
+        self.assertEqual(view.two_img_fields, None)
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_302_AnonymousUser(self):
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        view = self.cls_view
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        login_user =  DummyUser().create_dummy_user(username='ringo', password='secret')
+        self.client.login(username='ringo', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = login_user
+        view = self.cls_view
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        request.user = self.login_user
+        view = self.cls_view
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get(self):
+        view = self.cls_view
+
+        request = RequestFactory().get(self.path)
+        request.user = self.login_user
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<form id="one_two_form"', response._container[0], request)
+
+    def test_post_success_for_maximum_needed_data(self):
+        view = self.cls_view
+
+        # Передаємо у форму значення
+        # Слід вказати всі дані, в т.ч. і в полях readonly,
+        # принаймні у тих, які проходять валідацію у формі:
+        data = {
+            # read only:
+            'username'      : 'fred',
+            'first_name'    : '',
+            'last_name'     : '',
+            'date_joined'   : '',
+
+            'is_active'     : True,
+            'has_perm_member' : True,
+
+            'is_recognized' : True,
+
+            # read only:
+            'flat'          : '',
+            }
+        request = RequestFactory().post(self.path, data)
+        request.user = self.login_user
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+
+        # Витягаємо з бази запис:
+        user = view.ModelOne.objects.get(id=1)
+
+        self.assertEqual(user.username, 'fred')
+        self.assertEqual(user.first_name, '')
+        self.assertEqual(user.last_name, '')
+        self.assertAlmostEqual(user.date_joined, now(), delta=timedelta(minutes=1))
+        self.assertEqual(user.is_active, True)
+        self.assertTrue(has_group(user, 'members'))
+
+        profile = view.ModelTwo.objects.get(user=user)
+        self.assertEqual(profile.user, user)
+        self.assertEqual(profile.flat, None)
+        self.assertEqual(profile.is_recognized, True)
+
+        # Переадресовано на ту ж сторінку з прапорцем finished = True
+        self.assertEqual(response.status_code, 200)
+
+
+class UserProfileDetailShowTest(TestCase):
+
+    def setUp(self):
+        self.cls_view = UserProfileDetailShow
+        self.path = '/adm/users/1/profile/'
+        self.template = 'koop_adm_user_prof.html'
+
+        self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+        self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
+
+        self.login_user =  DummyUser().create_dummy_user(username='john', password='secret', id=2)
+        self.client.login(username='john', password='secret')
+        # DummyUser().add_dummy_permission(self.login_user, 'activate_account')
+
+    def test_view_model_and_attributes(self):
+        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        view = self.cls_view()
+        self.assertEqual(view.render_variant, "as_table")
+        self.assertEqual(view.form_one_name , 'form_one')
+        self.assertEqual(view.form_two_name , 'form_two')
+        self.assertEqual(view.finished      , False)
+        self.assertEqual(view.rel_name      , 'userprofile')
+        self.assertEqual(view.oto_name      , 'user')
+        self.assertEqual(view.capital_name  , 'username')
+        self.assertEqual(view.FormOne       , None)
+        self.assertEqual(view.FormTwo       , None)
+        self.assertEqual(view.ModelOne      , User)
+        self.assertEqual(view.ModelTwo      , UserProfile)
+        self.assertEqual(view.one_fields    , ('username', 'first_name', 'last_name', 'email'))
+        self.assertEqual(view.two_fields    , ('flat', 'picture'))
+        self.assertEqual(view.one_img_fields, None)
+        self.assertEqual(view.two_img_fields, ('picture',))
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_302_AnonymousUser(self):
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        view = self.cls_view
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    # TODO-2016 01 24 передбачити окремий доступ для перегляду чужого профілю
+    @skip
+    def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        login_user =  DummyUser().create_dummy_user(username='ringo', password='secret')
+        self.client.login(username='ringo', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = login_user
+        view = self.cls_view
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        request.user = self.login_user
+        view = self.cls_view
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get(self):
+        view = self.cls_view
+
+        request = RequestFactory().get(self.path)
+        request.user = self.login_user
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0], request)
+
+
+
+
+
+
+
+
+
+class OwnProfileUpdateTest(TestCase):
+    '''
+    Цим тестом одночасно перевіряється OneToOneUpdate
+    '''
+
+    def setUp(self):
+        self.cls_view = OwnProfileUpdate
+        self.path = '/own/profile/update/'
+        self.template = 'koop_own_prof_update.html'
+
+        self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+        self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(self.dummy_user, 'change_userprofile')
+        # self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
+
+    def test_view_model_and_attributes(self):
+        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        view = self.cls_view()
+        self.assertEqual(view.render_variant, "as_table")
+        self.assertEqual(view.form_one_name , 'form_one')
+        self.assertEqual(view.form_two_name , 'form_two')
+        self.assertEqual(view.finished      , False)
+        self.assertEqual(view.rel_name      , 'userprofile')
+        self.assertEqual(view.oto_name      , 'user')
+        self.assertEqual(view.capital_name  , 'username')
+        self.assertEqual(view.FormOne       , UserPersonDataForm)
+        self.assertEqual(view.FormTwo       , ProfilePersonDataForm)
+        self.assertEqual(view.ModelOne      , User)
+        self.assertEqual(view.ModelTwo      , UserProfile)
+        self.assertEqual(view.one_fields    , None)
+        self.assertEqual(view.two_fields    , None)
+        self.assertEqual(view.one_img_fields, None)
+        self.assertEqual(view.two_img_fields, None)
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_302_AnonymousUser(self):
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        view = self.cls_view
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        request.user = self.dummy_user
+        view = self.cls_view
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get(self):
+        view = self.cls_view
+
+        request = RequestFactory().get(self.path)
+        request.user = self.dummy_user
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<form id="one_two_form"', response._container[0], request)
+
+    def test_post_success_for_maximum_needed_data(self):
+        view = self.cls_view
+
+        with open("example.jpg", "rb") as file:
+            file_content = file.read()
+        file = open("example.jpg", "rb")
+        flat = DummyFlat().create_dummy_flat(id=1)
+
+        # Передаємо у форму значення:
+        data = {
+            'first_name': 'Fred',
+            'last_name' : 'Stone',
+            'email'     : 'fred@gmail.com',
+            'flat'      : '1',
+            'picture'   : file,
+            }
+        request = RequestFactory().post(self.path, data)
+        request.user = self.dummy_user
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+
+        # Витягаємо з бази запис:
+        user = view.ModelOne.objects.last()
+        self.assertEqual(user.username, 'fred')
+        self.assertEqual(user.first_name, 'Fred')
+        self.assertEqual(user.last_name, 'Stone')
+        self.assertEqual(user.email, 'fred@gmail.com')
+
+        profile = view.ModelTwo.objects.last()
+        self.assertEqual(profile.user, user)
+        self.assertEqual(profile.flat, flat)
+        self.assertEqual(profile.picture.file.read(), file_content)
+
+        file.close()
+        profile.picture.delete()
+
+        # Переадресовано на ту ж сторінку з прапорцем finished = True
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_post_success_for_no_profile_data(self):
+        view = self.cls_view
+
+        # Передаємо у форму значення:
+        data = {
+            'first_name': 'Fred',
+            'last_name' : 'Stone',
+            'email'     : 'fred@gmail.com',
+            }
+        request = RequestFactory().post(self.path, data)
+        request.user = self.dummy_user
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+
+        # Витягаємо з бази запис:
+        user = view.ModelOne.objects.last()
+        self.assertEqual(user.username, 'fred')
+        self.assertEqual(user.first_name, 'Fred')
+        self.assertEqual(user.last_name, 'Stone')
+        self.assertEqual(user.email, 'fred@gmail.com')
+
+        profile = view.ModelTwo.objects.last()
+        self.assertEqual(profile.user, user)
+
+        # Переадресовано на ту ж сторінку з прапорцем finished = True
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_post_success_for_profile_already_created(self):
+        view = self.cls_view
+
+        DummyUser().create_dummy_profile(self.dummy_user)
+
+        flat = DummyFlat().create_dummy_flat(id=1)
+
+        # Передаємо у форму значення:
+        data = {
+            'first_name': 'Fred',
+            'last_name' : 'Stone',
+            'email'     : 'fred@gmail.com',
+            'flat'      : '1',
+            }
+        request = RequestFactory().post(self.path, data)
+        request.user = self.dummy_user
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+
+        # Витягаємо з бази запис:
+        user = view.ModelOne.objects.last()
+        self.assertEqual(user.username, 'fred')
+        self.assertEqual(user.first_name, 'Fred')
+        self.assertEqual(user.last_name, 'Stone')
+        self.assertEqual(user.email, 'fred@gmail.com')
+
+        profile = view.ModelTwo.objects.last()
+        self.assertEqual(profile.user, user)
+        self.assertEqual(profile.flat, flat)
+
+        # Переадресовано на ту ж сторінку з прапорцем finished = True
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_post_unsuccess_for_invalid_email(self):
+        view = self.cls_view
+        data = {
+            'email'     : 'fred_gmail.com',
+            }
+
+        # Передаємо у форму значення:
+        request = RequestFactory().post(self.path, data)
+        request.user = self.dummy_user
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+
+        # Витягаємо з бази запис:
+        user = view.ModelOne.objects.get(id=1)
+        self.assertEqual(user.email, "")
+
+        # Переадресовано на ту ж сторінку з полями errors
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_unsuccess_for_invalid_picture(self):
+        view = self.cls_view
+        file = SimpleUploadedFile("file.txt", b"file_content")
+        data = {
+            'picture'    : file,
+            }
+
+        # Передаємо у форму значення:
+        request = RequestFactory().post(self.path, data)
+        request.user = self.dummy_user
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+
+        # Витягаємо з бази запис:
+        user = view.ModelOne.objects.get(id=1)
+        with self.assertRaises(ObjectDoesNotExist):
+            view.ModelTwo.objects.get(user=user)
+
+        # Переадресовано на ту ж сторінку з полями errors
+        self.assertEqual(response.status_code, 200)
+
+
 
 
 

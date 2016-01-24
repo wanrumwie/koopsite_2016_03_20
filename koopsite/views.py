@@ -374,9 +374,6 @@ class UserProfilePersonDataUpdate(UserProfileOneToOne, OneToOneUpdate):
         return super(UserProfilePersonDataUpdate, self).dispatch(request, *args, **kwargs)
 
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
-# ( крім того, протестовано ф-цію index() )
-
 class UserPermsFullUpdate(UserProfileOneToOne, OneToOneUpdate):
     FormOne  = UserPermsFullForm
     FormTwo  = ProfilePermForm
@@ -396,6 +393,8 @@ class UserPermsActivateUpdate(UserProfileOneToOne, OneToOneUpdate):
     def dispatch(self, request, *args, **kwargs):
         return super(UserPermsActivateUpdate, self).dispatch(request, *args, **kwargs)
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
+# ( крім того, протестовано ф-цію index() )
 
 class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
     one_fields = ('username', 'first_name', 'last_name', 'email')
@@ -403,16 +402,14 @@ class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
     one_img_fields = None
     two_img_fields = ('picture',)
     template_name = 'koop_adm_user_prof.html'
-    kwargs = None
+    # kwargs = None
+    FormOne = None
+    FormTwo = None
 
+    # TODO-може поставити доступ для перегляду чужого профілю?
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(UserProfileDetailShow, self).dispatch(request, *args, **kwargs)
-
-    def get_one(self, request, *args, **kwargs):
-        one_id = self.kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
-        one = self.ModelOne.objects.get(id=one_id)
-        return one
 
     def get_obj(self, instance, fields):
         obj = []
@@ -453,6 +450,7 @@ class OwnProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
             obj.append((k, n, v))
         return obj
 
+#---------------- ПОЧАТОК коду, охопленого тестуванням ------------------
 
 class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     FormOne  = UserPersonDataForm
@@ -471,6 +469,8 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
         # user_permissions_print(one)
         return one
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
+# ( крім того, протестовано ф-цію index() )
 
 class UsersList(ListView):
     model = User
