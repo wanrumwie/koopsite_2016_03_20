@@ -69,7 +69,7 @@ def author_or_permission_required(model, perm, login_url=None, raise_exception=F
                     return True
             except:
                 pass
-                print('except 404')
+                print('except 404, model =', model, 'pk =', object_id)
         # In case the 403 handler should be called raise the exception
         if raise_exception:
             raise PermissionDenied

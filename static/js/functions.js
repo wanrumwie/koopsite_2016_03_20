@@ -7,6 +7,8 @@ console.log('start loading functions.js');
  */
 set_listeners(); 
 
+// TODO-add this Hiding the error message function to koopsite and flat templates.
+// TODO-change function name?
 function set_listeners(){
     $( 'input' ).on( 'keypress', function () {
         $( this ).siblings( '.errorlist' ).hide();

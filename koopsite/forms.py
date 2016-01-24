@@ -2,11 +2,13 @@ from random import randrange
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
-from koopsite.functions import has_group_member, add_group, remove_group
-from .models import UserProfile
+from koopsite.functions import has_group_member, \
+                                add_group, remove_group, dict_print
+from koopsite.models import UserProfile
 
-# TODO-Запустити переклад verbose_name хоча б для моделі User
+# TODO-Запустити переклад verbose_name для моделі User.
 # Тимчасове рішення для перекладу назв полів моделі User:
+
 user_verbose_names_uk = {
     'username'      : 'Логін',
     'first_name'    : "Ім'я",
@@ -19,6 +21,31 @@ user_verbose_names_uk = {
     'last_login'    : 'Дата попер.входу',
     'groups'        : 'Групи:',
     }
+
+
+# Список типів віджетів, які не мають властивості readonly,
+# тому їх при потребі потрібно блокувати
+# встановленням атрибуту disabled
+# TODO-2016 01 24 Доповнити список віджетів, які не мають властивості readonly.
+readonly_disabled_widget_type_list = [
+    'Select',
+    'SelectMultiple',
+    ]
+
+def set_readonly_widget_attrs(fields, readonly_fields):
+    """
+    Встановлення полям форми властивості readonly.
+    Для віджетів, які не мають ції властивості, встановлюється disabled.
+    :param fields: список об'єктів полів форми
+    :param readonly_fields: список назв полів, які мають бути readonly
+    :return:
+    """
+    for field in readonly_fields:
+        widget = fields[field].widget
+        if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+            widget.attrs['disabled'] = 'disabled'
+        else:
+            widget.attrs['readonly'] = 'readonly'
 
 
 class UserFullForm(forms.ModelForm):
@@ -56,12 +83,12 @@ class UserFullForm(forms.ModelForm):
                             required=False, # інакше поле не зможе прийняти значення False
                             )
     date_joined = forms.DateField(
-                            widget=forms.DateInput(attrs={"readonly": "readonly"}),
+                            widget=forms.DateInput(attrs={"readonly": True}),
                             label='Дата створення',
                             required=False,
                             )
     last_login  = forms.DateField(
-                            widget=forms.DateInput(attrs={"readonly": "readonly"}),
+                            widget=forms.DateInput(attrs={"readonly": True}),
                             label='Дата попер.входу',
                             required=False,
                             )
@@ -132,13 +159,13 @@ class UserPermsFullForm(UserFullForm):
     # Додаємо поля, яких немає в батьківській формі:
 
     # Трюк з полями readonly:
-    READONLY_FIELDS = ('username', 'first_name', 'last_name')
+    READONLY_FIELDS = ('username', 'first_name', 'last_name',
+                      # 'date_joined', 'last_login',
+                    )
 
     def __init__(self, *args, **kwargs):
         super(UserPermsFullForm, self).__init__(*args, **kwargs)
-        for field in self.READONLY_FIELDS:
-            self.fields[field].widget.attrs['readonly'] = True
-            self.fields[field].widget.attrs['disabled'] = True
+        set_readonly_widget_attrs(self.fields, self.READONLY_FIELDS)
 
     class Meta:
         model = User
@@ -149,7 +176,6 @@ class UserPermsFullForm(UserFullForm):
                   'is_active', 'is_staff',
                   'groups',
                 )
-
 
 class UserPermsActivateForm(UserPermsFullForm):
     # Форма для вводу користувача
@@ -226,9 +252,10 @@ class ProfilePermForm(ProfileFullForm):
 
     def __init__(self, *args, **kwargs):
         super(ProfilePermForm, self).__init__(*args, **kwargs)
-        for field in self.READONLY_FIELDS:
-            self.fields[field].widget.attrs['readonly'] = True
-            self.fields[field].widget.attrs['disabled'] = True
+        set_readonly_widget_attrs(self.fields, self.READONLY_FIELDS)
+        # for field in self.READONLY_FIELDS:
+        #     self.fields[field].widget.attrs['readonly'] = True
+        #     self.fields[field].widget.attrs['disabled'] = True
 
     class Meta:
         model = UserProfile
@@ -256,6 +283,7 @@ class Human_Check:
     параметру validators поля форми.
     При неправильній відповіді у формі з'являється відповідне повідомлення.
     """
+    if_view_test = False # встановити True в тестах, де ця перевірка заважатиме
     # TODO-зробити, щоб після неправильної відповіді або генерувалося нове речення-завдання, або взагалі виходилося з форми.
     taskPattern = "Видаліть із цієї стрічки %s слово"
     numerals = {
@@ -279,6 +307,7 @@ class Human_Check:
         twords.pop(self.taskNo)
         awords = answer.split()
         check = twords == awords
+        check = check or self.if_view_test
         if not check:
             raise ValidationError("Помилка!")
 

@@ -40,32 +40,44 @@
         {% block href-index %}
             <li><a href="{% url 'index' %}">Головна сторінка</a></li>
         {% endblock %}
-        {% block href-flats %}
-            <li><a href="{% url 'flats:flat-scheme' %}">Квартири</a></li>
-        {% endblock %}
-        {% block href-folders %}
-            <li><a href="{% url 'folders:folder-contents' 1 %}">Картотека</a></li>
-        {% endblock %}
-        {% block href-login %}
-            {% if not user.is_authenticated %}
-            <li><a href="{% url 'login' %}" title="Login">Увійти</a></li>
-            {% endif %}
-        {% endblock %}
-        {% block href-register %}
-            {% if not user.is_authenticated %}
-                <li><a href="{% url 'register' %}">Зареєструватися</a></li>
-            {% endif %}
-        {% endblock %}
-        {% block href-own-profile %}
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'own-profile' %}">Мій профіль</a></li>
-            {% endif %}
-        {% endblock %}
-        {% block href-adm-index %}
-            {% if perms.koopsite.activate_account %}
-                <li><a href="{% url 'adm-index' %}">Адміністрування</a></li>
-            {% endif %}
-        {% endblock %}
+
+        {% block href-group-index %}
+
+            {% block href-flats %}
+                <li><a href="{% url 'flats:flat-scheme' %}">Квартири</a></li>
+            {% endblock %}
+            {% block href-folders %}
+                <li><a href="{% url 'folders:folder-contents' 1 %}">Картотека</a></li>
+            {% endblock %}
+            {% block href-login %}
+                {% if not user.is_authenticated %}
+                <li><a href="{% url 'login' %}" title="Login">Увійти</a></li>
+                {% endif %}
+            {% endblock %}
+            {% block href-register %}
+                {% if not user.is_authenticated %}
+                    <li><a href="{% url 'register' %}">Зареєструватися</a></li>
+                {% endif %}
+            {% endblock %}
+            {% block href-own-profile %}
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'own-profile' %}">Мій профіль</a></li>
+                {% endif %}
+            {% endblock %}
+            {% block href-adm-index %}
+                {% if perms.koopsite.activate_account %}
+                    <li><a href="{% url 'adm-index' %}">Адміністрування</a></li>
+                {% endif %}
+            {% endblock %}
+
+        {% endblock href-group-index %}
+
+        {% block href-group-adm-index %}
+        {% endblock href-group-adm-index %}
+
+        {% block href-group-own-index %}
+        {% endblock href-group-own-index %}
+
         {% block href-back %}
             <li><a href="javascript:history.back()">Назад</a></li>
         {% endblock %}
@@ -73,6 +85,18 @@
 
     {% block body %}
         {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
+    {% endblock %}
+
+    {% block load_js %}
+        {# У дочірньому шаблоні можна переозначити script #}
+    {% endblock %}
+
+    {% block ajax_browtab %}
+        {# У дочірньому шаблоні можна переозначити код #}
+    {% endblock %}
+
+    {% block load_ajax %}
+        {# У дочірньому шаблоні можна переозначити script #}
     {% endblock %}
 
   </div>

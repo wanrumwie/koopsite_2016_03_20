@@ -53,7 +53,7 @@ def list_node(template, indent=0):
 
 
 # template_name = 'koop_index.html'
-template_name = 'koop_base.html'
+template_name = 'base_koop.html'
 t = get_template(template_name).template
 
 def example():

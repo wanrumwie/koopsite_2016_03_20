@@ -14,9 +14,9 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView, MultipleObjectMixin
 from koopsite.decorators import author_or_permission_required
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
-                            UserPermsActivateForm, \
-                            ProfilePersonDataForm, user_verbose_names_uk, ProfilePermForm, UserRegistrationForm, \
-    UserPersonDataForm
+                    UserPermsActivateForm, ProfilePersonDataForm, \
+                    user_verbose_names_uk, ProfilePermForm, \
+                    UserRegistrationForm, UserPersonDataForm
 from koopsite.functions import AllFieldsMixin
 from koopsite.models import UserProfile
 
@@ -55,12 +55,6 @@ class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
         context = super(AllFieldsView, self).get_context_data(**kwargs)
         if self.context_self_object_name:
             context[self.context_self_object_name] = self.object
-        # list_print(key_list, name='key_list')
-        # list_print(verbname_list, name='vn_list')
-        # list_print(value_list, name='value_list from model')
-        # list_print(nv_list, name='label_value_list from model')
-        # print('context :------------------------')
-        # dict_print(context, 'context')
         return context
 
 
@@ -102,15 +96,8 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(AllRecordsAllFieldsView, self).get_context_data(**kwargs)
         context[self.context_verbose_list_name] = self.get_field_keys_verbnames()[1] # назви полів
-        # list_print(key_list, name='key_list')
-        # list_print(verbname_list, name='vn_list')
-        # list_print(self.object_list, name='self.object_list')
-        # print('context :------------------------')
-        # dict_print(context, 'context')
         return context
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
-# ( крім того, протестовано ф-цію index() )
 
 
 #################################################################
@@ -146,25 +133,26 @@ class OneToOneBase:
     Означує лише атрибути. Вся логіка буде означена при змішуванні
     з класами CreateView тощо.
     """
-    render_variant = "as_table"
     # render_variant = "as_ul"
     # render_variant = "as_p"
-    form_one_name = 'form_one'  # назви форм у шаблоні: {{ form_one }}
-    form_two_name = 'form_two'
-    finished = False            # прапорець успішного завершення
-    rel_name = ''               # userprofile - reverse name to User model
-    oto_name = ''               # user = models.OneToOneField(User) in UserProfile
-    capital_name  = ''          # поле моделі one, яке буде виведене в заголовку шаблона
+    render_variant  = "as_table"
+    form_one_name   = 'form_one'  # назви форм у шаблоні: {{ form_one }}
+    form_two_name   = 'form_two'
+    finished        = False       # прапорець успішного завершення
+    rel_name        = ''          # userprofile - reverse name to User model
+    oto_name        = ''          # user = models.OneToOneField(User) in UserProfile
+    capital_name    = ''          # поле моделі one, яке буде виведене в заголовку шаблона
 
-    FormOne = forms.ModelForm
-    FormTwo = forms.ModelForm
-    ModelTwo = models.Model
-    ModelOne = models.Model
+    FormOne         = forms.ModelForm
+    FormTwo         = forms.ModelForm
+    ModelTwo        = models.Model
+    ModelOne        = models.Model
 
-    one_fields = None
-    two_fields = None
-    one_img_fields = None
-    two_img_fields = None
+    one_fields      = None
+    two_fields      = None
+    one_img_fields  = None
+    two_img_fields  = None
+
 
     def get_one(self, request, *args, **kwargs):
         one_id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
@@ -193,7 +181,8 @@ class OneToOneBase:
         """
         assert False, 'Клас OneToOneBase: потрібно означити метод: set_two_outform_fields'
 
-
+#---------------- Кінець коду, охопленого тестуванням ------------------
+# Наступні класи тестуються автоматично при тестуванні їх дочірніх класів:
 
 class OneToOneCreate(OneToOneBase, CreateView):
     """
@@ -225,7 +214,8 @@ class OneToOneCreate(OneToOneBase, CreateView):
             capital = getattr(one, self.capital_name, '')
             self.finished = True            # редагування успішно завершене
         else:
-            print('ERRORS:', form_one.errors, form_two.errors)
+            pass
+            # print('ERRORS:', form_one.errors, form_two.errors)
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
                 'capital'           : capital,
@@ -259,15 +249,16 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
         two = self.get_two(one)
         form_one = self.FormOne(data=request.POST, files=request.FILES, instance=one)
         form_two = self.FormTwo(data=request.POST, files=request.FILES, instance=two)
-        print('form_one =', form_one.as_p())
-        print('form_two =', form_two.as_p())
+        # print('form_one =', form_one.as_p())
+        # print('form_two =', form_two.as_p())
         if form_one.is_valid() and form_two.is_valid():
             one = form_one.save()    # одночасно в базі зберігається примірник моделі
             two = form_two.save()
             self.finished = True            # редагування успішно завершене
         else:
             # Invalid form or forms - mistakes or something else?
-            print('ERRORS:', form_one.errors, form_two.errors)
+            pass
+            # print('ERRORS:', form_one.errors, form_two.errors)
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
                 'one_id'            : getattr(one, 'id'),
@@ -327,6 +318,9 @@ class OneToOneDetailShow(OneToOneBase, DetailView):
 # тоді як назва просто Profile означає тільки модель UserProfile.
 #################################################################
 
+#---------------- ПОЧАТОК коду, охопленого тестуванням ------------------
+# При тестуванні цих класів тестуються автоматично і їх суперкласи
+
 class UserProfileOneToOne:
     """
     Клас для підмішування до абстрактного класу типу OneToOne...
@@ -372,10 +366,16 @@ class UserProfilePersonDataUpdate(UserProfileOneToOne, OneToOneUpdate):
 
     # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
     # TODO-вилучити з форми можливість зміни ДОСТУПУ
-    @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
+    # TODO-чи використовується це view автором?
+    # TODO-перевірити з декоратором author_or_permission_required(UserProfile...)
+    # @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
+    @method_decorator(permission_required('koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
         return super(UserProfilePersonDataUpdate, self).dispatch(request, *args, **kwargs)
 
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
+# ( крім того, протестовано ф-цію index() )
 
 class UserPermsFullUpdate(UserProfileOneToOne, OneToOneUpdate):
     FormOne  = UserPermsFullForm

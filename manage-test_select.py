@@ -6,7 +6,7 @@ from tkinter import Tk, mainloop
 from comboform import ComboForm
 from koopsite.settings import INSTALLED_APPS, BASE_DIR
 
-fname = 'manageform.data'
+fname = 'manage-test_select.data'
 
 def get_test_list(start_path):
     # path_pattern = os.path.join(start_path, "*\\test*.py")

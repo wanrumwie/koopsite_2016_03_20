@@ -1,4 +1,4 @@
-{% extends "koop_adm_base.html" %}
+{% extends "base_koop_adm.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
@@ -6,7 +6,14 @@
     <div class="wrapper">
         <!--<div class="header">Header</div>-->
         <div class="main">
-            <h2>Сторінка персоналу сайта</h2>
+            <div id="page-name"
+                 class="padding-y-05">
+
+                {% block page-name %}
+                    <h2>Сторінка персоналу сайта</h2>
+                {% endblock %}
+
+            </div>
             {% if user.is_staff or perms.koopsite.activate_account %}
                 <h2>Вітаємо, {{ user.username }}!</h2>
                 <div class="pre-line">Оскільки Ви належите до персоналу сайта

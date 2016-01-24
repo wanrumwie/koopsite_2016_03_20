@@ -17,7 +17,7 @@ import os
 from bs4 import BeautifulSoup
 
 startFolder = 'c:\pyPrograms\Django\koopsite'
-html_file = 'koopsite/templates/koop_base.html'
+html_file = 'koopsite/templates/base_koop.html'
 html_file = os.path.join(startFolder, html_file)
 with open(html_file, encoding='utf-8') as infile:
     html_doc = infile.read()

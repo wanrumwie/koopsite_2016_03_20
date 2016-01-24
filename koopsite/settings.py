@@ -205,6 +205,7 @@ if not SKIP_VISUAL_TEST:
 if sys.argv == ['C:/PyPrograms/Django/koopsite/manage-test.py']\
         or sys.argv == ['manage.py', 'test']:
     SKIP_TEST = False
+    print('SKIP_TEST =', SKIP_TEST)
 
 # print('BASE_DIR=',BASE_DIR)
 

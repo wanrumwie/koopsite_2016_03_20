@@ -13,11 +13,13 @@ class DummyUser():
                               username='dummy_user',
                               password='top_secret',
                               last_name="",
-                              first_name=""
+                              first_name="",
+                              id=None
                             ):
         User = get_user_model()
         User.objects.create_user(username=username, password=password,
-                                first_name=first_name, last_name=last_name)
+                                first_name=first_name, last_name=last_name,
+                                id=id)
         user = authenticate(username=username, password=password)
         user.save()
         self.dummy_user = user

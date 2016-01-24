@@ -1,10 +1,15 @@
-{% extends "koop_adm_base.html" %}
+{% extends "base_koop_adm.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <div class="padding-y-05">
-        Список користувачів
+    <div id="page-name"
+         class="padding-y-05">
+        <h3>
+            {% block page-name %}
+                Список користувачів
+            {% endblock %}
+        </h3>
     </div>
     <div class="wrapper">
         <div class="main">

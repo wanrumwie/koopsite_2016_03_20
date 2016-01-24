@@ -1,4 +1,4 @@
-{% extends "koop_adm_base.html" %}
+{% extends "base_koop_adm.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
@@ -6,12 +6,11 @@
 
     <div id="page-name"
          class="padding-y-05">
-
-        {% block page-name %}
-            <h3>Редагування доступу користувача {{ capital }}</h3>
-            {# Переозначити тут назву сторінки, наприклад: Видалення теки #}
-        {% endblock %}
-
+        <h3>
+            {% block page-name %}
+                Редагування доступу користувача {{ capital }}
+            {% endblock %}
+        </h3>
     </div>
     {% if finished %}
         <p>Доступ користувача збережено!</p>

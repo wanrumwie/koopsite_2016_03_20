@@ -1,6 +1,5 @@
 from asyncio.tasks import sleep
 import inspect
-from unittest.case import skip, skipIf
 from datetime import timedelta
 from django.contrib.auth.models import AnonymousUser
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -8,15 +7,20 @@ from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.timezone import now
-from folders.forms import FolderForm, FolderFormInFolder, ReportForm, ReportUpdateForm, ReportFormInFolder, \
-    FolderDeleteForm
+from folders.forms import FolderForm, FolderFormInFolder, \
+                        ReportForm, ReportUpdateForm, \
+                        ReportFormInFolder, FolderDeleteForm
 from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
-from folders.views import FolderCreate, FolderList, FolderDetail, ReportList, ReportDetail, ReportPreview, \
-    FolderCreateInFolder, FolderDelete, ReportDelete, FolderUpdate, ReportUpdate, ReportUpload, ReportUploadInFolder, \
-    reportDownload, folderDownload, FolderParentList, FolderReportList
+from folders.views import FolderCreate, FolderList, FolderDetail, \
+                        ReportList, ReportDetail, ReportPreview, \
+                        FolderCreateInFolder, FolderDelete, \
+                        ReportDelete, FolderUpdate, ReportUpdate, \
+                        ReportUpload, ReportUploadInFolder, \
+                        reportDownload, folderDownload, \
+                        FolderParentList, FolderReportList
 from koopsite.fileExtIconPath import viewable_extension_list
-from koopsite.settings import LOGIN_URL, SKIP_TEST
+from koopsite.settings import LOGIN_URL
 from koopsite.tests.test_base import DummyUser
 from koopsite.tests.test_views import setup_view
 

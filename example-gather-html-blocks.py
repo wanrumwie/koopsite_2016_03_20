@@ -3,7 +3,7 @@ import os
 from bs4 import BeautifulSoup
 
 # base_dir = 'c:\pyPrograms\Django\koopsite'
-# html_file = 'koopsite/templates/koop_base.html'
+# html_file = 'koopsite/templates/base_koop.html'
 # html_file = os.path.join(base_dir, html_file)
 # with open(html_file, encoding='utf-8') as infile:
 #     html_doc = infile.read()

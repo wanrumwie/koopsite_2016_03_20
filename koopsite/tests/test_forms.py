@@ -1,11 +1,13 @@
+from unittest.case import skip
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from flats.tests.test_base import DummyFlat
-from folders.tests.test_base import DummyFolder
 from koopsite.forms import UserFullForm, UserRegistrationForm, UserPersonDataForm, UserPermsFullForm, \
-    UserPermsActivateForm, ProfileFullForm, ProfilePermForm, ProfilePersonDataForm, Human_Check, ProfileRegistrationForm
-from koopsite.functions import has_group
+    UserPermsActivateForm, ProfileFullForm, ProfilePermForm, ProfilePersonDataForm, Human_Check, ProfileRegistrationForm, \
+    readonly_disabled_widget_type_list
+from koopsite.functions import has_group, dict_print
 from koopsite.models import UserProfile
 from koopsite.tests.test_base import DummyUser
 
@@ -197,8 +199,11 @@ class UserPermsFullFormTest(TestCase):
     def test_init(self):
         form = self.cls_form()
         for field in form.READONLY_FIELDS:
-            self.assertTrue(form.fields[field].widget.attrs['readonly'])
-            self.assertTrue(form.fields[field].widget.attrs['disabled'])
+            widget = form.fields[field].widget
+            if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+                self.assertEqual(widget.attrs['disabled'], 'disabled')
+            else:
+                self.assertEqual(widget.attrs['readonly'], 'readonly')
 
 
 class UserPermsActivateFormTest(TestCase):
@@ -247,8 +252,12 @@ class UserPermsActivateFormTest(TestCase):
     def test_init_and_get_is_member(self):
         form = self.cls_form()
         for field in form.READONLY_FIELDS:
-            self.assertTrue(form.fields[field].widget.attrs['readonly'])
-            self.assertTrue(form.fields[field].widget.attrs['disabled'])
+            widget = form.fields[field].widget
+            if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+                self.assertEqual(widget.attrs['disabled'], 'disabled')
+            else:
+                self.assertEqual(widget.attrs['readonly'], 'readonly')
+
         # empty form:
         self.assertFalse(form.is_member)
         self.assertFalse(form.fields['has_perm_member'].initial)
@@ -363,8 +372,12 @@ class ProfilePermFormTest(TestCase):
     def test_init(self):
         form = self.cls_form()
         for field in form.READONLY_FIELDS:
-            self.assertTrue(form.fields[field].widget.attrs['readonly'])
-            self.assertTrue(form.fields[field].widget.attrs['disabled'])
+            widget = form.fields[field].widget
+            if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+                self.assertEqual(widget.attrs['disabled'], 'disabled')
+            else:
+                self.assertEqual(widget.attrs['readonly'], 'readonly')
+
 
 
 class ProfilePersonDataFormTest(TestCase):
@@ -466,7 +479,16 @@ class Human_CheckTest(TestCase):
             with self.assertRaises(ValidationError):
                 hc.validator(answer)
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
+        # Режим, коли б-я відповідь - правильна:
+        Human_Check.if_view_test = True
+        for i in range(-1, 6):
+            hc = Human_Check(i)
+            twords = hc.task.split()
+            twords.pop(hc.taskNo)
+            answer = 'абракадабра'
+            hc.validator(answer)    # помилки не повинно бути
+        Human_Check.if_view_test = False
+
 
 class ProfileRegistrationFormTest(TestCase):
 
@@ -503,6 +525,27 @@ class ProfileRegistrationFormTest(TestCase):
         form = self.cls_form(data={'human_check': 'abrakadabra'})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['human_check'], ["Помилка!"])
+
+    # TODO-не вдалося протестувати form для неправильного email
+    @skip
+    def test_form_validation_for_invalid_email(self):
+        form = self.cls_form(data={'email': 'ab'})
+        print(form.as_p())
+        dict_print(form.errors, 'form.errors')
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ["Помилка!"])
+
+    # TODO-не вдалося протестувати form для неправильного малюнка
+    @skip
+    def test_form_validation_for_invalid_picture(self):
+        Human_Check.if_view_test = True
+        file = SimpleUploadedFile("file.txt", b"file_content")
+        form = self.cls_form(data={'human_check': 'abrakadabra',
+                                   'file': file})
+        self.assertFalse(form.is_valid())
+        dict_print(form.errors, 'form.errors')
+        self.assertEqual(form.errors['picture'], ["Завантажте правильний малюнок. Файл, який ви завантажили, не є малюнком, або є зіпсованим малюнком."])
+        Human_Check.if_view_test = False
 
 
 
