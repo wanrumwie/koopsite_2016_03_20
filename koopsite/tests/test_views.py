@@ -1,8 +1,9 @@
 import inspect
 from datetime import timedelta
+import os
 from unittest.case import skip
 from django import forms
-from django.contrib.auth.models import User, AnonymousUser, Group
+from django.contrib.auth.models import User, AnonymousUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
@@ -16,13 +17,15 @@ from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from koopsite.forms import UserRegistrationForm, ProfileRegistrationForm, Human_Check, UserPermsFullForm, \
     ProfilePermForm, UserPersonDataForm, ProfilePersonDataForm, UserPermsActivateForm
-from koopsite.functions import dict_print, has_group
+from koopsite.functions import has_group, get_thumbnail_url_path
 from koopsite.models import UserProfile
 from koopsite.settings import LOGIN_URL
 from koopsite.tests.test_base import DummyUser
-from koopsite.views import index, AllFieldsView, AllRecordsAllFieldsView, OneToOneBase, OneToOneCreate, \
-    UserProfileCreate, UserProfilePersonDataUpdate, UserPermsFullUpdate, UserPermsActivateUpdate, OwnProfileUpdate, \
-    UserProfileDetailShow
+from koopsite.views import index, AllFieldsView, \
+    AllRecordsAllFieldsView, OneToOneBase, \
+    UserProfileCreate, UserProfilePersonDataUpdate, \
+    UserPermsFullUpdate, UserPermsActivateUpdate, OwnProfileUpdate, \
+    UserProfileDetailShow, OwnProfileDetailShow, UsersList
 
 
 def setup_view(view, request, *args, **kwargs):
@@ -645,7 +648,6 @@ class UserPermsFullUpdateTest(TestCase):
 
 
     def test_view_model_and_attributes(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         view = self.cls_view()
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
@@ -779,7 +781,6 @@ class UserPermsActivateUpdateTest(TestCase):
         DummyUser().add_dummy_permission(self.login_user, 'activate_account')
 
     def test_view_model_and_attributes(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         view = self.cls_view()
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
@@ -900,7 +901,7 @@ class UserProfileDetailShowTest(TestCase):
 
         self.login_user =  DummyUser().create_dummy_user(username='john', password='secret', id=2)
         self.client.login(username='john', password='secret')
-        # DummyUser().add_dummy_permission(self.login_user, 'activate_account')
+        DummyUser().add_dummy_permission(self.login_user, 'view_userprofile')
 
     def test_view_model_and_attributes(self):
         print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -938,8 +939,6 @@ class UserProfileDetailShowTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
-    # TODO-2016 01 24 передбачити окремий доступ для перегляду чужого профілю
-    @skip
     def test_view_gives_response_status_code_302_user_w_o_permission(self):
         login_user =  DummyUser().create_dummy_user(username='ringo', password='secret')
         self.client.login(username='ringo', password='secret')
@@ -970,11 +969,70 @@ class UserProfileDetailShowTest(TestCase):
         self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0], request)
 
 
+class OwnProfileDetailShowTest(TestCase):
+
+    def setUp(self):
+        self.cls_view = OwnProfileDetailShow
+        self.path = '/own/profile/'
+        self.template = 'koop_own_prof.html'
+
+        self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+        self.client.login(username='fred', password='secret')
+        self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
 
 
+    def test_view_model_and_attributes(self):
+        view = self.cls_view()
+        self.assertEqual(view.render_variant, "as_table")
+        self.assertEqual(view.form_one_name , 'form_one')
+        self.assertEqual(view.form_two_name , 'form_two')
+        self.assertEqual(view.finished      , False)
+        self.assertEqual(view.rel_name      , 'userprofile')
+        self.assertEqual(view.oto_name      , 'user')
+        self.assertEqual(view.capital_name  , 'username')
+        self.assertEqual(view.FormOne       , None)
+        self.assertEqual(view.FormTwo       , None)
+        self.assertEqual(view.ModelOne      , User)
+        self.assertEqual(view.ModelTwo      , UserProfile)
+        self.assertEqual(view.one_fields    , ('username', 'first_name', 'last_name', 'email'))
+        self.assertEqual(view.two_fields    , ('flat', 'picture'))
+        self.assertEqual(view.one_img_fields, None)
+        self.assertEqual(view.two_img_fields, ('picture',))
 
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
 
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
 
+    def test_view_gives_response_status_code_302_AnonymousUser(self):
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        view = self.cls_view
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        request.user = self.dummy_user
+        view = self.cls_view
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get(self):
+        view = self.cls_view
+
+        request = RequestFactory().get(self.path)
+        request.user = self.dummy_user
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0], request)
 
 
 class OwnProfileUpdateTest(TestCase):
@@ -1079,6 +1137,11 @@ class OwnProfileUpdateTest(TestCase):
         self.assertEqual(profile.flat, flat)
         self.assertEqual(profile.picture.file.read(), file_content)
 
+        # Видаляємо створені файли.
+        # Також видаляємо файл мініатюри, яка створилась автоматично
+        # при входженні в сторінку користувачем з userprofile.picture
+        miniature_path = get_thumbnail_url_path(profile.picture)[1]
+        os.remove(miniature_path)
         file.close()
         profile.picture.delete()
 
@@ -1189,6 +1252,71 @@ class OwnProfileUpdateTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+# TODO-2016 01 25 не працює UserList. Але чи воно взагалі потрібне? Прибрати згадку про нього з html.
+@skip
+class UserListTest(TestCase):
+
+    def setUp(self):
+        self.cls_view = UsersList
+        self.path = '/adm/users/list/'
+        self.template = 'koop_adm_users_list.html'
+
+        self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+        self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
+
+        self.login_user =  DummyUser().create_dummy_user(username='john', password='secret', id=2)
+        self.client.login(username='john', password='secret')
+        DummyUser().add_dummy_permission(self.login_user, 'activate_account')
+
+
+
+    def test_view_model_and_attributes(self):
+        view = self.cls_view()
+        self.assertEqual(view.model, User)
+        self.assertEqual(view.ordering, 'username')
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__)
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_302_AnonymousUser(self):
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        view = self.cls_view
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        login_user =  DummyUser().create_dummy_user(username='ringo', password='secret')
+        self.client.login(username='ringo', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = login_user
+        view = self.cls_view
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        view = self.cls_view.as_view()
+        response = view(request)
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_view_gives_response_status_code_2000(self):
+        request = RequestFactory().get(self.path)
+        request.user = self.login_user
+        view = self.cls_view
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
 
 
 

@@ -1,3 +1,4 @@
+import os
 import types
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.utils import IntegrityError
@@ -10,7 +11,8 @@ from koopsite.functions import round_up_division, AllFieldsMixin, get_namespace_
     get_iconPathByFileExt, fileNameCheckInsert, scale_height, scale_width, getSelections, getSelElementFromSession, \
     setSelElementToSession, parseClientRequest, parseXHRClientRequest, get_user_full_name, get_user_flat_No, \
     get_user_is_recognized, is_staff_only, get_or_none, has_group_member, has_group, add_group, remove_group, \
-    transliterate
+    transliterate, get_thumbnail_url_path
+from koopsite.settings import MEDIA_ROOT
 
 
 class DifferentFunctionsTest(TestCase):
@@ -24,7 +26,7 @@ class DifferentFunctionsTest(TestCase):
     def test_get_or_none_gives_error_if_multiple(self):
         DummyFlat().create_dummy_building()
         with self.assertRaises(MultipleObjectsReturned):
-            f = get_or_none(Flat, floor_No="2")
+            get_or_none(Flat, floor_No="2")
 
     def test_round_up_division(self):
         self.assertEqual(round_up_division(5, 5), 1)
@@ -507,4 +509,38 @@ class TestTransliterate(TestCase):
             eng = e[1]
             trans = transliterate(ukr)
             self.assertEqual(trans, eng)
+
+
+class Get_thumbnail_url_path_Test(TestCase):
+
+    def test_thumbnail_for_file(self):
+        user = DummyUser().create_dummy_user()
+        picture_path="koopsite/tests/profile_image.jpg"
+        DummyUser().create_dummy_profile(user, picture_path=picture_path)
+        picture = user.userprofile.picture
+        expected_url = '/media/profile_images/1_30x24.jpg'
+        expected_path = os.path.join(MEDIA_ROOT, r"profile_images\1_30x24.jpg")
+        mini_url, mini_path = get_thumbnail_url_path(picture)
+        self.assertEqual(mini_url, expected_url)
+        self.assertEqual(mini_path, expected_path)
+
+        expected_url = '/media/profile_images/1_200x100.jpg'
+        expected_path = os.path.join(MEDIA_ROOT, r"profile_images\1_200x100.jpg")
+        mini_url, mini_path = get_thumbnail_url_path(picture, "200x100")
+        self.assertEqual(mini_url, expected_url)
+        self.assertEqual(mini_path, expected_path)
+
+        os.remove('media/profile_images/1.jpg')
+        os.remove('media/profile_images/1_30x24.jpg')
+        os.remove('media/profile_images/1_200x100.jpg')
+
+    def test_thumbnail_for_path(self):
+        user = DummyUser().create_dummy_user()
+        picture_path="koopsite/tests/profile_image.jpg"
+        mini_url = get_thumbnail_url_path(picture_path)[0]
+        self.assertEqual(mini_url, 'koopsite/tests/profile_image_30x24.jpg')
+        mini_url = get_thumbnail_url_path(picture_path, "200x100")[0]
+        self.assertEqual(mini_url, 'koopsite/tests/profile_image_200x100.jpg')
+        os.remove('koopsite/tests/profile_image_30x24.jpg')
+        os.remove('koopsite/tests/profile_image_200x100.jpg')
 

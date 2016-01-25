@@ -127,6 +127,18 @@ a:focus     {outline-style: none;}
     background-color:   white;
 }
 
+.welcome_text {
+    line-height: 1;
+/*    font-size: 1.5em;*/
+    color:    green;
+}
+
+.message_text {
+/*    font-size: 1.5em;*/
+    line-height: 1;
+}
+
+
 /*=======================================================================*/
 .tabledetail {
     border:             1px solid black;

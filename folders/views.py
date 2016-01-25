@@ -8,7 +8,8 @@ from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from folders.forms import ReportUpdateForm, FolderForm, FolderFormInFolder, ReportForm, ReportFormInFolder, \
+from folders.forms import ReportUpdateForm, FolderForm, \
+    FolderFormInFolder, ReportForm, ReportFormInFolder, \
     FolderDeleteForm
 from folders.functions import response_for_download, \
     response_for_download_zip, get_subfolders, get_subreports, \

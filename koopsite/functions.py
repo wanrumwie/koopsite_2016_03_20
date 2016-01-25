@@ -6,6 +6,7 @@ from urllib.parse import unquote
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 from math import ceil
+from PIL import Image
 from koopsite.fileExtIconPath import iconPath
 from koopsite.settings import EMAIL_HOST_USER, TRACE_CONDITION
 
@@ -539,8 +540,55 @@ def transliterate(s, lang_from='uk', lang_to='en'):
         s = ''.join(trans)
     return s
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
 
+def get_thumbnail_url_path(picture, size='30x24'):
+    """
+    A function to resize a ImageField on demand, a use case could be:
+    <img src="{{ object.image.url }}" alt="original image">
+    <img src="{{ object.image|thumbnail }}" alt="image resized to default 104x104 format">
+    <img src="{{ object.image|thumbnail:200x300 }}" alt="image resized to 200x300">
+    Original http://www.djangosnippets.org/snippets/955/
+    :param picture: image object (ImageField instance)
+                        or image file path (str)
+    :param size:    size for thumbnail
+    :return:        thumbnail url, thumbnail file full path
+    """
+    # defining the size
+    x, y = [int(x) for x in size.split('x')]
+    # defining the filename and the miniature filename
+    if isinstance(picture, str):   # вхідним параметром є url == path (relative)
+        filename = picture
+        fileurl  = picture
+    else:
+        filename = picture.path
+        fileurl  = picture.url
+
+    filehead, filetail = os.path.split(filename)
+    basename, format = os.path.splitext(filetail)
+    miniature = basename + '_' + size + format
+    miniature_filename = os.path.join(filehead, miniature)
+
+    filehead, filetail = os.path.split(fileurl)
+    miniature_url = filehead + '/' + miniature
+
+    # remove a miniature file if miniature is older then main image file:
+    if os.path.exists(miniature_filename) and \
+            os.path.getmtime(filename) > os.path.getmtime(miniature_filename):
+        os.unlink(miniature_filename) # unlink() == remove()
+    # if the image wasn't already resized, resize it
+    if not os.path.exists(miniature_filename):
+        try:
+            image = Image.open(filename)
+            image.thumbnail([x, y], Image.ANTIALIAS)
+            try:
+                image.save(miniature_filename, image.format, quality=90, optimize=1)
+            except:
+                image.save(miniature_filename, image.format, quality=90)
+        except:
+            pass
+    return miniature_url, miniature_filename
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
 
 def sendMailToUser(user, subject="KoopSite administrator", message=""):
     email    = user.email

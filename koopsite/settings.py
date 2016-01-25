@@ -179,8 +179,13 @@ if DEBUG:
 else:
     SITE_ID = 1
 
+# ABSOLUTE_URL_OVERRIDES = {
+#     'auth.user': lambda u: "/users/%s/" % u.username,
+# }
+
 # ---------------------------------------------------------------
 # Власні глобальні параметри для етапу розробки:
+
 # Умова, при якій друкує trace_print(*args) з koopsite.functions
 # TRACE_CONDITION = True
 TRACE_CONDITION = False

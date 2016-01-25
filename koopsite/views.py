@@ -1,3 +1,4 @@
+# from django.core.urlresolvers import reverse
 from django import forms
 from django.db import models
 from django.contrib import messages
@@ -17,7 +18,7 @@ from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                     UserPermsActivateForm, ProfilePersonDataForm, \
                     user_verbose_names_uk, ProfilePermForm, \
                     UserRegistrationForm, UserPersonDataForm
-from koopsite.functions import AllFieldsMixin
+from koopsite.functions import AllFieldsMixin, dict_print
 from koopsite.models import UserProfile
 
 
@@ -181,6 +182,23 @@ class OneToOneBase:
         """
         assert False, 'Клас OneToOneBase: потрібно означити метод: set_two_outform_fields'
 
+    # success_template = 'koop_success.html'
+    # welcome_text    = "Вітання!"
+    # message_text    = "Повідомлення"
+    # href_url        = "/index/"
+    # href_text       = "Перехід"
+
+    # def get_success_data(self):
+    #     data = {
+    #         'welcome_text'  : self.welcome_text,
+    #         'message_text'  : self.message_text,
+    #         'href_url'      : self.href_url    ,
+    #         'href_text'     : self.href_text   ,
+    #     }
+    #     return data
+
+
+
 #---------------- Кінець коду, охопленого тестуванням ------------------
 # Наступні класи тестуються автоматично при тестуванні їх дочірніх класів:
 
@@ -189,13 +207,14 @@ class OneToOneCreate(OneToOneBase, CreateView):
     Абстрактний клас - основа CBV для створення двох моделей,
     пов'язаних між собою через OneToOne.
     """
+
     def get(self, request, *args, **kwargs):
         form_one = self.FormOne()
         form_two = self.FormTwo()
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
                 'render_variant'    : self.render_variant,
-                'finished'          : self.finished,
+                # 'finished'          : self.finished,
                 }
         return render(request, self.template_name, data)
 
@@ -230,6 +249,9 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
     Абстрактний клас - основа CBV для редагування двох моделей,
     пов'язаних між собою через OneToOne.
     """
+    # def get_success_url(self):
+    #     return reverse('success')
+
     def get(self, request, *args, **kwargs):
         one = self.get_one(request, *args, **kwargs)
         two = self.get_two(one)
@@ -237,10 +259,12 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
         form_two = self.FormTwo(instance=two)
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
+                'one'               : one,
+                'two'               : two,
                 'capital'           : getattr(one, self.capital_name),
                 'one_id'            : getattr(one, 'id'),
                 'render_variant'    : self.render_variant,
-                'finished'          : self.finished,
+                # 'finished'          : self.finished,
                 }
         return render(request, self.template_name, data)
 
@@ -249,8 +273,6 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
         two = self.get_two(one)
         form_one = self.FormOne(data=request.POST, files=request.FILES, instance=one)
         form_two = self.FormTwo(data=request.POST, files=request.FILES, instance=two)
-        # print('form_one =', form_one.as_p())
-        # print('form_two =', form_two.as_p())
         if form_one.is_valid() and form_two.is_valid():
             one = form_one.save()    # одночасно в базі зберігається примірник моделі
             two = form_two.save()
@@ -261,11 +283,14 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
             # print('ERRORS:', form_one.errors, form_two.errors)
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
+                'one'               : one,
+                'two'               : two,
                 'one_id'            : getattr(one, 'id'),
                 'capital'           : getattr(one, self.capital_name),
                 'render_variant'    : self.render_variant,
                 'finished'          : self.finished,
                 }
+        dict_print(data, 'data =')
         return render(request, self.template_name, data)
 
 
@@ -393,8 +418,6 @@ class UserPermsActivateUpdate(UserProfileOneToOne, OneToOneUpdate):
     def dispatch(self, request, *args, **kwargs):
         return super(UserPermsActivateUpdate, self).dispatch(request, *args, **kwargs)
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
-# ( крім того, протестовано ф-цію index() )
 
 class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
     one_fields = ('username', 'first_name', 'last_name', 'email')
@@ -402,12 +425,10 @@ class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
     one_img_fields = None
     two_img_fields = ('picture',)
     template_name = 'koop_adm_user_prof.html'
-    # kwargs = None
     FormOne = None
     FormTwo = None
 
-    # TODO-може поставити доступ для перегляду чужого профілю?
-    @method_decorator(login_required)
+    @method_decorator(author_or_permission_required(UserProfile, 'koopsite.view_userprofile'))
     def dispatch(self, request, *args, **kwargs):
         return super(UserProfileDetailShow, self).dispatch(request, *args, **kwargs)
 
@@ -423,34 +444,20 @@ class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
         return obj
 
 
-class OwnProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
-    one_fields = ('username', 'first_name', 'last_name', 'email')
-    two_fields = ('flat', 'picture')
-    one_img_fields = None
-    two_img_fields = ('picture',)
+class OwnProfileDetailShow(UserProfileDetailShow):
     template_name = 'koop_own_prof.html'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(OwnProfileDetailShow, self).dispatch(request, *args, **kwargs)
+        # super повинен "перестрибнути" через безпосереднього предка,
+        # інакше спрацює його декоратор
+        return super(UserProfileDetailShow, self).dispatch(request, *args, **kwargs)
 
     def get_one(self, request, *args, **kwargs):
         one_id = request.user.id # залогінений користувач
         one = self.ModelOne.objects.get(id=one_id)
         return one
 
-    def get_obj(self, instance, fields):
-        obj = []
-        for k in fields:
-            t = instance._meta.get_field(k).get_internal_type()
-            n = instance._meta.get_field(k).verbose_name
-            if instance._meta.model_name == 'user':
-                n = user_verbose_names_uk.get(k, n)
-            v = getattr(instance, k)
-            obj.append((k, n, v))
-        return obj
-
-#---------------- ПОЧАТОК коду, охопленого тестуванням ------------------
 
 class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     FormOne  = UserPersonDataForm
@@ -458,7 +465,7 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     template_name = 'koop_own_prof_update.html'
 
     # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
-    @method_decorator(login_required)
+    # @method_decorator(login_required)
     @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
         return super(OwnProfileUpdate, self).dispatch(request, *args, **kwargs)
@@ -469,18 +476,21 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
         # user_permissions_print(one)
         return one
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
-# ( крім того, протестовано ф-цію index() )
 
+# TODO-2016 01 25 не працює UserList. Але чи воно взагалі потрібне? Прибрати згадку про нього з html.
 class UsersList(ListView):
     model = User
     ordering = 'username'
     # paginate_by = 20
     template_name = 'koop_adm_users_list.html'
+
     @method_decorator(permission_required('koopsite.activate_account'))
     def dispatch(self, request, *args, **kwargs):
         return super(UsersList, self).dispatch(request, *args, **kwargs)
 
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
+# ( крім того, протестовано ф-цію index() )
 
 def user_login(request):
     template_name = 'koop_login.html'

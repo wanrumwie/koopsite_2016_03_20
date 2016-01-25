@@ -1,5 +1,6 @@
 {% block one-two-forms %}
     <div align="center">
+        {{ one }}  {{ two }} {{ user }}
         <form id="one_two_form" method="post" action=""
                 class="tableform cell-height-1em5 break_after_a"
                 enctype="multipart/form-data">
@@ -18,8 +19,31 @@
                     {{ form_two }}
                 </table>
             {% endif %}
-            <input type="submit" value="Готово" />
-            <input type="button" value="Скасувати" onclick="javascript:history.back()" />
+
+            {% block input-submit %}
+                <input type="submit" value="Готово" />
+            {% endblock %}
+
+            {% block input-cancel %}
+                {% if two.get_absolute_url %}
+
+                    {% if one == user %}
+                        {% with cancel_url='own-profile' %}
+                            <input type="button" value="Скасувати"
+                                   onclick="location.href='{% url cancel_url %}'" />
+                        {% endwith %}
+                    {% else %}
+                        <input type="button" value="Скасувати"
+                               onclick="location.href='{{ two.get_absolute_url }}'" />
+                    {% endif %}
+                {% else %}
+                    {% with cancel_url='adm-users-table' %}
+                        <input type="button" value="Скасувати"
+                               onclick="location.href='{% url cancel_url %}'" />
+                    {% endwith %}
+                {% endif %}
+            {% endblock %}
+
         </form>
     </div>
 {% endblock %}

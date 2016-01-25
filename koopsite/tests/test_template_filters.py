@@ -1,12 +1,10 @@
 import os
 from django.test import TestCase
-from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 from flats.tests.test_base import DummyFlat
 from folders.models import Folder
 from koopsite.templatetags.koop_template_filters import get_at_index, get_item_by_key, range_of, model_name, \
     user_full_name, user_flat_No, thumbnail, icon_yes_no_unknown
 from koopsite.tests.test_base import DummyUser
-from koopsite.urls import urlpatterns
 
 """
 Необхідність перевірки фільтрів виникає тому,

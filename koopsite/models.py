@@ -1,4 +1,5 @@
 import os
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import User
 from flats.models import Flat
@@ -69,11 +70,17 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username + ' (профіль)'
 
+    def get_absolute_url(self):
+        url_name = 'adm-users-profile'
+        user_pk = self.user.id
+        return reverse(url_name, kwargs={'pk': user_pk})
+
     class Meta:
         verbose_name = ('профіль користувача')
         verbose_name_plural = ('профілі користувачів')
         permissions = (
                         ('activate_account', 'Can activate/deactivate account'),
+                        ('view_userprofile', 'Can view user profile'),
         )
 
 #---------------- Кінець коду, охопленого тестуванням ------------------
