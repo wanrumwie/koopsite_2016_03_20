@@ -111,11 +111,11 @@ class UsersTable(ListView):
 
     @method_decorator(permission_required('koopsite.activate_account'))
     def dispatch(self, request, *args, **kwargs):
-        return super(UsersTable, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         # Материнська тека
-        context = super(UsersTable, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         browTabName = 'users_table'    # назва таблиці (для сесії і ajax)
         # Беремо з сесії масив параметрів виділеного елемента
         # parent_id='' у даному випадку
@@ -289,7 +289,7 @@ class AjaxRecognizeAccount(AjaxAccountView):
     # raise_exception=True - для ajax. Виняток обробить xhrErrorHandler (js).
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxRecognizeAccount, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
@@ -316,7 +316,7 @@ class AjaxDenyAccount(AjaxAccountView):
     """
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxDenyAccount, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
@@ -345,7 +345,7 @@ class AjaxActivateAccount(AjaxAccountView):
     """
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxActivateAccount, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
@@ -375,7 +375,7 @@ class AjaxDeactivateAccount(AjaxAccountView):
     """
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxDeactivateAccount, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
@@ -401,7 +401,7 @@ class AjaxSetMemberAccount(AjaxAccountView):
     """
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxSetMemberAccount, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
@@ -432,7 +432,7 @@ class AjaxDenyMemberAccount(AjaxAccountView):
     """
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxDenyMemberAccount, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
@@ -459,7 +459,7 @@ class AjaxDeleteAccount(AjaxAccountView):
     """
     @method_decorator(permission_required('auth.delete_user', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxDeleteAccount, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:

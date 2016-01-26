@@ -24,12 +24,11 @@
 {% endblock %}
 
 
-            {% block input-cancel %}
-                {% with cancel_url='own-profile' %}
-                    <input type="button" value="Скасувати"
-                           onclick="location.href='{% url cancel_url %}'" />
-                {% endwith %}
-            {% endblock %}
+{% block input-cancel %}
+    {% url 'own-profile' as cancel_url %}
+    <input type="button" value="Скасувати"
+           onclick="location.href='{{ cancel_url }}'" />
+{% endblock %}
 
 
 {% block href-back %}

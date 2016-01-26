@@ -1,13 +1,14 @@
-import inspect
 from datetime import timedelta
 import os
 from unittest.case import skip
 from django import forms
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User, AnonymousUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, reverse
 from django.http.request import HttpRequest
 from django.template.loader import render_to_string
 from django.test import TestCase
@@ -15,8 +16,10 @@ from django.test.client import RequestFactory
 from django.utils.timezone import now
 from flats.models import Flat
 from flats.tests.test_base import DummyFlat
-from koopsite.forms import UserRegistrationForm, ProfileRegistrationForm, Human_Check, UserPermsFullForm, \
-    ProfilePermForm, UserPersonDataForm, ProfilePersonDataForm, UserPermsActivateForm
+from koopsite.forms import UserRegistrationForm, \
+    ProfileRegistrationForm, Human_Check, UserPermsFullForm, \
+    ProfilePermForm, UserPersonDataForm, ProfilePersonDataForm, \
+    UserPermsActivateForm
 from koopsite.functions import has_group, get_thumbnail_url_path
 from koopsite.models import UserProfile
 from koopsite.settings import LOGIN_URL
@@ -25,7 +28,9 @@ from koopsite.views import index, AllFieldsView, \
     AllRecordsAllFieldsView, OneToOneBase, \
     UserProfileCreate, UserProfilePersonDataUpdate, \
     UserPermsFullUpdate, UserPermsActivateUpdate, OwnProfileUpdate, \
-    UserProfileDetailShow, OwnProfileDetailShow, UsersList
+    UserProfileDetailShow, OwnProfileDetailShow, UsersList, LoginView, \
+    user_logout, ChangePassword, adm_index, noaccess, \
+    page_not_ready, success
 
 
 def setup_view(view, request, *args, **kwargs):
@@ -132,10 +137,8 @@ class OneToOneBaseTest(TestCase):
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , '')
         self.assertEqual(view.oto_name      , '')
-        self.assertEqual(view.capital_name  , '')
         self.assertEqual(view.FormOne       , forms.ModelForm)
         self.assertEqual(view.FormTwo       , forms.ModelForm)
         self.assertEqual(view.ModelTwo      , models.Model)
@@ -187,24 +190,6 @@ class OneToOneBaseTest(TestCase):
         with self.assertRaises(AssertionError):
             view.set_two_outform_fields(user)
 
-    """
-    'username'
-    'first_name'
-    'last_name'
-    'password'
-    'email'
-    'is_active'
-    'is_staff'
-    'date_joined'
-    'last_login'
-    'groups'
-    'has_perm_member'
-    'flat'
-    'picture'
-    'is_recognized'
-    'human_check'
-    """
-
 
 class UserProfileCreateTest(TestCase):
     '''
@@ -226,10 +211,8 @@ class UserProfileCreateTest(TestCase):
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , 'userprofile')
         self.assertEqual(view.oto_name      , 'user')
-        self.assertEqual(view.capital_name  , 'username')
         self.assertEqual(view.FormOne       , UserRegistrationForm)
         self.assertEqual(view.FormTwo       , ProfileRegistrationForm)
         self.assertEqual(view.ModelOne      , User)
@@ -260,7 +243,7 @@ class UserProfileCreateTest(TestCase):
         request.user = self.dummy_user
         response = view.as_view()(request)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<form id="one_two_form"', response._container[0], request)
+        self.assertIn(b'<form id="one_two_form"', response._container[0])
 
     def test_post_success_for_minimum_needed_data(self):
         view = self.cls_view
@@ -424,10 +407,8 @@ class UserProfilePersonDataUpdateTest(TestCase):
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , 'userprofile')
         self.assertEqual(view.oto_name      , 'user')
-        self.assertEqual(view.capital_name  , 'username')
         self.assertEqual(view.FormOne       , UserPersonDataForm)
         self.assertEqual(view.FormTwo       , ProfilePersonDataForm)
         self.assertEqual(view.ModelOne      , User)
@@ -481,7 +462,7 @@ class UserProfilePersonDataUpdateTest(TestCase):
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<form id="one_two_form"', response._container[0], request)
+        self.assertIn(b'<form id="one_two_form"', response._container[0])
 
     def test_post_success_for_maximum_needed_data(self):
         view = self.cls_view
@@ -652,10 +633,8 @@ class UserPermsFullUpdateTest(TestCase):
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , 'userprofile')
         self.assertEqual(view.oto_name      , 'user')
-        self.assertEqual(view.capital_name  , 'username')
         self.assertEqual(view.FormOne       , UserPermsFullForm)
         self.assertEqual(view.FormTwo       , ProfilePermForm)
         self.assertEqual(view.ModelOne      , User)
@@ -709,7 +688,7 @@ class UserPermsFullUpdateTest(TestCase):
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<form id="one_two_form"', response._container[0], request)
+        self.assertIn(b'<form id="one_two_form"', response._container[0])
 
     def test_post_success_for_maximum_needed_data(self):
         view = self.cls_view
@@ -785,10 +764,8 @@ class UserPermsActivateUpdateTest(TestCase):
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , 'userprofile')
         self.assertEqual(view.oto_name      , 'user')
-        self.assertEqual(view.capital_name  , 'username')
         self.assertEqual(view.FormOne       , UserPermsActivateForm)
         self.assertEqual(view.FormTwo       , ProfilePermForm)
         self.assertEqual(view.ModelOne      , User)
@@ -842,7 +819,7 @@ class UserPermsActivateUpdateTest(TestCase):
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<form id="one_two_form"', response._container[0], request)
+        self.assertIn(b'<form id="one_two_form"', response._container[0])
 
     def test_post_success_for_maximum_needed_data(self):
         view = self.cls_view
@@ -904,15 +881,12 @@ class UserProfileDetailShowTest(TestCase):
         DummyUser().add_dummy_permission(self.login_user, 'view_userprofile')
 
     def test_view_model_and_attributes(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         view = self.cls_view()
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , 'userprofile')
         self.assertEqual(view.oto_name      , 'user')
-        self.assertEqual(view.capital_name  , 'username')
         self.assertEqual(view.FormOne       , None)
         self.assertEqual(view.FormTwo       , None)
         self.assertEqual(view.ModelOne      , User)
@@ -966,7 +940,7 @@ class UserProfileDetailShowTest(TestCase):
         kwargs = {'pk': 1}
         response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0], request)
+        self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0])
 
 
 class OwnProfileDetailShowTest(TestCase):
@@ -986,10 +960,8 @@ class OwnProfileDetailShowTest(TestCase):
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , 'userprofile')
         self.assertEqual(view.oto_name      , 'user')
-        self.assertEqual(view.capital_name  , 'username')
         self.assertEqual(view.FormOne       , None)
         self.assertEqual(view.FormTwo       , None)
         self.assertEqual(view.ModelOne      , User)
@@ -1032,7 +1004,7 @@ class OwnProfileDetailShowTest(TestCase):
         kwargs = {}
         response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0], request)
+        self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0])
 
 
 class OwnProfileUpdateTest(TestCase):
@@ -1051,15 +1023,12 @@ class OwnProfileUpdateTest(TestCase):
         # self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
 
     def test_view_model_and_attributes(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         view = self.cls_view()
         self.assertEqual(view.render_variant, "as_table")
         self.assertEqual(view.form_one_name , 'form_one')
         self.assertEqual(view.form_two_name , 'form_two')
-        self.assertEqual(view.finished      , False)
         self.assertEqual(view.rel_name      , 'userprofile')
         self.assertEqual(view.oto_name      , 'user')
-        self.assertEqual(view.capital_name  , 'username')
         self.assertEqual(view.FormOne       , UserPersonDataForm)
         self.assertEqual(view.FormTwo       , ProfilePersonDataForm)
         self.assertEqual(view.ModelOne      , User)
@@ -1102,7 +1071,7 @@ class OwnProfileUpdateTest(TestCase):
         kwargs = {}
         response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<form id="one_two_form"', response._container[0], request)
+        self.assertIn(b'<form id="one_two_form"', response._container[0])
 
     def test_post_success_for_maximum_needed_data(self):
         view = self.cls_view
@@ -1319,7 +1288,229 @@ class UserListTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class LoginViewTest(TestCase):
+    '''
+    Джерело LoginView: https://coderwall.com/p/sll1kw/django-auth-class-based-views-login-and-logout
+    '''
 
+    def setUp(self):
+        self.cls_view = LoginView
+        self.path = '/login/'
+        self.template = 'koop_login.html'
+        self.dummy_user = AnonymousUser()
+        self.known_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+
+    def test_view_model_and_attributes(self):
+        view = self.cls_view()
+        self.assertEqual(view.success_url, '/index/')
+        self.assertEqual(view.form_class, AuthenticationForm)
+        self.assertEqual(view.redirect_field_name, REDIRECT_FIELD_NAME)
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_get(self):
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<form id="login_form"', response._container[0])
+
+    def test_post_success(self):
+        # Передаємо у форму значення:
+        data = {
+            'username'  : 'fred',
+            'password'  : 'secret',
+            }
+        response = self.client.post(self.path, data)
+
+        # Чи в сесію записано правильний id клієнта?
+        self.assertEqual(int(self.client.session['_auth_user_id']), self.known_user.pk)
+
+        # Переадресовано на потрібну сторінку
+        self.assertEqual(response.status_code, 302)
+
+    def test_get_success_url_redirect_to_proper_url(self):
+        data = {
+            'username'  : 'fred',
+            'password'  : 'secret',
+            }
+        response = self.client.post(self.path, data, follow=True)
+        # dict_print(response.__dict__, 'response')
+        self.assertEqual(response.redirect_chain,
+                [('http://testserver/index/', 302)])
+
+    def unsuccess_for_invalid_data(self, data):
+        # Передаємо у форму значення:
+        response = self.client.post(self.path, data)
+
+        # В сесію не повинен бути записаний id клієнта
+        with self.assertRaises(KeyError):
+          id = self.client.session['_auth_user_id']
+
+        # Переадресовано на ту ж сторінку з полями errors
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_post_unsuccess_for_empty_username(self):
+        data = {
+            # 'username'  : 'fred',
+            'password'  : 'secret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_empty_password(self):
+        data = {
+            'username'  : 'fred',
+            # 'password'  : 'secret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_invalid_username(self):
+        data = {
+            'username'  : 'ringo',
+            'password'  : 'secret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_invalid_password(self):
+        data = {
+            'username'  : 'fred',
+            'password'  : 'Secret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_deactivated_account(self):
+        self.known_user.is_active = False
+        self.known_user.save()
+        data = {
+            'username'  : 'fred',
+            'password'  : 'secret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+
+class User_logoutTest(TestCase):
+
+    def test_logout_url_resolves_to_proper_view(self):
+        found = resolve('/logout/')
+        self.assertEqual(found.func, user_logout)
+
+    def test_logout_returns_correct_html(self):
+        request = HttpRequest()
+        response = index(request)
+        expected_html = render_to_string('koop_index.html')
+        self.assertEqual(response.content.decode(), expected_html)
+
+    def test_logout_redirect_to_proper_url(self):
+        response = self.client.get('/logout/', follow=True)
+        # dict_print(response.__dict__, 'response')
+        self.assertEqual(response.redirect_chain,
+                [('http://testserver/noaccess/?next=/logout/', 302)])
+
+
+class ChangePasswordTest(TestCase):
+    '''
+    Джерело ChangePassword: http://stackoverflow.com/questions/9046659/converting-a-function-based-view-to-a-class-based-view-with-only-a-form-and-no-m
+    '''
+
+    def setUp(self):
+        self.cls_view = ChangePassword
+        self.path = '/own/change-password/'
+        self.template = 'koop_own_change_password.html'
+        self.known_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+        self.client.login(username='fred', password='secret')
+
+    def test_view_model_and_attributes(self):
+        view = self.cls_view()
+        self.assertEqual(view.form_class, PasswordChangeForm)
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__) #
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_get(self):
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<form id="user_form"', response._container[0])
+
+    def test_get_success_url(self):
+        view = self.cls_view()
+        self.assertEqual(view.get_success_url(), reverse('own-profile'))
+
+    def test_post_success(self):
+        # Передаємо у форму значення:
+        data = {
+            'old_password'  : 'secret',
+            'new_password1' : 'topSecret',
+            'new_password2' : 'topSecret',
+            }
+        response = self.client.post(self.path, data)
+
+        # Чи в сесію записано правильний id клієнта?
+        self.assertEqual(int(self.client.session['_auth_user_id']), self.known_user.pk)
+
+        # Переадресовано на потрібну сторінку
+        self.assertEqual(response.status_code, 302)
+
+
+    def unsuccess_for_invalid_data(self, data):
+        # Передаємо у форму значення:
+        response = self.client.post(self.path, data)
+
+        # В сесії повинен залишитись той же клієнт
+        self.assertEqual(int(self.client.session['_auth_user_id']), self.known_user.pk)
+
+        # Переадресовано на ту ж сторінку з полями errors
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_post_unsuccess_for_empty_old_password(self):
+        data = {
+            # 'old_password'  : 'secret',
+            'new_password1' : 'topSecret',
+            'new_password2' : 'topSecret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_empty_newpassword1(self):
+        data = {
+            'old_password'  : 'secret',
+            # 'new_password1' : 'topSecret',
+            'new_password2' : 'topSecret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_empty_newpassword2(self):
+        data = {
+            'old_password'  : 'secret',
+            'new_password1' : 'topSecret',
+            # 'new_password2' : 'topSecret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_invalid_old_password(self):
+        data = {
+            'old_password'  : 'secretS',
+            'new_password1' : 'topSecret',
+            'new_password2' : 'topSecret',
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_different_new1_and_new2(self):
+        data = {
+            'old_password'  : 'secret',
+            'new_password1' : 'topSecret',
+            'new_password2' : 'topSecreT',
+            }
+        self.unsuccess_for_invalid_data(data)
 
 
 class IndexPageTest(TestCase):
@@ -1341,6 +1532,120 @@ class IndexPageTest(TestCase):
     def test_index_page_renders_proper_template(self):
         response = self.client.get('/index/')
         self.assertTemplateUsed(response, 'koop_index.html')
+
+
+class AdmIndexPageTest(TestCase):
+
+    def setUp(self):
+        self.view = adm_index
+        self.path = '/adm/index/'
+        self.template = 'koop_adm_index.html'
+        self.user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
+        self.client.login(username='fred', password='secret')
+        DummyUser().add_dummy_permission(self.user, 'activate_account')
+
+    def test_url_resolves_to_proper_page_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func, self.view)
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_302_AnonymousUser(self):
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        response = self.view(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_302_user_w_o_permission(self):
+        login_user =  DummyUser().create_dummy_user(username='ringo', password='secret')
+        self.client.login(username='ringo', password='secret')
+        request = RequestFactory().get(self.path)
+        request.user = login_user
+        response = self.view(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(LOGIN_URL))
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        request.user = self.user
+        response = self.view(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get(self):
+        request = RequestFactory().get(self.path)
+        request.user = self.user
+        response = self.view(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b', fred!</h2>', response._container[0])
+
+
+class NoaccessPageTest(TestCase):
+
+    def setUp(self):
+        self.view = noaccess
+        self.path = '/noaccess/'
+        self.template = 'koop_noaccess.html'
+
+    def test_url_resolves_to_proper_page_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func, self.view)
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        response = self.view(request)
+        self.assertEqual(response.status_code, 200)
+
+
+
+class SuccessPageTest(TestCase):
+
+    def setUp(self):
+        self.view = success
+        self.path = '/success/'
+        self.template = 'koop_success.html'
+
+    def test_url_resolves_to_proper_page_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func, self.view)
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        response = self.view(request)
+        self.assertEqual(response.status_code, 200)
+
+
+
+class Page_not_readyTest(TestCase):
+
+    def setUp(self):
+        self.view = page_not_ready
+        self.path = '/page_not_ready/'
+        self.template = 'koop_page_not_ready.html'
+
+    def test_url_resolves_to_proper_page_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func, self.view)
+
+    def test_view_renders_proper_template(self):
+        response = self.client.get(self.path)
+        self.assertTemplateUsed(response, self.template)
+
+    def test_view_gives_response_status_code_200(self):
+        request = RequestFactory().get(self.path)
+        response = self.view(request)
+        self.assertEqual(response.status_code, 200)
+
 
 
 

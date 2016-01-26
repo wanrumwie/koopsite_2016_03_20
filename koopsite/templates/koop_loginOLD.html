@@ -8,12 +8,15 @@
 {% endblock %}
 
 {% block welcome_text %}
+    Вітаємо, {{ user.username }}!
 {% endblock %}
 
 {% block message_text %}
+    Ви успішно авторизувались!
 {% endblock %}
 
 {% block href_continue %}
+    <a href="{% url 'index' %}">Продовжити роботу</a>
 {% endblock %}
 
 {% block one_two_forms %}
@@ -21,8 +24,25 @@
         <form id="login_form" method="post"
             class="tableform">
             {% csrf_token %}
+            {% if bad_details %}
+                <p><strong>Введені логін та/або пароль неправильні!</strong></p>
+            {% elif disabled_account %}
+                <p><strong>Ваш обліковий запис на даний момент недоступний;
+                            ви не можете увійти в нього!</strong></p>
+            {% endif %}
             <table>
-                  {{ form }}
+                <tr>
+                    <th>Логін: </th>
+                    <td>
+                        <input type="text" name="username" value="" size="50" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Пароль: </th>
+                    <td>
+                        <input type="password" name="password" value="" size="50" />
+                    </td>
+                </tr>
             </table>
 
             {% block input-submit %}

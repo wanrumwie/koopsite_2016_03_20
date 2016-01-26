@@ -1,1 +1,1 @@
-manage.py test koopsite.tests.test_models 
+manage.py test koopsite.tests.test_views 

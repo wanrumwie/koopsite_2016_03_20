@@ -1,24 +1,28 @@
-# from django.core.urlresolvers import reverse
 from django import forms
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout, REDIRECT_FIELD_NAME
 from django.contrib.auth import update_session_auth_hash
 from django.utils.decorators import method_decorator
+from django.utils.http import is_safe_url
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views.generic.list import ListView, MultipleObjectMixin
 from koopsite.decorators import author_or_permission_required
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                     UserPermsActivateForm, ProfilePersonDataForm, \
                     user_verbose_names_uk, ProfilePermForm, \
                     UserRegistrationForm, UserPersonDataForm
-from koopsite.functions import AllFieldsMixin, dict_print
+from koopsite.functions import AllFieldsMixin
 from koopsite.models import UserProfile
 
 
@@ -53,7 +57,7 @@ class AllFieldsView(AllFieldsMixin, MultipleObjectMixin, DetailView):
         value_list = self.get_value_list(self.object, key_list)
         self.object_list = self.get_label_value_list(verbname_list, value_list)
         # self.object_list = self.get_label_value_list(self.object)
-        context = super(AllFieldsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if self.context_self_object_name:
             context[self.context_self_object_name] = self.object
         return context
@@ -95,7 +99,7 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
         return queryset
 
     def get_context_data(self, **kwargs):
-        context = super(AllRecordsAllFieldsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context[self.context_verbose_list_name] = self.get_field_keys_verbnames()[1] # назви полів
         return context
 
@@ -120,7 +124,6 @@ class AllRecordsAllFieldsView(AllFieldsMixin, ListView):
 # oto_name = 'user'           # user = models.OneToOneField(User) in UserProfile
 # FormOne  = UserForm
 # FormTwo  = ProfileForm
-# capital_name  = 'username' # поле моделі one, яке буде виведене в заголовку шаблона
 #
 # Атрибути, які повинні бути означені в дочірньому класі:
 # template_name = 'koop_user_prof_create.html'
@@ -139,10 +142,8 @@ class OneToOneBase:
     render_variant  = "as_table"
     form_one_name   = 'form_one'  # назви форм у шаблоні: {{ form_one }}
     form_two_name   = 'form_two'
-    finished        = False       # прапорець успішного завершення
     rel_name        = ''          # userprofile - reverse name to User model
     oto_name        = ''          # user = models.OneToOneField(User) in UserProfile
-    capital_name    = ''          # поле моделі one, яке буде виведене в заголовку шаблона
 
     FormOne         = forms.ModelForm
     FormTwo         = forms.ModelForm
@@ -182,25 +183,9 @@ class OneToOneBase:
         """
         assert False, 'Клас OneToOneBase: потрібно означити метод: set_two_outform_fields'
 
-    # success_template = 'koop_success.html'
-    # welcome_text    = "Вітання!"
-    # message_text    = "Повідомлення"
-    # href_url        = "/index/"
-    # href_text       = "Перехід"
-
-    # def get_success_data(self):
-    #     data = {
-    #         'welcome_text'  : self.welcome_text,
-    #         'message_text'  : self.message_text,
-    #         'href_url'      : self.href_url    ,
-    #         'href_text'     : self.href_text   ,
-    #     }
-    #     return data
-
-
-
 #---------------- Кінець коду, охопленого тестуванням ------------------
 # Наступні класи тестуються автоматично при тестуванні їх дочірніх класів:
+
 
 class OneToOneCreate(OneToOneBase, CreateView):
     """
@@ -214,14 +199,13 @@ class OneToOneCreate(OneToOneBase, CreateView):
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
                 'render_variant'    : self.render_variant,
-                # 'finished'          : self.finished,
+                'finished'          : False,
                 }
         return render(request, self.template_name, data)
 
     def post(self, request, *args, **kwargs):
         form_one = self.FormOne(data=request.POST, files=request.FILES)
         form_two = self.FormTwo(data=request.POST, files=request.FILES)
-        capital = ""
         if form_one.is_valid() and form_two.is_valid():
             one = form_one.save()    # одночасно в базі зберігається примірник моделі
             one = self.set_one_outform_fields(one)
@@ -230,16 +214,18 @@ class OneToOneCreate(OneToOneBase, CreateView):
             setattr(two, self.oto_name, one)
             two = self.set_two_outform_fields(two)
             two.save()
-            capital = getattr(one, self.capital_name, '')
-            self.finished = True            # редагування успішно завершене
+            finished = True            # редагування успішно завершене
         else:
-            pass
-            # print('ERRORS:', form_one.errors, form_two.errors)
+            finished = False
+            one = None
+            two = None
+
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
-                'capital'           : capital,
+                'one'               : one,
+                'two'               : two,
                 'render_variant'    : self.render_variant,
-                'finished'          : self.finished,
+                'finished'          : finished,
                 }
         return render(request, self.template_name, data)
 
@@ -249,8 +235,6 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
     Абстрактний клас - основа CBV для редагування двох моделей,
     пов'язаних між собою через OneToOne.
     """
-    # def get_success_url(self):
-    #     return reverse('success')
 
     def get(self, request, *args, **kwargs):
         one = self.get_one(request, *args, **kwargs)
@@ -261,10 +245,8 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
                 self.form_two_name  : form_two,
                 'one'               : one,
                 'two'               : two,
-                'capital'           : getattr(one, self.capital_name),
-                'one_id'            : getattr(one, 'id'),
                 'render_variant'    : self.render_variant,
-                # 'finished'          : self.finished,
+                'finished'          : False,
                 }
         return render(request, self.template_name, data)
 
@@ -276,21 +258,17 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
         if form_one.is_valid() and form_two.is_valid():
             one = form_one.save()    # одночасно в базі зберігається примірник моделі
             two = form_two.save()
-            self.finished = True            # редагування успішно завершене
+            finished = True            # редагування успішно завершене
         else:
-            # Invalid form or forms - mistakes or something else?
-            pass
-            # print('ERRORS:', form_one.errors, form_two.errors)
+            finished = False
+
         data = {self.form_one_name  : form_one,
                 self.form_two_name  : form_two,
                 'one'               : one,
                 'two'               : two,
-                'one_id'            : getattr(one, 'id'),
-                'capital'           : getattr(one, self.capital_name),
                 'render_variant'    : self.render_variant,
-                'finished'          : self.finished,
+                'finished'          : finished,
                 }
-        dict_print(data, 'data =')
         return render(request, self.template_name, data)
 
 
@@ -329,8 +307,8 @@ class OneToOneDetailShow(OneToOneBase, DetailView):
                 'obj_two' : obj_two,
                 'one_img_fields' : self.one_img_fields,
                 'two_img_fields' : self.two_img_fields,
-                'capital'        : getattr(one, self.capital_name),
-                'one_id'         : getattr(one, 'id'),
+                'one'               : one,
+                'two'               : two,
                 }
         return render(request, self.template_name, data)
 
@@ -357,7 +335,6 @@ class UserProfileOneToOne:
     ModelTwo = UserProfile
     rel_name = 'userprofile'    # userprofile - reverse name to User model
     oto_name = 'user'           # user = models.OneToOneField(User) in UserProfile
-    capital_name  = 'username' # поле моделі one, яке буде виведене в заголовку шаблона
 
 
 class UserProfileCreate(UserProfileOneToOne, OneToOneCreate):
@@ -396,7 +373,7 @@ class UserProfilePersonDataUpdate(UserProfileOneToOne, OneToOneUpdate):
     # @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
     @method_decorator(permission_required('koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
-        return super(UserProfilePersonDataUpdate, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserPermsFullUpdate(UserProfileOneToOne, OneToOneUpdate):
@@ -406,7 +383,7 @@ class UserPermsFullUpdate(UserProfileOneToOne, OneToOneUpdate):
 
     @method_decorator(permission_required('auth.change_permission'))
     def dispatch(self, request, *args, **kwargs):
-        return super(UserPermsFullUpdate, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserPermsActivateUpdate(UserProfileOneToOne, OneToOneUpdate):
@@ -416,7 +393,7 @@ class UserPermsActivateUpdate(UserProfileOneToOne, OneToOneUpdate):
 
     @method_decorator(permission_required('koopsite.activate_account'))
     def dispatch(self, request, *args, **kwargs):
-        return super(UserPermsActivateUpdate, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
@@ -430,7 +407,7 @@ class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
 
     @method_decorator(author_or_permission_required(UserProfile, 'koopsite.view_userprofile'))
     def dispatch(self, request, *args, **kwargs):
-        return super(UserProfileDetailShow, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_obj(self, instance, fields):
         obj = []
@@ -449,8 +426,9 @@ class OwnProfileDetailShow(UserProfileDetailShow):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        # super повинен "перестрибнути" через безпосереднього предка,
-        # інакше спрацює його декоратор
+        # УВАГА! super повинен "перестрибнути" через безпосереднього
+        # предка, інакше спрацює його декоратор
+        # return DetailView().dispatch(request, *args, **kwargs)
         return super(UserProfileDetailShow, self).dispatch(request, *args, **kwargs)
 
     def get_one(self, request, *args, **kwargs):
@@ -468,16 +446,15 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     # @method_decorator(login_required)
     @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
-        return super(OwnProfileUpdate, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_one(self, request, *args, **kwargs):
         one_id = request.user.id # залогінений користувач
         one = self.ModelOne.objects.get(id=one_id)
-        # user_permissions_print(one)
         return one
 
 
-# TODO-2016 01 25 не працює UserList. Але чи воно взагалі потрібне? Прибрати згадку про нього з html.
+# TODO-2016 01 25 не працює UserList. Але чи він взагалі потрібен? Прибрати згадку про нього з html.
 class UsersList(ListView):
     model = User
     ordering = 'username'
@@ -486,67 +463,73 @@ class UsersList(ListView):
 
     @method_decorator(permission_required('koopsite.activate_account'))
     def dispatch(self, request, *args, **kwargs):
-        return super(UsersList, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
-# ( крім того, протестовано ф-цію index() )
-
-def user_login(request):
+class LoginView(FormView):
+    """
+    Provides the ability to login as a user with a username and password
+    """
     template_name = 'koop_login.html'
-    finished = False  # змінна буде передана в шаблон
-    bad_details = False
-    disabled_account = False
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user:
-            if user.is_active:
-                login(request, user)
-                finished = True       # авторизація успішно завершена
-            else:
-                # An inactive account was used - no logging in!
-                disabled_account = True
-        else:
-            bad_details = True
-            print("Invalid login details: {0}, {1}".format(username, password))
-    return render(request, template_name,
-                  {'finished': finished,
-                   'bad_details': bad_details,
-                   'disabled_account': disabled_account,
-                   })
+    success_url = '/index/'
+    form_class = AuthenticationForm
+    redirect_field_name = REDIRECT_FIELD_NAME
+    request = None
+
+    @method_decorator(sensitive_post_parameters('password'))
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        # Sets a test cookie to make sure the user has cookies enabled
+        request.session.set_test_cookie()
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        # If the test cookie worked, go ahead and
+        # delete it since its no longer needed
+        if self.request.session.test_cookie_worked():
+            self.request.session.delete_test_cookie()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        redirect_to = self.request.POST.get(self.redirect_field_name)
+        if not is_safe_url(url=redirect_to, host=self.request.get_host()):
+            redirect_to = self.success_url
+        return redirect_to
+
 
 @login_required
 def user_logout(request):
-    # Since we know the user is logged in, we can now just log them out.
     logout(request)
-    # Take the user back to the homepage.
     return HttpResponseRedirect('/index/')
 
-@login_required
-def change_password(request):
+
+class ChangePassword(FormView):
+    form_class = PasswordChangeForm
+    # success_url = '/own/profile/'
+    # success_url = reverse('own-profile')
     template_name = 'koop_own_change_password.html'
-    finished = False  # змінна буде передана в шаблон
-    bad_details = False
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
-            update_session_auth_hash(request, form.user) # don't logout the user.
-            finished = True
-            messages.success(request, "Password changed.")
-        else:
-            bad_details = True
-            print('bad_details=', bad_details)
-    else:
-        form = PasswordChangeForm(request.user)
-    data = {
-        'form': form,
-        'finished': finished,
-        'bad_details': bad_details,
-    }
-    return render(request, template_name, data)
+
+    def get_success_url(self):
+        return reverse('own-profile')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        update_session_auth_hash(self.request, form.user) # don't logout the user.
+        messages.success(self.request, "Password changed.")
+        # messages.add_message(self.request, messages.INFO, 'profile changed')
+        return super().form_valid(form)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 def index(request):
     """
@@ -587,4 +570,32 @@ def page_not_ready(request):
         pass
     else:
         return render(request, template_name, {})
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
+
+
+
+@login_required
+def change_password(request):
+    template_name = 'koop_own_change_password.html'
+    finished = False  # змінна буде передана в шаблон
+    bad_details = False
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user) # don't logout the user.
+            finished = True
+            messages.success(request, "Password changed.")
+        else:
+            bad_details = True
+            print('bad_details=', bad_details)
+    else:
+        form = PasswordChangeForm(request.user)
+    data = {
+        'form': form,
+        'finished': finished,
+        'bad_details': bad_details,
+    }
+    return render(request, template_name, data)
 

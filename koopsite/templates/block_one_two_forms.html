@@ -26,21 +26,18 @@
 
             {% block input-cancel %}
                 {% if two.get_absolute_url %}
-
                     {% if one == user %}
-                        {% with cancel_url='own-profile' %}
-                            <input type="button" value="Скасувати"
-                                   onclick="location.href='{% url cancel_url %}'" />
-                        {% endwith %}
+                        {% url 'own-profile' as cancel_url %}
+                        <input type="button" value="Скасувати"
+                               onclick="location.href='{{ cancel_url }}'" />
                     {% else %}
                         <input type="button" value="Скасувати"
                                onclick="location.href='{{ two.get_absolute_url }}'" />
                     {% endif %}
                 {% else %}
-                    {% with cancel_url='adm-users-table' %}
-                        <input type="button" value="Скасувати"
-                               onclick="location.href='{% url cancel_url %}'" />
-                    {% endwith %}
+                    {% url 'adm-users-table' as cancel_url %}
+                    <input type="button" value="Скасувати"
+                           onclick="location.href='{{ cancel_url }}'" />
                 {% endif %}
             {% endblock %}
 

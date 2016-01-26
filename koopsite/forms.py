@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
 from koopsite.functions import has_group_member, \
-                                add_group, remove_group, dict_print
+                                add_group, remove_group
 from koopsite.models import UserProfile
 
 # TODO-Запустити переклад verbose_name для моделі User.
@@ -164,7 +164,7 @@ class UserPermsFullForm(UserFullForm):
                     )
 
     def __init__(self, *args, **kwargs):
-        super(UserPermsFullForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         set_readonly_widget_attrs(self.fields, self.READONLY_FIELDS)
 
     class Meta:
@@ -193,7 +193,7 @@ class UserPermsActivateForm(UserPermsFullForm):
                             required=False,
                             )
     def __init__(self, *args, **kwargs):
-        super(UserPermsActivateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         instance = kwargs.get('instance', None)
         # instance - примірник збереженої форми, у даному випадку
         # примірник моделі User
@@ -206,7 +206,7 @@ class UserPermsActivateForm(UserPermsFullForm):
         return self.is_member
 
     def save(self, commit=True):
-        instance = super(UserPermsActivateForm, self).save(commit=False)
+        instance = super().save(commit=False)
         if self.cleaned_data.get('has_perm_member'):
             add_group(instance, 'members')
         else:
@@ -251,11 +251,8 @@ class ProfilePermForm(ProfileFullForm):
     READONLY_FIELDS = ('flat', )
 
     def __init__(self, *args, **kwargs):
-        super(ProfilePermForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         set_readonly_widget_attrs(self.fields, self.READONLY_FIELDS)
-        # for field in self.READONLY_FIELDS:
-        #     self.fields[field].widget.attrs['readonly'] = True
-        #     self.fields[field].widget.attrs['disabled'] = True
 
     class Meta:
         model = UserProfile

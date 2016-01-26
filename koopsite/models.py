@@ -24,9 +24,9 @@ class UserProfile(models.Model):
         if self.pk is None:
             saved_file = self.picture
             self.picture = None
-            super(UserProfile, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
             self.picture = saved_file
-        super(UserProfile, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     user = models.OneToOneField(User)
     # Додаткові поля для профілю користувача:

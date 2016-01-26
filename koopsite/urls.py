@@ -19,7 +19,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.base import TemplateView
 from koopsite.views import UserPermsActivateUpdate, \
                     OwnProfileDetailShow, \
-                    UserProfileDetailShow
+                    UserProfileDetailShow, LoginView, ChangePassword, \
+                    page_not_ready
 from koopsite.viewsajaxuser import UsersTable, AjaxRecognizeAccount, \
                     AjaxDenyAccount, AjaxActivateAccount, \
                     AjaxDeactivateAccount, AjaxDeleteAccount, \
@@ -27,7 +28,7 @@ from koopsite.viewsajaxuser import UsersTable, AjaxRecognizeAccount, \
                     AjaxActivateAllAccounts, AjaxSetMemberAllAccounts
 
 from .settings import MEDIA_ROOT, MEDIA_URL
-from .views import index, user_login, user_logout, \
+from .views import index, user_logout, \
                     change_password, noaccess, success, \
                     OwnProfileUpdate, \
                     UsersList, \
@@ -45,7 +46,7 @@ urlpatterns = [
     # /index/ та інші "кореневі" url - виклик з views.py проекту
     url(r'^$',          index,                          name='root'),
     url(r'^index/$',    index,                          name='index'),
-    url(r'^login/$',    user_login,                     name='login'),
+    url(r'^login/$',    LoginView.as_view(),            name='login'),
     url(r'^logout/$',   user_logout,                    name='logout'),
     url(r'^noaccess/$', noaccess,                       name='noaccess'),
     url(r'^success/$',  success,                        name='success'),
@@ -54,7 +55,8 @@ urlpatterns = [
     # /own/profile/ та інші - дані залогіненого користувач (is_authenticated == True)
     url(r'^own/profile/$',          OwnProfileDetailShow.as_view(), name='own-profile'),
     url(r'^own/profile/update/$',   OwnProfileUpdate.as_view(),     name='own-profile-update'),
-    url(r'^own/change-password/$',  change_password,                name='change-password'),
+    url(r'^own/change-password/$',  ChangePassword.as_view(),       name='change-password'),
+    # url(r'^own/change-password/$',  change_password,                name='change-password'),
 
     # /adm/ та інші - адміністративні сторінки (is_staff == True)
     url(r'^adm/index/$',                              adm_index,                            name='adm-index'),
@@ -85,11 +87,16 @@ urlpatterns = [
     url(r'^folders/',   include('folders.urls', namespace='folders')),
     url(r'^lists/',     include('lists.urls',   namespace='TDD-lists')), # для прикладів з книги TDD with Python
 
-    # /js_tests/ - під'єднуємо urls.py js-тестів
-    url(r'^js_tests/',  include('js_tests.urls', namespace='js_tests')),
-
     # /admin/ - під'єднання до вбудованого admin
     url(r'^admin/',     include(admin.site.urls)),
+
+    # /messages/ - під'єднання до вбудованого django_messages app
+    # url(r'^messages/',  include('django_messages.urls')),
+
+    url(r'^page_not_ready/$', page_not_ready,   name='page_not_ready'),
+
+    # /js_tests/ - під'єднуємо urls.py js-тестів
+    url(r'^js_tests/',  include('js_tests.urls', namespace='js_tests')),
 
     # FT - порожня сторінка, щоб задати кукі перед аутентифікацією при тестах
     url(r'^selenium-cookie-setup/$',

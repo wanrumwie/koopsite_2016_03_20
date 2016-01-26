@@ -1,4 +1,3 @@
-import inspect
 from unittest.mock import Mock
 from django.http.response import HttpResponseRedirect
 from django.test import TestCase
@@ -72,8 +71,6 @@ class AuthorPermissionDecoratorTest(TestCase):
     # без змін взято з user_passes_test()
 
     def test_request_passes_test_True(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
         test_func = self.test_func
         view_func = self.view_func
 
@@ -87,8 +84,6 @@ class AuthorPermissionDecoratorTest(TestCase):
         self.assertEqual(decorated(view_func)(self.request, pk='2'), 'passed')
 
     def test_request_passes_test_False(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
         test_func = self.test_func
         view_func = self.view_func
 
@@ -112,8 +107,6 @@ class AuthorPermissionDecoratorTest(TestCase):
     # без змін взято з permission required()
 
     def test_author_or_permission_required_User_1_Permission_True(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
         view_func = self.view_func
 
         decorated = author_or_permission_required(self.model, self.perm)
@@ -124,8 +117,6 @@ class AuthorPermissionDecoratorTest(TestCase):
 
 
     def test_author_or_permission_required_User_1_Perm_False(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
         view_func = self.view_func
 
         self.user.has_perms.return_value = False
@@ -138,8 +129,6 @@ class AuthorPermissionDecoratorTest(TestCase):
 
 
     def test_author_or_permission_required_User_False_Perm_True(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
         view_func = self.view_func
 
         self.request.user = self.user2
@@ -152,8 +141,6 @@ class AuthorPermissionDecoratorTest(TestCase):
 
 
     def test_author_or_permission_required_User_False_Perm_False(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
         view_func = self.view_func
 
         self.request.user = self.user2
@@ -167,8 +154,6 @@ class AuthorPermissionDecoratorTest(TestCase):
 
     # Перевірка цього декоратора для іншої моделі, а саме UserProfile:
     def test_author_or_permission_required_UserProfile_Perm_False(self):
-        print('started:=========================== %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
         view_func = self.view_func
 
         self.user.has_perms.return_value = False

@@ -30,10 +30,9 @@
                 <input type="button" value="Скасувати"
                        onclick="location.href='{{ object.get_absolute_url }}'" />
             {% else %}
-                {% with cancel_url='folders:folder-list-all' %}
-                    <input type="button" value="Скасувати"
-                           onclick="location.href='{% url cancel_url %}'" />
-                {% endwith %}
+                {% url 'folders:folder-list-all' as cancel_url %}
+                <input type="button" value="Скасувати"
+                       onclick="location.href='{{ cancel_url }}'" />
             {% endif %}
         </form>
     </div>
