@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -20,7 +20,7 @@ from django.views.generic.list import ListView, MultipleObjectMixin
 from koopsite.decorators import author_or_permission_required
 from koopsite.forms import UserPermsFullForm, ProfileRegistrationForm, \
                     UserPermsActivateForm, ProfilePersonDataForm, \
-                    user_verbose_names_uk, ProfilePermForm, \
+                    ProfilePermForm, \
                     UserRegistrationForm, UserPersonDataForm
 from koopsite.functions import AllFieldsMixin
 from koopsite.models import UserProfile
@@ -206,6 +206,7 @@ class OneToOneCreate(OneToOneBase, CreateView):
     def post(self, request, *args, **kwargs):
         form_one = self.FormOne(data=request.POST, files=request.FILES)
         form_two = self.FormTwo(data=request.POST, files=request.FILES)
+
         if form_one.is_valid() and form_two.is_valid():
             one = form_one.save()    # одночасно в базі зберігається примірник моделі
             one = self.set_one_outform_fields(one)
@@ -256,7 +257,11 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
         form_one = self.FormOne(data=request.POST, files=request.FILES, instance=one)
         form_two = self.FormTwo(data=request.POST, files=request.FILES, instance=two)
         if form_one.is_valid() and form_two.is_valid():
-            one = form_one.save()    # одночасно в базі зберігається примірник моделі
+            # TODO-2016 01 27 додати перевірку потреби в save_m2m()
+            # TODO-2016 01 27 додати save_m2m() для інших моделей і view
+            form_one.save(commit=False)
+            one = form_one.save()
+            form_one.save_m2m()
             two = form_two.save()
             finished = True            # редагування успішно завершене
         else:
@@ -344,6 +349,7 @@ class UserProfileCreate(UserProfileOneToOne, OneToOneCreate):
     власне створює новий запис в моделі User (і UserProfile).
     """
     FormOne  = UserRegistrationForm
+    # FormOne  = UserCreationForm
     FormTwo  = ProfileRegistrationForm
     template_name = 'koop_user_prof_create.html'
 
@@ -413,9 +419,9 @@ class UserProfileDetailShow(UserProfileOneToOne, OneToOneDetailShow):
         obj = []
         for k in fields:
             t = instance._meta.get_field(k).get_internal_type()
-            n = instance._meta.get_field(k).verbose_name
-            if instance._meta.model_name == 'user':
-                n = user_verbose_names_uk.get(k, n)
+            n = instance._meta.get_field(k).verbose_name.capitalize()
+            # if instance._meta.model_name == 'user':
+            #     n = user_verbose_names_uk.get(k, n)
             v = getattr(instance, k)
             obj.append((k, n, v))
         return obj

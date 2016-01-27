@@ -1,4 +1,3 @@
-from datetime import timedelta
 import os
 from unittest.case import skip
 from django import forms
@@ -13,7 +12,6 @@ from django.http.request import HttpRequest
 from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.utils.timezone import now
 from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from koopsite.forms import UserRegistrationForm, \
@@ -251,7 +249,8 @@ class UserProfileCreateTest(TestCase):
         # Передаємо у форму значення:
         data = {
             'username'  : 'fred',
-            'password'  : 'secret',
+            'password1'  : 'secret',
+            'password2'  : 'secret',
             'human_check' : 'abrakadabra'
             }
         request = RequestFactory().post(self.path, data)
@@ -286,7 +285,8 @@ class UserProfileCreateTest(TestCase):
         # Передаємо у форму значення:
         data = {
             'username'  : 'fred',
-            'password'  : 'secret',
+            'password1'  : 'secret',
+            'password2'  : 'secret',
             'first_name': 'Fred',
             'last_name' : 'Stone',
             'email'     : 'fred@gmail.com',
@@ -342,15 +342,37 @@ class UserProfileCreateTest(TestCase):
     def test_post_unsuccess_for_empty_username(self):
         data = {
             # 'username'  : 'fred',
-            'password'  : 'secret',
+            'password1'  : 'secret',
+            'password2'  : 'secret',
             'human_check': 'abrakadabra'
             }
         self.unsuccess_for_invalid_data(data)
 
-    def test_post_unsuccess_for_empty_password(self):
+    def test_post_unsuccess_for_empty_password1(self):
         data = {
             'username'  : 'fred',
-            # 'password'  : 'secret',
+            # 'password1'  : 'secret',
+            'password2'  : 'secret',
+            'email'     : 'fred@gmail.com',
+            'human_check': 'abrakadabra'
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_empty_password2(self):
+        data = {
+            'username'  : 'fred',
+            'password1'  : 'secret',
+            # 'password2'  : 'secret',
+            'email'     : 'fred@gmail.com',
+            'human_check': 'abrakadabra'
+            }
+        self.unsuccess_for_invalid_data(data)
+
+    def test_post_unsuccess_for_not_equal_passwords(self):
+        data = {
+            'username'  : 'fred',
+            'password1'  : 'secret',
+            'password2'  : 'Secret',
             'email'     : 'fred@gmail.com',
             'human_check': 'abrakadabra'
             }
@@ -359,7 +381,8 @@ class UserProfileCreateTest(TestCase):
     def test_post_unsuccess_for_invalid_email(self):
         data = {
             'username'  : 'fred',
-            'password'  : 'secret',
+            'password1'  : 'secret',
+            'password2'  : 'secret',
             'email'     : 'fred_gmail.com',
             'human_check': 'abrakadabra'
             }
@@ -369,7 +392,8 @@ class UserProfileCreateTest(TestCase):
         Human_Check.if_view_test = False
         data = {
             'username'  : 'fred',
-            'password'  : 'secret',
+            'password1'  : 'secret',
+            'password2'  : 'secret',
             # 'email'     : 'fred@gmail.com',
             'human_check': 'abrakadabra'
             }
@@ -698,15 +722,15 @@ class UserPermsFullUpdateTest(TestCase):
         # принаймні у тих, які проходять валідацію у формі:
         data = {
             # read only:
-            'username'      : 'fred',
+            # 'username'      : 'fred',
             'first_name'    : '',
             'last_name'     : '',
-            'date_joined'   : '',
+            'date_joined'   : '2016-01-15',
             'last_login'    : '',
 
             'is_active'     : True,
             'is_staff'      : True,
-            'groups'        : '2',
+            'groups'        : 2,
 
             'is_recognized' : True,
 
@@ -724,7 +748,6 @@ class UserPermsFullUpdateTest(TestCase):
         self.assertEqual(user.username, 'fred')
         self.assertEqual(user.first_name, '')
         self.assertEqual(user.last_name, '')
-        self.assertAlmostEqual(user.date_joined, now(), delta=timedelta(minutes=1))
         self.assertEqual(user.last_login, None)
         self.assertEqual(user.is_active, True)
         self.assertEqual(user.is_staff, True)
@@ -832,7 +855,7 @@ class UserPermsActivateUpdateTest(TestCase):
             'username'      : 'fred',
             'first_name'    : '',
             'last_name'     : '',
-            'date_joined'   : '',
+            'date_joined'   : '2015-12-11',
 
             'is_active'     : True,
             'has_perm_member' : True,
@@ -853,7 +876,7 @@ class UserPermsActivateUpdateTest(TestCase):
         self.assertEqual(user.username, 'fred')
         self.assertEqual(user.first_name, '')
         self.assertEqual(user.last_name, '')
-        self.assertAlmostEqual(user.date_joined, now(), delta=timedelta(minutes=1))
+        # self.assertAlmostEqual(user.date_joined, now(), delta=timedelta(minutes=1))
         self.assertEqual(user.is_active, True)
         self.assertTrue(has_group(user, 'members'))
 

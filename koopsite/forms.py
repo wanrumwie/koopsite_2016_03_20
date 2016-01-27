@@ -1,26 +1,11 @@
 from random import randrange
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
 from koopsite.functions import has_group_member, \
-                                add_group, remove_group
+                                add_group, remove_group, dict_print
 from koopsite.models import UserProfile
-
-# TODO-Запустити переклад verbose_name для моделі User.
-# Тимчасове рішення для перекладу назв полів моделі User:
-
-user_verbose_names_uk = {
-    'username'      : 'Логін',
-    'first_name'    : "Ім'я",
-    'last_name'     : "Прізвище",
-    'password'      : 'Пароль',
-    'email'         : 'e-mail',
-    'is_active'     : 'Активний',
-    'is_staff'      : 'У штаті',
-    'date_joined'   : 'Дата створення',
-    'last_login'    : 'Дата попер.входу',
-    'groups'        : 'Групи:',
-    }
 
 
 # Список типів віджетів, які не мають властивості readonly,
@@ -47,130 +32,63 @@ def set_readonly_widget_attrs(fields, readonly_fields):
         else:
             widget.attrs['readonly'] = 'readonly'
 
+def clear_help_text(fields):
+    """
+    Занулення тексту-підказки для всіх полів
+    :param fields: список об'єктів полів форми
+    :return:
+    """
+    for field in fields:
+        fields[field].help_text = ""
 
-class UserFullForm(forms.ModelForm):
-    # Базова Форма для вводу користувача
-    # Поля вказані тут для того, щоб описати label і т.д.,
-    # оскільки модель User - специфічна і не згадується в models.py
-    username = forms.CharField(
-                            label='Логін',
-                            error_messages={
-                                # інші помилки переозначені на поч. цього модуля
-                                'unique': "Користувач з таким логіном вже існує."},
-                             )
-    first_name = forms.CharField(
-                            label="Ім'я",
-                            required=False,
-                             )
-    last_name = forms.CharField(
-                            label="Прізвище",
-                            required=False,
-                             )
-    password = forms.CharField(
-                            label='Пароль',
-                            widget=forms.PasswordInput(),
-                            )
-    email    = forms.CharField(
-                            label='e-mail',
-                            required=False,
-                            )
-    is_active   = forms.BooleanField(
-                            label='Активний',
-                            required=False, # інакше поле не зможе прийняти значення False
-                            )
-    is_staff    = forms.BooleanField(
-                            label='У штаті',
-                            required=False, # інакше поле не зможе прийняти значення False
-                            )
-    date_joined = forms.DateField(
-                            widget=forms.DateInput(attrs={"readonly": True}),
-                            label='Дата створення',
-                            required=False,
-                            )
-    last_login  = forms.DateField(
-                            widget=forms.DateInput(attrs={"readonly": True}),
-                            label='Дата попер.входу',
-                            required=False,
-                            )
-    groups  = forms.ModelMultipleChoiceField(
-                            queryset=Group.objects.all(),
-                            label='Групи:',
-                            required=False,
-                            )
-    # У формі в тегах буде додано назву відповідного класу CSS:
+
+class UserRegistrationForm(UserCreationForm):
+    # Форма для реєстрації (створення нового) користувача
+
     required_css_class  = 'required'
     error_css_class     = 'error'
 
     class Meta:
         model = User
-        fields = ('username', 'password',
-                  'first_name', 'last_name', 'email',
-                  'date_joined', 'last_login',
-                  'is_active', 'is_staff',
-                  'groups',
-                 )
+        fields = (
+                'username',
+                'first_name', 'last_name', 'email',
+                )
 
 
-class UserRegistrationForm(UserFullForm):
-    # Форма для реєстрації користувача
-    # Декларативно видаляємо деякі успадковані поля:
-    date_joined = None
-    last_login  = None
-    is_active   = None
-    is_staff    = None
-    groups      = None
-    # has_perm_member = None
+class UserPersonDataForm(forms.ModelForm):
+    # Коротка Форма для редагування персональних даних користувача.
 
-    class Meta:
-        model = User
-        fields = ('username', 'password',
-                  'first_name', 'last_name', 'email')
-
-
-class UserPersonDataForm(UserRegistrationForm):
-    # Коротка Форма для вводу користувача.
-    # Декларативно видаляємо деякі успадковані поля:
-    username = None
-    password = None
+    required_css_class  = 'required'
+    error_css_class     = 'error'
 
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
 
 
-class UserPermsFullForm(UserFullForm):
-    # Форма для вводу користувача
-    # Модифікуємо деякі успадковані поля:
-    # username = forms.CharField(
-    #                 label='Логін',
-    #                 widget=forms.TextInput(attrs={"readonly": "readonly"}),
-    #                 )
-    # first_name = forms.CharField(
-    #                 label="Ім'я",
-    #                 widget=forms.TextInput(attrs={"readonly": "readonly"}),
-    #                 )
-    # last_name =  forms.CharField(
-    #                 label="Прізвище",
-    #                 widget=forms.TextInput(attrs={"readonly": "readonly"}),
-    #                 )
-    # Декларативно видаляємо деякі успадковані поля:
-    password = None
-    email    = None
-    # Додаємо поля, яких немає в батьківській формі:
+class UserPermsFullForm(forms.ModelForm):
+    # Форма для редагування всіх даних стосовно доступу користувача
+
+    required_css_class  = 'required'
+    error_css_class     = 'error'
 
     # Трюк з полями readonly:
-    READONLY_FIELDS = ('username', 'first_name', 'last_name',
-                      # 'date_joined', 'last_login',
-                    )
+    READONLY_FIELDS = (
+                        # 'username',
+                        'first_name', 'last_name',
+                        # 'date_joined', 'last_login',
+                        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         set_readonly_widget_attrs(self.fields, self.READONLY_FIELDS)
+        clear_help_text(self.fields)
 
     class Meta:
         model = User
         fields = (
-                  'username',
+                  # 'username',
                   'first_name', 'last_name',
                   'date_joined', 'last_login',
                   'is_active', 'is_staff',
@@ -178,12 +96,7 @@ class UserPermsFullForm(UserFullForm):
                 )
 
 class UserPermsActivateForm(UserPermsFullForm):
-    # Форма для вводу користувача
-    # Модифікуємо деякі успадковані поля:
-    # Декларативно видаляємо деякі успадковані поля:
-    last_login  = None
-    is_staff    = None
-    groups      = None
+    # Форма для редагуванння даних стосовно активації доступу користувача
 
     # Додаємо поля, яких немає в моделі:
     has_perm_member = forms.NullBooleanField(
@@ -192,6 +105,7 @@ class UserPermsActivateForm(UserPermsFullForm):
                             # initial=get_is_member,
                             required=False,
                             )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         instance = kwargs.get('instance', None)
@@ -201,6 +115,7 @@ class UserPermsActivateForm(UserPermsFullForm):
         if instance:
             self.is_member = has_group_member(instance)
             self.fields['has_perm_member'].initial = self.is_member
+
 
     def get_is_member(self):
         return self.is_member
@@ -218,7 +133,7 @@ class UserPermsActivateForm(UserPermsFullForm):
     class Meta:
         model = User
         fields = (
-                  'username',
+                  # 'username',
                   'first_name', 'last_name',
                   'date_joined',
                   'is_active',
