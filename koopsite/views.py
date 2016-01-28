@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -11,6 +11,7 @@ from django.contrib.auth import login, logout, REDIRECT_FIELD_NAME
 from django.contrib.auth import update_session_auth_hash
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
+from django.utils.timezone import now
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
@@ -186,6 +187,18 @@ class OneToOneBase:
 #---------------- Кінець коду, охопленого тестуванням ------------------
 # Наступні класи тестуються автоматично при тестуванні їх дочірніх класів:
 
+# TODO-2016 01 27 додати перевірку потреби в save_m2m()
+def form_save_with_m2m(form):
+    """
+    Зберігання форми для моделі з  полями m2m
+    :param form: об'єкт форми
+    :return: збережений примірник моделі
+    """
+    form.save(commit=False)
+    instance = form.save()
+    form.save_m2m()
+    return instance
+
 
 class OneToOneCreate(OneToOneBase, CreateView):
     """
@@ -208,13 +221,14 @@ class OneToOneCreate(OneToOneBase, CreateView):
         form_two = self.FormTwo(data=request.POST, files=request.FILES)
 
         if form_one.is_valid() and form_two.is_valid():
-            one = form_one.save()    # одночасно в базі зберігається примірник моделі
+            one = form_save_with_m2m(form_one)
             one = self.set_one_outform_fields(one)
             one.save()
             two = form_two.save(commit=False)
             setattr(two, self.oto_name, one)
             two = self.set_two_outform_fields(two)
             two.save()
+            form_two.save_m2m()
             finished = True            # редагування успішно завершене
         else:
             finished = False
@@ -257,12 +271,8 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
         form_one = self.FormOne(data=request.POST, files=request.FILES, instance=one)
         form_two = self.FormTwo(data=request.POST, files=request.FILES, instance=two)
         if form_one.is_valid() and form_two.is_valid():
-            # TODO-2016 01 27 додати перевірку потреби в save_m2m()
-            # TODO-2016 01 27 додати save_m2m() для інших моделей і view
-            form_one.save(commit=False)
-            one = form_one.save()
-            form_one.save_m2m()
-            two = form_two.save()
+            one = form_save_with_m2m(form_one)
+            two = form_save_with_m2m(form_two)
             finished = True            # редагування успішно завершене
         else:
             finished = False
@@ -477,10 +487,15 @@ class LoginView(FormView):
     Provides the ability to login as a user with a username and password
     """
     template_name = 'koop_login.html'
-    success_url = '/index/'
+    # success_url = '/index/'
     form_class = AuthenticationForm
     redirect_field_name = REDIRECT_FIELD_NAME
-    request = None
+
+    def get_success_url(self):
+        redirect_to = self.request.POST.get(self.redirect_field_name)
+        if not is_safe_url(url=redirect_to, host=self.request.get_host()):
+            redirect_to = reverse('index')
+        return redirect_to
 
     @method_decorator(sensitive_post_parameters('password'))
     @method_decorator(csrf_protect)
@@ -491,18 +506,15 @@ class LoginView(FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        login(self.request, form.get_user())
+        user = form.get_user()
+        login(self.request, user)
+        user.last_login = now()
         # If the test cookie worked, go ahead and
         # delete it since its no longer needed
         if self.request.session.test_cookie_worked():
             self.request.session.delete_test_cookie()
         return super().form_valid(form)
 
-    def get_success_url(self):
-        redirect_to = self.request.POST.get(self.redirect_field_name)
-        if not is_safe_url(url=redirect_to, host=self.request.get_host()):
-            redirect_to = self.success_url
-        return redirect_to
 
 
 @login_required
@@ -513,9 +525,8 @@ def user_logout(request):
 
 class ChangePassword(FormView):
     form_class = PasswordChangeForm
-    # success_url = '/own/profile/'
-    # success_url = reverse('own-profile')
     template_name = 'koop_own_change_password.html'
+    request = None
 
     def get_success_url(self):
         return reverse('own-profile')

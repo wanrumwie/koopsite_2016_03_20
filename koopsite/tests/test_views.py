@@ -1,5 +1,6 @@
 import os
 from unittest.case import skip
+from datetime import timedelta
 from django import forms
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
@@ -12,6 +13,7 @@ from django.http.request import HttpRequest
 from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.utils.timezone import now
 from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from koopsite.forms import UserRegistrationForm, \
@@ -1325,7 +1327,6 @@ class LoginViewTest(TestCase):
 
     def test_view_model_and_attributes(self):
         view = self.cls_view()
-        self.assertEqual(view.success_url, '/index/')
         self.assertEqual(view.form_class, AuthenticationForm)
         self.assertEqual(view.redirect_field_name, REDIRECT_FIELD_NAME)
 
@@ -1352,6 +1353,9 @@ class LoginViewTest(TestCase):
 
         # Чи в сесію записано правильний id клієнта?
         self.assertEqual(int(self.client.session['_auth_user_id']), self.known_user.pk)
+        # Чи оновилася дата last_login?
+        user = User.objects.get(id=self.known_user.id)
+        self.assertAlmostEqual(user.last_login, now(), delta=timedelta(minutes=1))
 
         # Переадресовано на потрібну сторінку
         self.assertEqual(response.status_code, 302)

@@ -127,6 +127,18 @@ a:focus     {outline-style: none;}
     background-color:   white;
 }
 
+.welcome_text {
+    line-height: 1;
+/*    font-size: 1.5em;*/
+    color:    green;
+}
+
+.message_text {
+/*    font-size: 1.5em;*/
+    line-height: 1;
+}
+
+
 /*=======================================================================*/
 .tabledetail {
     border:             1px solid black;
@@ -202,8 +214,8 @@ a:focus     {outline-style: none;}
     empty-cells:        hide;
     padding:            0;
 }
-.tableform table tr th {height: 2em; text-align: right; width:  10em; }
-.tableform table tr td {height: 2em; text-align: left;  width:  18em; overflow-x: hidden; }
+.tableform table tr th {height: 2em; text-align: right; width:  10em; padding: 4px; }
+.tableform table tr td {height: 2em; text-align: left;  width:  25em; padding: 4px; overflow-x: hidden; }
 
 /* Elements in td must fill all space:*/
 .tableform table td label,
@@ -225,18 +237,31 @@ a:focus     {outline-style: none;}
 .tableform table td select[multiple="multiple"] {
     height:             4em    !important;
 }
-.tableform table td a::after {
-    content:"\a";           /* end of line after <a> in order to place next <input> & <label> in one line */
-    white-space: pre;
-}
 .tableform > input {
+    border:             1px solid gray; 
+    height:             2em;
     padding:            0.1em 0.5em;
     margin:             0.5em;
     }
+.tableform > input[type="submit"] ,
+.tableform > input[type="button"] {
+    min-width:          5em; 
+    background-color:   #F0E68C;  /* khaki */
+}
 .tableform > input:hover {
+    border:             1px solid black; 
     cursor:             pointer;
     color:              #00008B; /* DarkBlue */
     }
+.red_button > input[type="submit"]:hover {
+    border:             1px solid red; 
+    cursor:             pointer;
+    color:              red;
+    }
+.break_after_a table td a::after {
+    content:"\a";           /* end of line after <a> in order to place next <input> & <label> in one line */
+    white-space: pre;
+}
     
 .required label:after { 
     content:    '*'; 
@@ -475,22 +500,22 @@ ul.column-list {
 /*  background: deepskyblue;*/
 }
 .aside-1 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: left;
 /*  background: gold;*/
 }
 .aside-2 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: right;
 /*  background: hotpink;*/
 }
 .aside-1-5 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: left;
 /*  background: gold;*/
 }
 .aside-2-5 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: right;
 /*  background: hotpink;*/
 }
@@ -635,6 +660,10 @@ ul.column-list {
 .padding-y-05 {
     padding-top:        0.5em !important;
     padding-bottom:     0.5em !important;
+}
+.padding-u-05 {
+    padding-top:        0.5em !important;
+    padding-bottom:     0 !important;
 }
 .padding-y-07 {
     padding-top:        0.7em !important;

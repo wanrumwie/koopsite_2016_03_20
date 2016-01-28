@@ -26,11 +26,12 @@ def set_readonly_widget_attrs(fields, readonly_fields):
     :return:
     """
     for field in readonly_fields:
-        widget = fields[field].widget
-        if widget.__class__.__name__ in readonly_disabled_widget_type_list:
-            widget.attrs['disabled'] = 'disabled'
-        else:
-            widget.attrs['readonly'] = 'readonly'
+        if field in fields:
+            widget = fields[field].widget
+            if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+                widget.attrs['disabled'] = 'disabled'
+            else:
+                widget.attrs['readonly'] = 'readonly'
 
 def clear_help_text(fields):
     """
@@ -70,14 +71,14 @@ class UserPersonDataForm(forms.ModelForm):
 class UserPermsFullForm(forms.ModelForm):
     # Форма для редагування всіх даних стосовно доступу користувача
 
-    required_css_class  = 'required'
-    error_css_class     = 'error'
+    # required_css_class  = 'required'
+    # error_css_class     = 'error'
 
     # Трюк з полями readonly:
     READONLY_FIELDS = (
                         # 'username',
                         'first_name', 'last_name',
-                        # 'date_joined', 'last_login',
+                        'date_joined', 'last_login',
                         )
 
     def __init__(self, *args, **kwargs):
@@ -148,10 +149,6 @@ class ProfileFullForm(forms.ModelForm):
                             widget=forms.CheckboxInput(),
                             required=False,
                             )
-
-    # У формі в тегах буде додано назву відповідного класу CSS:
-    required_css_class  = 'required'
-    error_css_class     = 'error'
 
     class Meta:
         model = UserProfile
@@ -240,6 +237,10 @@ class ProfileRegistrationForm(ProfileFullForm):
                     # інакше валідатор пропустить порожнє поле
                     # бо Django не перевіряє порожніх текстових полів!
                     )
+
+    # У формі в тегах буде додано назву відповідного класу CSS:
+    required_css_class  = 'required'
+    error_css_class     = 'error'
 
     class Meta:
         model = UserProfile

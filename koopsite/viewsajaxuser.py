@@ -178,6 +178,7 @@ class UsersTable(ListView):
             self.qs = [u for u in self.qs if not is_staff_only(u)]
         return self.qs
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
 
 #################################################################
 # jQuery ajax base class for single Account:

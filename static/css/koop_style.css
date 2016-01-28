@@ -500,22 +500,22 @@ ul.column-list {
 /*  background: deepskyblue;*/
 }
 .aside-1 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: left;
 /*  background: gold;*/
 }
 .aside-2 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: right;
 /*  background: hotpink;*/
 }
 .aside-1-5 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: left;
 /*  background: gold;*/
 }
 .aside-2-5 {
-    padding:    0.5em;
+    padding:    0.25em;
     text-align: right;
 /*  background: hotpink;*/
 }
@@ -660,6 +660,10 @@ ul.column-list {
 .padding-y-05 {
     padding-top:        0.5em !important;
     padding-bottom:     0.5em !important;
+}
+.padding-u-05 {
+    padding-top:        0.5em !important;
+    padding-bottom:     0 !important;
 }
 .padding-y-07 {
     padding-top:        0.7em !important;

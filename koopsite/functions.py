@@ -67,7 +67,6 @@ def round_up_division(a, b):
 def get_iconPathForFolder(openFlag=False):
     if openFlag: p = 'img/open_folder.png'
     else:        p = 'img/folder.png'
-    # print('folder: p=', p)
     return p
 
 def get_iconPathByFileExt(ext):
@@ -75,7 +74,6 @@ def get_iconPathByFileExt(ext):
     if not p: p = "_page.png"
     directory = 'img/file-icons/32px/'
     p = directory + p
-    # print('ext =', ext, '  p=', p)
     return p
 
 def fileNameCheckInsert(fileName, fileNameList):
@@ -149,16 +147,10 @@ def getSelections(session):
     # Пробуємо отримати значення з сесії:
     selections = session.get('Selections')
     trace_print('getSelections: session =', session.items())
-    # print('getSelections: selections =', selections)
     if (not selections) or (type(selections) != type({})):
         # якщо selections не існує або не є словником,
         # створюємо новий порожній словник:
-        # browTabName   = ""
-        # parent_id       = 0
-        # tableSelections = {str(parent_id) : emptyElement}
-        # selections      = {browTabName  : tableSelections}
         selections      = {}
-        # print('getSelections: not: selections =', selections)
         # Записуємо в сесію:
         session['Selections'] = selections
     return selections
@@ -182,7 +174,6 @@ def getSelElementFromSession(session, browTabName, parent_id=''):
     selections = getSelections(session)
     tableSelections = selections.get(browTabName, {})
     selElement = tableSelections.get(parent_id, emptyElement)
-    # print('getSelElementFromSession: selElement =', selElement)
     return selElement
 
 def setSelElementToSession(session, browTabName, parent_id='',
@@ -208,8 +199,6 @@ def setSelElementToSession(session, browTabName, parent_id='',
     selections[browTabName] = tableSelections
     # Записуємо в сесію:
     session['Selections'] = selections
-    # print('setSelElementToSession:')
-    # print('selElement =', selElement)
 
 def parseClientRequest(requestPOST):
     """
@@ -246,10 +235,7 @@ def parseClientRequest(requestPOST):
             ]
     # Перевіряємо наявність ключів і заповнюємо відсутні значенням None
     for key in keys:
-        if not key in d.keys():
-            d[key] = None
-    # print('json_s =', json_s)
-    # print('parseClientRequest: d=', d)
+        d.setdefault(key, None)
     return d
 
 def parseXHRClientRequest(requestMETA):

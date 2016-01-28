@@ -1,1 +1,1 @@
-manage.py test koopsite.tests.test_views 
+manage.py test koopsite.tests.test_viewsajaxuser 

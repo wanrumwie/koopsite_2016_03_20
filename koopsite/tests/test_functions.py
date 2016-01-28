@@ -214,24 +214,27 @@ class ParseClientRequestTest(TestCase):
 
     def test_parseClientRequest(self):
         json_s = '{"browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
-        requestPOST = {'client_request': json_s}
+        request = self.client.request()
+        request.POST = {'client_request': json_s}
         expected = {'sendMail': None, 'id': None, 'name': None, 'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0', 'model': None}
-        self.assertEqual(parseClientRequest(requestPOST), expected)
+        self.assertEqual(parseClientRequest(request.POST), expected)
 
     def test_parseClientRequest_can_expand_d(self):
         json_s = '{"alfa":"beta","browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
-        requestPOST = {'client_request': json_s}
+        request = self.client.request()
+        request.POST = {'client_request': json_s}
         expected = {'alfa': 'beta', 'sendMail': None, 'id': None, 'name': None, 'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0', 'model': None}
-        self.assertEqual(parseClientRequest(requestPOST), expected)
+        self.assertEqual(parseClientRequest(request.POST), expected)
 
 
 class ParseXHRClientRequestTest(TestCase):
     # для тесту взято дані, роздруковані в ході виконання report download
 
     def test_parseXHRClientRequest(self):
-        requestMETA = {'PYTHONIOENCODING': 'UTF-8', 'HTTP_X_CLIENT_REQUEST': '%7B%22browTabName%22%3A%22folders_contents%22%2C%22parent_id%22%3A%227%22%2C%22selRowIndex%22%3A%222%22%2C%22model%22%3A%22report%22%2C%22id%22%3A%22130%22%2C%22name%22%3A%22%D0%92%D1%96%D0%B4%D1%80%D1%8F%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F.tif%22%7D', }
+        request = self.client.request()
+        request.META = {'PYTHONIOENCODING': 'UTF-8', 'HTTP_X_CLIENT_REQUEST': '%7B%22browTabName%22%3A%22folders_contents%22%2C%22parent_id%22%3A%227%22%2C%22selRowIndex%22%3A%222%22%2C%22model%22%3A%22report%22%2C%22id%22%3A%22130%22%2C%22name%22%3A%22%D0%92%D1%96%D0%B4%D1%80%D1%8F%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F.tif%22%7D', }
         expected = {'model': 'report', 'browTabName': 'folders_contents', 'selRowIndex': '2', 'id': '130', 'parent_id': '7', 'name': 'Відрядження.tif'}
-        self.assertEqual(parseXHRClientRequest(requestMETA), expected)
+        self.assertEqual(parseXHRClientRequest(request.META), expected)
 
 
 class Get_namespace_from_dictTest(TestCase):
