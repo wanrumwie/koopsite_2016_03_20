@@ -1,9 +1,16 @@
-{% extends "flats/flat_base.html" %}
+{% extends "flats/base_flat.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <p id="page-name">Характеристика квартир</p>
+    <div id="page-name"
+         class="padding-y-05">
+        <h3>
+        {% block page-name %}
+            Характеристика квартир
+        {% endblock %}
+        </h3>
+    </div>
     <table id="body-table"
         class="tabledetail max-width-4em">
         <tr>

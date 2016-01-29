@@ -13,7 +13,7 @@ from koopsite.settings import EMAIL_HOST_USER, STATIC_URL, SITE_ADDRESS
 from koopsite.functions import has_group, add_group, \
                         remove_group, is_staff_only, sendMailToUser, \
                         get_user_full_name, get_user_flat_No, \
-                        get_user_is_recognized
+                        get_user_is_recognized, get_or_none, dict_print
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest
@@ -178,7 +178,6 @@ class UsersTable(ListView):
             self.qs = [u for u in self.qs if not is_staff_only(u)]
         return self.qs
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
 
 #################################################################
 # jQuery ajax base class for single Account:
@@ -193,17 +192,22 @@ class AjaxAccountView(View):
     Метод dispatch повністю замінений викликом функції handler
     Метод dispatch декорується у дочірніх класах.
     """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.msg = types.SimpleNamespace(title   = "",
+                                        type    = "",
+                                        message = "",
+                                        )
+        print('AjaxAccountView: self.msg=', self.msg)
+        self.no_request_template = 'koop_adm_users_table.html'
+        self.sendMail = False
+
     def dispatch(self, request, *args, **kwargs):
+        print('dispatch: self.msg=', self.msg)
         return self.handler(request)
 
-    msg = types.SimpleNamespace(title   = "",
-                                type    = "",
-                                message = "",
-                                )
-    no_request_template = 'koop_adm_users_table.html'
-    sendMail = False
 
-    def handler(self,request):
+    def handler(self, request):
         if 'client_request' in request.POST:
             # Розбираємо дані від клієнта:
             user, profile = self.get_request_data(request)
@@ -228,26 +232,34 @@ class AjaxAccountView(View):
             # print('handler: response_cont =', response_cont)
             # Посилаємо відповідь клієнту:
             # return JsonResponse(response_cont)
+            print('handler: self.msg=', self.msg)
             return HttpResponse(json.dumps(response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
-            return render(self, request, self.no_request_template)
+            print('handler: self.msg=', self.msg)
+            return HttpResponse()
+            # return render(self, request, self.no_request_template)
 
     def get_request_data(self, request):
         # Розбираємо дані від клієнта:
-        d = parseClientRequest(request.POST)
-        self.sendMail = d['sendMail']
-        user_id = d['id']                       # id of selected user
-        user = User.objects.get(id=user_id)     # selected user
-        try:                                    # profile
-            profile = UserProfile.objects.get(user=user)
-        except:
-            profile = UserProfile.objects.create(user=user)
-        return user, profile
+        try:
+            d = parseClientRequest(request.POST)
+        except ValueError as err:
+            # запит від клієнта містить невідповідні дані:
+            print('get_request_data_set:', err.args)
+            return None, None
+        self.sendMail = d.get('sendMail')
+        user_id = d.get('id')                   # id of selected user
+        if d.get('model') == "user":
+            user = get_or_none(User, id=user_id)    # selected user
+            profile = get_or_none(UserProfile, user=user)  # profile
+            return user, profile
+        else:
+            return None, None
 
     def processing(self, user, profile, msg):
         """
-        Цю функцію треба переозначити у дочірньому класі.
+        Цей метод треба переозначити у дочірньому класі.
         Тут наводиться як приклад.
         """
         # Умови при яких зміни не відбудуться:
@@ -265,8 +277,10 @@ class AjaxAccountView(View):
             msg.message     = "Акаунт підтверджено!"
             e_msg_body = "Ваш акаунт на сайті підтверджено!"
             self.send_e_mail(user, e_msg_body)
+            print('processing: self.msg=', self.msg)
         return user, msg
 
+    # TODO-2016 01 29 немає тесту для метода send_e_mail()
     def send_e_mail(self, user, e_msg_body):
         if self.sendMail:
             e_msg = "Шановний %s,\n" \
@@ -310,6 +324,7 @@ class AjaxRecognizeAccount(AjaxAccountView):
             self.send_e_mail(user, e_msg_body)
         return user, msg
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
 
 class AjaxDenyAccount(AjaxAccountView):
     """
@@ -545,7 +560,12 @@ class AjaxAllAccountsView(View):
 
     def get_request_data_set(self, request):
         # Розбираємо дані від клієнта:
-        d = parseClientRequest(request.POST)
+        try:
+            d = parseClientRequest(request.POST)
+        except ValueError as err:
+            # запит від клієнта містить невідповідні дані:
+            print('get_request_data_set:', err.args)
+            return HttpResponse()
         self.sendMail = d['sendMail']
         elemSet = d.get('elemSet')
         users_set = []

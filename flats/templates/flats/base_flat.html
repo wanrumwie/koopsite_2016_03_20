@@ -49,7 +49,7 @@
             <li><a href="{% url 'flats:person-table' %}">Таблиця персон (в роботі!)</a></li>
         {% endblock %}
         {% block href-back %}
-            <li><a href="javascript:history.back()">Назад</a></li>
+            <li><a href="{% url 'index' %}">Уверх</a></li>
         {% endblock %}
     </ul>
 

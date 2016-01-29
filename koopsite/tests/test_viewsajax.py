@@ -7,24 +7,152 @@ from koopsite.functions import parseClientRequest, get_or_none
 from koopsite.viewsajax import ajaxSelRowIndexToSession, \
                         ajaxStartRowIndexFromSession, BrowseTableArray
 
+'''
+function selElementArr(){
+    // only selected element in table
+    var arr = {};
+    arr.browTabName = $( "#browTabName" ).val(); // name of table for session dictionary
+    arr.parent_id   = '';                        // parent folder id - for compatibility with Folders model
+    arr.sendMail    = $( "#id_cond" ).prop( "checked" );  // send mail to user condition
+    arr.selRowIndex = $( "#selRowIndex" ).val(); // selected row index
+    arr.model       = selElement.model;          // selected element model name
+    arr.id          = selElement.id;             // selected element id
+    arr.name        = selElement.name;           // selected element name
+//    console.log('arr=', arr);
+    return arr;
+}
+function ajax_selRowIndexToSession() {
+    var arr = selElementArr();
+    var json_string = JSON.stringify( arr );
+    // Changing ajax settings:
+    var as = ajax_settings();
+    as.url = "/ajax-selrowindex-to-session";
+    as.data = {
+            client_request : json_string,
+            csrfmiddlewaretoken: csrf_token
+        };
+    as.success = function( json ) { };            // response no needed
+    as.error = function( xhr ) {
+            xhrErrorAlert( xhr, 'ajax_selRowIndexToSession' );
+        };
+    $.ajax( as );
+    return false;
+}
+'''
 
-class TestajaxSelRowIndexToSession(TestCase):
+# TODO-2016 01 29 створити аналогічний DummyAjaxRequest для XHRClientRequest
+class DummyAjaxRequest:
+    """
+    Емуляція запиту ajax, сформованого в js
+    Фактично відтворюються відповідні змінні і функції з файлів js
+    """
+
+    def __init__(self,  browTabName="",
+                        parent_id  ="",
+                        sendMail   ="",
+                        selRowIndex="",
+                        model      ="",
+                        id         ="",
+                        name       ="",
+                        **kwargs):
+        self.browTabName = browTabName
+        self.parent_id   = parent_id
+        self.sendMail    = sendMail
+        self.selRowIndex = selRowIndex
+        self.model       = model
+        self.id          = id
+        self.name        = name
+        self.kwargs      = kwargs
+        self.selElement = {'model': model, 'id': id, 'name': name}
+
+    def selElementArr(self):
+        arr = {
+        'browTabName' : self.browTabName,
+        'parent_id'   : self.parent_id,
+        'sendMail'    : self.sendMail,
+        'selRowIndex' : self.selRowIndex,
+        'model'       : self.selElement.get('model'),
+        'id'          : self.selElement.get('id'),
+        'name'        : self.selElement.get('name'),
+        }
+        return arr
+
+    def ajax_data(self):
+        arr = self.selElementArr()
+        arr.update(self.kwargs)
+        json_string = json.dumps(arr)
+        data = {
+                'client_request' : json_string,
+                # 'csrfmiddlewaretoken': csrf_token
+            }
+        return data
+
+def server_response_decrypt(container, i=0):
+    """
+    Допоміжна функція: перетворює контейнер з json-стрічкою в словник
+    Відтворює аналогічну процедуру, яку виконує ф-ція ajax.js
+    Використовується в тестах для перевірки правильності формування
+    відповіді сервера
+    :param container: HttpResponse._container - список з json-string
+    :param i: порядковий номер у списку (завжди 0?)
+    :return: d - словник
+    """
+    json_str = container[0]
+    d = json.loads(json_str.decode())
+    return d
+
+
+class AjaxSelRowIndexToSessionTest(TestCase):
 
     def test_function(self):
-        json_s = '{"browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'parent_id'   :"",
+                    'sendMail'    :"",
+                    'selRowIndex' :'0',
+                    'model'       :'user',
+                    'id'          :'1',
+                    'name'        :'fred',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
         request = self.client.request()
-        request.POST = {'client_request': json_s}
+        request.POST = ajax_data
         request.session = {}
         response = ajaxSelRowIndexToSession(request)
-        expected = {'Selections': {'folders_contents': {'1': {'model': None, 'id': None, 'selRowIndex': '0'}}}}
+
+        # Чи в сесію записано правильні дані?
+        expected = {'Selections': {'users_table': {'': {'model': "user", 'id': "1", 'selRowIndex': '0'}}}}
         self.assertEqual(request.session, expected)
         self.assertTrue(isinstance(response, HttpResponse))
-        expected = [b'{"server_response": {"id": null, "selRowIndex": "0", "model": null}}']
+
+        # Чи ф-ція повертає правильний response?
+        expected = [b'{"server_response": {"id": "1", "selRowIndex": "0", "model": "user"}}']
         self.assertEqual(json.loads(response._container[0].decode()) , json.loads(expected[0].decode()))
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
 
-    def test_function_return_empty_response(self):
+    def test_function_return_empty_response_if_non_mathing_data(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'parent_id'   :"",
+                    'sendMail'    :"",
+                    'selRowIndex' :'0',
+                    'model'       :'FOLDER',
+                    'id'          :'1',
+                    'name'        :'fred',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        request.session = {}
+        response = ajaxSelRowIndexToSession(request)
+        self.assertEqual(request.session, {})
+        self.assertTrue(isinstance(response, HttpResponse))
+        self.assertEqual(response._container, [b''])
+        expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
+        self.assertEqual(response._headers, expected)
+
+    def test_function_return_empty_response_if_no_client_request(self):
         request = self.client.request()
         request.POST = {}
         request.session = {}
@@ -36,16 +164,20 @@ class TestajaxSelRowIndexToSession(TestCase):
         self.assertEqual(response._headers, expected)
 
 
-class TestajaxStartRowIndexFromSession(TestCase):
+class AjaxStartRowIndexFromSessionTest(TestCase):
 
     def test_function_return_HttpResponse(self):
-        json_s = '{"browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
+        ajax_data = DummyAjaxRequest(browTabName='folders_contents',
+                                       parent_id='1',
+                                       selRowIndex='0').ajax_data()
         request = self.client.request()
-        request.POST = {'client_request': json_s}
-        request.session = {'Selections': {'folders_contents': {'1': {'model': None, 'id': None, 'selRowIndex': '0'}}}}
+        request.POST = ajax_data
+        request.session = {'Selections': {'folders_contents': {'1': {'model': "user", 'id': "1", 'selRowIndex': '0'}}}}
         response = ajaxStartRowIndexFromSession(request)
         self.assertTrue(isinstance(response, HttpResponse))
-        expected = [b'{"server_response": {"id": null, "selRowIndex": "0", "model": null}}']
+
+        # Чи ф-ція повертає правильний response?
+        expected = [b'{"server_response": {"id": "1", "selRowIndex": "0", "model": "user"}}']
         self.assertEqual(json.loads(response._container[0].decode()) , json.loads(expected[0].decode()))
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
@@ -69,12 +201,28 @@ class TestajaxStartRowIndexFromSession(TestCase):
                    }
         response = ajaxStartRowIndexFromSession(request)
         self.assertTrue(isinstance(response, HttpResponse))
+
+        # Чи ф-ція повертає правильний response?
         expected = [b'{"server_response": {"id": "1", "selRowIndex": "2", "model": "folder"}}']
         self.assertEqual(json.loads(response._container[0].decode()) , json.loads(expected[0].decode()))
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
 
-    def test_function_return_empty_response(self):
+    def test_function_return_empty_response_if_non_matching_data(self):
+        ajax_data = DummyAjaxRequest(browTabName='folders_contents',
+                                       model='USER',
+                                       parent_id='1',
+                                       selRowIndex='0').ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        request.session = {'Selections': {'folders_contents': {'1': {'model': "user", 'id': "1", 'selRowIndex': '0'}}}}
+        response = ajaxStartRowIndexFromSession(request)
+        self.assertTrue(isinstance(response, HttpResponse))
+        self.assertEqual(response._container, [b''])
+        expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
+        self.assertEqual(response._headers, expected)
+
+    def test_function_return_empty_response_if_no_client_request(self):
         request = self.client.request()
         request.POST = {}
         response = ajaxStartRowIndexFromSession(request)

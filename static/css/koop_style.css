@@ -138,7 +138,6 @@ a:focus     {outline-style: none;}
     line-height: 1;
 }
 
-
 /*=======================================================================*/
 .tabledetail {
     border:             1px solid black;
@@ -253,6 +252,7 @@ a:focus     {outline-style: none;}
     cursor:             pointer;
     color:              #00008B; /* DarkBlue */
     }
+
 .red_button > input[type="submit"]:hover {
     border:             1px solid red; 
     cursor:             pointer;
@@ -267,6 +267,10 @@ a:focus     {outline-style: none;}
     content:    '*'; 
     color:      red;
 }
+.striped tbody tr:nth-child(odd) {
+    background:     rgba(0,0,0,.05) !important;
+}
+
 /*=======================================================================*/
 /* Classes added to the tags in form in case of error values: 
     required_css_class  = 'required'
@@ -278,6 +282,9 @@ a:focus     {outline-style: none;}
 .error ul {
     margin:             0           !important;
     padding:            0 0 0 1em   !important;
+}
+.error ul, li {
+    background-color:   rgba(0,0,0,0) !important;
 }
 .required input {
     color:              darkred;

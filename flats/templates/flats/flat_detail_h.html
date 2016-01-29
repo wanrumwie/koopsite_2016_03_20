@@ -1,9 +1,16 @@
-{% extends "flats/flat_base.html" %}
+{% extends "flats/base_flat.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
 {% block body %}
-    <p id="page-name">Характеристика квартири № {{ object.flat_No }}</p>
+    <div id="page-name"
+         class="padding-y-05">
+        <h3>
+        {% block page-name %}
+            Характеристика квартири № {{ object.flat_No }}
+        {% endblock %}
+        </h3>
+    </div>
     <table id="body-table"
         class="tabledetail max-width-4em">
         <tr>
@@ -26,4 +33,8 @@
             <p><a href="{% url 'flats:flat-detail' object.pk %}">В одну колонку</a></p>
         </li>
     </ul>
+{% endblock %}
+
+{% block href-back %}
+    <li><a href="{% url 'flats:flat-scheme' %}">Уверх</a></li>
 {% endblock %}

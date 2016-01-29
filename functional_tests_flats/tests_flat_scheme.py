@@ -32,7 +32,7 @@ class FlatSchemePageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             {'ls':'#body-navigation'          , 'lt': 'Таблиця параметрів всіх квартир'   , 'un': 'flats:flat-table'},
             {'ls':'#body-navigation'          , 'lt': 'Таблиця персон (в роботі!)'   , 'un': 'flats:person-table'},
-            # {'ls':'#body-navigation'          , 'lt': 'Назад           ' , 'un': "javascript:history.back()"},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "index"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'            , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -51,7 +51,7 @@ class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 1 # лінк javascript:history.back()
+        self.data_links_number += 0 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
@@ -86,7 +86,7 @@ class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
         profile.flat=flat
         profile.save()
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 1 # лінк javascript:history.back()
+        self.data_links_number += 0 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
@@ -106,7 +106,7 @@ class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
         self.dummy_user = AnonymousUser()
         # self.create_dummy_folder()
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 1 # лінк javascript:history.back()
+        self.data_links_number += 0 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
@@ -127,7 +127,7 @@ class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
         self.dummy_user = AnonymousUser()
         DummyFlat().create_dummy_flat(flat_No='52d')
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 1 # лінк javascript:history.back()
+        self.data_links_number += 0 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_flat(self):
@@ -156,7 +156,7 @@ class FlatSchemePageVisitorCanFindFlatTest(FlatSchemePageVisitTest):
         self.dummy_user = AnonymousUser()
         DummyFlat().create_dummy_building()
         self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 1 # лінк javascript:history.back()
+        self.data_links_number += 0 # лінк javascript:history.back()
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_find_flat(self):

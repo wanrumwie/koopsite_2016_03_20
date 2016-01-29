@@ -7,12 +7,16 @@ from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from folders.models import Folder
 from functional_tests_koopsite.ft_base import DummyUser
-from koopsite.functions import round_up_division, AllFieldsMixin, get_namespace_from_dict, get_iconPathForFolder, \
-    get_iconPathByFileExt, fileNameCheckInsert, scale_height, scale_width, getSelections, getSelElementFromSession, \
-    setSelElementToSession, parseClientRequest, parseXHRClientRequest, get_user_full_name, get_user_flat_No, \
-    get_user_is_recognized, is_staff_only, get_or_none, has_group_member, has_group, add_group, remove_group, \
+from koopsite.functions import round_up_division, AllFieldsMixin, \
+    get_namespace_from_dict, get_iconPathForFolder, get_iconPathByFileExt, \
+    fileNameCheckInsert, scale_height, scale_width, \
+    getSelections, getSelElementFromSession, setSelElementToSession, \
+    parseClientRequest, parseXHRClientRequest, get_user_full_name, \
+    get_user_flat_No, get_user_is_recognized, is_staff_only, get_or_none, \
+    has_group_member, has_group, add_group, remove_group, \
     transliterate, get_thumbnail_url_path
 from koopsite.settings import MEDIA_ROOT
+from koopsite.tests.test_viewsajax import DummyAjaxRequest
 
 
 class DifferentFunctionsTest(TestCase):
@@ -210,20 +214,109 @@ class SetSelElementToSessionTest(TestCase):
 
 
 class ParseClientRequestTest(TestCase):
-    # для тесту взято дані, роздруковані в ході виконання folder/contents/1/
 
     def test_parseClientRequest(self):
-        json_s = '{"browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'parent_id'   :None,
+                    'sendMail'    :None,
+                    'selRowIndex' :'0',
+                    'model'       :'user',
+                    'id'          :'1',
+                    'name'        :'fred',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
         request = self.client.request()
-        request.POST = {'client_request': json_s}
-        expected = {'sendMail': None, 'id': None, 'name': None, 'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0', 'model': None}
+        request.POST = ajax_data
+        expected = kwargs
+        self.assertEqual(parseClientRequest(request.POST), expected)
+
+    def test_parseClientRequest_not_full_data(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'model'       :'user',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        expected = {
+                    'browTabName' :'users_table',
+                    'parent_id'   :"",
+                    'sendMail'    :"",
+                    'selRowIndex' :"",
+                    'model'       :'user',
+                    'id'          :"",
+                    'name'        :"",
+                }
         self.assertEqual(parseClientRequest(request.POST), expected)
 
     def test_parseClientRequest_can_expand_d(self):
-        json_s = '{"alfa":"beta","browTabName":"folders_contents","parent_id":"1","selRowIndex":"0"}'
+        kwargs = {
+                    'EXTRA': 'extra',
+                    'browTabName' :'users_table',
+                    'parent_id'   :None,
+                    'sendMail'    :None,
+                    'selRowIndex' :'0',
+                    'model'       :'user',
+                    'id'          :'1',
+                    'name'        :'fred',
+                }
+
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
         request = self.client.request()
-        request.POST = {'client_request': json_s}
-        expected = {'alfa': 'beta', 'sendMail': None, 'id': None, 'name': None, 'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0', 'model': None}
+        request.POST = ajax_data
+        expected = kwargs
+        self.assertEqual(parseClientRequest(request.POST), expected)
+
+    def test_parseClientRequest_raise_error_if_model_table_mismatch(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'model'       :'folder',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        with self.assertRaises(ValueError):
+            parseClientRequest(request.POST)
+
+    def test_parseClientRequest_raise_error_if_no_table(self):
+        kwargs = {
+                    'browTabName' :'',
+                    'model'       :'folder',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        with self.assertRaises(ValueError):
+            parseClientRequest(request.POST)
+
+    def test_parseClientRequest_raise_error_if_unknown_table(self):
+        kwargs = {
+                    'browTabName' :'TABLE',
+                    'model'       :'folder',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        with self.assertRaises(ValueError):
+            parseClientRequest(request.POST)
+
+    def test_parseClientRequest_if_no_model(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        expected = {
+                    'browTabName' :'users_table',
+                    'parent_id'   :"",
+                    'sendMail'    :"",
+                    'selRowIndex' :"",
+                    'model'       :'',
+                    'id'          :"",
+                    'name'        :"",
+                }
         self.assertEqual(parseClientRequest(request.POST), expected)
 
 

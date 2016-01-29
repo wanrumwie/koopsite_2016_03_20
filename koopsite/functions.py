@@ -200,6 +200,13 @@ def setSelElementToSession(session, browTabName, parent_id='',
     # Записуємо в сесію:
     session['Selections'] = selections
 
+# Словник, який пов'язує між собою назви таблиць і моделей
+# Назва таблиці, яка надсилає ajax-запити, має корелювати з назвами моделей:
+browTabName_models = {
+        'folders_contents'  : ('folder', 'report', ),
+        'users_table'       : ('user',),
+        }
+
 def parseClientRequest(requestPOST):
     """
     Розбираємо запит від клієнта
@@ -233,6 +240,21 @@ def parseClientRequest(requestPOST):
             'name'       ,
             'sendMail'   ,
             ]
+    browTabName = d.get('browTabName')
+    model = d.get('model')
+    # Перевіряємо правильність вхідних даних і при потребі
+    #    активуємо помилку яку відслідкуємо у викликаючій процедурі
+    # Назва таблиці повинна бути в запиті
+    if not browTabName:
+        raise ValueError('Error data in request.POST: no table name', model, browTabName)
+    # Назва таблиці повинна бути в словнику browTabName_models
+    if browTabName not in browTabName_models:
+        raise ValueError('Error data in request.POST: unknown table name', model, browTabName)
+    # Якщо є назва моделі, то вона повинна корелювати з назвою таблиці
+    if model:
+        if model not in browTabName_models.get(browTabName):
+            raise ValueError('Error data in request.POST: model name does not correspond to table name', model, browTabName)
+    # Помилок у вхідних даних немає
     # Перевіряємо наявність ключів і заповнюємо відсутні значенням None
     for key in keys:
         d.setdefault(key, None)

@@ -169,6 +169,11 @@
 {% block href-admin %}
 {% endblock %}
 
+{% block href-back %}
+    <li><a href="{% url 'adm-index' %}">Уверх</a></li>
+{% endblock %}
+
+
 {% block load_js %}
 
     {% load staticfiles %}

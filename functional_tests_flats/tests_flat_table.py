@@ -36,7 +36,7 @@ class FlatTablePageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             # {'ls':'#body-navigation'          , 'lt': 'Таблиця параметрів всіх квартир'   , 'un': 'flats:flat-table'},
             {'ls':'#body-navigation'          , 'lt': 'Таблиця персон (в роботі!)'   , 'un': 'flats:person-table'},
-            # {'ls':'#body-navigation'          , 'lt': 'Назад           ' , 'un': "javascript:history.back()"},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "index"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'            , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -62,11 +62,11 @@ class FlatTablePageVisitTest(PageVisitTest):
         page_links_number = self.get_num_page_links()[1]
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number = page_links_number # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 1 # лінк javascript:history.back()
+        self.data_links_number += 0 # лінк javascript:history.back()
         return self.data_links_number
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatTablePageAuthenticatedVisitorTest(FlatTablePageVisitTest):
     """
     Тест відвідання сторінки сайту

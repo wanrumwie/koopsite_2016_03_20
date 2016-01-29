@@ -270,6 +270,12 @@ class AjaxTableRowView(View):
 
     def get_request_data(self, request, rqst):
         # Розбираємо дані від клієнта:
+        try:
+            d = parseClientRequest(request.POST)
+        except ValueError as err:
+            # запит від клієнта містить невідповідні дані:
+            print('get_request_data_set:', err.args)
+            return None, None
         d = parseClientRequest(request.POST)
         rqst = get_namespace_from_dict(d, rqst)
         # rqst.parent_id            = d.get('parent_id')

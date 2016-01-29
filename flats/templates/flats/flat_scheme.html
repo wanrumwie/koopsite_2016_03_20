@@ -1,4 +1,4 @@
-{% extends "flats/flat_base.html" %}
+{% extends "flats/base_flat.html" %}
 
 {# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
 
@@ -6,7 +6,14 @@
     {% load koop_template_filters %}
     {% load staticfiles %}
 
-    <p id="page-name">Схема розташування квартир</p>
+    <div id="page-name"
+         class="padding-y-05">
+        <h3>
+        {% block page-name %}
+            Схема розташування квартир
+        {% endblock %}
+        </h3>
+    </div>
     <table id="body-table"
         class="tabledetail tablescheme"  >
         <colgroup span="1"></colgroup>

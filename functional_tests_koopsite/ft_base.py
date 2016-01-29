@@ -12,6 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import sys
 import time
 from selenium.webdriver.support.wait import WebDriverWait
+from koopsite.functions import list_print
 from koopsite.tests.test_base import DummyUser
 
 
