@@ -8,12 +8,11 @@
     {% load folder_template_filters %}
     <div id="page-name"
          class="padding-y-05">
-            Попередній перегляд файла: {{ report }}
-    </div>
-    <div>
-        viewable_extension_list= {{ viewable_extension_list }}
-        <br>fileext= {{ report|fileext }}
-        <br>type= {{ report|file_media_type }}
+        <h3>
+            {% block page-name %}
+                Попередній перегляд файла: {{ report }}
+            {% endblock %}
+        </h3>
     </div>
     <div id="preview-box"
          class="preview-box">

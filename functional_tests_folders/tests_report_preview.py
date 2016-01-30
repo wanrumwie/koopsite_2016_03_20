@@ -1,9 +1,7 @@
-from asyncio.tasks import sleep
 import inspect
 import os
 from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
-from django.core.files.uploadedfile import SimpleUploadedFile
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.fileExtIconPath import viewable_extension_list
@@ -137,7 +135,7 @@ class ReportPreviewPageAuthenticatedVisitorWoPermissionTest(ReportPreviewPageVis
 
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -151,7 +149,7 @@ class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPage
         self.get_data_links_number()
         parent = DummyFolder().create_dummy_folder()
         # Для прикладу беремо цей файл:
-        full_path = os.path.join(os.getcwd(), 'example.txt') # повний шлях
+        full_path = os.path.join(os.getcwd(), 'example.docx') # повний шлях
         self.report = DummyFolder().create_dummy_report(parent=parent,
                                                    id=1, path=full_path)
         print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
@@ -164,7 +162,6 @@ class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPage
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
 
-        # TODO-2016 01 20 виловити помилку AssertionError: '' != 'На даний час неможливо переглянути файл цього типу'
         # Бачить у полі очікувану інформацію
         inputbox = self.browser.find_element_by_id('preview-box')
         self.assertEqual(inputbox.text, "На даний час неможливо переглянути файл цього типу")
