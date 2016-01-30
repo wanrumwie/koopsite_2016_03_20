@@ -25,14 +25,16 @@ def list_print(list, name=''):
     for i in list: print(i)
 
 def dict_print(d, name='', *args):
-    try:    length = len(d)
-    except: length = len(d.__dict__)
-    print(name, 'len =', length, *args)
-    try:
-        for k, v in sorted(d.items()): print('%-20s : %s' % (k, v))
-    except:
-        for k, v in sorted(d.__dict__.items()): print('%-20s : %s' % (k, v))
-
+    if d:
+        try:    length = len(d)
+        except: length = len(d.__dict__)
+        print(name, 'len =', length, *args)
+        try:
+            for k, v in sorted(d.items()): print('%-20s : %s' % (k, v))
+        except:
+            for k, v in sorted(d.__dict__.items()): print('%-20s : %s' % (k, v))
+    else:
+        print(name, d)
 
 def user_permissions_print(user):
     print('='*50)
@@ -47,7 +49,6 @@ def user_permissions_print(user):
     for g in user.groups.all():
         print(g.name)
     print('-'*50)
-
 
 def get_or_none(classmodel, **kwargs):
     try:

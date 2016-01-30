@@ -49,6 +49,11 @@ class DummyUser():
         user.groups.add(group)
         return group
 
+    def remove_dummy_group(self, user, group_name):
+        group = Group.objects.get(name=group_name)
+        user.groups.remove(group)
+        return group
+
     def create_dummy_profile(self, user, id=None, flat=None, picture=None,
                              picture_path=None,
                              is_recognized=None):

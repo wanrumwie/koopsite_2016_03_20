@@ -4,7 +4,6 @@ import types
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import User
 from django.http.response import HttpResponse
-from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.views.generic.list import ListView
@@ -13,7 +12,7 @@ from koopsite.settings import EMAIL_HOST_USER, STATIC_URL, SITE_ADDRESS
 from koopsite.functions import has_group, add_group, \
                         remove_group, is_staff_only, sendMailToUser, \
                         get_user_full_name, get_user_flat_No, \
-                        get_user_is_recognized, get_or_none, dict_print
+                        get_user_is_recognized, get_or_none
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest
@@ -198,12 +197,10 @@ class AjaxAccountView(View):
                                         type    = "",
                                         message = "",
                                         )
-        print('AjaxAccountView: self.msg=', self.msg)
-        self.no_request_template = 'koop_adm_users_table.html'
+        # self.no_request_template = 'koop_adm_users_table.html'
         self.sendMail = False
 
     def dispatch(self, request, *args, **kwargs):
-        print('dispatch: self.msg=', self.msg)
         return self.handler(request)
 
 
@@ -232,11 +229,9 @@ class AjaxAccountView(View):
             # print('handler: response_cont =', response_cont)
             # Посилаємо відповідь клієнту:
             # return JsonResponse(response_cont)
-            print('handler: self.msg=', self.msg)
             return HttpResponse(json.dumps(response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
-            print('handler: self.msg=', self.msg)
             return HttpResponse()
             # return render(self, request, self.no_request_template)
 
@@ -263,12 +258,14 @@ class AjaxAccountView(View):
         Тут наводиться як приклад.
         """
         # Умови при яких зміни не відбудуться:
-        if profile.is_recognized == True:
+        if profile and profile.is_recognized == True:
             msg.title   = user.username
             msg.type    = msgType.NoChange
             msg.message = "Акаунт вже підтверджений!"
         else:
             # Робимо зміни:
+            if not profile:
+                profile = UserProfile(user=user)
             profile.is_recognized = True
             profile.save()
             user.userprofile = profile
@@ -277,7 +274,6 @@ class AjaxAccountView(View):
             msg.message     = "Акаунт підтверджено!"
             e_msg_body = "Ваш акаунт на сайті підтверджено!"
             self.send_e_mail(user, e_msg_body)
-            print('processing: self.msg=', self.msg)
         return user, msg
 
     # TODO-2016 01 29 немає тесту для метода send_e_mail()
@@ -308,12 +304,14 @@ class AjaxRecognizeAccount(AjaxAccountView):
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
-        if profile.is_recognized == True:
+        if profile and profile.is_recognized == True:
             msg.title   = user.username
             msg.type    = msgType.NoChange
             msg.message = "Акаунт раніше вже був підтверджений!"
         else:
             # Робимо зміни:
+            if not profile:
+                profile = UserProfile(user=user)
             profile.is_recognized = True
             profile.save()
             user.userprofile = profile
@@ -324,7 +322,6 @@ class AjaxRecognizeAccount(AjaxAccountView):
             self.send_e_mail(user, e_msg_body)
         return user, msg
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
 
 class AjaxDenyAccount(AjaxAccountView):
     """
@@ -336,12 +333,14 @@ class AjaxDenyAccount(AjaxAccountView):
 
     def processing(self, user, profile, msg):
         # Умови при яких зміни не відбудуться:
-        if profile.is_recognized == False:
+        if profile and profile.is_recognized == False:
             msg.title   = user.username
             msg.type    = msgType.NoChange
             msg.message = "Акаунт раніше вже був відхилений!"
         else:
             # Робимо зміни:
+            if not profile:
+                profile = UserProfile(user=user)
             profile.is_recognized = False
             profile.save()
             user.userprofile = profile
@@ -369,7 +368,7 @@ class AjaxActivateAccount(AjaxAccountView):
             msg.title   = user.username
             msg.type    = msgType.NoChange
             msg.message = "Акаунт вже активний!"
-        elif profile.is_recognized == False:
+        elif profile and profile.is_recognized == False:
             msg.title   = user.username
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не можна активувати!"
@@ -384,6 +383,7 @@ class AjaxActivateAccount(AjaxAccountView):
             self.send_e_mail(user, e_msg_body)
         return user, msg
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
 
 class AjaxDeactivateAccount(AjaxAccountView):
     """
@@ -398,7 +398,7 @@ class AjaxDeactivateAccount(AjaxAccountView):
         if not user.is_active:
             msg.title   = user.username
             msg.type    = msgType.NoChange
-            msg.message = "Акаунт вже не активний!"
+            msg.message = "Акаунт вже неактивний!"
         else:
             # Робимо зміни:
             user.is_active = False
@@ -483,22 +483,26 @@ class AjaxDeleteAccount(AjaxAccountView):
             msg.title   = user.username
             msg.type    = msgType.Error
             msg.message = "Активний акаунт не можна видалити!"
-        elif profile.is_recognized != False:
+        elif (not profile) or (profile.is_recognized != False):
             msg.title   = user.username
             msg.type    = msgType.Error
-            msg.message = "Підтверджений Акаунт не можна видалити!"
+            msg.message = "Підтверджений акаунт не можна видалити!"
         else:
             # Робимо зміни:
             msg.title   = user.username
-            # profile.delete()
-            # user.delete()
+            profile.delete()
+            user.delete()
             msg.type    = msgType.DeleteRow
             msg.message = "Акаунт видалено!"
-            msg.message = "Акаунт НЕ видалено (DEBUGGING)!"
+            # msg.message = "Акаунт НЕ видалено (DEBUGGING)!"
             e_msg_body = "Ваш акаунт на сайті видалено."
-            self.send_e_mail(user, e_msg_body)
+            # TODO-як відправити email на видалений акаунт?
+            # self.send_e_mail(user, e_msg_body)
+            user = None
         return user, msg
+        # return None, msg
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
 
 #################################################################
 # jQuery ajax base class for GROUP of Accounts:
@@ -518,7 +522,7 @@ class AjaxAllAccountsView(View):
                                       message = ""
                                       )
     group_msg = deepcopy(empty_msg)
-    no_request_template = 'koop_adm_users_table.html'
+    # no_request_template = 'koop_adm_users_table.html'
     sendMail = False
 
     def init_counter(self):
@@ -556,7 +560,8 @@ class AjaxAllAccountsView(View):
             return HttpResponse(json.dumps(group_response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
-            return render(self, request, self.no_request_template)
+            return HttpResponse()
+            # return render(self, request, self.no_request_template)
 
     def get_request_data_set(self, request):
         # Розбираємо дані від клієнта:
@@ -711,7 +716,6 @@ class AjaxSetMemberAllAccounts(AjaxAllAccountsView):
         return self.group_handler(request)
 
     def processing(self, user, profile, msg):
-        print('AjaxSetMemberAllAccounts: processing')
         # Умови при яких зміни не відбудуться:
         if has_group(user, 'members'):
             msg.title   = user.username
