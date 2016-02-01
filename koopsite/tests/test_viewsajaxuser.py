@@ -3,6 +3,7 @@ import json
 import types
 from unittest.case import skipIf
 from django.contrib.auth.models import User, AnonymousUser
+from django.core import mail
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve
 from django.http.response import HttpResponse
@@ -10,14 +11,17 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from flats.tests.test_base import DummyFlat
 from functional_tests_koopsite.ft_base import DummyUser
-from koopsite.functions import get_or_none, has_group
+from koopsite.functions import get_or_none, has_group, dict_print
 from koopsite.models import UserProfile
 from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_views import setup_view
-from koopsite.tests.test_viewsajax import DummyAjaxRequest, server_response_decrypt
+from koopsite.tests.test_viewsajax import DummyAjaxRequest, \
+    server_response_decrypt
 from koopsite.viewsajax import msgType
-from koopsite.viewsajaxuser import UsersTableArray, UsersTable, AjaxAccountViewBase, AjaxRecognizeAccount, AjaxDenyAccount, \
-    AjaxActivateAccount, AjaxDeactivateAccount, AjaxSetMemberAccount, AjaxDenyMemberAccount, AjaxDeleteAccount
+from koopsite.viewsajaxuser import UsersTableArray, UsersTable, \
+    AjaxAccountViewBase, AjaxRecognizeAccount, AjaxDenyAccount, \
+    AjaxActivateAccount, AjaxDeactivateAccount, AjaxSetMemberAccount, \
+    AjaxDenyMemberAccount, AjaxDeleteAccount
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -230,10 +234,11 @@ class AjaxAccountTestBase(TestCase):
 
         DummyUser().create_dummy_group(group_name='members')
         DummyUser().create_dummy_group(group_name='staff')
-        self.john   = DummyUser().create_dummy_user(id=1, username='john', password='secret')
+        self.john   = DummyUser().create_dummy_user(id=1, username='john', password='secret', email='john@gmail.com')
         self.paul   = DummyUser().create_dummy_user(id=2, username='paul', password='secret')
         self.george = DummyUser().create_dummy_user(id=3, username='george', password='secret')
         self.ringo  = DummyUser().create_dummy_user(id=4, username='ringo', password='secret')
+        self.freddy = DummyUser().create_dummy_user(id=5, username='freddy', password='secret', email='freddy@gmail.com')
 
         # john буде логінитись і має доступ
         self.john.is_staff = True
@@ -243,12 +248,13 @@ class AjaxAccountTestBase(TestCase):
         self.set_parameters_to_user(self.john,   True,  True,  True)
         self.set_parameters_to_user(self.paul,   True,  True,  False)
         self.set_parameters_to_user(self.george, True,  False, False)
-        self.set_parameters_to_user(self.ringo,  False, False, False)
+        self.set_parameters_to_user(self.ringo,  None,  False, False)
+        self.set_parameters_to_user(self.freddy, False, False, False)
 
-    def set_parameters_to_user(self, user, is_recognized=False, is_active=False, is_member=False):
-        if is_recognized:
+    def set_parameters_to_user(self, user, is_recognized=None, is_active=False, is_member=False):
+        if is_recognized != None:
             DummyUser().create_dummy_profile(user)
-            user.userprofile.is_recognized = True
+            user.userprofile.is_recognized = is_recognized
             user.userprofile.save()
         user.is_active = is_active
         if is_member:
@@ -275,6 +281,65 @@ class AjaxAccountTestBase(TestCase):
         self.assertEqual(d['supplement'], expected_supplement)
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
+
+    def get_elemSet(self, userSet):
+        elemSet = []
+        for user in userSet:
+            elem = {
+                    'model': 'user',
+                    'id'   : user.id,
+                    'name' : user.username,
+                    }
+            elemSet.append(elem)
+        return elemSet
+
+    def get_kwargs_for_ajax_data(self, elemSet):
+        kwargs = {
+                    'browTabName' : 'users_table',
+                    'parent_id'   : "",
+                    'sendMail'    : "",
+                    'selRowIndex' : '0',
+                    'elemSet'     : elemSet,
+                }
+        return kwargs
+
+    def get_expected(self, user, changes_678, suppl_678):
+        # Очікувані дані з response
+        id = str(user.id)
+        name = user.username
+        model = "user"
+        expected_model      = model
+        expected_id         = str(id)
+        expected_changes    = {0: {'id': id,
+                                   'name': name,
+                                   'model': model},
+                               }
+        expected_changes.update(changes_678)
+        d = {}
+        for k in suppl_678:
+            d[k] = '/static/admin/img/icon-%s.gif' % suppl_678[k]
+        expected_supplement = {'iconPath': d}
+        return expected_model, expected_id, expected_changes, expected_supplement
+
+
+    def check_view_response_cont(self, d, stringify,
+                                        expected_model,
+                                        expected_id,
+                                        expected_changes,
+                                        expected_supplement
+                                       ):
+        # Чи ф-ція повертає правильний словник?
+        if stringify: # словники мають "пройти" крізь дворазове перетворення json
+            self.assertEqual(d['model'     ], json.loads(json.dumps(expected_model     )))
+            self.assertEqual(d['id'        ], json.loads(json.dumps(expected_id        )))
+            self.assertEqual(d['changes'   ], json.loads(json.dumps(expected_changes   )))
+            self.assertEqual(d['supplement'], json.loads(json.dumps(expected_supplement)))
+        else:
+            self.assertEqual(d['model'     ], expected_model     )
+            self.assertEqual(d['id'        ], expected_id        )
+            self.assertEqual(d['changes'   ], expected_changes   )
+            self.assertEqual(d['supplement'], expected_supplement)
+
 
 
 
@@ -436,37 +501,42 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         self.assertEqual(profile, None)
 
 
-    """
-    Метод processing треба переозначити у дочірньому класі.
-    Тут наводиться приклад тесту.
-    """
+        # Метод processing тестується у дочірніх класах
 
-    def test_processing_no_changes_made(self):
+    def test_send_e_mail(self):
         view = self.cls_view()
-        user0 = self.john
-        prof0 = user0.userprofile
-        user, msg = view.processing(user0, prof0, view.msg)
-        # Витягаємо з бази щойно збережені записи і перевіряємо
-        self.assertEqual(user, user0)
-        self.assertEqual(msg.title  , user0.username)
-        self.assertEqual(msg.type   , msgType.NoChange)
-        self.assertEqual(msg.message, "Акаунт раніше вже був підтверджений!")
+        view.sendMail = True
+        user = self.freddy
 
-    def test_processing_changes_made(self):
+        e_msg_body = "Ваш акаунт на сайті підтверджено!"
+        view.send_e_mail(user, e_msg_body)
+
+        self.assertEqual(len(mail.outbox), 1)
+        msg = mail.outbox[0]
+        self.assertEqual(msg.recipients(), [user.email])
+        self.assertEqual(msg.subject, 'KoopSite administrator')
+        self.assertIn(e_msg_body, msg.body)
+
+    def test_send_e_mail_no_address(self):
         view = self.cls_view()
-        user0 = self.ringo
-        prof0 = getattr(user0, 'userprofile', None)
-        user, msg = view.processing(user0, prof0, view.msg)
-        # Витягаємо з бази щойно збережені записи і перевіряємо
-        user_db = get_or_none(User, id=user0.id)
-        prof_db = get_or_none(UserProfile, user=user0)
-        self.assertEqual(user.id, user_db.id)
-        self.assertEqual(prof_db.is_recognized, True)
-        self.assertEqual(msg.title  , user_db.username)
-        self.assertEqual(msg.type   , msgType.Change)
-        self.assertEqual(msg.message, "Акаунт підтверджено!")
+        view.sendMail = True
+        user = self.paul
 
-        # TODO-2016 01 29 додати перевірку self.send_e_mail(user, e_msg_body)
+        e_msg_body = "Ваш акаунт на сайті підтверджено!"
+        view.send_e_mail(user, e_msg_body)
+
+        self.assertEqual(len(mail.outbox), 0)
+
+
+    def test_send_e_mail_not_send(self):
+        view = self.cls_view()
+        view.sendMail = False
+        user = self.freddy
+
+        e_msg_body = "Ваш акаунт на сайті підтверджено!"
+        view.send_e_mail(user, e_msg_body)
+
+        self.assertEqual(len(mail.outbox), 0)
 
 
     def test_handler(self):
@@ -599,7 +669,7 @@ class AjaxRecognizeAccountTest(AjaxAccountTestBase):
         self.assertEqual(msg.type   , msgType.Change)
         self.assertEqual(msg.message, "Акаунт підтверджено!")
 
-    def test_view_response_container_data_No_changes(self):
+    def test_view_response_container_data_no_changes(self):
         self.client.login(username='john', password='secret')
         # Дані для request
         kwargs = {  'browTabName' :'users_table',
@@ -643,22 +713,20 @@ class AjaxRecognizeAccountTest(AjaxAccountTestBase):
                     'sendMail'    :"",
                     'selRowIndex' :'0',
                     'model'       :'user',
-                    'id'          :'2',
-                    'name'        :'paul',
+                    'id'          :'5',
+                    'name'        :'freddy',
                 }
-        self.paul.userprofile.is_recognized = False
-        self.paul.userprofile.save()
         ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
         # Очікувані дані з response
-        expected_title      = "paul"
+        expected_title      = "freddy"
         expected_type       = "Change"
         expected_message    = "Акаунт підтверджено!"
-        expected_changes    = {'0': {'id': '2', 'name': 'paul', 'model': 'user'},
+        expected_changes    = {'0': {'id': '5', 'name': 'freddy', 'model': 'user'},
                                '6': True,
                                }
         expected_supplement = {'iconPath': {
                             '6': '/static/admin/img/icon-yes.gif',
-                            '7': '/static/admin/img/icon-yes.gif',
+                            '7': '/static/admin/img/icon-no.gif',
                             '8': '/static/admin/img/icon-no.gif',
                             }}
         request = RequestFactory().get(self.path)
@@ -765,9 +833,7 @@ class AjaxDenyAccountTest(AjaxAccountTestBase):
 
     def test_processing_no_changes_made(self):
         view = self.cls_view()
-        user0 = self.john
-        user0.userprofile.is_recognized = False
-        user0.userprofile.save()
+        user0 = self.freddy
         prof0 = getattr(user0, 'userprofile', None)
         user, msg = view.processing(user0, prof0, view.msg)
         # Витягаємо з бази щойно збережені записи і перевіряємо
@@ -778,7 +844,7 @@ class AjaxDenyAccountTest(AjaxAccountTestBase):
 
     def test_processing_changes_made(self):
         view = self.cls_view()
-        user0 = self.john
+        user0 = self.george
         prof0 = getattr(user0, 'userprofile', None)
         user, msg = view.processing(user0, prof0, view.msg)
         # Витягаємо з бази щойно збережені записи і перевіряємо
@@ -814,21 +880,19 @@ class AjaxDenyAccountTest(AjaxAccountTestBase):
                     'sendMail'    :"",
                     'selRowIndex' :'0',
                     'model'       :'user',
-                    'id'          :'2',
-                    'name'        :'paul',
+                    'id'          :'5',
+                    'name'        :'freddy',
                 }
-        self.paul.userprofile.is_recognized = False
-        self.paul.userprofile.save()
         ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
         # Очікувані дані з response
-        expected_title      = "paul"
+        expected_title      = "freddy"
         expected_type       = "NoChange"
         expected_message    = "Акаунт раніше вже був відхилений!"
-        expected_changes    = {'0': {'id': '2', 'name': 'paul', 'model': 'user'},
+        expected_changes    = {'0': {'id': '5', 'name': 'freddy', 'model': 'user'},
                                }
         expected_supplement = {'iconPath': {
                             '6': '/static/admin/img/icon-no.gif',
-                            '7': '/static/admin/img/icon-yes.gif',
+                            '7': '/static/admin/img/icon-no.gif',
                             '8': '/static/admin/img/icon-no.gif',
                             }}
         request = RequestFactory().get(self.path)
@@ -984,10 +1048,8 @@ class AjaxActivateAccountTest(AjaxAccountTestBase):
 
     def test_processing_error_account_is_denied(self):
         view = self.cls_view()
-        user0 = self.george
+        user0 = self.freddy
         prof0 = getattr(user0, 'userprofile', None)
-        prof0.is_recognized = False
-        prof0.save()
         user, msg = view.processing(user0, prof0, view.msg)
         # Витягаємо з бази щойно збережені записи і перевіряємо
         self.assertEqual(user, user0)
@@ -1313,16 +1375,25 @@ class AjaxSetMemberAccountTest(AjaxAccountTestBase):
 
     def test_processing_error_account_is_denied(self):
         view = self.cls_view()
-        user0 = self.george
+        user0 = self.freddy
         prof0 = getattr(user0, 'userprofile', None)
-        prof0.is_recognized = False
-        prof0.save()
         user, msg = view.processing(user0, prof0, view.msg)
         # Витягаємо з бази щойно збережені записи і перевіряємо
         self.assertEqual(user, user0)
         self.assertEqual(msg.title  , user0.username)
         self.assertEqual(msg.type   , msgType.Error)
         self.assertEqual(msg.message, "Відхилений Акаунт не може отримати права доступу!")
+
+    def test_processing_error_account_is_not_recognized(self):
+        view = self.cls_view()
+        user0 = self.ringo
+        prof0 = getattr(user0, 'userprofile', None)
+        user, msg = view.processing(user0, prof0, view.msg)
+        # Витягаємо з бази щойно збережені записи і перевіряємо
+        self.assertEqual(user, user0)
+        self.assertEqual(msg.title  , user0.username)
+        self.assertEqual(msg.type   , msgType.Error)
+        self.assertEqual(msg.message, "Непідтверджений Акаунт не може отримати права доступу!")
 
     def test_processing_changes_made(self):
         view = self.cls_view()
@@ -1562,6 +1633,7 @@ class AjaxDenyMemberAccountTest(AjaxAccountTestBase):
             expected_changes, expected_supplement)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class AjaxDeleteAccountTest(AjaxAccountTestBase):
 
     def setUp(self):
@@ -1633,7 +1705,7 @@ class AjaxDeleteAccountTest(AjaxAccountTestBase):
         self.assertEqual(user, user0)
         self.assertEqual(msg.title  , user0.username)
         self.assertEqual(msg.type   , msgType.Error)
-        self.assertEqual(msg.message, "Підтверджений акаунт не можна видалити!")
+        self.assertEqual(msg.message, "Видалити можна лише відхилений акаунт!")
 
     def test_processing_error_account_no_profile(self):
         view = self.cls_view()
@@ -1644,14 +1716,12 @@ class AjaxDeleteAccountTest(AjaxAccountTestBase):
         self.assertEqual(user, user0)
         self.assertEqual(msg.title  , user0.username)
         self.assertEqual(msg.type   , msgType.Error)
-        self.assertEqual(msg.message, "Підтверджений акаунт не можна видалити!")
+        self.assertEqual(msg.message, "Видалити можна лише відхилений акаунт!")
 
     def test_processing_account_deleted(self):
         view = self.cls_view()
-        user0 = self.george
+        user0 = self.freddy
         prof0 = getattr(user0, 'userprofile', None)
-        prof0.is_recognized = False
-        prof0.save()
         u_name = user0.username
         u_id = user0.id
         p_id = prof0.id
@@ -1719,7 +1789,7 @@ class AjaxDeleteAccountTest(AjaxAccountTestBase):
         # Очікувані дані з response
         expected_title      = "george"
         expected_type       = "Error"
-        expected_message    = "Підтверджений акаунт не можна видалити!"
+        expected_message    = "Видалити можна лише відхилений акаунт!"
         expected_changes    = {'0': {'id': '3', 'name': 'george', 'model': 'user'},
                                }
         expected_supplement = {'iconPath': {
@@ -1749,15 +1819,13 @@ class AjaxDeleteAccountTest(AjaxAccountTestBase):
                     'sendMail'    :"",
                     'selRowIndex' :'0',
                     'model'       :'user',
-                    'id'          :'3',
-                    'name'        :'george',
+                    'id'          :'5',
+                    'name'        :'freddy',
                 }
         ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
-        self.george.userprofile.is_recognized = False
-        self.george.userprofile.save()
 
         # Очікувані дані з response
-        expected_title      = "george"
+        expected_title      = "freddy"
         expected_type       = "DeleteRow"
         expected_message    = "Акаунт видалено!"
         expected_changes    = None

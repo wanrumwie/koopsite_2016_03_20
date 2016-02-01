@@ -1,8 +1,10 @@
+from collections import OrderedDict
 from copy import deepcopy
 import json
 import types
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http.response import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
@@ -12,7 +14,7 @@ from koopsite.settings import EMAIL_HOST_USER, STATIC_URL, SITE_ADDRESS
 from koopsite.functions import has_group, add_group, \
                         remove_group, is_staff_only, sendMailToUser, \
                         get_user_full_name, get_user_flat_No, \
-                        get_user_is_recognized, get_or_none, browTabName_models
+                        get_user_is_recognized, get_or_none, browTabName_models, dict_print
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest
@@ -227,7 +229,6 @@ class AjaxAccountViewBase(View):
             response_cont = vars(msg)
             response_cont['changes'] = changes
             response_cont['supplement'] = supplement
-            # print('handler: response_cont =', response_cont)
             # Посилаємо відповідь клієнту:
             # return JsonResponse(response_cont)
             return HttpResponse(json.dumps(response_cont), content_type="application/json")
@@ -277,17 +278,17 @@ class AjaxAccountViewBase(View):
             self.send_e_mail(user, e_msg_body)
         return user, msg
 
-    # TODO-2016 01 29 немає тесту для метода send_e_mail()
     def send_e_mail(self, user, e_msg_body):
         if self.sendMail:
-            e_msg = "Шановний %s,\n" \
-                    "%s\n" \
-                    "З повагою, адміністратор сайта %s\n" \
-                    "%s" % (user.username, e_msg_body, 
-                            SITE_ADDRESS, EMAIL_HOST_USER)
-            sendMailToUser(user, 
-                           subject="KoopSite administrator", 
-                           message=e_msg)
+            email = user.email
+            if email:
+                subject="KoopSite administrator"
+                message = "Шановний %s,\n" \
+                        "%s\n" \
+                        "З повагою, адміністратор сайта %s\n" \
+                        "%s" % (user.username, e_msg_body,
+                                SITE_ADDRESS, EMAIL_HOST_USER)
+                send_mail(subject, message, EMAIL_HOST_USER, [email])
 
 
 #################################################################
@@ -425,10 +426,14 @@ class AjaxSetMemberAccount(AjaxAccountViewBase):
             msg.title   = user.username
             msg.type    = msgType.NoChange
             msg.message = "Акаунт вже має ці права доступу!"
-        elif profile.is_recognized == False:
+        elif profile and profile.is_recognized == False:
             msg.title   = user.username
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не може отримати права доступу!"
+        elif (not profile) or (profile and profile.is_recognized == None):
+            msg.title   = user.username
+            msg.type    = msgType.Error
+            msg.message = "Непідтверджений Акаунт не може отримати права доступу!"
         else:
             # Робимо зміни:
             add_group(user, 'members')
@@ -486,7 +491,7 @@ class AjaxDeleteAccount(AjaxAccountViewBase):
         elif (not profile) or (profile.is_recognized != False):
             msg.title   = user.username
             msg.type    = msgType.Error
-            msg.message = "Підтверджений акаунт не можна видалити!"
+            msg.message = "Видалити можна лише відхилений акаунт!"
         else:
             # Робимо зміни:
             msg.title   = user.username
@@ -502,7 +507,6 @@ class AjaxDeleteAccount(AjaxAccountViewBase):
         return user, msg
         # return None, msg
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
 
 #################################################################
 # jQuery ajax base class for GROUP of Accounts:
@@ -531,11 +535,11 @@ class AjaxAllAccountsViewBase(View):
         self.group_msg.title   = "Активація групи акаунтів"
         self.group_msg.type    = msgType.Group
         self.group_msg.message = ""
-        self.counter =  {
-                    "вже активні" : 0,
-                    "відхилені"   : 0,
-                    "активовано"  : 0,
-                    }
+        self.counter = OrderedDict()
+        self.counter["активовано"    ] = 0
+        self.counter["вже активні"   ] = 0
+        self.counter["відхилені"     ] = 0
+        self.counter["непідтверджені"] = 0
 
     def dispatch(self, request, *args, **kwargs):
         return self.group_handler(request)
@@ -595,17 +599,19 @@ class AjaxAllAccountsViewBase(View):
         response_set = []
         for user in users_set:
             msg = deepcopy(self.empty_msg)
-            try:
-                profile = UserProfile.objects.get(user=user)
-            except:
-                profile = UserProfile.objects.create(user=user)
+            profile = get_or_none(UserProfile, user=user)  # profile
             # Елемент - рядок таблиці ДО змін:
             old_element = UsersTableArray().get_row(user)
+
+            # dict_print(old_element, 'old_element')
 
             user, msg = self.processing(user, profile, msg)
 
             # Елемент - рядок таблиці ПІСЛЯ змін (якщо були):
             new_element     = UsersTableArray().get_row(user)
+
+            # dict_print(new_element, 'new_element')
+
             # Зміни рядка в таблиці:
             if msg.type == msgType.NewRow:
                 changes = new_element
@@ -616,7 +622,7 @@ class AjaxAllAccountsViewBase(View):
             # Формуємо словник для передачі в шаблон через XHR:
             response_cont = vars(msg)
             response_cont['model'] = user._meta.model_name
-            response_cont['id'] = user.id
+            response_cont['id'] = str(user.id)
             response_cont['changes'] = changes
             response_cont['supplement'] = supplement
             response_set.append(response_cont)
@@ -638,6 +644,11 @@ class AjaxAllAccountsViewBase(View):
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не можна активувати!"
             self.counter["відхилені"] += 1
+        elif (not profile) or (profile and profile.is_recognized == None):
+            msg.title   = user.username
+            msg.type    = msgType.Error
+            msg.message = "Непідтверджений Акаунт не можна активувати!"
+            self.counter["непідтверджені"] += 1
         else:
             # Робимо зміни:
             user.is_active = True
@@ -648,16 +659,19 @@ class AjaxAllAccountsViewBase(View):
             self.counter["активовано"] += 1
         return user, msg
 
+    # TODO-2016 02 01 Ф-ція send_e_mail двічі описана у цьому файлі: DRY!
     def send_e_mail(self, user, e_msg_body):
         if self.sendMail:
-            e_msg = "Шановний %s,\n" \
-                    "%s\n" \
-                    "З повагою, адміністратор сайта %s.\n" \
-                    "%s" % (user.username, e_msg_body, 
-                            "KoopSite", EMAIL_HOST_USER)
-            sendMailToUser(user, 
-                           subject="KoopSite administrator", 
-                           message=e_msg)
+            email = user.email
+            if email:
+                subject="KoopSite administrator"
+                message = "Шановний %s,\n" \
+                        "%s\n" \
+                        "З повагою, адміністратор сайта %s\n" \
+                        "%s" % (user.username, e_msg_body,
+                                SITE_ADDRESS, EMAIL_HOST_USER)
+                send_mail(subject, message, EMAIL_HOST_USER, [email])
+
 
 
 #################################################################
@@ -672,11 +686,11 @@ class AjaxActivateAllAccounts(AjaxAllAccountsViewBase):
         self.group_msg.title   = "Активація групи акаунтів"
         self.group_msg.type    = msgType.Group
         self.group_msg.message = ""
-        self.counter =  {
-                    "вже активні" : 0,
-                    "відхилені"   : 0,
-                    "активовано"  : 0,
-                    }
+        self.counter = OrderedDict()
+        self.counter["активовано"    ] = 0
+        self.counter["вже активні"   ] = 0
+        self.counter["відхилені"     ] = 0
+        self.counter["непідтверджені"] = 0
 
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
@@ -694,10 +708,15 @@ class AjaxActivateAllAccounts(AjaxAllAccountsViewBase):
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не можна активувати!"
             self.counter["відхилені"] += 1
+        elif (not profile) or (profile and profile.is_recognized == None):
+            msg.title   = user.username
+            msg.type    = msgType.Error
+            msg.message = "Непідтверджений Акаунт не можна активувати!"
+            self.counter["непідтверджені"] += 1
         else:
             # Робимо зміни:
             user.is_active = True
-            # user.save()
+            user.save()
             msg.title   = user.username
             msg.type    = msgType.Change
             msg.message = "Акаунт активовано!"
@@ -715,11 +734,11 @@ class AjaxSetMemberAllAccounts(AjaxAllAccountsViewBase):
         self.group_msg.title   = "Надання права доступу групі акаунтів"
         self.group_msg.type    = msgType.Group
         self.group_msg.message = ""
-        self.counter =  {
-                    "доступ вже є" : 0,
-                    "відхилені"    : 0,
-                    "встановлено"  : 0,
-                    }
+        self.counter = OrderedDict()
+        self.counter["встановлено"   ] = 0
+        self.counter["доступ вже є"  ] = 0
+        self.counter["відхилені"     ] = 0
+        self.counter["непідтверджені"] = 0
 
     @method_decorator(permission_required('koopsite.activate_account', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
@@ -737,6 +756,11 @@ class AjaxSetMemberAllAccounts(AjaxAllAccountsViewBase):
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не може отримати права доступу!"
             self.counter["відхилені"] += 1
+        elif (not profile) or (profile and profile.is_recognized == None):
+            msg.title   = user.username
+            msg.type    = msgType.Error
+            msg.message = "Непідтверджений Акаунт не може отримати права доступу!"
+            self.counter["непідтверджені"] += 1
         else:
             # Робимо зміни:
             add_group(user, 'members')
@@ -751,3 +775,4 @@ class AjaxSetMemberAllAccounts(AjaxAllAccountsViewBase):
         return user, msg
 
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
