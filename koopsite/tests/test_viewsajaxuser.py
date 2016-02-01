@@ -1,8 +1,7 @@
 from copy import deepcopy
-import inspect
 import json
 import types
-from unittest.case import skip, skipIf
+from unittest.case import skipIf
 from django.contrib.auth.models import User, AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve
@@ -11,13 +10,13 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from flats.tests.test_base import DummyFlat
 from functional_tests_koopsite.ft_base import DummyUser
-from koopsite.functions import get_or_none, dict_print, parseClientRequest, has_group
+from koopsite.functions import get_or_none, has_group
 from koopsite.models import UserProfile
 from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_views import setup_view
 from koopsite.tests.test_viewsajax import DummyAjaxRequest, server_response_decrypt
 from koopsite.viewsajax import msgType
-from koopsite.viewsajaxuser import UsersTableArray, UsersTable, AjaxAccountView, AjaxRecognizeAccount, AjaxDenyAccount, \
+from koopsite.viewsajaxuser import UsersTableArray, UsersTable, AjaxAccountViewBase, AjaxRecognizeAccount, AjaxDenyAccount, \
     AjaxActivateAccount, AjaxDeactivateAccount, AjaxSetMemberAccount, AjaxDenyMemberAccount, AjaxDeleteAccount
 
 
@@ -219,44 +218,77 @@ class UsersTableTest(TestCase):
         self.assertEqual(request.session['Selections'], {'users_table': {'': {'model': None, 'id': None, 'selRowIndex': 0}}})
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
-class AjaxAccountViewTest(TestCase):
+
+class AjaxAccountTestBase(TestCase):
 
     def setUp(self):
-        self.cls_view = AjaxAccountView
-        # self.path = '/adm/users/table/'
-        # self.template = 'koop_adm_users_table.html'
-
         self.msg = types.SimpleNamespace(title   = "",
                                         type    = "",
                                         message = "",
                                         )
-        # self.no_request_template = 'koop_adm_users_table.html'
         self.sendMail = False
 
         DummyUser().create_dummy_group(group_name='members')
         DummyUser().create_dummy_group(group_name='staff')
-        self.john   = DummyUser().create_dummy_user(username='john', password='secret')
-        self.paul   = DummyUser().create_dummy_user(username='paul')
-        self.george = DummyUser().create_dummy_user(username='george')
-        self.ringo  = DummyUser().create_dummy_user(username='ringo', password='secret')
-        DummyUser().add_dummy_group(self.john  , 'members')
-        DummyUser().add_dummy_group(self.john  , 'staff')
-        DummyUser().add_dummy_group(self.paul  , 'members')
-        DummyUser().add_dummy_group(self.george, 'staff')
-        DummyUser().add_dummy_permission(self.john, 'activate_account')
-        DummyUser().create_dummy_profile(self.john)
-        self.john.is_staff = True
-        self.john.save()
-        self.dummy_user = AnonymousUser()
+        self.john   = DummyUser().create_dummy_user(id=1, username='john', password='secret')
+        self.paul   = DummyUser().create_dummy_user(id=2, username='paul', password='secret')
+        self.george = DummyUser().create_dummy_user(id=3, username='george', password='secret')
+        self.ringo  = DummyUser().create_dummy_user(id=4, username='ringo', password='secret')
 
+        # john буде логінитись і має доступ
+        self.john.is_staff = True
+        DummyUser().add_dummy_group(self.john  , 'staff')
+        DummyUser().add_dummy_permission(self.john, 'activate_account')
+
+        self.set_parameters_to_user(self.john,   True,  True,  True)
+        self.set_parameters_to_user(self.paul,   True,  True,  False)
+        self.set_parameters_to_user(self.george, True,  False, False)
+        self.set_parameters_to_user(self.ringo,  False, False, False)
+
+    def set_parameters_to_user(self, user, is_recognized=False, is_active=False, is_member=False):
+        if is_recognized:
+            DummyUser().create_dummy_profile(user)
+            user.userprofile.is_recognized = True
+            user.userprofile.save()
+        user.is_active = is_active
+        if is_member:
+            DummyUser().add_dummy_group(user, 'members')
+        else:
+            DummyUser().remove_dummy_group(user, 'members')
+        user.save()
+
+    def check_view_response_container_data(self,
+                                            response=None,
+                                            expected_title=None,
+                                            expected_type=None,
+                                            expected_message=None,
+                                            expected_changes=None,
+                                            expected_supplement=None
+                                           ):
+        d = server_response_decrypt(response._container)
+
+        # Чи ф-ція повертає правильний response?
+        self.assertEqual(d['title'     ], expected_title     )
+        self.assertEqual(d['type'      ], expected_type      )
+        self.assertEqual(d['message'   ], expected_message   )
+        self.assertEqual(d['changes'   ], expected_changes   )
+        self.assertEqual(d['supplement'], expected_supplement)
+        expected = {'content-type': ('Content-Type', 'application/json')}
+        self.assertEqual(response._headers, expected)
+
+
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
+class AjaxAccountViewTest(AjaxAccountTestBase):
+
+    def setUp(self):
+        super().setUp()
+        self.cls_view = AjaxAccountViewBase
 
     def test_view_model_and_attributes(self):
         view = self.cls_view()
-        self.assertEqual(view.msg                , self.msg                )
-        # self.assertEqual(view.no_request_template, self.no_request_template)
-        self.assertEqual(view.sendMail           , self.sendMail           )
-
+        self.assertEqual(view.msg     , self.msg     )
+        self.assertEqual(view.sendMail, self.sendMail)
 
     def test_get_request_data(self):
         view = self.cls_view
@@ -287,8 +319,8 @@ class AjaxAccountViewTest(TestCase):
                     'sendMail'    :"",
                     'selRowIndex' :'0',
                     'model'       :'user',
-                    'id'          :'2',
-                    'name'        :'paul',
+                    'id'          :'4',
+                    'name'        :'ringo',
                 }
         ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
         request = self.client.request()
@@ -296,7 +328,7 @@ class AjaxAccountViewTest(TestCase):
         request.session = {}
         user, profile = view().get_request_data(request)
         # Чи метод повертає правильні записи?
-        self.assertEqual(user, self.paul)
+        self.assertEqual(user, self.ringo)
         self.assertEqual(profile, None)
 
     def test_get_request_data_3_no_user(self):
@@ -413,28 +445,27 @@ class AjaxAccountViewTest(TestCase):
         view = self.cls_view()
         user0 = self.john
         prof0 = user0.userprofile
-        prof0.is_recognized = True
         user, msg = view.processing(user0, prof0, view.msg)
         # Витягаємо з бази щойно збережені записи і перевіряємо
         self.assertEqual(user, user0)
         self.assertEqual(msg.title  , user0.username)
         self.assertEqual(msg.type   , msgType.NoChange)
-        self.assertEqual(msg.message, "Акаунт вже підтверджений!")
-
+        self.assertEqual(msg.message, "Акаунт раніше вже був підтверджений!")
 
     def test_processing_changes_made(self):
         view = self.cls_view()
-        user0 = self.john
-        prof0 = user0.userprofile
+        user0 = self.ringo
+        prof0 = getattr(user0, 'userprofile', None)
         user, msg = view.processing(user0, prof0, view.msg)
         # Витягаємо з бази щойно збережені записи і перевіряємо
-        user_db = get_or_none(User, id=self.john.id)
-        prof_db = get_or_none(UserProfile, user=self.john)
+        user_db = get_or_none(User, id=user0.id)
+        prof_db = get_or_none(UserProfile, user=user0)
         self.assertEqual(user.id, user_db.id)
         self.assertEqual(prof_db.is_recognized, True)
         self.assertEqual(msg.title  , user_db.username)
         self.assertEqual(msg.type   , msgType.Change)
         self.assertEqual(msg.message, "Акаунт підтверджено!")
+
         # TODO-2016 01 29 додати перевірку self.send_e_mail(user, e_msg_body)
 
 
@@ -450,30 +481,25 @@ class AjaxAccountViewTest(TestCase):
                     'name'        :'john',
                 }
         ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        # Очікувані дані з response
+        expected_title      = "john"
+        expected_type       = "NoChange"
+        expected_message    = "Акаунт раніше вже був підтверджений!"
+        expected_changes    = {'0': {'id': '1', 'name': 'john', 'model': 'user'},
+                               }
+        expected_supplement = {'iconPath': {
+                            '6': '/static/admin/img/icon-yes.gif',
+                            '7': '/static/admin/img/icon-yes.gif',
+                            '8': '/static/admin/img/icon-yes.gif',
+                            }}
         request = self.client.request()
         request.POST = ajax_data
         request.session = {}
 
         response = view.handler(request)
-
-        d = server_response_decrypt(response._container)
-
-        # Чи ф-ція повертає правильний response?
-
-        expected_changes    = {'0': {'id': '1', 'name': 'john', 'model': 'user'}, '6': True}
-        expected_message    = "Акаунт підтверджено!"
-        expected_supplement = {'iconPath': {'8': '/static/admin/img/icon-yes.gif', '7': '/static/admin/img/icon-yes.gif', '6': '/static/admin/img/icon-yes.gif'}}
-        expected_title      = "john"
-        expected_type       = "Change"
-
-        self.assertEqual(d['changes'   ], expected_changes   )
-        self.assertEqual(d['message'   ], expected_message   )
-        self.assertEqual(d['supplement'], expected_supplement)
-        self.assertEqual(d['title'     ], expected_title     )
-        self.assertEqual(d['type'      ], expected_type      )
-
-        expected = {'content-type': ('Content-Type', 'application/json')}
-        self.assertEqual(response._headers, expected)
+        self.check_view_response_container_data(response,
+            expected_title, expected_type, expected_message,
+            expected_changes, expected_supplement)
 
     def test_handler_return_empty_response_if_no_client_request(self):
         view = self.cls_view()
@@ -495,65 +521,6 @@ class AjaxAccountViewTest(TestCase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-
-
-class AjaxAccountTestBase(TestCase):
-
-    def setUp(self):
-        self.msg = types.SimpleNamespace(title   = "",
-                                        type    = "",
-                                        message = "",
-                                        )
-        # self.no_request_template = 'koop_adm_users_table.html'
-        self.sendMail = False
-
-        DummyUser().create_dummy_group(group_name='members')
-        DummyUser().create_dummy_group(group_name='staff')
-        self.john   = DummyUser().create_dummy_user(id=1, username='john', password='secret')
-        self.paul   = DummyUser().create_dummy_user(id=2, username='paul', password='secret')
-        self.george = DummyUser().create_dummy_user(id=3, username='george', password='secret')
-        self.ringo  = DummyUser().create_dummy_user(id=4, username='ringo', password='secret')
-
-        # john буде логінитись і має доступ
-        self.john.is_staff = True
-        DummyUser().add_dummy_group(self.john  , 'staff')
-        DummyUser().add_dummy_permission(self.john, 'activate_account')
-
-        self.set_parameters_to_user(self.john,   True,  True,  True)
-        self.set_parameters_to_user(self.paul,   True,  True,  False)
-        self.set_parameters_to_user(self.george, True,  False, False)
-        self.set_parameters_to_user(self.ringo,  False, False, False)
-
-    def set_parameters_to_user(self, user, is_recognized=False, is_active=False, is_member=False):
-        if is_recognized:
-            DummyUser().create_dummy_profile(user)
-            user.userprofile.is_recognized = True
-            user.userprofile.save()
-        user.is_active = is_active
-        if is_member:
-            DummyUser().add_dummy_group(user, 'members')
-        else:
-            DummyUser().remove_dummy_group(user, 'members')
-        user.save()
-
-    def check_view_response_container_data(self,
-                                            response=None,
-                                            expected_title=None,
-                                            expected_type=None,
-                                            expected_message=None,
-                                            expected_changes=None,
-                                            expected_supplement=None
-                                           ):
-        d = server_response_decrypt(response._container)
-
-        # Чи ф-ція повертає правильний response?
-        self.assertEqual(d['title'     ], expected_title     )
-        self.assertEqual(d['type'      ], expected_type      )
-        self.assertEqual(d['message'   ], expected_message   )
-        self.assertEqual(d['changes'   ], expected_changes   )
-        self.assertEqual(d['supplement'], expected_supplement)
-        expected = {'content-type': ('Content-Type', 'application/json')}
-        self.assertEqual(response._headers, expected)
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")

@@ -12,7 +12,7 @@ from koopsite.settings import EMAIL_HOST_USER, STATIC_URL, SITE_ADDRESS
 from koopsite.functions import has_group, add_group, \
                         remove_group, is_staff_only, sendMailToUser, \
                         get_user_full_name, get_user_flat_No, \
-                        get_user_is_recognized, get_or_none
+                        get_user_is_recognized, get_or_none, browTabName_models
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest
@@ -110,6 +110,7 @@ class UsersTable(ListView):
 
     @method_decorator(permission_required('koopsite.activate_account'))
     def dispatch(self, request, *args, **kwargs):
+        self.request = request
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -182,7 +183,7 @@ class UsersTable(ListView):
 # jQuery ajax base class for single Account:
 #################################################################
 
-class AjaxAccountView(View):
+class AjaxAccountViewBase(View):
     """
     CBV - базовий суперклас для обробки AJAX-запитів з таблиці.
     Від класу View використовується:
@@ -261,7 +262,7 @@ class AjaxAccountView(View):
         if profile and profile.is_recognized == True:
             msg.title   = user.username
             msg.type    = msgType.NoChange
-            msg.message = "Акаунт вже підтверджений!"
+            msg.message = "Акаунт раніше вже був підтверджений!"
         else:
             # Робимо зміни:
             if not profile:
@@ -293,7 +294,7 @@ class AjaxAccountView(View):
 # jQuery ajax CBV for single Account:
 #################################################################
 
-class AjaxRecognizeAccount(AjaxAccountView):
+class AjaxRecognizeAccount(AjaxAccountViewBase):
     """
     Підтвердження акаунту.
     """
@@ -323,7 +324,7 @@ class AjaxRecognizeAccount(AjaxAccountView):
         return user, msg
 
 
-class AjaxDenyAccount(AjaxAccountView):
+class AjaxDenyAccount(AjaxAccountViewBase):
     """
     Підтвердження акаунту.
     """
@@ -354,7 +355,7 @@ class AjaxDenyAccount(AjaxAccountView):
         return user, msg
 
 
-class AjaxActivateAccount(AjaxAccountView):
+class AjaxActivateAccount(AjaxAccountViewBase):
     """
     Активація акаунту.
     """
@@ -383,9 +384,8 @@ class AjaxActivateAccount(AjaxAccountView):
             self.send_e_mail(user, e_msg_body)
         return user, msg
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
 
-class AjaxDeactivateAccount(AjaxAccountView):
+class AjaxDeactivateAccount(AjaxAccountViewBase):
     """
     Деактивація акаунту.
     """
@@ -411,7 +411,7 @@ class AjaxDeactivateAccount(AjaxAccountView):
         return user, msg
 
 
-class AjaxSetMemberAccount(AjaxAccountView):
+class AjaxSetMemberAccount(AjaxAccountViewBase):
     """
     Додавання користувача до групи 'members'.
     """
@@ -442,7 +442,7 @@ class AjaxSetMemberAccount(AjaxAccountView):
         return user, msg
 
 
-class AjaxDenyMemberAccount(AjaxAccountView):
+class AjaxDenyMemberAccount(AjaxAccountViewBase):
     """
     Видалення користувача з групи 'members'.
     """
@@ -469,7 +469,7 @@ class AjaxDenyMemberAccount(AjaxAccountView):
         return user, msg
 
 
-class AjaxDeleteAccount(AjaxAccountView):
+class AjaxDeleteAccount(AjaxAccountViewBase):
     """
     Видалення акаунту.
     """
@@ -508,7 +508,7 @@ class AjaxDeleteAccount(AjaxAccountView):
 # jQuery ajax base class for GROUP of Accounts:
 #################################################################
 
-class AjaxAllAccountsView(View):
+class AjaxAllAccountsViewBase(View):
     """
     CBV - базовий суперклас для обробки AJAX-запитів з таблиці.
     Від класу View використовується:
@@ -517,13 +517,15 @@ class AjaxAllAccountsView(View):
     Метод dispatch повністю замінений викликом функції handler
     Метод dispatch декорується у дочірніх класах.
     """
-    empty_msg = types.SimpleNamespace(title   = "",
-                                      type    = "",
-                                      message = ""
-                                      )
-    group_msg = deepcopy(empty_msg)
-    # no_request_template = 'koop_adm_users_table.html'
-    sendMail = False
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.empty_msg = types.SimpleNamespace(title   = "",
+                                        type    = "",
+                                        message = "",
+                                        )
+        self.group_msg = deepcopy(self.empty_msg)
+        self.sendMail = False
+        self.init_counter()
 
     def init_counter(self):
         self.group_msg.title   = "Активація групи акаунтів"
@@ -543,7 +545,6 @@ class AjaxAllAccountsView(View):
             # Розбираємо дані від клієнта:
             users_set = self.get_request_data_set(request)
 
-            self.init_counter()
             # Перевіряємо і вносимо зміни у всі елементи.
             group_response_set = self.group_processing(users_set)
 
@@ -570,15 +571,24 @@ class AjaxAllAccountsView(View):
         except ValueError as err:
             # запит від клієнта містить невідповідні дані:
             print('get_request_data_set:', err.args)
-            return HttpResponse()
+            return None
+        browTabName = d.get('browTabName')
+        if browTabName != 'users_table':
+            return None
         self.sendMail = d['sendMail']
         elemSet = d.get('elemSet')
         users_set = []
         if elemSet:
             for elem in elemSet:
-                user_id = elem.get('id')
-                user = User.objects.get(id=user_id)
-                users_set.append(user)
+                model = elem.get('model')
+                if model:
+                    if model not in browTabName_models.get(browTabName):
+                        print('Error data in request.POST: model name in elemSet does not correspond to table name', model, browTabName)
+                        return None
+                if model == "user":
+                    user_id = elem.get('id')
+                    user = get_or_none(User, id=user_id)    # selected user
+                    users_set.append(user)
         return users_set
 
     def group_processing(self, users_set):
@@ -623,7 +633,7 @@ class AjaxAllAccountsView(View):
             msg.type    = msgType.NoChange
             msg.message = "Акаунт вже активний!"
             self.counter["вже активні"] += 1
-        elif profile.is_recognized == False:
+        elif profile and profile.is_recognized == False:
             msg.title   = user.username
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не можна активувати!"
@@ -654,7 +664,7 @@ class AjaxAllAccountsView(View):
 # jQuery ajax CBV for GROUP of Accounts:
 #################################################################
 
-class AjaxActivateAllAccounts(AjaxAllAccountsView):
+class AjaxActivateAllAccounts(AjaxAllAccountsViewBase):
     """
     Активація всіх акаунтів з фільтрованого списку.
     """
@@ -679,7 +689,7 @@ class AjaxActivateAllAccounts(AjaxAllAccountsView):
             msg.type    = msgType.NoChange
             msg.message = "Акаунт вже активний!"
             self.counter["вже активні"] += 1
-        elif profile.is_recognized == False:
+        elif profile and profile.is_recognized == False:
             msg.title   = user.username
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не можна активувати!"
@@ -697,7 +707,7 @@ class AjaxActivateAllAccounts(AjaxAllAccountsView):
         return user, msg
 
 
-class AjaxSetMemberAllAccounts(AjaxAllAccountsView):
+class AjaxSetMemberAllAccounts(AjaxAllAccountsViewBase):
     """
     Приєднання до групи members всіх акаунтів з фільтрованого списку.
     """
@@ -722,7 +732,7 @@ class AjaxSetMemberAllAccounts(AjaxAllAccountsView):
             msg.type    = msgType.NoChange
             msg.message = "Акаунт вже має ці права доступу!"
             self.counter["доступ вже є"] += 1
-        elif profile.is_recognized == False:
+        elif profile and profile.is_recognized == False:
             msg.title   = user.username
             msg.type    = msgType.Error
             msg.message = "Відхилений Акаунт не може отримати права доступу!"
