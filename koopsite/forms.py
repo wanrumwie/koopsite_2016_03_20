@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
-from koopsite.functions import has_group_member, \
+from koopsite.functions import has_group_members, \
                                 add_group, remove_group, dict_print
 from koopsite.models import UserProfile
 
@@ -114,7 +114,7 @@ class UserPermsActivateForm(UserPermsFullForm):
         # примірник моделі User
         self.is_member = None
         if instance:
-            self.is_member = has_group_member(instance)
+            self.is_member = has_group_members(instance)
             self.fields['has_perm_member'].initial = self.is_member
 
 
@@ -247,3 +247,13 @@ class ProfileRegistrationForm(ProfileFullForm):
         fields = ('flat', 'picture')
 
 #---------------- Кінець коду, охопленого тестуванням ------------------
+
+class UserSetMemberForm(UserPermsActivateForm):
+    # Форма для редагуванння даних стосовно прав члена кооперативу
+    READONLY_FIELDS = (
+                        # 'username',
+                        'first_name', 'last_name',
+                        'date_joined', 'last_login',
+                        )
+
+

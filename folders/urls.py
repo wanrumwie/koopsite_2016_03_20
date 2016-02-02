@@ -56,8 +56,8 @@ urlpatterns = [
     url(r'^report/(?P<pk>[0-9]+)/update/$',     ReportUpdate.as_view(), name='report-update'),
     url(r'^report/(?P<pk>[0-9]+)/delete/$',     ReportDelete.as_view(), name='report-delete'),
     url(r'^report/(?P<pk>[0-9]+)/download/$',   reportDownload,         name='report-download'),
-#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^report/(?P<pk>[0-9]+)/preview/$',    ReportPreview.as_view(), name='report-preview'),
+#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^report/(?P<pk>[0-9]+)/view/$',       reportPreview,          name='report-view'),
     url(r'^report/(?P<pk>[0-9]+)/deco/$',       reportDecorView,        name='report-deco'),
 

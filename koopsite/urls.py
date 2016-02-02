@@ -40,6 +40,7 @@ from .viewsajax import \
                     ajaxSelRowIndexToSession, \
                     ajaxStartRowIndexFromSession
 
+#--------- ПОЧАТОК коду, охопленого функціональними тестами ------------
 urlpatterns = [
     # сайт: localhost або готовий сайт
 
@@ -48,9 +49,12 @@ urlpatterns = [
     url(r'^index/$',    index,                          name='index'),
     url(r'^login/$',    LoginView.as_view(),            name='login'),
     url(r'^logout/$',   user_logout,                    name='logout'),
+#--------- Кінець коду, охопленого функціональними тестами ------------
     url(r'^noaccess/$', noaccess,                       name='noaccess'),
     url(r'^success/$',  success,                        name='success'),
+#--------- ПОЧАТОК коду, охопленого функціональними тестами ------------
     url(r'^register/$', UserProfileCreate.as_view(),    name='register'),
+#--------- Кінець коду, охопленого функціональними тестами ------------
 
     # /own/profile/ та інші - дані залогіненого користувач (is_authenticated == True)
     url(r'^own/profile/$',          OwnProfileDetailShow.as_view(), name='own-profile'),

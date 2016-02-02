@@ -18,7 +18,7 @@ class FolderFormBaseTest(TestCase):
         form = self.cls_form
         self.assertEqual(form.required_css_class, 'required')
         self.assertEqual(form.error_css_class   , 'error')
-        self.assertEqual(form.READONLY_FIELDS   , [])
+        self.assertEqual(form.READONLY_FIELDS   , ())
         self.assertEqual(form.Meta.model, Folder)
         self.assertEqual(form.Meta.fields, ('parent', 'name', 'created_on'))
 
@@ -149,7 +149,7 @@ class ReportUpdateFormTest(TestCase):
 
     def test_form_attributes(self):
         form = self.cls_form
-        self.assertEqual(form.READONLY_FIELDS, [])
+        self.assertEqual(form.READONLY_FIELDS, ())
         self.assertEqual(form.Meta.model, Report)
         self.assertEqual(form.Meta.fields, ('parent', 'filename', 'file'))
 
@@ -160,7 +160,7 @@ class ReportFormTest(TestCase):
 
     def test_form_attributes(self):
         form = self.cls_form
-        self.assertEqual(form.READONLY_FIELDS, [])
+        self.assertEqual(form.READONLY_FIELDS, ())
         self.assertEqual(form.Meta.model, Report)
         self.assertEqual(form.Meta.fields, ('parent', 'file'))
 

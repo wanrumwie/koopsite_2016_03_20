@@ -12,9 +12,10 @@ from django.views.generic.list import ListView
 from koopsite.models import UserProfile
 from koopsite.settings import EMAIL_HOST_USER, STATIC_URL, SITE_ADDRESS
 from koopsite.functions import has_group, add_group, \
-                        remove_group, is_staff_only, sendMailToUser, \
+                        remove_group, is_staff_only, \
                         get_user_full_name, get_user_flat_No, \
-                        get_user_is_recognized, get_or_none, browTabName_models, dict_print
+                        get_user_is_recognized, get_or_none, \
+                        browTabName_models
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest

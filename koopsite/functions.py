@@ -7,6 +7,7 @@ from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 from math import ceil
 from PIL import Image
+from flats.models import Flat
 from koopsite.fileExtIconPath import iconPath
 from koopsite.settings import EMAIL_HOST_USER, TRACE_CONDITION
 
@@ -324,7 +325,7 @@ def is_staff_only(user):
     staff  = get_or_none(Group, name='staff')
     return staff in groups and len(groups) == 1
 
-def has_group_member(user):
+def has_group_members(user):
     return has_group(user, 'members')
 
 def has_group(user, group_name):
@@ -338,6 +339,27 @@ def add_group(user, group_name):
 def remove_group(user, group_name):
     group = get_or_none(Group, name=group_name)
     user.groups.remove(group)
+
+def get_flat_users(flat):
+    # Повертає список користувачів, у профілях яких вказано цю квартиру
+    users_list = []
+    if flat and isinstance(flat, Flat):
+        for profile in flat.userprofiles.all():
+            user = profile.user
+            users_list.append(user)
+    return users_list
+
+def has_flat_member(flat):
+    # Повертає True, якщо серед користувачів, у профілях яких
+    # вказано цю квартиру, є користувач з правами доступу "member"
+    flag = False
+    if flat and isinstance(flat, Flat):
+        for profile in flat.userprofiles.all():
+            user = profile.user
+            if has_group_members(user):
+                flag = True
+                break
+    return flag
 
 
 class AllFieldsMixin():
@@ -598,6 +620,8 @@ def get_thumbnail_url_path(picture, size='30x24'):
     return miniature_url, miniature_filename
 
 #---------------- Кінець коду, охопленого тестуванням ------------------
+
+
 
 def sendMailToUser(user, subject="KoopSite administrator", message=""):
     email    = user.email

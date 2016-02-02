@@ -198,7 +198,7 @@ a:focus     {outline-style: none;}
 
 /*=======================================================================*/
 .tableform {
-    max-width:          30em; 
+    max-width:          40em;
 }
 .tableform table {
     width:              100%; 
@@ -213,7 +213,7 @@ a:focus     {outline-style: none;}
     empty-cells:        hide;
     padding:            0;
 }
-.tableform table tr th {height: 2em; text-align: right; width:  10em; padding: 4px; }
+.tableform table tr th {height: 2em; text-align: right; width:  15em; padding: 4px; }
 .tableform table tr td {height: 2em; text-align: left;  width:  25em; padding: 4px; overflow-x: hidden; }
 
 /* Elements in td must fill all space:*/
@@ -227,6 +227,11 @@ a:focus     {outline-style: none;}
     height:             100%; 
     margin:             0;
     padding:            0 0.5em;
+}
+.tableform table td input[type="text"] ,
+.tableform table td input[type="email"] ,
+.tableform table td input[type="password"] {
+    height:             1.5em    !important;
 }
 .tableform table td input[type="file"],
 .tableform table td input[type="checkbox"] {

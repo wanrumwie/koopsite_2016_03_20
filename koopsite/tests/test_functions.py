@@ -1,5 +1,6 @@
 import os
 import types
+from django.contrib.auth.models import User
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.utils import IntegrityError
 from django.test import TestCase
@@ -13,8 +14,8 @@ from koopsite.functions import round_up_division, AllFieldsMixin, \
     getSelections, getSelElementFromSession, setSelElementToSession, \
     parseClientRequest, parseXHRClientRequest, get_user_full_name, \
     get_user_flat_No, get_user_is_recognized, is_staff_only, get_or_none, \
-    has_group_member, has_group, add_group, remove_group, \
-    transliterate, get_thumbnail_url_path
+    has_group_members, has_group, add_group, remove_group, \
+    transliterate, get_thumbnail_url_path, get_flat_users, has_flat_member, dict_print
 from koopsite.settings import MEDIA_ROOT
 from koopsite.tests.test_viewsajax import DummyAjaxRequest
 
@@ -414,12 +415,12 @@ class UserDifferentAttributesTest(TestCase):
     def test_has_group_member(self):
         DummyUser().create_dummy_group(group_name='members')
         DummyUser().add_dummy_group(self.user, group_name='members')
-        self.assertTrue(has_group_member(self.user))
+        self.assertTrue(has_group_members(self.user))
 
     def test_has_group_member_gives_false(self):
         DummyUser().create_dummy_group(group_name='stuff')
         DummyUser().add_dummy_group(self.user, group_name='stuff')
-        self.assertFalse(has_group_member(self.user))
+        self.assertFalse(has_group_members(self.user))
 
     def test_has_group(self):
         DummyUser().create_dummy_group(group_name='members')
@@ -448,6 +449,26 @@ class UserDifferentAttributesTest(TestCase):
     def test_remove_group_gives_false_if_no_group(self):
         remove_group(self.user, 'members')
         self.assertFalse(has_group(self.user, 'members'))
+
+
+    def test_get_flat_users(self):
+        john, paul, george, ringo, freddy = DummyUser().create_dummy_beatles()
+        flat_1, flat_2 = DummyUser().set_flats_to_beatles(john, paul, george, ringo, freddy)
+        self.assertEqual(get_flat_users(flat_1), [john,])
+        self.assertEqual(get_flat_users(flat_2), [paul, george, ringo])
+        self.assertEqual(get_flat_users(None), [])
+        self.assertEqual(get_flat_users(User()), [])
+
+    def test_has_flat_member(self):
+        john, paul, george, ringo, freddy = DummyUser().create_dummy_beatles()
+        flat_1, flat_2 = DummyUser().set_flats_to_beatles(john, paul, george, ringo, freddy)
+        DummyUser().create_dummy_group(group_name='members')
+        DummyUser().add_dummy_group(john, group_name='members')
+        self.assertEqual(has_flat_member(flat_1), True)
+        self.assertEqual(has_flat_member(flat_2), False)
+        self.assertEqual(has_flat_member(None), False)
+        self.assertEqual(has_flat_member(User()), False)
+
 
 
 class AllFieldsMixinTest(TestCase):

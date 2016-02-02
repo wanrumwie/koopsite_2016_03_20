@@ -1,5 +1,4 @@
 import importlib
-from unittest.mock import _get_class
 from django.test import TestCase
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver, reverse, resolve
 from koopsite.urls import urlpatterns
@@ -106,5 +105,12 @@ class UrlNameSpaceTest(TestCase):
                 print('%-50s %s' % (u, n))
         self.assertEqual(len(dupl_in_name), 0, 'Виявлено дублікати в назвах url')
         self.assertEqual(len(dupl_in_urls), 0, 'Виявлено дублікати в шаблонах url')
+
+    def test_root_equal_index(self):
+        self.assertEqual('/', reverse('root'))
+        self.assertEqual('/index/', reverse('index'))
+        found1 = resolve('/')
+        found2 = resolve('/index/')
+        self.assertEqual(found1.func, found2.func)
 
 

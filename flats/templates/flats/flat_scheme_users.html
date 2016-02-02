@@ -6,11 +6,12 @@
 {% load staticfiles %}
 
 {% block page-name %}
-    Схема розташування квартир
+    Зареєстровані користувачі сайту
 {% endblock %}
 
 {% block flat-td-a-href %}
-    <td><a href="{% url 'flats:flat-detail' f.id %}">{{ f.flat_No }}</a></td>
+    <td bgcolor="{{ bgcolor }}"
+            ><a href="{% url 'flats:flat-detail' f.id %}">{{ f.flat_No }}</a></td>
 {% endblock %}
 
 {% block empty-flat-td %}
@@ -18,5 +19,5 @@
 {% endblock %}
 
 {% block under-table %}
-    Клацніть мишкою по номеру квартири, щоб побачити її характеристики
+    Клацніть мишкою по номеру квартири, щоб побачити список користувачів
 {% endblock %}

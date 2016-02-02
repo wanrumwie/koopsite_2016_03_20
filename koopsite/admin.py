@@ -111,3 +111,4 @@ class UserProfileAdmin(UserAdmin):
 # admin.site.register(User, UserProfileAdmin)
 admin.site.register(UserProfile, ProfileAdmin)
 #
+

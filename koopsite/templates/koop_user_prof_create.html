@@ -45,6 +45,13 @@
     щоб активувати новий обліковий запис.
     </p>
     {% include "block_one_two_forms.html" %}
+
+    {% load staticfiles %}
+    <!-- Спочатку завантажуємо jquery! -->
+    {% include "block_js_jquery.html" %}
+
+    <script src="{% static 'js/functions.js' %}"></script>
+
 {% endblock %}
 
 {% block href-back %}

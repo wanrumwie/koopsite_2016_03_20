@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from flats.views import FlatSchemeUsers
 from koopsite.views import page_not_ready
 
 from .views import FlatList, FlatScheme, \
@@ -18,6 +19,7 @@ urlpatterns = [
 
 #--------- Кінець коду, охопленого функціональними тестами ------------
 
+    url(r'^scheme-users/$',     FlatSchemeUsers.as_view(),      name='flat-scheme-users'),
     # url(r'^person/table/$',   PersonTableView.as_view(), name='person-table'),
     url(r'^person/table/$',     page_not_ready,                 name='person-table'),
 ]

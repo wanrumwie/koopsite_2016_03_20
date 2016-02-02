@@ -3,6 +3,7 @@ from django.contrib.auth.models import Permission, Group
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils.timezone import now
+from flats.tests.test_base import DummyFlat
 from koopsite.functions import trace_print
 from koopsite.models import UserProfile
 
@@ -69,4 +70,26 @@ class DummyUser():
         trace_print('created profile:', profile, 'for user:', user)
         return profile
 
+    def create_dummy_beatles(self):
+        john   = self.create_dummy_user(id=1, username='john', password='secret', email='john@gmail.com')
+        paul   = self.create_dummy_user(id=2, username='paul', password='secret')
+        george = self.create_dummy_user(id=3, username='george', password='secret')
+        ringo  = self.create_dummy_user(id=4, username='ringo', password='secret')
+        freddy = self.create_dummy_user(id=5, username='freddy', password='secret', email='freddy@gmail.com')
+        return john, paul, george, ringo, freddy
 
+    def set_parameters_to_user(self, user, flat=None):
+        if flat != None:
+            DummyUser().create_dummy_profile(user)
+            user.userprofile.flat = flat
+            user.userprofile.save()
+
+    def set_flats_to_beatles(self, john, paul, george, ringo, freddy):
+        flat_1 = DummyFlat().create_dummy_flat(id=1, flat_No='1')
+        flat_2 = DummyFlat().create_dummy_flat(id=2, flat_No='2')
+        self.set_parameters_to_user(john,   flat=flat_1)
+        self.set_parameters_to_user(paul,   flat=flat_2)
+        self.set_parameters_to_user(george, flat=flat_2)
+        self.set_parameters_to_user(ringo,  flat=flat_2)
+        self.set_parameters_to_user(freddy)
+        return flat_1, flat_2

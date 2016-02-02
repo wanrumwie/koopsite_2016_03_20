@@ -1,5 +1,5 @@
 import os
-from unittest.case import skip
+from unittest.case import skip, skipIf
 from datetime import timedelta
 from django import forms
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -22,7 +22,7 @@ from koopsite.forms import UserRegistrationForm, \
     UserPermsActivateForm
 from koopsite.functions import has_group, get_thumbnail_url_path
 from koopsite.models import UserProfile
-from koopsite.settings import LOGIN_URL
+from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_base import DummyUser
 from koopsite.views import index, AllFieldsView, \
     AllRecordsAllFieldsView, OneToOneBase, \
@@ -46,6 +46,7 @@ def setup_view(view, request, *args, **kwargs):
 
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class AllFieldsViewTest(TestCase):
     # Тестуємо клас, базовий для, напр., FlatDetail
 
@@ -73,6 +74,7 @@ class AllFieldsViewTest(TestCase):
         self.assertEqual(context['object_list'], expected_obj_details)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class AllRecordsAllFieldsViewTest(TestCase):
     # Тестуємо клас, базовий для, напр., FlatTable
 
@@ -125,6 +127,7 @@ class AllRecordsAllFieldsViewTest(TestCase):
         self.assertEqual(context['title_list'], exp_verb)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class OneToOneBaseTest(TestCase):
 
     def setUp(self):
@@ -191,6 +194,7 @@ class OneToOneBaseTest(TestCase):
             view.set_two_outform_fields(user)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class UserProfileCreateTest(TestCase):
     '''
     Цим тестом одночасно перевіряється OneToOneCreate
@@ -412,6 +416,7 @@ class UserProfileCreateTest(TestCase):
         self.unsuccess_for_invalid_data(data)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class UserProfilePersonDataUpdateTest(TestCase):
     '''
     Цим тестом одночасно перевіряється OneToOneUpdate
@@ -633,6 +638,7 @@ class UserProfilePersonDataUpdateTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class UserPermsFullUpdateTest(TestCase):
     '''
     Цим тестом одночасно перевіряється OneToOneUpdate
@@ -764,6 +770,7 @@ class UserPermsFullUpdateTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class UserPermsActivateUpdateTest(TestCase):
     '''
     Цим тестом одночасно перевіряється OneToOneUpdate
@@ -891,6 +898,7 @@ class UserPermsActivateUpdateTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class UserProfileDetailShowTest(TestCase):
 
     def setUp(self):
@@ -968,6 +976,7 @@ class UserProfileDetailShowTest(TestCase):
         self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0])
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class OwnProfileDetailShowTest(TestCase):
 
     def setUp(self):
@@ -1032,6 +1041,7 @@ class OwnProfileDetailShowTest(TestCase):
         self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0])
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class OwnProfileUpdateTest(TestCase):
     '''
     Цим тестом одночасно перевіряється OneToOneUpdate
@@ -1313,6 +1323,7 @@ class UserListTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class LoginViewTest(TestCase):
     '''
     Джерело LoginView: https://coderwall.com/p/sll1kw/django-auth-class-based-views-login-and-logout
@@ -1420,6 +1431,7 @@ class LoginViewTest(TestCase):
         self.unsuccess_for_invalid_data(data)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class User_logoutTest(TestCase):
 
     def test_logout_url_resolves_to_proper_view(self):
@@ -1439,6 +1451,7 @@ class User_logoutTest(TestCase):
                 [('http://testserver/noaccess/?next=/logout/', 302)])
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ChangePasswordTest(TestCase):
     '''
     Джерело ChangePassword: http://stackoverflow.com/questions/9046659/converting-a-function-based-view-to-a-class-based-view-with-only-a-form-and-no-m
@@ -1540,6 +1553,7 @@ class ChangePasswordTest(TestCase):
         self.unsuccess_for_invalid_data(data)
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class IndexPageTest(TestCase):
 
     def test_root_url_resolves_to_index_page_view(self):
@@ -1561,6 +1575,7 @@ class IndexPageTest(TestCase):
         self.assertTemplateUsed(response, 'koop_index.html')
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class AdmIndexPageTest(TestCase):
 
     def setUp(self):
@@ -1609,6 +1624,7 @@ class AdmIndexPageTest(TestCase):
         self.assertIn(b', fred!</h2>', response._container[0])
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class NoaccessPageTest(TestCase):
 
     def setUp(self):
@@ -1631,6 +1647,7 @@ class NoaccessPageTest(TestCase):
 
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class SuccessPageTest(TestCase):
 
     def setUp(self):
@@ -1653,6 +1670,7 @@ class SuccessPageTest(TestCase):
 
 
 
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class Page_not_readyTest(TestCase):
 
     def setUp(self):
@@ -1674,5 +1692,41 @@ class Page_not_readyTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class UsersOfFlatTest(TestCase):
+
+    def setUp(self):
+        DummyUser().create_dummy_group(group_name='members')
+        DummyUser().create_dummy_group(group_name='staff')
+        self.john   = DummyUser().create_dummy_user(id=1, username='john', password='secret', email='john@gmail.com')
+        self.paul   = DummyUser().create_dummy_user(id=2, username='paul', password='secret')
+        self.george = DummyUser().create_dummy_user(id=3, username='george', password='secret')
+        self.ringo  = DummyUser().create_dummy_user(id=4, username='ringo', password='secret')
+        self.freddy = DummyUser().create_dummy_user(id=5, username='freddy', password='secret', email='freddy@gmail.com')
+
+        # john буде логінитись і має доступ
+        self.john.is_staff = True
+        DummyUser().add_dummy_group(self.john  , 'staff')
+        DummyUser().add_dummy_permission(self.john, 'activate_account')
+        self.flat_1 = DummyFlat().create_dummy_flat(id=1, flat_No='1')
+        self.flat_2 = DummyFlat().create_dummy_flat(id=2, flat_No='2')
+
+        self.set_parameters_to_user(self.john,   flat=self.flat_1)
+        self.set_parameters_to_user(self.paul,   flat=self.flat_2)
+        self.set_parameters_to_user(self.george, flat=self.flat_2)
+        self.set_parameters_to_user(self.ringo,  flat=self.flat_2)
+        self.set_parameters_to_user(self.freddy)
+
+    def set_parameters_to_user(self, user, flat=None):
+        if flat != None:
+            DummyUser().create_dummy_profile(user)
+            user.userprofile.flat = flat
+            user.userprofile.save()
+
+    def test_rel_name(self):
+        for flat in Flat.objects.all():
+            print('flat =', flat)
+            for profile in flat.userprofiles.all():
+                user = profile.user
+                print('user =', user)
 
 

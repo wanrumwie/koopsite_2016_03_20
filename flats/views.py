@@ -76,6 +76,7 @@ class FlatScheme(ListView):
         kwargs['block_length'] = l
         kwargs['floors']       = floors
         kwargs['entrances']    = entrances
+        kwargs['bgcolor']    = 'red'
         # dict_print(kwargs, 'kwargs')
         return kwargs
 
@@ -103,3 +104,6 @@ class FlatTable(AllRecordsAllFieldsView):
     context_verbose_list_name = "field_names"
 
 #---------------- Кінець коду, охопленого тестуванням ------------------
+
+class FlatSchemeUsers(FlatScheme):
+    template_name = 'flats/flat_scheme_users.html'

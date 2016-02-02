@@ -1,4 +1,5 @@
 from django import forms
+from koopsite.forms import set_readonly_widget_attrs
 from .models import Folder, Report
 
 
@@ -8,13 +9,11 @@ class FolderFormBase(forms.ModelForm):
     error_css_class     = 'error'
 
     # Трюк з полями readonly:
-    READONLY_FIELDS = []
+    READONLY_FIELDS = ()
 
     def __init__(self, *args, **kwargs):
         super(FolderFormBase, self).__init__(*args, **kwargs)
-        for field in self.READONLY_FIELDS:
-            self.fields[field].widget.attrs['readonly'] = True
-            self.fields[field].widget.attrs['disabled'] = True
+        set_readonly_widget_attrs(self.fields, self.READONLY_FIELDS)
 
     class Meta:
         model  = Folder
@@ -52,9 +51,7 @@ class ReportFormBase(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ReportFormBase, self).__init__(*args, **kwargs)
-        for field in self.READONLY_FIELDS:
-            self.fields[field].widget.attrs['readonly'] = True
-            self.fields[field].widget.attrs['disabled'] = True
+        set_readonly_widget_attrs(self.fields, self.READONLY_FIELDS)
 
     class Meta:
         model = Report
@@ -63,7 +60,7 @@ class ReportFormBase(forms.ModelForm):
 
 class ReportForm(forms.ModelForm):
     # Форма для вводу даних про файл
-    READONLY_FIELDS = []
+    READONLY_FIELDS = ()
 
     class Meta:
         model = Report
@@ -81,7 +78,7 @@ class ReportFormInFolder(ReportFormBase):
 
 class ReportUpdateForm(ReportFormBase):
     # Форма для редагування даних про файл
-    READONLY_FIELDS = []
+    READONLY_FIELDS = ()
 
     class Meta:
         model = Report
