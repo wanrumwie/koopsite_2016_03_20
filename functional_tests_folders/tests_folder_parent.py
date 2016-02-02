@@ -83,22 +83,21 @@ class FolderParentListPageAuthenticatedVisitorTest(FolderParentListPageVisitTest
         self.add_user_cookie_to_browser(self.dummy_user)
         DummyFolder().create_dummy_catalogue()
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -112,12 +111,11 @@ class FolderParentListPageAnonymousVisitorTest(FolderParentListPageVisitTest):
         self.dummy_user = AnonymousUser()
         DummyFolder().create_dummy_catalogue()
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -133,7 +131,6 @@ class FolderParentListPageAuthenticatedVisitorCanFindLinkTest(FolderParentListPa
         self.add_user_cookie_to_browser(self.dummy_user)
         DummyFolder().create_dummy_catalogue()
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_find_folder(self):
         # Користувач може  перейти по лінку потрібні дані
@@ -146,7 +143,7 @@ class FolderParentListPageAuthenticatedVisitorCanFindLinkTest(FolderParentListPa
             expected_regex       = ""
             self.check_go_to_link(self.this_url, link_parent_selector, link_text,
                 url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -161,7 +158,6 @@ class FolderParentListPageAnonymousVisitorCanFindLinkTest(FolderParentListPageVi
         self.dummy_user = AnonymousUser()
         DummyFolder().create_dummy_catalogue()
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_find_folder(self):
         # Користувач може  перейти по лінку потрібні дані
@@ -174,5 +170,5 @@ class FolderParentListPageAnonymousVisitorCanFindLinkTest(FolderParentListPageVi
             expected_regex       = "/noaccess/"
             self.check_go_to_link(self.this_url, link_parent_selector, link_text,
                 url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 

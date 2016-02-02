@@ -70,22 +70,21 @@ class ReportDetailPageAuthenticatedVisitorTest(ReportDetailPageVisitTest):
         self.get_data_links_number()
         parent = DummyFolder().create_dummy_folder()
         DummyFolder().create_dummy_report(parent=parent, id=1, filename='dummy_file_name')
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -97,11 +96,10 @@ class ReportDetailPageAnonymousVisitorTest(ReportDetailPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 

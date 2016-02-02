@@ -65,22 +65,21 @@ class FolderCreateInPageAuthenticatedVisitorTest(FolderCreateInPageVisitTest):
         self.add_dummy_permission(self.dummy_user, codename='add_folder', model='folder')
         self.get_data_links_number()
         DummyFolder().create_dummy_folder(id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -93,12 +92,11 @@ class FolderCreateInPageAnonymousVisitorTest(FolderCreateInPageVisitTest):
     def setUp(self):
         self.dummy_user = AnonymousUser()
         DummyFolder().create_dummy_folder(id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -112,12 +110,11 @@ class FolderCreateInPageAuthenticatedVisitorWoPermissionTest(FolderCreateInPageV
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
         DummyFolder().create_dummy_folder(id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 
@@ -134,7 +131,6 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         self.add_user_cookie_to_browser(self.dummy_user)
         self.add_dummy_permission(self.dummy_user, codename='add_folder', model='folder')
         DummyFolder().create_dummy_folder(id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
     def test_visitor_can_create_folder(self):
@@ -170,7 +166,7 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(expected_regex=folder.get_absolute_url())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -193,7 +189,7 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(expected_regex=folder.get_absolute_url())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -210,7 +206,7 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         self.assertTrue(error.is_displayed())
         self.assertEqual(error.text, "Це поле обов'язкове.")
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -235,7 +231,7 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         error = self.get_error_elements_for_field('#id_name')[0]
         self.assertFalse(error.is_displayed())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -258,7 +254,7 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         error = self.get_error_element(".errorlist")
         self.assertEqual(error.text, "Тека з таким Материнська тека та Тека вже існує.")
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -273,6 +269,6 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(url_name='folders:folder-list-all')
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 

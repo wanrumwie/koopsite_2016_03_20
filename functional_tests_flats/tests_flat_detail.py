@@ -76,22 +76,21 @@ class FlatDetailPageAuthenticatedVisitorTest(FlatDetailPageVisitTest):
         self.add_user_cookie_to_browser(self.dummy_user)
         DummyFlat().create_dummy_flat(flat_No='1')
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageAuthenticatedVisitorWithFlatTest(FlatDetailPageVisitTest):
@@ -109,12 +108,11 @@ class FlatDetailPageAuthenticatedVisitorWithFlatTest(FlatDetailPageVisitTest):
         profile.flat=flat
         profile.save()
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageAnonymousVisitorTest(FlatDetailPageVisitTest):
@@ -127,12 +125,11 @@ class FlatDetailPageAnonymousVisitorTest(FlatDetailPageVisitTest):
         self.dummy_user = AnonymousUser()
         DummyFlat().create_dummy_flat(flat_No='1')
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -147,7 +144,6 @@ class FlatDetailPageDataTest(FlatDetailPageVisitTest):
         self.dummy_user = AnonymousUser()
         DummyFlat().create_dummy_flat(flat_No='1')
         self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_data_links(self):
         # Користувач може перейти по лінку на горизонтальну таблицю
@@ -178,7 +174,7 @@ class FlatDetailPageDataTest(FlatDetailPageVisitTest):
         expected_regex       = ""
         self.check_go_to_link(self.this_url, link_parent_selector, link_text,
             kwargs=kwargs, url_name=url_name, expected_regex=expected_regex)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 
@@ -232,24 +228,23 @@ class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк "В одну колонку"
         self.data_links_number += 1 # лінк javascript:history.back()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     # @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     # @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -265,12 +260,11 @@ class FlatDetail_h_PageAnonymousVisitorTest(FlatDetail_h_PageVisitTest):
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк "В одну колонку"
         self.data_links_number += 1 # лінк javascript:history.back()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_data_links(self):
         # Користувач може перейти по лінку на горизонтальну таблицю
@@ -286,5 +280,5 @@ class FlatDetail_h_PageAnonymousVisitorTest(FlatDetail_h_PageVisitTest):
         expected_regex       = ""
         self.check_go_to_link(self.this_url, link_parent_selector, link_text,
             kwargs=kwargs, url_name=url_name, expected_regex=expected_regex)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 

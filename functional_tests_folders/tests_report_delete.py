@@ -67,24 +67,23 @@ class ReportDeletePageAuthenticatedVisitorWithPermissionTest(ReportDeletePageVis
         self.get_data_links_number()
         parent = DummyFolder().create_dummy_folder(id=1)
         DummyFolder().create_dummy_report(parent=parent, id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     # @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     # @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -100,12 +99,11 @@ class ReportDeletePageAuthenticatedVisitorAuthorTest(ReportDeletePageVisitTest):
         self.get_data_links_number()
         parent = DummyFolder().create_dummy_folder(id=1)
         DummyFolder().create_dummy_report(parent=parent, id=1, user=self.dummy_user)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -117,12 +115,11 @@ class ReportDeletePageAnonymousVisitorTest(ReportDeletePageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Користувач НЕ може відвідати сторінку і буде переадресований
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -135,12 +132,11 @@ class ReportDeletePageAuthenticatedVisitorWoPermissionTest(ReportDeletePageVisit
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Користувач НЕ може відвідати сторінку і буде переадресований
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 
@@ -156,12 +152,11 @@ class ReportDeletePageAuthenticatedVisitorWoPermissionNotAuthorTest(ReportDelete
         self.add_user_cookie_to_browser(self.dummy_user)
         parent = DummyFolder().create_dummy_folder(id=1)
         report = DummyFolder().create_dummy_report(parent=parent, id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Користувач НЕ може відвідати сторінку і буде переадресований
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 
@@ -181,7 +176,6 @@ class ReportDeletePageAuthenticatedVisitorCanDeleteReportTest(ReportDeletePageVi
         file = SimpleUploadedFile("file.txt", b"file_content")
         report = DummyFolder().create_dummy_report(parent=parent, id=1, file=file)
         self.file_full_path = report.file.path
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def tearDown(self):
         try:
@@ -214,7 +208,7 @@ class ReportDeletePageAuthenticatedVisitorCanDeleteReportTest(ReportDeletePageVi
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(url_name='folders:folder-list-all')
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -231,6 +225,6 @@ class ReportDeletePageAuthenticatedVisitorCanDeleteReportTest(ReportDeletePageVi
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(url_name='folders:report-detail', kwargs={'pk': '1'})
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 

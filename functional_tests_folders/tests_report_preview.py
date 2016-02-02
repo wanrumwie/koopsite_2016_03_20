@@ -77,7 +77,6 @@ class ReportPreviewPageAuthenticatedVisitorTest(ReportPreviewPageVisitTest):
         full_path = os.path.join(os.getcwd(), 'example.jpg') # повний шлях
         self.report = DummyFolder().create_dummy_report(parent=parent,
                                                    id=1, path=full_path)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def tearDown(self):
         self.report.file.delete()
@@ -86,17 +85,17 @@ class ReportPreviewPageAuthenticatedVisitorTest(ReportPreviewPageVisitTest):
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page(delta=20) # враховуємо смужку скролінгу, через яку зображення зсувається з центру
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -108,12 +107,11 @@ class ReportPreviewPageAnonymousVisitorTest(ReportPreviewPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -126,12 +124,11 @@ class ReportPreviewPageAuthenticatedVisitorWoPermissionTest(ReportPreviewPageVis
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 
@@ -152,7 +149,6 @@ class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPage
         full_path = os.path.join(os.getcwd(), 'example.docx') # повний шлях
         self.report = DummyFolder().create_dummy_report(parent=parent,
                                                    id=1, path=full_path)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def tearDown(self):
         self.report.file.delete()
@@ -165,12 +161,12 @@ class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPage
         # Бачить у полі очікувану інформацію
         inputbox = self.browser.find_element_by_id('preview-box')
         self.assertEqual(inputbox.text, "На даний час неможливо переглянути файл цього типу")
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_VISUAL_TEST, "Тест потребує візуального спостереження")
@@ -186,7 +182,6 @@ class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest
         self.add_dummy_permission(self.dummy_user, codename='view_report', model='report')
         self.get_data_links_number()
         self.parent = DummyFolder().create_dummy_folder()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def tearDown(self):
         # sleep(10)
@@ -215,13 +210,13 @@ class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest
 
     def test_jpg(self):
         self.visit_page('example.jpg')
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_pdf(self):
         self.visit_page('example.pdf')
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_txt(self):
         self.visit_page('example.txt', "На даний час неможливо переглянути файл цього типу")
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 

@@ -86,6 +86,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
 
     @classmethod
     def setUpClass(cls):
+        print('start class: %s' % cls.__name__, end=' >> ')
         cls.browser = webdriver.Firefox()
         cls.browser.implicitly_wait(20)
         cls.browser.set_window_position(250, 0)
@@ -102,13 +103,13 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         if cls.server_url == cls.live_server_url:
             super().tearDownClass()
         cls.browser.quit()
+        print('finished class: %s' % cls.__name__)
 
     # def setUp(self):
     #     pass
 
     def tearDown(self):
         super().tearDown()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def add_user_cookie_to_browser(self, user, url=None):
         session = create_user_session(user)

@@ -1077,12 +1077,10 @@ class ReportDownloadTest(TestCase):
         if not deleted: print('file not deleted in ReportDownloadTest')
 
     def test_url_resolves_to_proper_view(self):
-        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         found = resolve(self.path)
         self.assertEqual(found.func.__name__, self.view.__name__)
 
     def test_view_gives_response_status_code_302_AnonymousUser(self):
-        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         request = RequestFactory().get(self.path)
         request.user = AnonymousUser()
         response = self.view(request)
@@ -1090,7 +1088,6 @@ class ReportDownloadTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_302_user_w_o_permission(self):
-        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         request = RequestFactory().get(self.path)
@@ -1100,7 +1097,6 @@ class ReportDownloadTest(TestCase):
         self.assertTrue(response.url.startswith(LOGIN_URL))
 
     def test_view_gives_response_status_code_200(self):
-        print('started: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'download_report')

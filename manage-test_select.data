@@ -1,1 +1,1 @@
-manage.py test functional_tests_koopsite.tests_register 
+manage.py test functional_tests_koopsite 

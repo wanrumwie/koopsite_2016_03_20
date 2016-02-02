@@ -1,4 +1,5 @@
 import inspect
+from time import sleep
 from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser, User
 from selenium.webdriver.common.action_chains import ActionChains
@@ -46,81 +47,8 @@ class RegisterPageVisitTest(PageVisitTest):
         self.data_links_number += 0 # Кнопки
         return self.data_links_number
 
-
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
-class RegisterPageAuthenticatedVisitorTest(RegisterPageVisitTest):
-    """
-    Тест відвідання сторінки сайту
-    аутентифікованим користувачем
-    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
-    """
-    def setUp(self):
-        self.dummy_user = self.create_dummy_user()
-        self.add_user_cookie_to_browser(self.dummy_user)
-        self.add_dummy_permission(self.dummy_user, codename='add_folder', model='folder')
-        self.get_data_links_number()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    def test_can_not_visit_page(self):
-        # Заголовок і назва сторінки правильні
-        self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-
-@skipIf(SKIP_TEST, "пропущено для економії часу")
-class RegisterPageAnonymousVisitorTest(RegisterPageVisitTest):
-    """
-    Тест відвідання сторінки сайту
-    анонімним користувачем
-    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
-    """
-    def setUp(self):
-        self.dummy_user = AnonymousUser()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    def test_can_visit_page(self):
-        # Заголовок і назва сторінки правильні
-        self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    # @skip
-    def test_layout_and_styling_page(self):
-        # CSS завантажено і працює
-        self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    # @skip
-    def test_visitor_can_go_to_links(self):
-        # Користувач може перейти по всіх лінках на сторінці
-        self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-
-
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
-class RegisterPageVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
-    """
-    Тест відвідання сторінки сайту
-    користувачем
-    Чи всі дані правильно відображені?
-    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
-    """
-    def setUp(self):
-        Human_Check.if_view_test = True
-        self.dummy_user = AnonymousUser()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
-
-    def tearDown(self):
-        Human_Check.if_view_test = False
-        super().tearDown()
-
-    def test_visitor_can_create_account_with_minimum_needed_fields(self):
-        # Користувач відкриває сторінку
-        self.browser.get('%s%s' % (self.server_url, self.this_url))
-
-        # Бачить у полі очікувану інформацію
-
-        # Вводить у полі дані
+    def enter_and_check_new_user_minimum_data(self):
+        # Вводить у полях дані і завершує форму натисканням Готово
         inputbox = self.browser.find_element_by_id('id_username')
         inputbox.send_keys('fred')
 
@@ -140,7 +68,6 @@ class RegisterPageVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
         button.click()
 
         user = User.objects.last()
-        print('user =', User)
         self.assertEqual(user.username, 'fred')
         self.assertEqual(user.is_active, False)
         self.assertNotEqual(user.password, None)
@@ -150,17 +77,104 @@ class RegisterPageVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
         self.assertEqual(profile.user, user)
         self.assertEqual(user.is_active, False)
 
+        return user
+
+    def check_finish_sub_page_for_Anonymous_visitor(self, new_user):
         # Залишається на тій же сторінці з оновленим текстом
         self.check_passed_link(url_name='register')
         div = self.browser.find_element_by_css_selector('.welcome_text')
         text = div.text
-        self.assertEqual(text, "Вітаємо, %s!" % user.username)
+        self.assertEqual(text, "Вітаємо, %s!" % new_user.username)
         div = self.browser.find_element_by_css_selector('.message_text')
         text = div.text
         self.assertIn("Дякуємо, що зареєструвались на сайті!", text)
 
+    def check_finish_sub_page_for_Authenticated_visitor(self, new_user):
+        # Залишається на тій же сторінці з оновленим текстом
+        self.check_passed_link(url_name='register')
+        div = self.browser.find_element_by_css_selector('.welcome_text')
+        text = div.text
+        self.assertEqual(text, "Вітаємо, %s!" % self.dummy_user.username)
+        div = self.browser.find_element_by_css_selector('.message_text')
+        text = div.text
+        self.assertIn("Ви зареєстрували нового користувача: %s" % new_user.username, text)
+
+
+@skipIf(SKIP_TEST, "пропущено для економії часу")
+class RegisterPageAuthenticatedVisitorTest(RegisterPageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    аутентифікованим користувачем
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        self.get_data_links_number()
+
+    def test_visitor_can_go_to_links(self):
+        # Користувач може перейти по всіх лінках на сторінці
+        self.visitor_can_go_to_links()
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+
+@skipIf(SKIP_TEST, "пропущено для економії часу")
+class RegisterPageAnonymousVisitorTest(RegisterPageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    анонімним користувачем
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        self.dummy_user = AnonymousUser()
+
+    def test_can_visit_page(self):
+        # Заголовок і назва сторінки правильні
+        self.can_visit_page()
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+    # @skip
+    def test_layout_and_styling_page(self):
+        # CSS завантажено і працює
+        self.layout_and_styling_page()
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+    # @skip
+    def test_visitor_can_go_to_links(self):
+        # Користувач може перейти по всіх лінках на сторінці
+        self.visitor_can_go_to_links()
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
+class RegisterPageAnonymousVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    користувачем
+    Чи всі дані правильно відображені?
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        Human_Check.if_view_test = True
+        self.dummy_user = AnonymousUser()
+
+    def tearDown(self):
+        Human_Check.if_view_test = False
+        super().tearDown()
+
+    def test_anon_visitor_can_create_account_with_minimum_needed_fields(self):
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Вводить дані і натискає кнопку Готово
+        new_user = self.enter_and_check_new_user_minimum_data()
+
+        # Опиняється на фінішній суб-сторінці з оновленим текстом
+        self.check_finish_sub_page_for_Anonymous_visitor(new_user)
+
         # Шукає лінк і переходить по ньому на головну сторінку
-        link_text = "Повернутися на головну сторінку"
+        link_text = "повернутися на головну сторінку"
         href = self.browser.find_element_by_partial_link_text(link_text)
 
         actions = ActionChains(self.browser)
@@ -169,7 +183,47 @@ class RegisterPageVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
         actions.perform()
         self.check_passed_link(url_name='index')
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
+class RegisterPageAuthenticatedVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    користувачем
+    Чи всі дані правильно відображені?
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        Human_Check.if_view_test = True
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+
+    def tearDown(self):
+        Human_Check.if_view_test = False
+        super().tearDown()
+
+    def test_auth_visitor_can_create_account_with_minimum_needed_fields(self):
+        # Користувач відкриває сторінку
+        self.browser.get('%s%s' % (self.server_url, self.this_url))
+
+        # Вводить дані і натискає кнопку Готово
+        new_user = self.enter_and_check_new_user_minimum_data()
+
+        # Опиняється на фінішній суб-сторінці з оновленим текстом
+        self.check_finish_sub_page_for_Authenticated_visitor(new_user)
+
+        # Шукає ОДИН з ДВОХ лінків і переходить по ньому на головну сторінку
+        link_text = "продовжити роботу"
+        href = self.browser.find_element_by_partial_link_text(link_text)
+
+        actions = ActionChains(self.browser)
+        actions.move_to_element(href)
+        actions.click(href)
+        actions.perform()
+        self.check_passed_link(url_name='index')
+
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 '''
     def test_visitor_can_create_folder_in_parent(self):

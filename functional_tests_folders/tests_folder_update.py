@@ -66,24 +66,23 @@ class FolderUpdatePageAuthenticatedVisitorTest(FolderUpdatePageVisitTest):
         self.add_dummy_permission(self.dummy_user, codename='change_folder', model='folder')
         self.get_data_links_number()
         DummyFolder().create_dummy_folder(id=1)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     # @skip
     def test_layout_and_styling_page(self):
         # CSS завантажено і працює
         self.layout_and_styling_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     # @skip
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -95,12 +94,11 @@ class FolderUpdatePageAnonymousVisitorTest(FolderUpdatePageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -113,12 +111,11 @@ class FolderUpdatePageAuthenticatedVisitorWoPermissionTest(FolderUpdatePageVisit
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 
@@ -136,7 +133,6 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         self.add_dummy_permission(self.dummy_user, codename='change_folder', model='folder')
         DummyFolder().create_dummy_folder(id=1)
         DummyFolder().create_dummy_catalogue()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
 
     # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -168,7 +164,7 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(expected_regex=folder.get_absolute_url())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -201,7 +197,7 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(expected_regex=folder.get_absolute_url())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -233,7 +229,6 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         button.click()
 
         folder = Folder.objects.get(id=1)
-        # print('folder =', folder)
         self.assertEqual(folder.name, 'New_folder_name')
         self.assertEqual(folder.parent.id, 1)
         self.assertEqual(folder.created_on.isoformat(), datetime(2015,12,25,tzinfo=UTC).isoformat())
@@ -241,7 +236,7 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(expected_regex=folder.get_absolute_url())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -261,7 +256,7 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         self.assertTrue(error.is_displayed())
         self.assertEqual(error.text, "Це поле обов'язкове.")
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -289,7 +284,7 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         error = self.get_error_elements_for_field('#id_name')[0]
         self.assertFalse(error.is_displayed())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -325,7 +320,7 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         error = self.get_error_elements_for_field('#id_name')[0]
         self.assertTrue(error.is_displayed())
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -355,7 +350,7 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         error = self.get_error_element(".errorlist")
         self.assertEqual(error.text, "Тека з таким Материнська тека та Тека вже існує.")
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
     @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -382,6 +377,6 @@ class FolderUpdatePageAuthenticatedVisitorCanUpdateFolderTest(FolderUpdatePageVi
         # Має бути перехід на потрібну сторінку
         self.check_passed_link(url_name='folders:folder-detail', kwargs={'pk': '1'})
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 

@@ -31,12 +31,11 @@ class FolderDownloadPageAnonymousVisitorTest(FolderDownloadPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -49,12 +48,11 @@ class FolderDownloadPageAuthenticatedVisitorWoPermissionTest(FolderDownloadPageV
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     def test_can_not_visit_page(self):
         # Заголовок і назва сторінки правильні
         self.can_not_visit_page()
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
 
@@ -70,7 +68,6 @@ class FolderDownloadPageAuthenticatedVisitorCanDownloadFolderTest(FolderDownload
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
         self.add_dummy_permission(self.dummy_user, codename='download_folder', model='folder')
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
 
     # @skipIf(SKIP_TEST, "пропущено для економії часу")
     def test_visitor_can_download_folder(self):
@@ -100,6 +97,6 @@ class FolderDownloadPageAuthenticatedVisitorCanDownloadFolderTest(FolderDownload
         # Сторінка має залишитись та сама
         self.check_passed_link(expected_regex=current_url)
 
-        print('finished: %-30s of %s' % (inspect.stack()[0][3], self.__class__.__name__))
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
