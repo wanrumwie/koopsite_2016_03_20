@@ -1,1 +1,1 @@
-manage.py test koopsite.tests.test_functions 
+manage.py test functional_tests_flats 

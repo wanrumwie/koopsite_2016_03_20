@@ -7,16 +7,16 @@ from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.settings import SKIP_TEST
 
 
-class FlatSchemePageVisitTest(PageVisitTest):
+class FlatSchemeUsersPageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки одної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування цієї сторінки з іншими користувачами.
     """
-    this_url    = '/flats/scheme/'
+    this_url    = '/flats/scheme-users/'
     page_title  = 'Пасічний'
-    page_name   = 'Схема розташування квартир'
+    page_name   = 'Зареєстровані користувачі сайту'
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -28,11 +28,11 @@ class FlatSchemePageVisitTest(PageVisitTest):
         username, flat_id, flat_No = self.get_user_name_flat(user)
         s = [
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка' , 'un': 'index'},
-            # {'ls':'#body-navigation'          , 'lt': 'Схема розташування квартир', 'un': 'flats:flat-scheme'},#########
+            {'ls':'#body-navigation'          , 'lt': 'Схема розташування квартир', 'un': 'flats:flat-scheme'},#########
             {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             {'ls':'#body-navigation'          , 'lt': 'Таблиця параметрів всіх квартир'   , 'un': 'flats:flat-table'},
-            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users'},
-            {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "index"},
+            # {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users'},
+            {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "flats:flat-scheme"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
             {'ls':'#header-aside-2-navigation', 'lt': 'Вийти'            , 'un': 'logout'      , 'cd': "user.is_authenticated()", 'er': '/index/'},
@@ -41,7 +41,7 @@ class FlatSchemePageVisitTest(PageVisitTest):
         return s
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
+class FlatSchemeUsersPageAuthenticatedVisitorTest(FlatSchemeUsersPageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
@@ -70,7 +70,7 @@ class FlatSchemePageAuthenticatedVisitorTest(FlatSchemePageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
+class FlatSchemeUsersPageAuthenticatedVisitorWithFlatTest(FlatSchemeUsersPageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем з номером квартири)
@@ -94,7 +94,7 @@ class FlatSchemePageAuthenticatedVisitorWithFlatTest(FlatSchemePageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
+class FlatSchemeUsersPageAnonymousVisitorTest(FlatSchemeUsersPageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -113,7 +113,7 @@ class FlatSchemePageAnonymousVisitorTest(FlatSchemePageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
+class FlatSchemeUsersPageGoToFlatTest(FlatSchemeUsersPageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -141,7 +141,7 @@ class FlatSchemePageGoToFlatTest(FlatSchemePageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatSchemePageVisitorCanFindFlatTest(FlatSchemePageVisitTest):
+class FlatSchemeUsersPageVisitorCanFindFlatTest(FlatSchemeUsersPageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем

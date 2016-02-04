@@ -90,6 +90,24 @@ table.scrolltable {
     margin:         0;
     padding:        0.3em 0;
     }
+    
+.img-box {
+    display:        flex;
+    width:          2em;
+}
+.img-box img {
+    margin: auto !important;    
+}
+.width-2em {
+/*    display: inline-block;*/
+    display:        flex;
+    width:          2em;
+}
+.after-img-box {
+    display:        flex;
+    vertical-align: middle;
+    margin-left:    0.3em;
+}
 /*    
 .scrolltable th button {text-align: center; }
 */
@@ -183,6 +201,26 @@ table.scrolltable {
 .folders4-wide td:nth-child(3)     { width: 10%; } /* Date */
 .folders4-wide th:nth-child(4), 
 .folders4-wide td:nth-child(4)     { width: 10%; } /* Size */
+/********************************************************************/
+
+/* Case of 4 columns table Flat-users: */
+/********************************************************************/
+.flat-users4 th:nth-child(1),
+.flat-users4 td:nth-child(1)     { width: 30%; } /* Username */
+.flat-users4 th:nth-child(2),
+.flat-users4 td:nth-child(2)     { width: 30%; } /* FullName */
+.flat-users4 th:nth-child(3),
+.flat-users4 td:nth-child(3)     { width: 20%; } /* DateJoin */
+.flat-users4 th:nth-child(4),
+.flat-users4 td:nth-child(4)     { width: 20%; } /* Status */
+.flat-users4 th:nth-child(1)     { text-align: center; }
+.flat-users4 td:nth-child(1)     { text-align: left; }
+.flat-users4 th:nth-child(2)     { text-align: center; }
+.flat-users4 td:nth-child(2)     { text-align: left; }
+.flat-users4 th:nth-child(3)     { text-align: center; }
+.flat-users4 td:nth-child(3)     { text-align: center; }
+.flat-users4 th:nth-child(4)     { text-align: center; }
+.flat-users4 td:nth-child(4)     { text-align: center; }
 /********************************************************************/
 
 

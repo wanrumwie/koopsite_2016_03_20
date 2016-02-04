@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block flat-td-a-href %}
-    <td bgcolor="{{ bgcolor }}"
-            ><a href="{% url 'flats:flat-detail' f.id %}">{{ f.flat_No }}</a></td>
+    <td class="{{ f|flat_user_CSS_class }}"
+            ><a href="{% url 'flats:flat-users-list' f.id %}">{{ f.flat_No }}</a></td>
 {% endblock %}
 
 {% block empty-flat-td %}
@@ -19,5 +19,19 @@
 {% endblock %}
 
 {% block under-table %}
-    Клацніть мишкою по номеру квартири, щоб побачити список користувачів
+    <div class="inline-blocks">
+        <div class="legend">Клацніть мишкою по номеру квартири, щоб побачити список користувачів:</div>
+    </div>
+    <div class="inline-blocks">
+        <div class="legend-box flat-has-member"></div>
+        <div class="legend">- зареєстровані користувачі-члени кооперативу</div>
+    </div>
+    <div class="inline-blocks">
+        <div class="legend-box flat-has-users"></div>
+        <div class="legend">- прості користувачі</div>
+    </div>
+
+{% endblock %}
+
+{% block href-flat-scheme-users %}
 {% endblock %}

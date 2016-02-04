@@ -1,4 +1,6 @@
 from django.views.generic import ListView
+from django.views.generic.detail import SingleObjectMixin
+from koopsite.functions import get_flat_users
 from koopsite.views import AllFieldsView, AllRecordsAllFieldsView
 from .models import Flat
 
@@ -76,7 +78,7 @@ class FlatScheme(ListView):
         kwargs['block_length'] = l
         kwargs['floors']       = floors
         kwargs['entrances']    = entrances
-        kwargs['bgcolor']    = 'red'
+        kwargs['flatclass']    = 'flat-has-users'
         # dict_print(kwargs, 'kwargs')
         return kwargs
 
@@ -105,5 +107,25 @@ class FlatTable(AllRecordsAllFieldsView):
 
 #---------------- Кінець коду, охопленого тестуванням ------------------
 
+
 class FlatSchemeUsers(FlatScheme):
     template_name = 'flats/flat_scheme_users.html'
+
+
+class FlatUsersList(SingleObjectMixin, ListView):
+    # paginate_by = 15
+    template_name = 'flats/flat_users_list.html'
+    # context_object_name = "all_list" # додатковий ідентифікатор для списку self.object_list
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Flat.objects.all())
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        # Дочірні об'єкти:
+        # два queryset з різних моделей об'єднується в один qs,
+        # який обробляється в template як одне ціле
+        flat = self.object
+        qs = get_flat_users(flat)
+        return qs
+

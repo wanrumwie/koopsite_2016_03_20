@@ -8,16 +8,16 @@ from koopsite.settings import SKIP_TEST
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatListPageVisitTest(PageVisitTest):
+class FlatDetail_h_PageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
     Описані тут параметри - для перевірки одної сторінки сайту.
     Цей клас буде використовуватися як основа
     для класів тестування цієї сторінки з іншими користувачами.
     """
-    this_url    = '/flats/list/'
+    this_url    = '/flats/1/h/'
     page_title  = 'Пасічний'
-    page_name   = 'Список квартир'
+    page_name   = 'Характеристика квартири № 1'
 
     def links_in_template(self, user):
         # Повертає список словників, які поступають як параметри до функції self.check_go_to_link(...)
@@ -30,7 +30,7 @@ class FlatListPageVisitTest(PageVisitTest):
         s = [
             {'ls':'#body-navigation'          , 'lt': 'Головна сторінка' , 'un': 'index'},
             {'ls':'#body-navigation'          , 'lt': 'Схема розташування квартир', 'un': 'flats:flat-scheme'},
-            # {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
+            {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             {'ls':'#body-navigation'          , 'lt': 'Таблиця параметрів всіх квартир'   , 'un': 'flats:flat-table'},
             {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users'},
             {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "flats:flat-scheme"},
@@ -41,9 +41,16 @@ class FlatListPageVisitTest(PageVisitTest):
             ]
         return s
 
+    def get_data_links_number(self):
+        self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 1 # лінк "В один рядок"
+        self.data_links_number += 0 # лінк javascript:history.back()
+        return self.data_links_number
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatListPageAuthenticatedVisitorTest(FlatListPageVisitTest):
+
+
+@skipIf(SKIP_TEST, "пропущено для економії часу")
+class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
     """
     Тест відвідання сторінки сайту
     аутентифікованим користувачем
@@ -52,9 +59,8 @@ class FlatListPageAuthenticatedVisitorTest(FlatListPageVisitTest):
     def setUp(self):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
-        DummyFlat().create_dummy_building()
-        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 0 # лінк javascript:history.back()
+        flat = DummyFlat().create_dummy_flat(flat_No='1')
+        self.get_data_links_number()
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
@@ -75,7 +81,7 @@ class FlatListPageAuthenticatedVisitorTest(FlatListPageVisitTest):
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatListPageAnonymousVisitorTest(FlatListPageVisitTest):
+class FlatDetail_h_PageAnonymousVisitorTest(FlatDetail_h_PageVisitTest):
     """
     Тест відвідання сторінки сайту
     анонімним користувачем
@@ -83,40 +89,27 @@ class FlatListPageAnonymousVisitorTest(FlatListPageVisitTest):
     """
     def setUp(self):
         self.dummy_user = AnonymousUser()
-        DummyFlat().create_dummy_building()
-        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 0 # лінк javascript:history.back()
+        DummyFlat().create_dummy_flat(flat_No='1')
+        self.get_data_links_number()
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
+    def test_data_links(self):
+        # Користувач може перейти по лінку на горизонтальну таблицю
+        # Таблиця має два рядки і потрібну кількість колонок
+        # TODO-чи перевіряти як виглядає таблиця і які містить дані?
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
-class FlatListPageVisitorCanFindFlatTest(FlatListPageVisitTest):
-    """
-    Тест відвідання сторінки сайту
-    анонімним користувачем
-    Чи всі дані правильно відображені?
-    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
-    """
-    def setUp(self):
-        self.dummy_user = AnonymousUser()
-        DummyFlat().create_dummy_building()
-        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 0 # лінк javascript:history.back()
-
-    def test_visitor_can_find_flat(self):
-        # Користувач може  перейти по лінку потрібні дані
         self.browser.get('%s%s' % (self.server_url, self.this_url))
-        for flat in Flat.objects.all():
-            link_parent_selector = '#body-list'
-            link_text            = flat.flat_No
-            url_name             = 'flats:flat-detail'
-            kwargs               = {'pk': flat.id}
-            expected_regex       = ""
-            self.check_go_to_link(self.this_url, link_parent_selector, link_text,
-                url_name=url_name, kwargs=kwargs, expected_regex=expected_regex)
+        flat = Flat.objects.get(flat_No='1')
+        kwargs               = {'pk': flat.id}
+        link_parent_selector = '#under-paginator'
+        link_text            = "В одну колонку"
+        url_name             = 'flats:flat-detail'
+        expected_regex       = ""
+        self.check_go_to_link(self.this_url, link_parent_selector, link_text,
+            kwargs=kwargs, url_name=url_name, expected_regex=expected_regex)
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 

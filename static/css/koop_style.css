@@ -40,6 +40,7 @@ body {
     background-image:   none;
     text-align:         center;
     }
+
 @media all and (max-width: 700px) {
   body {
     word-wrap:  break-word;
@@ -173,6 +174,36 @@ a:focus     {outline-style: none;}
 }
 
 /*=======================================================================*/
+
+.flat-has-users {
+    background-color:   #FFE600;  /* khaki */
+    background-image:   none;
+}
+.flat-has-member {
+    background-color:   #FFB200;  /* hot yellow */
+    background-image:   none;
+}
+
+.inline-blocks {
+    display:        inline-block;
+}
+.inline-blocks * {
+    display:        inline-block;
+}
+.legend-box {
+    vertical-align:     bottom;
+    border:             1px solid black;
+    width:              0.75em;
+    height:             0.75em;
+    padding:            0 0.5em;
+    }
+.legend {
+    vertical-align: middle;
+    height:             1em;
+    padding:            0 0 0.5em 0;
+    }
+/*=======================================================================*/
+
 .max-width-4em { 
     max-width:          100%;
 }
@@ -302,6 +333,18 @@ a:focus     {outline-style: none;}
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+/*  -webkit-flex-flow: column nowrap;*/
+  justify-content: flex-start;
+  align-items:  stretch;
+}
+
+/* from https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+.flex-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
   -webkit-flex-flow: column nowrap;
   justify-content: flex-start;
   align-items:  stretch;
@@ -309,16 +352,16 @@ a:focus     {outline-style: none;}
 
 .flex-item {
   background: tomato;
-  padding: 5px;
-  width: 200px;
-  height: 150px;
-  margin-top: 10px;
-  line-height: 150px;
+  padding: 0.5em;
+  min-width: 2em;
+  height: 2em;
+  margin-top: 0.5em;
+  line-height: 30px;
   color: white;
   font-weight: bold;
-  font-size: 3em;
   text-align: center;
 }
+*/
 /*=======================================================================*/
 .navigation {
     display:            -webkit-box;
@@ -387,8 +430,13 @@ a:focus     {outline-style: none;}
     list-style:         none;
     margin:             0;
     padding:            0;
-    color:              #F0E68C;  /* khaki */
-    background:         #3CB371;  /* mediumseagreen */
+
+    color:              inherit;
+    background:         inherit;
+
+/*    color:              #F0E68C;  /* khaki */
+/*    background:         #3CB371;  /* mediumseagreen */
+
 }
 .navigation-small li {
     color:              inherit;

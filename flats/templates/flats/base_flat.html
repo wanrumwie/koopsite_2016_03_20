@@ -45,11 +45,11 @@
         {% block href-flat-table %}
             <li><a href="{% url 'flats:flat-table' %}">Таблиця параметрів всіх квартир</a></li>
         {% endblock %}
-        {% block href-person-table %}
-            <li><a href="{% url 'flats:person-table' %}">Таблиця персон (в роботі!)</a></li>
+        {% block href-flat-scheme-users %}
+            <li><a href="{% url 'flats:flat-scheme-users' %}">Схема користувачів</a></li>
         {% endblock %}
         {% block href-back %}
-            <li><a href="{% url 'index' %}">Уверх</a></li>
+            <li><a href="{% url 'flats:flat-scheme' %}">Уверх</a></li>
         {% endblock %}
     </ul>
 

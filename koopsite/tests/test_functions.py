@@ -454,18 +454,22 @@ class UserDifferentAttributesTest(TestCase):
     def test_get_flat_users(self):
         john, paul, george, ringo, freddy = DummyUser().create_dummy_beatles()
         flat_1, flat_2 = DummyUser().set_flats_to_beatles(john, paul, george, ringo, freddy)
+        flat_3 = Flat()
         self.assertEqual(get_flat_users(flat_1), [john,])
         self.assertEqual(get_flat_users(flat_2), [paul, george, ringo])
+        self.assertEqual(get_flat_users(flat_3), [])
         self.assertEqual(get_flat_users(None), [])
         self.assertEqual(get_flat_users(User()), [])
 
     def test_has_flat_member(self):
         john, paul, george, ringo, freddy = DummyUser().create_dummy_beatles()
         flat_1, flat_2 = DummyUser().set_flats_to_beatles(john, paul, george, ringo, freddy)
+        flat_3 = Flat()
         DummyUser().create_dummy_group(group_name='members')
         DummyUser().add_dummy_group(john, group_name='members')
         self.assertEqual(has_flat_member(flat_1), True)
         self.assertEqual(has_flat_member(flat_2), False)
+        self.assertEqual(has_flat_member(flat_3), False)
         self.assertEqual(has_flat_member(None), False)
         self.assertEqual(has_flat_member(User()), False)
 

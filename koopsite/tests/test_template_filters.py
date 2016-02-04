@@ -1,9 +1,11 @@
 import os
+from django.contrib.auth.models import User
 from django.test import TestCase
+from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from folders.models import Folder
 from koopsite.templatetags.koop_template_filters import get_at_index, get_item_by_key, range_of, model_name, \
-    user_full_name, user_flat_No, thumbnail, icon_yes_no_unknown
+    user_full_name, user_flat_No, thumbnail, icon_yes_no_unknown, flat_user_CSS_class, has_member_perms
 from koopsite.tests.test_base import DummyUser
 
 """
@@ -58,7 +60,7 @@ class TemplateFiltersTest(TestCase):
 
     def test_thumbnail_for_file(self):
         user = DummyUser().create_dummy_user()
-        picture_path="koopsite/tests/profile_image.jpg"
+        picture_path = "koopsite/tests/profile_image.jpg"
         DummyUser().create_dummy_profile(user, picture_path=picture_path)
         mini_url = thumbnail(user.userprofile.picture)
         self.assertEqual(mini_url, '/media/profile_images/1_30x24.jpg')
@@ -70,7 +72,7 @@ class TemplateFiltersTest(TestCase):
 
     def test_thumbnail_for_path(self):
         user = DummyUser().create_dummy_user()
-        picture_path="koopsite/tests/profile_image.jpg"
+        picture_path = "koopsite/tests/profile_image.jpg"
         mini_url = thumbnail(picture_path)
         self.assertEqual(mini_url, 'koopsite/tests/profile_image_30x24.jpg')
         mini_url = thumbnail(picture_path, "200x100")
@@ -83,3 +85,22 @@ class TemplateFiltersTest(TestCase):
         self.assertEqual(icon_yes_no_unknown(False), 'admin/img/icon-no.gif')
         self.assertEqual(icon_yes_no_unknown(None),  'admin/img/icon-unknown.gif')
 
+
+    def test_flat_user_CSS_class(self):
+        john, paul, george, ringo, freddy = DummyUser().create_dummy_beatles()
+        flat_1, flat_2 = DummyUser().set_flats_to_beatles(john, paul, george, ringo, freddy)
+        flat_3 = Flat()
+        DummyUser().create_dummy_group(group_name='members')
+        DummyUser().add_dummy_group(john, group_name='members')
+        self.assertEqual(flat_user_CSS_class(flat_1), "flat-has-member")
+        self.assertEqual(flat_user_CSS_class(flat_2), "flat-has-users")
+        self.assertEqual(flat_user_CSS_class(flat_3), "")
+        self.assertEqual(flat_user_CSS_class(None), "")
+        self.assertEqual(flat_user_CSS_class(User()), "")
+
+    def test_has_members_perms(self):
+        john, paul, george, ringo, freddy = DummyUser().create_dummy_beatles()
+        DummyUser().create_dummy_group(group_name='members')
+        DummyUser().add_dummy_group(john, group_name='members')
+        self.assertTrue(has_member_perms(john))
+        self.assertFalse(has_member_perms(paul))

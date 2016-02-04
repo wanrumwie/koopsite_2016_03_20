@@ -3,7 +3,8 @@
 """
 
 from django.template import Library
-from koopsite.functions import get_user_full_name, get_user_flat_No, get_thumbnail_url_path
+from koopsite.functions import get_user_full_name, get_user_flat_No, get_thumbnail_url_path, get_flat_users, \
+    has_flat_member, has_group_members
 
 register = Library()
 
@@ -72,4 +73,23 @@ def icon_yes_no_unknown(bool_val):
     else:                   miniature_url = 'admin/img/icon-unknown.gif'
     return miniature_url
 
+@register.filter()
+def flat_user_CSS_class(flat):
+    # Фільтр визначає CSS-клас для комірки з flat
+    # залежно від користувачів, повязаних з цією квартирою
+    css_class = ""
+    users = get_flat_users(flat)
+    if users:
+        css_class = "flat-has-users"
+        if has_flat_member(flat):
+            css_class = "flat-has-member"
+    return css_class
+
+@register.filter()
+def has_member_perms(user):
+    # Фільтр визначає CSS-клас для комірки з flat
+    # залежно від користувачів, повязаних з цією квартирою
+    return has_group_members(user)
+
 #---------------- Кінець коду, охопленого тестуванням ------------------
+
