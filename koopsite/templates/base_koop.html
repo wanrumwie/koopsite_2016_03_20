@@ -1,6 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 {# Шаблон-каркас. Його блоки можуть перевизначатися дочірніми шаблонами #}
+
+{% comment %}
+УВАГА!  PyCharm зберігає у форматі UTF-8-BOM =>
+        => у деяких шаблонах BOM екранує !DOCTYPE =>
+        => неправильно працює CSS
+        Тому після зміни цього файлу його слід  перезберегти
+        в notepad++ з кодуванням  UTF-8 (без BOM)
+		https://github.com/contao/core/issues/6408
+{% endcomment %}
 
 <html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
@@ -78,12 +87,22 @@
         {% block href-group-own-index %}
         {% endblock href-group-own-index %}
 
+        {% block href-group-flats-index %}
+        {% endblock href-group-flats-index %}
+
+        {% block href-group-folders-index %}
+        {% endblock href-group-folders-index %}
+
         {% block href-back %}
             <li><a href="javascript:history.back()">Назад</a></li>
         {% endblock %}
     </ul>
 
     {% block body %}
+        {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
+    {% endblock %}
+
+    {% block under-paginator %}
         {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
     {% endblock %}
 

@@ -23,13 +23,11 @@
     {% include "block_one_two_forms.html" %}
 {% endblock %}
 
-
 {% block input-cancel %}
     {% url 'own-profile' as cancel_url %}
     <input type="button" value="Скасувати"
            onclick="location.href='{{ cancel_url }}'" />
 {% endblock %}
-
 
 {% block href-back %}
     <li><a href="{% url 'own-profile' %}">Уверх</a></li>

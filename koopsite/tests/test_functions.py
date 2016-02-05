@@ -1,5 +1,7 @@
 import os
 import types
+from PIL import Image
+from unittest.case import skip
 from django.contrib.auth.models import User
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.utils import IntegrityError
@@ -634,6 +636,7 @@ class TestTransliterate(TestCase):
 
 class Get_thumbnail_url_path_Test(TestCase):
 
+    @skip
     def test_thumbnail_for_file(self):
         user = DummyUser().create_dummy_user()
         picture_path="koopsite/tests/profile_image.jpg"
@@ -655,6 +658,7 @@ class Get_thumbnail_url_path_Test(TestCase):
         os.remove('media/profile_images/1_30x24.jpg')
         os.remove('media/profile_images/1_200x100.jpg')
 
+    @skip
     def test_thumbnail_for_path(self):
         user = DummyUser().create_dummy_user()
         picture_path="koopsite/tests/profile_image.jpg"
@@ -664,4 +668,23 @@ class Get_thumbnail_url_path_Test(TestCase):
         self.assertEqual(mini_url, 'koopsite/tests/profile_image_200x100.jpg')
         os.remove('koopsite/tests/profile_image_30x24.jpg')
         os.remove('koopsite/tests/profile_image_200x100.jpg')
+
+    def test_thumbnail_for_file_3(self):
+        user = DummyUser().create_dummy_user()
+        picture_path="koopsite/tests/profile_image_3.jpg"
+        DummyUser().create_dummy_profile(user, picture_path=picture_path)
+        picture = user.userprofile.picture
+        expected_url = '/media/profile_images/1_30x24.jpg'
+        expected_path = os.path.join(MEDIA_ROOT, r"profile_images\1_30x24.jpg")
+        mini_url, mini_path = get_thumbnail_url_path(picture)
+        self.assertEqual(mini_url, expected_url)
+        self.assertEqual(mini_path, expected_path)
+
+        image = Image.open(expected_path)
+        size = image.size
+        self.assertEqual(size, (30, 16))
+        image.close()
+
+        os.remove('media/profile_images/1.jpg')
+        os.remove('media/profile_images/1_30x24.jpg')
 

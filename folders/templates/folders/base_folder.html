@@ -1,43 +1,13 @@
-<!DOCTYPE html>
+{% extends "base_koop.html" %}
 
-{# Шаблон-каркас. Його блоки можуть перевизначатися дочірніми шаблонами #}
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+{# Є одночасно базовим шаблоном для folders app #}
 
-<html xmlns="http://www.w3.org/1999/html">
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>ЖК "Пасічний" (Django)</title>
+{% block href-group-index %}
+{% endblock href-group-index %}
 
-    {% block load_style %}
-        {% load staticfiles %}
-        <link rel="stylesheet" type="text/css"
-              href="{% static 'css/koop_style.css' %}">
-        <link rel="shortcut icon"
-              href="{% static 'favicon/favicon.ico' %}"/>
-    {% endblock %}
 
-    {% block style %}
-        {# У дочірньому шаблоні можна переозначити стилі #}
-    {% endblock %}
-
-</head>
-
-<body>
- <div class="site-container">
-  <div class="site-header">
-    {% block title %}
-        {% include "block_title.html" %}
-    {% endblock %}
-  </div>
-
-  <div class="site-body">
-    <ul id="body-navigation"
-        class="navigation">
-        {# У дочірньому шаблоні можна переозначити тільки самопосилання #}
-        {% block href-report-reload %}
-        {% endblock %}
-        {% block href-index %}
-            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
-        {% endblock %}
+{% block href-group-folders-index %}
         {% block href-folder-list-all %}
             <li><a href="{% url 'folders:folder-list-all' %}">Картотека (ст.)</a></li>
         {% endblock %}
@@ -93,36 +63,12 @@
         {% block href-folder-contents %}
             <li><a href="{% url 'folders:folder-contents' 1 %}">Картотека (js)</a></li>
         {% endblock %}
-        {% block href-back %}
-            <li><a href="{% url 'index' %}">Уверх</a></li>
-        {% endblock %}
-    </ul>
+{% endblock href-group-folders-index %}
 
-    {% block body %}
-        {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
-    {% endblock %}
+{% block href-back %}
+    <li><a href="{% url 'folders:folder-list-all' %}">Уверх</a></li>
+{% endblock %}
 
-    {% block load_js %}
-        {# У дочірньому шаблоні можна переозначити script #}
-    {% endblock %}
-
-    {% block ajax_browtab %}
-        {# У дочірньому шаблоні можна переозначити код #}
-    {% endblock %}
-
-    {% block load_ajax %}
-        {# У дочірньому шаблоні можна переозначити script #}
-    {% endblock %}
-  </div>
-
-  <div class="site-footer">
-    {% block bottom %}
-        {% include "block_bottom.html" %}
-    {% endblock %}
-  </div>
- </div>
-</body>
-</html>
 
 <!------------------------------------------------>
 {% comment %}

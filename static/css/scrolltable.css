@@ -93,10 +93,17 @@ table.scrolltable {
     
 .img-box {
     display:        flex;
-    width:          2em;
+    width:          32px;
+    height:         32px;
+/*    overflow:       hidden;*/
 }
 .img-box img {
-    margin: auto !important;    
+    margin:         auto !important;    
+    max-width:      30px;
+    max-height:     30px;
+}
+.instead-img {
+    width:          2em;
 }
 .width-2em {
 /*    display: inline-block;*/
@@ -159,9 +166,9 @@ table.scrolltable {
 .users8 th, 
 .users8 td                  { width:  9%; } /* 9%*3 = 27% */
 .users8 th:nth-child(1), 
-.users8 td:nth-child(1)     { width: 15%; } /* Login */
+.users8 td:nth-child(1)     { width: 20%; } /* Login */
 .users8 th:nth-child(2), 
-.users8 td:nth-child(2)     { width: 25%; } /* Full-name */
+.users8 td:nth-child(2)     { width: 20%; } /* Full-name */
 .users8 th:nth-child(3), 
 .users8 td:nth-child(3)     { width:  5%; } /* Flat-No */
 .users8 th:nth-child(4), 

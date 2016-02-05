@@ -15,7 +15,7 @@ from koopsite.functions import has_group, add_group, \
                         remove_group, is_staff_only, \
                         get_user_full_name, get_user_flat_No, \
                         get_user_is_recognized, get_or_none, \
-                        browTabName_models
+                        browTabName_models, dict_print
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest
@@ -171,6 +171,7 @@ class UsersTable(ListView):
         setSelElementToSession(self.request.session,
                                             browTabName,
                                             selElement=selElement)
+        dict_print(context, 'context')
         return context
 
     def get_queryset(self):

@@ -376,7 +376,7 @@ class UserProfileCreate(UserProfileOneToOne, OneToOneCreate):
 
 class UserProfilePersonDataUpdate(UserProfileOneToOne, OneToOneUpdate):
     """
-    CBV для редагування даних користувача і його профілю.
+    CBV для редагування даних БУДЬ-ЯКОГО користувача і його профілю.
     """
     FormOne  = UserPersonDataForm
     FormTwo  = ProfilePersonDataForm
@@ -454,6 +454,9 @@ class OwnProfileDetailShow(UserProfileDetailShow):
 
 
 class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
+    """
+    CBV для редагування даних ЗАЛОГІНЕНОГО користувача і його профілю.
+    """
     FormOne  = UserPersonDataForm
     FormTwo  = ProfilePersonDataForm
     template_name = 'koop_own_prof_update.html'

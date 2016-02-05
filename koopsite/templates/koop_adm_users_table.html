@@ -60,12 +60,22 @@
                                     headers="th{{ j }}"
                                     data-column-header="{{ cap|get_at_index:j }}">
                                     {% if j == 1 %}
-                                        {% if user.is_staff %}
-                                            <a href="{% url 'adm-users-profile' row.0.id %}">{{ v }}</a>
-                                        {% else %}
-                                            <a href="{% url 'adm-users-profile' row.0.id %}">{{ v }}</a>
-                                        {% endif %}
-
+                                        <a href="{% url 'adm-users-profile' row.0.id %}" title="Профіль користувача"
+                                            class="flex-container"
+                                            >
+                                            <div class="img-box">
+                                                {% with f=object_list|get_at_index:i %}
+                                                    {% with pic=f.userprofile.picture %}
+                                                        {% if pic and pic != "False"  %}
+                                                            <img src="{% static pic|thumbnail %}"/>
+                                                        {% else %}
+                                                            <div class="instead-img"></div>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                {% endwith %}
+                                            </div>
+                                            <div class="after-img-box">{{ v }}</div>
+                                        </a>
                                     {% elif j == 5 %}
                                         <span>{{ v|date:"d.m.Y" }}</span>
                                     {% elif j == 6 or j == 7 or j == 8 %}

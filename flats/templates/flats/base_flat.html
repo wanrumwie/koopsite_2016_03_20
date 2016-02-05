@@ -1,74 +1,28 @@
-<!DOCTYPE html>
+{% extends "base_koop.html" %}
 
-{# Шаблон-каркас. Його блоки можуть перевизначатися дочірніми шаблонами #}
+{# Дочірній шаблон. Переозначає деякі/всі блоки батьківського шаблону #}
+{# Є одночасно базовим шаблоном для flats app #}
 
-<html xmlns="http://www.w3.org/1999/html">
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>ЖК "Пасічний" (Django)</title>
-
-    {% block load_style %}
-        {% load staticfiles %}
-        <link rel="stylesheet" type="text/css"
-              href="{% static 'css/koop_style.css' %}" />
-        <link rel="shortcut icon"
-              href="{% static 'favicon/favicon.ico' %}"/>
-    {% endblock %}
-
-    {% block style %}
-        {# У дочірньому шаблоні можна переозначити стилі #}
-    {% endblock %}
-
-</head>
-
-<body>
- <div class="site-container">
-  <div class="site-header">
-    {% block title %}
-        {% include "block_title.html" %}
-    {% endblock %}
-  </div>
-
-  <div class="site-body">
-    <ul id="body-navigation"
-        class="navigation">
-        {# У дочірньому шаблоні переознач тільки самопосилання #}
-        {% block href-index %}
-            <li><a href="{% url 'index' %}">Головна сторінка</a></li>
-        {% endblock %}
-        {% block href-flat-scheme %}
-            <li><a href="{% url 'flats:flat-scheme' %}">Схема розташування квартир</a></li>
-        {% endblock %}
-        {% block href-flat-list %}
-            <li><a href="{% url 'flats:flat-list' %}">Список квартир</a></li>
-        {% endblock %}
-        {% block href-flat-table %}
-            <li><a href="{% url 'flats:flat-table' %}">Таблиця параметрів всіх квартир</a></li>
-        {% endblock %}
-        {% block href-flat-scheme-users %}
-            <li><a href="{% url 'flats:flat-scheme-users' %}">Схема користувачів</a></li>
-        {% endblock %}
-        {% block href-back %}
-            <li><a href="{% url 'flats:flat-scheme' %}">Уверх</a></li>
-        {% endblock %}
-    </ul>
+{% block href-group-index %}
+{% endblock href-group-index %}
 
 
-    {% block body %}
-        {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
-    {% endblock %}
+{% block href-group-flats-index %}
+	{% block href-flat-scheme %}
+		<li><a href="{% url 'flats:flat-scheme' %}">Схема будинку</a></li>
+	{% endblock %}
+	{% block href-flat-list %}
+		<li><a href="{% url 'flats:flat-list' %}">Список квартир</a></li>
+	{% endblock %}
+	{% block href-flat-table %}
+		<li><a href="{% url 'flats:flat-table' %}">Параметри квартир</a></li>
+	{% endblock %}
+	{% block href-flat-scheme-users %}
+		<li><a href="{% url 'flats:flat-scheme-users' %}">Схема користувачів</a></li>
+	{% endblock %}
+{% endblock href-group-flats-index %}
 
-    {% block under-paginator %}
-        {# У дочірньому шаблоні можна переозначити основне тіло шаблону #}
-    {% endblock %}
+{% block href-back %}
+    <li><a href="{% url 'flats:flat-scheme' %}">Уверх</a></li>
+{% endblock %}
 
-  </div>
-
-  <div class="site-footer">
-    {% block bottom %}
-        {% include "block_bottom.html" %}
-    {% endblock %}
-  </div>
- </div>
-</body>
-</html>
