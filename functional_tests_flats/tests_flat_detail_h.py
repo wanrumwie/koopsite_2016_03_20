@@ -32,7 +32,7 @@ class FlatDetail_h_PageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Схема будинку', 'un': 'flats:flat-scheme'},
             {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             {'ls':'#body-navigation'          , 'lt': 'Параметри квартир'   , 'un': 'flats:flat-table'},
-            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users'},
+            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users', 'cd': "user.has_perm('koopsite.view_userprofile')"},
             {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "flats:flat-scheme"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
@@ -74,6 +74,25 @@ class FlatDetail_h_PageAuthenticatedVisitorTest(FlatDetail_h_PageVisitTest):
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     # @skip
+    def test_visitor_can_go_to_links(self):
+        # Користувач може перейти по всіх лінках на сторінці
+        self.visitor_can_go_to_links()
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+
+class FlatDetail_h_PageAuthenticatedVisitorWithPermTest(FlatDetail_h_PageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    аутентифікованим користувачем з доступом
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        DummyFlat().create_dummy_flat(flat_No='1')
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        self.add_dummy_permission(self.dummy_user, codename='view_userprofile')
+        self.get_data_links_number()
+
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()

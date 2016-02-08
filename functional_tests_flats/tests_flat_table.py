@@ -35,7 +35,7 @@ class FlatTablePageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Схема будинку', 'un': 'flats:flat-scheme'},
             {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             # {'ls':'#body-navigation'          , 'lt': 'Параметри квартир'   , 'un': 'flats:flat-table'},
-            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users'},
+            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users', 'cd': "user.has_perm('koopsite.view_userprofile')"},
             {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "flats:flat-scheme"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
@@ -44,22 +44,8 @@ class FlatTablePageVisitTest(PageVisitTest):
             ]
         return s
 
-    def get_num_page_links(self):
-        # Повертає к-ть сторінок і к-ть лінків пейджінатора
-        paginate_by = FlatTable.paginate_by
-        list_len = len(Flat.objects.all())
-        if paginate_by:
-            num_pages = round_up_division(list_len, paginate_by)
-            if   num_pages == 1: page_links_number = 0
-            elif num_pages == 2: page_links_number = 1
-            else: page_links_number = 2
-        else:
-            num_pages = 1
-            page_links_number = 0
-        return num_pages, page_links_number
-
     def get_data_links_number(self):
-        page_links_number = self.get_num_page_links()[1]
+        page_links_number = self.get_num_page_links(len(Flat.objects.all()), FlatTable.paginate_by)[1]
         self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
         self.data_links_number = page_links_number # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 0 # лінк javascript:history.back()

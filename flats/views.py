@@ -1,6 +1,10 @@
+from django.contrib.auth.decorators import permission_required
+from django.test.client import RequestFactory
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from django.views.generic.detail import SingleObjectMixin
 from koopsite.functions import get_flat_users
+from koopsite.models import UserProfile
 from koopsite.views import AllFieldsView, AllRecordsAllFieldsView
 from .models import Flat
 
@@ -105,27 +109,31 @@ class FlatTable(AllRecordsAllFieldsView):
     context_object_name = "field_vals"
     context_verbose_list_name = "field_names"
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
-
 
 class FlatSchemeUsers(FlatScheme):
     template_name = 'flats/flat_scheme_users.html'
 
+    @method_decorator(permission_required('koopsite.view_userprofile'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
 
 class FlatUsersList(SingleObjectMixin, ListView):
-    # paginate_by = 15
     template_name = 'flats/flat_users_list.html'
-    # context_object_name = "all_list" # додатковий ідентифікатор для списку self.object_list
+
+    @method_decorator(permission_required('koopsite.view_userprofile'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Flat.objects.all())
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        # Дочірні об'єкти:
-        # два queryset з різних моделей об'єднується в один qs,
-        # який обробляється в template як одне ціле
+        # Повертає список всіх користувачів, у профілі яких вказано flat
         flat = self.object
         qs = get_flat_users(flat)
         return qs
+
+#---------------- Кінець коду, охопленого тестуванням ------------------
 

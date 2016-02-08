@@ -6,7 +6,6 @@ from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from folders.views import FolderList
 from functional_tests_koopsite.ft_base import PageVisitTest
-from koopsite.functions import round_up_division
 from koopsite.settings import SKIP_TEST
 
 
@@ -52,22 +51,9 @@ class FolderListPageVisitTest(PageVisitTest):
         self.data_length = len(Folder.objects.all())# довжина списку з даними
         return self.data_length
 
-    def get_num_page_links(self):
-        # Повертає к-ть сторінок і к-ть лінків пейджінатора
-        paginate_by = FolderList.paginate_by
-        if paginate_by:
-            num_pages = round_up_division(self.get_data_length(), paginate_by)
-            if   num_pages == 1: page_links_number = 0
-            elif num_pages == 2: page_links_number = 1
-            else: page_links_number = 2
-        else:
-            num_pages = 1
-            page_links_number = 0
-        return num_pages, page_links_number
-
     def get_data_links_number(self):
         self.data_links_number = self.get_data_length() # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += self.get_num_page_links()[1]
+        self.data_links_number += self.get_num_page_links(self.get_data_length(), FolderList.paginate_by)[1]
         return self.data_links_number
 
 

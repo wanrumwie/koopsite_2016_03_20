@@ -8,7 +8,7 @@
         <td id="td1-{{ f|model_name }}#{{ f.id }}"
             data-column-header="Користувач"
             >
-            <a href="{% url 'adm-users-profile' f.id %}" title="Профіль користувача"
+            <a href="{% url 'adm-users-profile' f.id %}" title="{{ f }}"
                 class="flex-container"
                 >
                 <span class="img-box">
@@ -23,6 +23,7 @@
         </td>
         <td id="td2-{{ f|model_name }}#{{ f.id }}"
             data-column-header="Прізвище та ім'я"
+            title="{{ f|user_full_name }}"
             >
             <span>{{ f|user_full_name }}</span>
         </td>

@@ -32,7 +32,7 @@ class FlatListPageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Схема будинку', 'un': 'flats:flat-scheme'},
             # {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             {'ls':'#body-navigation'          , 'lt': 'Параметри квартир'   , 'un': 'flats:flat-table'},
-            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users'},
+            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users', 'cd': "user.has_perm('koopsite.view_userprofile')"},
             {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "flats:flat-scheme"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
@@ -40,6 +40,11 @@ class FlatListPageVisitTest(PageVisitTest):
             {'ls':'#header-aside-2-navigation', 'lt': 'Авторизуватися'   , 'un': 'login'       , 'cd': "not user.is_authenticated()"},
             ]
         return s
+
+    def get_data_links_number(self):
+        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
+        self.data_links_number += 0 # лінк javascript:history.back()
+        return self.data_links_number
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -53,8 +58,7 @@ class FlatListPageAuthenticatedVisitorTest(FlatListPageVisitTest):
         self.dummy_user = self.create_dummy_user()
         self.add_user_cookie_to_browser(self.dummy_user)
         DummyFlat().create_dummy_building()
-        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 0 # лінк javascript:history.back()
+        self.get_data_links_number()
 
     def test_can_visit_page(self):
         # Заголовок і назва сторінки правильні
@@ -74,6 +78,24 @@ class FlatListPageAuthenticatedVisitorTest(FlatListPageVisitTest):
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
+class FlatListPageAuthenticatedVisitorWithPermTest(FlatListPageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    аутентифікованим користувачем з доступом
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        self.add_dummy_permission(self.dummy_user, codename='view_userprofile')
+        self.get_data_links_number()
+
+    def test_visitor_can_go_to_links(self):
+        # Користувач може перейти по всіх лінках на сторінці
+        self.visitor_can_go_to_links()
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+
 @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatListPageAnonymousVisitorTest(FlatListPageVisitTest):
     """
@@ -84,8 +106,7 @@ class FlatListPageAnonymousVisitorTest(FlatListPageVisitTest):
     def setUp(self):
         self.dummy_user = AnonymousUser()
         DummyFlat().create_dummy_building()
-        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 0 # лінк javascript:history.back()
+        self.get_data_links_number()
 
     def test_visitor_can_go_to_links(self):
         # Користувач може перейти по всіх лінках на сторінці
@@ -104,8 +125,7 @@ class FlatListPageVisitorCanFindFlatTest(FlatListPageVisitTest):
     def setUp(self):
         self.dummy_user = AnonymousUser()
         DummyFlat().create_dummy_building()
-        self.data_links_number = len(Flat.objects.all()) # кількість лінків, які приходять в шаблон з даними
-        self.data_links_number += 0 # лінк javascript:history.back()
+        self.get_data_links_number()
 
     def test_visitor_can_find_flat(self):
         # Користувач може  перейти по лінку потрібні дані

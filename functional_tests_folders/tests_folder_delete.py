@@ -1,14 +1,11 @@
 import inspect
 from unittest.case import skipIf
-from datetime import datetime
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ObjectDoesNotExist
-from pytz import UTC
 from folders.models import Folder
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.settings import SKIP_TEST
-from selenium.webdriver.common.keys import Keys
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")

@@ -171,7 +171,6 @@ class UsersTable(ListView):
         setSelElementToSession(self.request.session,
                                             browTabName,
                                             selElement=selElement)
-        dict_print(context, 'context')
         return context
 
     def get_queryset(self):

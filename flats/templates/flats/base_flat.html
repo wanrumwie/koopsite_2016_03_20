@@ -18,7 +18,9 @@
 		<li><a href="{% url 'flats:flat-table' %}">Параметри квартир</a></li>
 	{% endblock %}
 	{% block href-flat-scheme-users %}
-		<li><a href="{% url 'flats:flat-scheme-users' %}">Схема користувачів</a></li>
+        {% if perms.koopsite.view_userprofile %}
+    		<li><a href="{% url 'flats:flat-scheme-users' %}">Схема користувачів</a></li>
+        {% endif %}
 	{% endblock %}
 {% endblock href-group-flats-index %}
 

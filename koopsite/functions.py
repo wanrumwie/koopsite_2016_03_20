@@ -3,7 +3,7 @@ import os
 import re
 import string
 from urllib.parse import unquote
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.core.mail import send_mail
 from math import ceil
 from PIL import Image
@@ -49,6 +49,10 @@ def user_permissions_print(user):
     print('groups:')
     for g in user.groups.all():
         print(g.name)
+    print('-'*50)
+    print('Permission.objects.all():')
+    for p in Permission.objects.all():
+        print('%-30s %-20s %-20s %s' % (p.name, p.content_type, p.codename, p))
     print('-'*50)
 
 def get_or_none(classmodel, **kwargs):

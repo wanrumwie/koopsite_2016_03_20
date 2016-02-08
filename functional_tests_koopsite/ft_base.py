@@ -1,4 +1,3 @@
-import inspect
 from time import sleep
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, \
@@ -7,12 +6,12 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, MoveTargetOutOfBoundsException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
 import time
 from selenium.webdriver.support.wait import WebDriverWait
-from koopsite.functions import list_print
+from koopsite.functions import round_up_division
 from koopsite.tests.test_base import DummyUser
 
 
@@ -216,9 +215,7 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
             print(exception)
             return
         passing_url = self.browser.current_url  # url після переходу
-        self.assertRegex(passing_url, expected_regex)
-        if sleep_time:
-            sleep(sleep_time)   # чекаємо на завершення обміну даними на деяких сторінках
+
         # print('link_parent_selector =', link_parent_selector)
         # print('link_text =', link_text)
         # print('href =', href)
@@ -226,6 +223,10 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
         # print('kwargs =', kwargs)
         # print('passing_url =', passing_url)
         # print('expected_regex =', expected_regex)
+
+        self.assertRegex(passing_url, expected_regex)
+        if sleep_time:
+            sleep(sleep_time)   # чекаємо на завершення обміну даними на деяких сторінках
 
     def get_link_location(self, link_parent_selector, link_text):
         parent = self.browser.find_element_by_css_selector(
@@ -288,6 +289,18 @@ class PageVisitTest(DummyUser, FunctionalTest):
         except: flat_No = ""
         return username, flat_id, flat_No
 
+    def get_num_page_links(self, list_len, paginate_by):
+        # Повертає к-ть сторінок і к-ть лінків пейджінатора
+        if paginate_by:
+            num_pages = round_up_division(list_len, paginate_by)
+            if   num_pages == 1: page_links_number = 0
+            elif num_pages == 2: page_links_number = 1
+            else: page_links_number = 2
+        else:
+            num_pages = 1
+            page_links_number = 0
+        return num_pages, page_links_number
+
     def links_in_template(self, user):
         # Перелік лінків, важливих для сторінки.
         # Повертає список словників, які поступають як параметри до функції
@@ -330,9 +343,6 @@ class PageVisitTest(DummyUser, FunctionalTest):
                 visible_links.append(d)
         expected = len(visible_links)
         expected += self.data_links_number # + лінки в таблицях з даними. Ці лінки даних не входять до словника links_in_template.
-        # list_print(links, 'links')
-        # list_print(visible_links, 'visible_links')
-        # print('expected =', expected)
         self.assertEqual(len(elements), expected,
               msg="Кількість лінків на сторінці не відповідає очікуваній")
         # Користувач може перейти по всіх лінках на сторінці

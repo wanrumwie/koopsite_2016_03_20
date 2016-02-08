@@ -60,7 +60,7 @@
                                     headers="th{{ j }}"
                                     data-column-header="{{ cap|get_at_index:j }}">
                                     {% if j == 1 %}
-                                        <a href="{% url 'adm-users-profile' row.0.id %}" title="Профіль користувача"
+                                        <a href="{% url 'adm-users-profile' row.0.id %}" title="{{ v }}"
                                             class="flex-container"
                                             >
                                             <div class="img-box">
@@ -82,7 +82,7 @@
                                         <img class="padding-y-07"
                                              src="{% static v|icon_yes_no_unknown %}"/>
                                     {% else %}
-                                        <span>{{ v }}</span>
+                                        <span title="{{ v }}">{{ v }}</span>
                                     {% endif %}
                                 </td>
                             {% endif %}

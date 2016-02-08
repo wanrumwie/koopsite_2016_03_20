@@ -5,11 +5,11 @@ from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from flats.views import FlatDetail
 from functional_tests_koopsite.ft_base import PageVisitTest
-from koopsite.functions import round_up_division
+from koopsite.functions import round_up_division, user_permissions_print
 from koopsite.settings import SKIP_TEST
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageVisitTest(PageVisitTest):
     """
     Допоміжний клас для функціональних тестів.
@@ -34,7 +34,7 @@ class FlatDetailPageVisitTest(PageVisitTest):
             {'ls':'#body-navigation'          , 'lt': 'Схема будинку', 'un': 'flats:flat-scheme'},
             {'ls':'#body-navigation'          , 'lt': 'Список квартир'   , 'un': 'flats:flat-list'},
             {'ls':'#body-navigation'          , 'lt': 'Параметри квартир'   , 'un': 'flats:flat-table'},
-            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users'},
+            {'ls':'#body-navigation'          , 'lt': 'Схема користувачів','un': 'flats:flat-scheme-users', 'cd': "user.has_perm('koopsite.view_userprofile')"},
             {'ls':'#body-navigation'          , 'lt': 'Уверх'            , 'un': "flats:flat-scheme"},
             {'ls':'#header-aside-2-navigation', 'lt': username           , 'un': 'own-profile' , 'cd': "user.is_authenticated()"},
             {'ls':'#header-aside-2-navigation', 'lt': "Кв." + flat_No    , 'un': "flats:flat-detail", 'kw': {'pk': flat_id}, 'cd': "user.is_authenticated() and user.userprofile.flat"},
@@ -43,28 +43,14 @@ class FlatDetailPageVisitTest(PageVisitTest):
             ]
         return s
 
-    def get_num_page_links(self):
-        # Повертає к-ть сторінок і к-ть лінків пейджінатора
-        paginate_by = FlatDetail.paginate_by
-        if paginate_by:
-            num_pages = round_up_division(22, paginate_by)
-            if   num_pages == 1: page_links_number = 0
-            elif num_pages == 2: page_links_number = 1
-            else: page_links_number = 2
-        else:
-            num_pages = 1
-            page_links_number = 0
-        return num_pages, page_links_number
-
     def get_data_links_number(self):
-        page_links_number = self.get_num_page_links()[1]
-        self.data_links_number = 0 # кількість лінків, які приходять в шаблон з даними
+        page_links_number = self.get_num_page_links(22, FlatDetail.paginate_by)[1]
         self.data_links_number = page_links_number # кількість лінків, які приходять в шаблон з даними
         self.data_links_number += 1 # лінк "В один рядок"
         self.data_links_number += 0 # лінк javascript:history.back()
         return self.data_links_number
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageAuthenticatedVisitorTest(FlatDetailPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -92,7 +78,7 @@ class FlatDetailPageAuthenticatedVisitorTest(FlatDetailPageVisitTest):
         self.visitor_can_go_to_links()
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageAuthenticatedVisitorWithFlatTest(FlatDetailPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -113,6 +99,27 @@ class FlatDetailPageAuthenticatedVisitorWithFlatTest(FlatDetailPageVisitTest):
         # Користувач може перейти по всіх лінках на сторінці
         self.visitor_can_go_to_links()
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
+class FlatDetailPageAuthenticatedVisitorWithPermTest(FlatDetailPageVisitTest):
+    """
+    Тест відвідання сторінки сайту
+    аутентифікованим користувачем з доступом
+    Параметри сторінки описані в суперкласі, тому не потребують переозначення.
+    """
+    def setUp(self):
+        DummyFlat().create_dummy_flat(flat_No='1')
+        self.dummy_user = self.create_dummy_user()
+        self.add_user_cookie_to_browser(self.dummy_user)
+        self.add_dummy_permission(self.dummy_user, codename='view_userprofile')
+        self.get_data_links_number()
+
+    def test_visitor_can_go_to_links(self):
+        # Користувач може перейти по всіх лінках на сторінці
+        self.visitor_can_go_to_links()
+        print('finished: %s' % inspect.stack()[0][3], end=' >> ')
+
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
 class FlatDetailPageAnonymousVisitorTest(FlatDetailPageVisitTest):

@@ -154,10 +154,10 @@ class FolderCreateInPageAuthenticatedVisitorCanCreateFolderTest(FolderCreateInPa
         # Після натискання ENTER база часом не встигає записати новий елемент.
         # Тому доводиться придумувати в тесті штучні затримки.
         # Без цього друку виникає "гонитва" з чудернацькими помилками:
-        print('ENTER:')
+        print('inputbox.send_keys(Keys.ENTER): print for delay', end=' ')
         sleep(5)
         ff = Folder.objects.all()
-        for f in ff: print('f.id=', f.id, f, f.parent)
+        for f in ff: print('f.id=', f.id, f, f.parent, end=' ')
 
         folder = Folder.objects.last()
         self.assertEqual(folder.name, 'New_folder')

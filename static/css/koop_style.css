@@ -69,13 +69,13 @@ img.fill-space {
 
 hr {
     border:     1px solid #F0E68C;  /* khaki */
-    color:      #F0E68C;  /* khaki */
+/*    color:      #F0E68C;  /* khaki */
     margin:     0.5em 0;
     padding:    0;
 }
 
 caption {
-    color:             #F0E68C;  /* khaki */
+/*    color:             #F0E68C;  /* khaki */
     background-image:   none;
     }
 table {
@@ -176,7 +176,7 @@ a:focus     {outline-style: none;}
 /*=======================================================================*/
 
 .flat-has-users {
-    background-color:   #FFE600;  /* khaki */
+    background-color:   #FFE600;  /* yellow */
     background-image:   none;
 }
 .flat-has-member {

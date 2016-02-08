@@ -17,10 +17,11 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/h/$', FlatDetailHorizontal.as_view(), name='flat-detail-h'),
     url(r'^table/$',            FlatTable.as_view(),            name='flat-table'),
 
-#--------- Кінець коду, охопленого функціональними тестами ------------
-
     url(r'^scheme-users/$',     FlatSchemeUsers.as_view(),      name='flat-scheme-users'),
     url(r'^(?P<pk>[0-9]+)/users-list/$',   FlatUsersList.as_view(), name='flat-users-list'),
+
+#--------- Кінець коду, охопленого функціональними тестами ------------
+
     # url(r'^person/table/$',   PersonTableView.as_view(), name='person-table'),
     url(r'^person/table/$',     page_not_ready,                 name='person-table'),
 ]
