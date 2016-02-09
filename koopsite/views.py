@@ -156,6 +156,9 @@ class OneToOneBase:
     one_img_fields  = None
     two_img_fields  = None
 
+    one             = None
+    two             = None
+
 
     def get_one(self, request, *args, **kwargs):
         one_id = kwargs.get('pk') # ОТРИМАННЯ даних з URLconf
@@ -251,6 +254,9 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
     пов'язаних між собою через OneToOne.
     """
 
+    def get_success_url(self):
+        return self.two.get_absolute_url()
+
     def get(self, request, *args, **kwargs):
         one = self.get_one(request, *args, **kwargs)
         two = self.get_two(one)
@@ -271,20 +277,20 @@ class OneToOneUpdate(OneToOneBase, UpdateView):
         form_one = self.FormOne(data=request.POST, files=request.FILES, instance=one)
         form_two = self.FormTwo(data=request.POST, files=request.FILES, instance=two)
         if form_one.is_valid() and form_two.is_valid():
-            one = form_save_with_m2m(form_one)
-            two = form_save_with_m2m(form_two)
+            self.one = form_save_with_m2m(form_one)
+            self.two = form_save_with_m2m(form_two)
             finished = True            # редагування успішно завершене
+            return HttpResponseRedirect(self.get_success_url())
         else:
             finished = False
-
-        data = {self.form_one_name  : form_one,
-                self.form_two_name  : form_two,
-                'one'               : one,
-                'two'               : two,
-                'render_variant'    : self.render_variant,
-                'finished'          : finished,
-                }
-        return render(request, self.template_name, data)
+            data = {self.form_one_name  : form_one,
+                    self.form_two_name  : form_two,
+                    'one'               : one,
+                    'two'               : two,
+                    'render_variant'    : self.render_variant,
+                    'finished'          : finished,
+                    }
+            return render(request, self.template_name, data)
 
 
 class OneToOneDetailShow(OneToOneBase, DetailView):
@@ -383,13 +389,12 @@ class UserProfilePersonDataUpdate(UserProfileOneToOne, OneToOneUpdate):
     template_name = 'koop_adm_user_prof_update.html'
 
     # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
-    # TODO-вилучити з форми можливість зміни ДОСТУПУ
-    # TODO-чи використовується це view автором?
-    # TODO-перевірити з декоратором author_or_permission_required(UserProfile...)
-    # @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
     @method_decorator(permission_required('koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.two.get_absolute_url()
 
 
 class UserPermsFullUpdate(UserProfileOneToOne, OneToOneUpdate):
@@ -462,7 +467,6 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     template_name = 'koop_own_prof_update.html'
 
     # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
-    # @method_decorator(login_required)
     @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -472,17 +476,8 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
         one = self.ModelOne.objects.get(id=one_id)
         return one
 
-
-# TODO-2016 01 25 не працює UserList. Але чи він взагалі потрібен? Прибрати згадку про нього з html.
-class UsersList(ListView):
-    model = User
-    ordering = 'username'
-    # paginate_by = 20
-    template_name = 'koop_adm_users_list.html'
-
-    @method_decorator(permission_required('koopsite.activate_account'))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    def get_success_url(self):
+        return reverse('own-profile')
 
 
 class LoginView(FormView):
@@ -561,7 +556,6 @@ def index(request):
     else:
         return render(request, template_name, {})
 
-# TODO-можливо зробити декоратор перевірки належності до групи?
 @permission_required('koopsite.activate_account')
 def adm_index(request):
     template_name = 'koop_adm_index.html'
@@ -592,30 +586,4 @@ def page_not_ready(request):
         return render(request, template_name, {})
 
 #---------------- Кінець коду, охопленого тестуванням ------------------
-
-
-
-@login_required
-def change_password(request):
-    template_name = 'koop_own_change_password.html'
-    finished = False  # змінна буде передана в шаблон
-    bad_details = False
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
-            update_session_auth_hash(request, form.user) # don't logout the user.
-            finished = True
-            messages.success(request, "Password changed.")
-        else:
-            bad_details = True
-            print('bad_details=', bad_details)
-    else:
-        form = PasswordChangeForm(request.user)
-    data = {
-        'form': form,
-        'finished': finished,
-        'bad_details': bad_details,
-    }
-    return render(request, template_name, data)
 

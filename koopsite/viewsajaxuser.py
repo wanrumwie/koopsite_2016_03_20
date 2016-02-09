@@ -201,7 +201,6 @@ class AjaxAccountViewBase(View):
                                         type    = "",
                                         message = "",
                                         )
-        # self.no_request_template = 'koop_adm_users_table.html'
         self.sendMail = False
 
     def dispatch(self, request, *args, **kwargs):
@@ -212,6 +211,9 @@ class AjaxAccountViewBase(View):
         if 'client_request' in request.POST:
             # Розбираємо дані від клієнта:
             user, profile = self.get_request_data(request)
+            if not user:
+                print("There is no user in request.POST")
+                return HttpResponse()
             # Елемент - рядок таблиці ДО змін:
             old_element = UsersTableArray().get_row(user)
 
@@ -236,7 +238,6 @@ class AjaxAccountViewBase(View):
         else:
             print("There is no 'client_request' in request.POST")
             return HttpResponse()
-            # return render(self, request, self.no_request_template)
 
     def get_request_data(self, request):
         # Розбираємо дані від клієнта:
@@ -244,7 +245,7 @@ class AjaxAccountViewBase(View):
             d = parseClientRequest(request.POST)
         except ValueError as err:
             # запит від клієнта містить невідповідні дані:
-            print('get_request_data_set:', err.args)
+            print('get_request_data:', err.args)
             return None, None
         self.sendMail = d.get('sendMail')
         user_id = d.get('id')                   # id of selected user
@@ -593,7 +594,8 @@ class AjaxAllAccountsViewBase(View):
                 if model == "user":
                     user_id = elem.get('id')
                     user = get_or_none(User, id=user_id)    # selected user
-                    users_set.append(user)
+                    if user:
+                        users_set.append(user)
         return users_set
 
     def group_processing(self, users_set):

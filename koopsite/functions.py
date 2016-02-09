@@ -60,6 +60,8 @@ def get_or_none(classmodel, **kwargs):
         return classmodel.objects.get(**kwargs)
     except classmodel.DoesNotExist:
         return None
+    except ValueError:
+        return None
 
 def round_up_division(a, b):
     """
@@ -384,9 +386,7 @@ class AllFieldsMixin():
         Представлення значення у шаблоні.
         Заокруглює число. Для нуля повертає "".
         У дочірньому класі можна переозначити для специфічних потреб,
-        наприклад, щоб floor_No = 0 ДРУКУВАЛОСЬ ЯК 0, а не ""
         """
-        # TODO-floor_No = 0 виводиться як "" - виправити!
         try:    v = round(v, decimal)
         except: pass
         if v == 0: v = ""

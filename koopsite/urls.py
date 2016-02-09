@@ -17,28 +17,27 @@ from django.conf.urls import include, url, static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.base import TemplateView
-from koopsite.views import UserPermsActivateUpdate, \
+from koopsite.views import index, user_logout, \
+                    noaccess, success, \
+                    OwnProfileUpdate, \
+                    UserProfileCreate, \
+                    adm_index, \
+                    UserProfilePersonDataUpdate, \
+                    UserPermsFullUpdate,\
+                    UserPermsActivateUpdate, \
                     OwnProfileDetailShow, \
                     UserProfileDetailShow, LoginView, ChangePassword, \
                     page_not_ready
+from koopsite.viewsajax import \
+                    ajaxSelRowIndexToSession, \
+                    ajaxStartRowIndexFromSession
 from koopsite.viewsajaxuser import UsersTable, AjaxRecognizeAccount, \
                     AjaxDenyAccount, AjaxActivateAccount, \
                     AjaxDeactivateAccount, AjaxDeleteAccount, \
                     AjaxSetMemberAccount, AjaxDenyMemberAccount, \
                     AjaxActivateAllAccounts, AjaxSetMemberAllAccounts
 
-from .settings import MEDIA_ROOT, MEDIA_URL
-from .views import index, user_logout, \
-                    change_password, noaccess, success, \
-                    OwnProfileUpdate, \
-                    UsersList, \
-                    UserProfileCreate, \
-                    adm_index, \
-                    UserProfilePersonDataUpdate, \
-                    UserPermsFullUpdate
-from .viewsajax import \
-                    ajaxSelRowIndexToSession, \
-                    ajaxStartRowIndexFromSession
+from koopsite.settings import MEDIA_ROOT, MEDIA_URL
 
 #--------- ПОЧАТОК коду, охопленого функціональними тестами ------------
 urlpatterns = [
@@ -65,7 +64,6 @@ urlpatterns = [
     # /adm/ та інші - адміністративні сторінки (is_staff == True)
     url(r'^adm/index/$',                              adm_index,                            name='adm-index'),
     url(r'^adm/users/table/$',                        UsersTable.as_view(),                 name='adm-users-table'),
-    url(r'^adm/users/list/$',                         UsersList.as_view(),                  name='adm-users-list'),
     url(r'^adm/users/(?P<pk>[0-9]+)/profile/$',       UserProfileDetailShow.as_view(),      name='adm-users-profile'),
     url(r'^adm/users/(?P<pk>[0-9]+)/profile/update/$',UserProfilePersonDataUpdate.as_view(),name='adm-users-profile-update'),
     url(r'^adm/users/(?P<pk>[0-9]+)/perms/update/$',  UserPermsFullUpdate.as_view(),        name='all-users-perm-update'),

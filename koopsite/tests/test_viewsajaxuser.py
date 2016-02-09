@@ -582,6 +582,27 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
+    def test_handler_return_empty_response_if_no_element(self):
+        view = self.cls_view()
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'parent_id'   :"",
+                    'sendMail'    :"",
+                    'selRowIndex' :'0',
+                    'model'       :'user',
+                    'id'          :'',
+                    'name'        :'john',
+                }
+        ajax_data = DummyAjaxRequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        request.session = {}
+        response = view.handler(request)
+        self.assertTrue(isinstance(response, HttpResponse))
+        self.assertEqual(response._container, [b''])
+        expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
+        self.assertEqual(response._headers, expected)
+
     def test_dispatch(self):
         view = self.cls_view()
 

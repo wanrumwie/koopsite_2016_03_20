@@ -71,13 +71,13 @@ class FlatSchemeTest(TestCase):
 
     def test_context_data(self):
         # Імітуємо будинок з одної квартири:
-        floors = [0]
-        entrances = [1]
+        floors = ['0']
+        entrances = ['1']
         flat = Flat(floor_No=0, entrance_No=1)
         flat.save()
-        block_scheme = {0: {1: [flat, ]}}
+        block_scheme = {'0': {'1': [flat, ]}}
         # {0: {1: [flat, ], 2: [flat, ]}, 1: {1: [flat, ], 2: [flat, ]},}
-        block_length = {1: 1}
+        block_length = {'1': 1}
         kwargs = {'block_scheme': block_scheme,
                   'block_length': block_length,
                   'floors'      : floors,
@@ -103,11 +103,11 @@ class FlatSchemeTest(TestCase):
         flat2.save()
         flat3 = Flat(floor_No=2, entrance_No=2)
         flat3.save()
-        floors = [2, 1]
-        entrances = [1, 2]
-        block_scheme = {1: {1: [flat1]}, 2: {2: [flat2, flat3]}}
+        floors = ['2', '1']
+        entrances = ['1', '2']
+        block_scheme = {'1': {'1': [flat1]}, '2': {'2': [flat2, flat3]}}
         # {0: {1: [flat, ], 2: [flat, ]}, 1: {1: [flat, ], 2: [flat, ]},}
-        block_length = {1: 1, 2: 2}
+        block_length = {'1': 1, '2': 2}
         kwargs = {
                 'block_scheme' : block_scheme,
                 'block_length' : block_length,

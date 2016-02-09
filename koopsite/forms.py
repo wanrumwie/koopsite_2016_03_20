@@ -1,20 +1,22 @@
 from random import randrange
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from koopsite.functions import has_group_members, \
-                                add_group, remove_group, dict_print
+                                add_group, remove_group
 from koopsite.models import UserProfile
 
 
 # Список типів віджетів, які не мають властивості readonly,
 # тому їх при потребі потрібно блокувати
 # встановленням атрибуту disabled
-# TODO-2016 01 24 Доповнити список віджетів, які не мають властивості readonly.
 readonly_disabled_widget_type_list = [
     'Select',
     'SelectMultiple',
+    'NullBooleanSelect',
+    # 'RadioSelect',
+    'SelectDateWidget',
     ]
 
 def set_readonly_widget_attrs(fields, readonly_fields):

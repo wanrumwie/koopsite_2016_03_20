@@ -28,7 +28,7 @@ from koopsite.views import index, AllFieldsView, \
     AllRecordsAllFieldsView, OneToOneBase, \
     UserProfileCreate, UserProfilePersonDataUpdate, \
     UserPermsFullUpdate, UserPermsActivateUpdate, OwnProfileUpdate, \
-    UserProfileDetailShow, OwnProfileDetailShow, UsersList, LoginView, \
+    UserProfileDetailShow, OwnProfileDetailShow, LoginView, \
     user_logout, ChangePassword, adm_index, noaccess, \
     page_not_ready, success
 
@@ -93,7 +93,7 @@ class AllRecordsAllFieldsViewTest(TestCase):
         view.model = Flat
         view.fields = ('id', 'flat_No', 'floor_No', 'entrance_No')
         view.exclude = ('id', )
-        expected = [['1', 1, 1], ['2', 2, 2], ['3', 3, 3]]
+        expected = [['1', '1', '1'], ['2', '2', '2'], ['3', '3', '3']]
         self.assertEqual(view.get_queryset(), expected)
 
 
@@ -150,6 +150,8 @@ class OneToOneBaseTest(TestCase):
         self.assertEqual(view.two_fields    , None)
         self.assertEqual(view.one_img_fields, None)
         self.assertEqual(view.two_img_fields, None)
+        self.assertEqual(view.one           , None)
+        self.assertEqual(view.two           , None)
 
     def test_get_one(self):
         view = self.cls_view()
@@ -426,6 +428,7 @@ class UserProfilePersonDataUpdateTest(TestCase):
         self.cls_view = UserProfilePersonDataUpdate
         self.path = '/adm/users/1/profile/update/'
         self.template = 'koop_adm_user_prof_update.html'
+        self.expected_success_url = "/adm/users/1/profile/"
         self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
         self.client.login(username='fred', password='secret')
 
@@ -448,6 +451,8 @@ class UserProfilePersonDataUpdateTest(TestCase):
         self.assertEqual(view.two_fields    , None)
         self.assertEqual(view.one_img_fields, None)
         self.assertEqual(view.two_img_fields, None)
+        self.assertEqual(view.one           , None)
+        self.assertEqual(view.two           , None)
 
     def test_url_resolves_to_proper_view(self):
         found = resolve(self.path)
@@ -531,8 +536,8 @@ class UserProfilePersonDataUpdateTest(TestCase):
         file.close()
         profile.picture.delete()
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
     def test_post_success_for_no_profile_data(self):
@@ -559,8 +564,8 @@ class UserProfilePersonDataUpdateTest(TestCase):
         profile = view.ModelTwo.objects.last()
         self.assertEqual(profile.user, user)
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
     def test_post_success_for_profile_already_created(self):
@@ -593,8 +598,8 @@ class UserProfilePersonDataUpdateTest(TestCase):
         self.assertEqual(profile.user, user)
         self.assertEqual(profile.flat, flat)
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
     def test_post_unsuccess_for_invalid_email(self):
@@ -648,6 +653,7 @@ class UserPermsFullUpdateTest(TestCase):
         self.cls_view = UserPermsFullUpdate
         self.path = '/adm/users/1/perms/update/'
         self.template = 'koop_adm_user_perm_update.html'
+        self.expected_success_url = "/adm/users/1/profile/"
 
         self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
         DummyUser().create_dummy_group(group_name='members')
@@ -766,8 +772,8 @@ class UserPermsFullUpdateTest(TestCase):
         self.assertEqual(profile.flat, None)
         self.assertEqual(profile.is_recognized, True)
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -780,6 +786,7 @@ class UserPermsActivateUpdateTest(TestCase):
         self.cls_view = UserPermsActivateUpdate
         self.path = '/adm/users/1/perms/activate/'
         self.template = 'koop_adm_user_perm_update.html'
+        self.expected_success_url = "/adm/users/1/profile/"
 
         self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
         DummyUser().create_dummy_group(group_name='members')
@@ -894,8 +901,8 @@ class UserPermsActivateUpdateTest(TestCase):
         self.assertEqual(profile.flat, None)
         self.assertEqual(profile.is_recognized, True)
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -1051,6 +1058,7 @@ class OwnProfileUpdateTest(TestCase):
         self.cls_view = OwnProfileUpdate
         self.path = '/own/profile/update/'
         self.template = 'koop_own_prof_update.html'
+        self.expected_success_url = "/own/profile/"
 
         self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
         self.client.login(username='fred', password='secret')
@@ -1149,8 +1157,8 @@ class OwnProfileUpdateTest(TestCase):
         file.close()
         profile.picture.delete()
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
     def test_post_success_for_no_profile_data(self):
@@ -1177,8 +1185,8 @@ class OwnProfileUpdateTest(TestCase):
         profile = view.ModelTwo.objects.last()
         self.assertEqual(profile.user, user)
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
     def test_post_success_for_profile_already_created(self):
@@ -1211,8 +1219,8 @@ class OwnProfileUpdateTest(TestCase):
         self.assertEqual(profile.user, user)
         self.assertEqual(profile.flat, flat)
 
-        # Переадресовано на ту ж сторінку з прапорцем finished = True
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.expected_success_url)
 
 
     def test_post_unsuccess_for_invalid_email(self):
@@ -1253,73 +1261,6 @@ class OwnProfileUpdateTest(TestCase):
             view.ModelTwo.objects.get(user=user)
 
         # Переадресовано на ту ж сторінку з полями errors
-        self.assertEqual(response.status_code, 200)
-
-
-# TODO-2016 01 25 не працює UserList. Але чи воно взагалі потрібне? Прибрати згадку про нього з html.
-@skip
-class UserListTest(TestCase):
-
-    def setUp(self):
-        self.cls_view = UsersList
-        self.path = '/adm/users/list/'
-        self.template = 'koop_adm_users_list.html'
-
-        self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
-        self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
-
-        self.login_user =  DummyUser().create_dummy_user(username='john', password='secret', id=2)
-        self.client.login(username='john', password='secret')
-        DummyUser().add_dummy_permission(self.login_user, 'activate_account')
-
-
-
-    def test_view_model_and_attributes(self):
-        view = self.cls_view()
-        self.assertEqual(view.model, User)
-        self.assertEqual(view.ordering, 'username')
-
-    def test_url_resolves_to_proper_view(self):
-        found = resolve(self.path)
-        self.assertEqual(found.func.__name__, self.cls_view.__name__)
-
-    def test_view_renders_proper_template(self):
-        response = self.client.get(self.path)
-        self.assertTemplateUsed(response, self.template)
-
-    def test_view_gives_response_status_code_302_AnonymousUser(self):
-        request = RequestFactory().get(self.path)
-        request.user = AnonymousUser()
-        view = self.cls_view
-        kwargs = {}
-        response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(LOGIN_URL))
-
-    def test_view_gives_response_status_code_302_user_w_o_permission(self):
-        login_user =  DummyUser().create_dummy_user(username='ringo', password='secret')
-        self.client.login(username='ringo', password='secret')
-        request = RequestFactory().get(self.path)
-        request.user = login_user
-        view = self.cls_view
-        kwargs = {}
-        response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(LOGIN_URL))
-
-    def test_view_gives_response_status_code_200(self):
-        request = RequestFactory().get(self.path)
-        view = self.cls_view.as_view()
-        response = view(request)
-        self.assertEqual(response.status_code, 200)
-
-
-    def test_view_gives_response_status_code_2000(self):
-        request = RequestFactory().get(self.path)
-        request.user = self.login_user
-        view = self.cls_view
-        kwargs = {}
-        response = view.as_view()(request, **kwargs)
         self.assertEqual(response.status_code, 200)
 
 

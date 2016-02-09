@@ -1,12 +1,10 @@
 from django.contrib.auth.decorators import permission_required
-from django.test.client import RequestFactory
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from django.views.generic.detail import SingleObjectMixin
+from flats.models import Flat
 from koopsite.functions import get_flat_users
-from koopsite.models import UserProfile
 from koopsite.views import AllFieldsView, AllRecordsAllFieldsView
-from .models import Flat
 
 
 class FlatList(ListView):

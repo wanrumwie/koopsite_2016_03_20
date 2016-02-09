@@ -14,7 +14,7 @@ from django.views.generic.list import ListView
 from koopsite.settings import STATIC_URL
 from koopsite.functions import fileNameCheckInsert, \
                         get_namespace_from_dict, \
-                        get_iconPathForFolder, get_iconPathByFileExt
+                        get_iconPathForFolder, get_iconPathByFileExt, get_or_none
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest, \
@@ -23,7 +23,8 @@ from koopsite.viewsajax import msgType, BrowseTableArray
 from folders.models import Folder, Report
 from folders.functions import response_for_download, \
                         response_for_download_zip, \
-                        get_folders_tree_HTML, get_parents, get_subfolders, get_subreports
+                        get_folders_tree_HTML, get_parents, \
+                        get_subfolders, get_subreports
 
 
 #################################################################
@@ -54,15 +55,18 @@ class FolderContentsArray(BrowseTableArray):
         :param f: примірник моделі
         :return: {'id': f.id, 'model': m}
         """
-        m = f._meta.model_name
-        if   m == 'folder': n = f.name
-        elif m == 'report': n = f.filename
-        else:               n = ""
-        m_id_n = {
-            'id'    : str(f.id),
-            'model' : m,
-            'name'  : n,
-            }
+        try:
+            m = f._meta.model_name
+            if   m == 'folder': n = f.name
+            elif m == 'report': n = f.filename
+            else:               n = ""
+            m_id_n = {
+                'id'    : str(f.id),
+                'model' : m,
+                'name'  : n,
+                }
+        except:
+            m_id_n = {}
         return m_id_n
 
     def get_row(self, f):
@@ -170,7 +174,6 @@ class FolderContents(SingleObjectMixin, ListView):
 
         context['cap'] = cap    # список заголовків таблиці
         # context['arr'] = arr    # 2D-масив даних таблиці:
-
         # Одночасно передаємо цей же 2D-масив для обробки js.
         # Дата ще на етапі формування масиву вже перетворена
         # в isoformat, прийнятний для JSON.
@@ -201,7 +204,7 @@ class FolderContents(SingleObjectMixin, ListView):
 # jQuery ajax base class for single row from BrowTable:
 #################################################################
 
-class AjaxTableRowView(View):
+class AjaxTableRowViewBase(View):
     """
     CBV - базовий суперклас для обробки AJAX-запитів з таблиці.
     Від класу View використовується:
@@ -210,27 +213,27 @@ class AjaxTableRowView(View):
     Метод dispatch зводиться до виклику функції handler
     """
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Простір імен для додаткових даних з запиту клієнта:
+        self.rqst = types.SimpleNamespace(
+                                            parent_id   = None,
+                                            model       = None,
+                                            id          = None,
+                                            name        = None,
+                                            target_id   = None,
+                                            )
+        # Простір імен для повідомлень клієнту:
+        self.msg = types.SimpleNamespace(
+                                            title   = "",
+                                            type    = "",
+                                            message = ""
+                                            )
+
     def dispatch(self, request, *args, **kwargs):
         return self.handler(request)
 
-    # Простір імен для додаткових даних з запиту клієнта:
-    rqst = types.SimpleNamespace(
-                                parent_id   = None,
-                                model       = None,
-                                id          = None,
-                                name        = None,
-                                target_id   = None,
-                                )
-
-    # Простір імен для повідомлень клієнту:
-    msg = types.SimpleNamespace(title   = "",
-                                type    = "",
-                                message = ""
-                                )
-    no_request_template = 'folders/folder_contents.html'
-    # sendMail = False
-
-    def handler(self,request):
+    def handler(self, request):
         """
         Основний обробних даних. Порядок виконання:
         - дані з request.POST зберігаємо у rqst, і визначаємо
@@ -249,9 +252,11 @@ class AjaxTableRowView(View):
         """
         if 'client_request' in request.POST:
             element, rqst = self.get_request_data(request, self.rqst)
+            if not element:
+                print("There is no element in request.POST")
+                return HttpResponse()
             old_element = FolderContentsArray().get_row(element)
             element, msg = self.processing(element, rqst, self.msg)
-            # TODO-як працює get_folder_content_row та get_browtable_cell_changes при element=None ?
             new_element = FolderContentsArray().get_row(element)
             if msg.type == msgType.NewRow:
                 changes = new_element
@@ -261,12 +266,12 @@ class AjaxTableRowView(View):
             response_cont = vars(msg)
             response_cont['changes'] = changes
             response_cont['supplement'] = supplement
-            print('AjaxTableRowView: processing: response_cont=', response_cont)
+            print('AjaxTableRowViewBase: processing: response_cont=', response_cont)
             # return JsonResponse(response_cont)
             return HttpResponse(json.dumps(response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
-            return render(self, request, self.no_request_template)
+            return HttpResponse()
 
     def get_request_data(self, request, rqst):
         # Розбираємо дані від клієнта:
@@ -274,22 +279,22 @@ class AjaxTableRowView(View):
             d = parseClientRequest(request.POST)
         except ValueError as err:
             # запит від клієнта містить невідповідні дані:
-            print('get_request_data_set:', err.args)
+            print('get_request_data:', err.args)
             return None, None
-        d = parseClientRequest(request.POST)
         rqst = get_namespace_from_dict(d, rqst)
         # rqst.parent_id            = d.get('parent_id')
         # rqst.model                = d.get('model')
         # rqst.id                   = d.get('id')
         # rqst.name                 = d.get('name')
         # rqst.target_id            = d.get('target_id')
-        print('d =', d)
-        print('rqst =', rqst)
         if rqst.model == "folder":
             element = Folder.objects.get(id=rqst.id)
         elif rqst.model == "report":
             element = Report.objects.get(id=rqst.id)
-        else: element = None
+        else:
+            return None, None
+        if not element:
+            rqst = None
         return element, rqst
 
     def processing(self, element, rqst, msg):
@@ -326,7 +331,7 @@ class AjaxTableRowView(View):
 # jQuery ajax CBV for single row:
 #################################################################
 
-class AjaxFolderCreate(AjaxTableRowView):
+class AjaxFolderCreate(AjaxTableRowViewBase):
     # raise_exception=True - для ajax.
     # Тоді виняток обробить xhrErrorHandler (js).
 
@@ -360,7 +365,7 @@ class AjaxFolderCreate(AjaxTableRowView):
         return folder, msg
 
 
-class AjaxFolderRename(AjaxTableRowView):
+class AjaxFolderRename(AjaxTableRowViewBase):
     # Перейменовуємо обрану теку у відомій теці з доп. AJAX
 
     @method_decorator(permission_required('folders.change_folder', raise_exception=True))
@@ -373,9 +378,6 @@ class AjaxFolderRename(AjaxTableRowView):
            in Folder.objects.filter(parent_id=rqst.parent_id) \
                                 .exclude(id=rqst.id)]
         # Умови при яких зміни не відбудуться:
-        print('processing: rqst=', rqst)
-        print('rqst.name =', rqst.name)
-        print('f_name_list =', f_name_list)
         if not rqst.name or rqst.name == "":
             msg.type    = msgType.IncorrectData
             msg.title   = folder.name
@@ -398,7 +400,7 @@ class AjaxFolderRename(AjaxTableRowView):
         return folder, msg
 
 
-class AjaxReportRename(AjaxTableRowView):
+class AjaxReportRename(AjaxTableRowViewBase):
     # Перейменовуємо обрану теку у відомій теці з доп. AJAX
 
     @method_decorator(permission_required('folders.change_report', raise_exception=True))
@@ -414,26 +416,26 @@ class AjaxReportRename(AjaxTableRowView):
         if not rqst.name or rqst.name == "":
             msg.type    = msgType.IncorrectData
             msg.title   = report.filename
-            msg.message = "Ви не вказали нову назву документа!"
+            msg.message = "Ви не вказали нову назву файла!"
         elif rqst.name in f_name_list:
             msg.type    = msgType.IncorrectData
             msg.title   = report.filename
-            msg.message = "Документ з такою назвою вже існує!"
+            msg.message = "Файл з такою назвою вже існує!"
         elif rqst.name == report.filename:
             msg.title   = report.filename
             msg.type    = msgType.NoChange
-            msg.message = "Ви не змінили назву документа!"
+            msg.message = "Ви не змінили назву файла!"
         else:
             # Робимо зміни:
             report.filename  = rqst.name
             report.save()                       # остаточне збереження
             msg.title   = report.filename
             msg.type    = msgType.Rename
-            msg.message = "Документ перейменовано!"
+            msg.message = "Файл перейменовано!"
         return report, msg
 
 
-class AjaxElementMove(AjaxTableRowView):
+class AjaxElementMove(AjaxTableRowViewBase):
     # Переміщуємо обраний елемент в іншу теку з доп. AJAX
 
     @method_decorator(permission_required('folders.change_folder', raise_exception=True))
@@ -450,7 +452,7 @@ class AjaxElementMove(AjaxTableRowView):
             target_name_list = [f.filename for f
                in Report.objects.filter(parent_id=rqst.target_id)]
         else: target_name_list = None
-        target = Folder.objects.get(id=rqst.target_id)
+        target = get_or_none(Folder, id=rqst.target_id)
         # Умови при яких зміни не відбудуться:
         if not rqst.target_id or rqst.target_id in (0, '0'):
             msg.title   = rqst.name
@@ -467,13 +469,12 @@ class AjaxElementMove(AjaxTableRowView):
         elif rqst.name in target_name_list:
             msg.title   = rqst.name
             msg.type    = msgType.IncorrectData
-            msg.message = "В обраному місці призначення" \
-                            "є %s з такою назвою!" % "тека" \
-                            if rqst.model == 'folder' else "документ"
+            msg.message = "В обраному місці призначення є %s з такою назвою!" % \
+                            ("тека" if rqst.model == 'folder' else "файл")
         elif not element or not target:
             msg.title   = rqst.name
             msg.type    = msgType.Error
-            msg.message = "Не вдалося змінити розташування!" \
+            msg.message = "Не вдалося змінити розташування! " \
                             "Можливо обране місце призначення не існує."
         else:
             # Робимо зміни:
@@ -481,11 +482,13 @@ class AjaxElementMove(AjaxTableRowView):
             element.save()       # збереження в базі
             msg.title   = rqst.name
             msg.type    = msgType.MoveElement
-            msg.message = "Елемент переміщено!"
+            msg.message = "%s переміщено!" % \
+                          ("Теку" if rqst.model == 'folder' else "Файл")
         return element, msg
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
 
-class AjaxFolderDelete(AjaxTableRowView):
+class AjaxFolderDelete(AjaxTableRowViewBase):
     # Перейменовуємо обрану теку у відомій теці з доп. AJAX
     @method_decorator(permission_required('folders.delete_folder', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
@@ -506,7 +509,7 @@ class AjaxFolderDelete(AjaxTableRowView):
         return None, msg
 
 
-class AjaxReportDelete(AjaxTableRowView):
+class AjaxReportDelete(AjaxTableRowViewBase):
     # Перейменовуємо обрану теку у відомій теці з доп. AJAX
 
     @method_decorator(permission_required('folders.delete_report', raise_exception=True))
@@ -564,8 +567,6 @@ class XHRTableRowView(View):
                                 type    = "",
                                 message = ""
                                 )
-    no_request_template = 'folders/folder_contents.html'
-    # sendMail = False
 
     def get_XHR_data(self, request, rqst):
         # Розбираємо дані від клієнта:
@@ -612,7 +613,7 @@ class XHRTableRowView(View):
             return response
         else:
             print("There is no 'client_request' in request.POST")
-            return render(self, request, self.no_request_template)
+            return HttpResponse()
 
     def processing(self, request, report, rqst, msg):
         """

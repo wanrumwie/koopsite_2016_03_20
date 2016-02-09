@@ -1,10 +1,10 @@
 from django.conf.urls import url
-from flats.views import FlatSchemeUsers, FlatUsersList
+from flats.views import FlatList, FlatScheme, \
+                    FlatDetail, FlatDetailHorizontal, \
+                    FlatTable, \
+                    FlatSchemeUsers, FlatUsersList
 from koopsite.views import page_not_ready
 
-from .views import FlatList, FlatScheme, \
-                    FlatDetail, FlatDetailHorizontal, \
-                    FlatTable
 
 """
 /flats/ - під'єднано у модулі koopsite.urls.py:

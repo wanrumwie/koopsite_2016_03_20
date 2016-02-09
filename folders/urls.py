@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.views.generic.base import TemplateView
 from folders.views import folderDownload, ReportPreview, FolderReportList, some_view, DisplayPDFView, txt_view, \
     reportPreview, reportDecorView
-from .views import  FolderCreate, \
+from folders.views import  FolderCreate, \
                     FolderCreateInFolder, \
                     FolderUpdate, \
                     FolderDelete, \
@@ -16,7 +16,7 @@ from .views import  FolderCreate, \
                     ReportDetail, \
                     reportDownload, \
                     FolderParentList
-from .viewsajaxfolder import \
+from folders.viewsajaxfolder import \
                     FolderContents, \
                     ajaxFoldersTreeFromBase, \
                     AjaxFolderCreate, \
