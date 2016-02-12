@@ -1,4 +1,5 @@
 import json
+from urllib.parse import quote
 from django.contrib.auth.models import User
 from django.http.response import HttpResponse
 from django.test import TestCase
@@ -46,7 +47,7 @@ class DummyAjaxRequest:
     Емуляція запиту ajax, сформованого в js
     Фактично відтворюються відповідні змінні і функції з файлів js
     """
-
+    '''
     def __init__(self,  browTabName="",
                         parent_id  ="",
                         sendMail   ="",
@@ -76,16 +77,31 @@ class DummyAjaxRequest:
         'name'        : self.selElement.get('name'),
         }
         return arr
+    '''
+    def __init__(self,  **kwargs):
+        self.kwargs      = kwargs
 
     def ajax_data(self):
-        arr = self.selElementArr()
-        arr.update(self.kwargs)
+        arr = self.kwargs
         json_string = json.dumps(arr)
         data = {
                 'client_request' : json_string,
                 # 'csrfmiddlewaretoken': csrf_token
             }
         return data
+
+class DummyXHRrequest(DummyAjaxRequest):
+
+    def ajax_data(self):
+        arr = self.kwargs
+        json_string = json.dumps(arr)
+        encoded_json_string = quote(json_string)
+        data = {
+                "HTTP_X_CLIENT_REQUEST" : json_string,
+            }
+        return data
+
+
 
 def server_response_decrypt(container, i=0):
     """
@@ -97,7 +113,11 @@ def server_response_decrypt(container, i=0):
     :param i: порядковий номер у списку (завжди 0?)
     :return: d - словник
     """
+    print('container =', container)
     json_str = container[0]
+    print('json_str =', json_str)
+    decoded = json_str.decode()
+    print('decoded =', decoded)
     d = json.loads(json_str.decode())
     return d
 
@@ -187,6 +207,7 @@ class AjaxStartRowIndexFromSessionTest(TestCase):
         request = self.client.request()
         request.POST = {'client_request': json_s}
         expected = {'sendMail': None, 'id': None, 'name': None, 'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0', 'model': None}
+        expected = {'browTabName': 'folders_contents', 'parent_id': '1', 'selRowIndex': '0'}
         self.assertEqual(parseClientRequest(request.POST), expected)
         request.session = {
                    'Selections':

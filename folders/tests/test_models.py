@@ -13,7 +13,12 @@ from folders.tests.test_base import DummyFolder
 class DifferentFunctionsTest(TestCase):
 
     def test_get_report_path(self):
-        patt = 'uploads\\folders\\%s\\%s.data'
+        # patt = 'uploads\\folders\\%s\\%s.data'
+        patt = os.path.join('uploads',
+                            'folders',
+                            '%s',
+                            '%s.data')
+
         self.assertEqual(get_report_path(1), patt % (0, 1))
         self.assertEqual(get_report_path(511), patt % (0, 511))
         self.assertEqual(get_report_path(512), patt % (1, 512))

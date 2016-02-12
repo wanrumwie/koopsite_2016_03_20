@@ -466,8 +466,7 @@ class OwnProfileUpdate(UserProfileOneToOne, OneToOneUpdate):
     FormTwo  = ProfilePersonDataForm
     template_name = 'koop_own_prof_update.html'
 
-    # TODO-для правління прибрати можливість зміни персональних даних, а тільки - is_active i is_recognized
-    @method_decorator(author_or_permission_required(UserProfile, 'koopsite.change_userprofile'))
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 

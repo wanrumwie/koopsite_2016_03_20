@@ -14,13 +14,13 @@ from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder
 from folders.viewsajaxfolder import FolderContentsArray, FolderContents, \
                                     AjaxTableRowViewBase, AjaxFolderCreate, AjaxFolderRename, AjaxReportRename, \
-    AjaxElementMove
+    AjaxElementMove, AjaxFolderDelete, AjaxReportDelete, XHRTableRowView
 from functional_tests_koopsite.ft_base import DummyUser
 from koopsite.functions import get_or_none, has_group, dict_print
 from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_views import setup_view
 from koopsite.tests.test_viewsajax import DummyAjaxRequest, \
-    server_response_decrypt
+    server_response_decrypt, DummyXHRrequest
 from koopsite.viewsajax import msgType
 
 
@@ -281,7 +281,6 @@ class AjaxTableRowTestBase(TestCase):
         self.assertEqual(rqst.target_id, kwarqs.get('target_id'))
 
 
-
     def check_view_response_container_data(self,
                                             response=None,
                                             expected_title=None,
@@ -300,53 +299,6 @@ class AjaxTableRowTestBase(TestCase):
         self.assertEqual(d['supplement'], expected_supplement)
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
-
-    def get_elemSet(self, userSet):
-        elemSet = []
-        for user in userSet:
-            elem = {
-                    'model': 'user',
-                    'id'   : user.id,
-                    'name' : user.username,
-                    }
-            elemSet.append(elem)
-        return elemSet
-
-    def get_expected(self, record, changes_678, suppl_678):
-        # Очікувані дані з response
-        model, id, name = self.get_m_id_n(record)
-        expected_model      = model
-        expected_id         = id
-        expected_changes    = {0: {'id': id,
-                                   'name': name,
-                                   'model': model},
-                               }
-        expected_changes.update(changes_678)
-        d = {}
-        for k in suppl_678:
-            d[k] = '/static/admin/img/icon-%s.gif' % suppl_678[k]
-        expected_supplement = {'iconPath': d}
-        return expected_model, expected_id, expected_changes, expected_supplement
-
-
-    def check_view_response_cont(self, d, stringify,
-                                        expected_model,
-                                        expected_id,
-                                        expected_changes,
-                                        expected_supplement
-                                       ):
-        # Чи ф-ція повертає правильний словник?
-        if stringify: # словники мають "пройти" крізь дворазове перетворення json
-            self.assertEqual(d['model'     ], json.loads(json.dumps(expected_model     )))
-            self.assertEqual(d['id'        ], json.loads(json.dumps(expected_id        )))
-            self.assertEqual(d['changes'   ], json.loads(json.dumps(expected_changes   )))
-            self.assertEqual(d['supplement'], json.loads(json.dumps(expected_supplement)))
-        else:
-            self.assertEqual(d['model'     ], expected_model     )
-            self.assertEqual(d['id'        ], expected_id        )
-            self.assertEqual(d['changes'   ], expected_changes   )
-            self.assertEqual(d['supplement'], expected_supplement)
-
 
 
 
@@ -869,7 +821,7 @@ class AjaxReportRenameTest(AjaxTableRowTestBase):
         self.assertEqual(msg.message, "Файл перейменовано!")
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class AjaxElementMoveTest(AjaxTableRowTestBase):
 
     def setUp(self):
@@ -1147,5 +1099,489 @@ class AjaxElementMoveTest(AjaxTableRowTestBase):
         self.assertEqual(msg.title  , report.filename)
         self.assertEqual(msg.type   , msgType.MoveElement)
         self.assertEqual(msg.message, "Файл переміщено!")
+
+
+@skipIf(SKIP_TEST, "пропущено для економії часу")
+class AjaxFolderDeleteTest(AjaxTableRowTestBase):
+
+    def setUp(self):
+        super().setUp()
+        self.cls_view = AjaxFolderDelete
+        self.path = '/folders/ajax-folder-delete'
+        DummyUser().add_dummy_permission(self.john, 'delete_folder')
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__)
+
+    def test_dispatch(self):
+        self.client.login(username='john', password='secret')
+        view = self.cls_view()
+        request = self.client.request()
+        request.POST = {}
+        request.user = self.john
+        request.session = {}
+        response = view.dispatch(request)
+        expected_response = view.handler(request)
+        self.assertEqual(response.__dict__, expected_response.__dict__)
+
+    def test_view_gives_response_status_code_200(self):
+        self.client.login(username='john', password='secret')
+        view = self.cls_view
+        request = RequestFactory().get(self.path)
+        request.user = self.john
+        request.session = {}
+        kwargs = {}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_response_raise_exception_AnonymousUser(self):
+        view = self.cls_view
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        request.session = {}
+        kwargs = {}
+        with self.assertRaises(PermissionDenied):
+            view.as_view()(request, **kwargs)
+
+    def test_view_response_raise_exception_user_w_o_permission(self):
+        self.client.login(username='ringo', password='secret')
+        view = self.cls_view
+        request = RequestFactory().get(self.path)
+        request.user = self.ringo
+        request.session = {}
+        kwargs = {}
+        with self.assertRaises(PermissionDenied):
+            view.as_view()(request, **kwargs)
+
+    def test_processing_no_changes_made_folder_not_empty(self):
+        view = self.cls_view()
+        folder0 = self.folder1
+        view.rqst.parent_id   = '1'
+        view.rqst.model       = 'folder'
+        view.rqst.id          = '2'
+        view.rqst.name        = 'dum_f_0_0_0'
+        view.rqst.target_id   = None
+        folder, msg = view.processing(folder0, view.rqst, view.msg)
+        # Витягаємо з бази щойно збережені записи і перевіряємо
+        folder_db = get_or_none(Folder, id=folder0.id)
+        self.assertEqual(folder_db, folder0)
+        self.assertEqual(msg.title  , folder0.name)
+        self.assertEqual(msg.type   , msgType.Forbidden)
+        self.assertEqual(msg.message, "Обрана тека не порожня! Спершу слід видалити вміст теки.")
+
+    def test_processing_changes_made(self):
+        view = self.cls_view()
+        folder0 = Folder.objects.get(id=7)
+        view.rqst.parent_id   = '1'
+        view.rqst.model       = 'folder'
+        view.rqst.id          = '7'
+        view.rqst.name        = 'dum_f_0_0_1_1_1'
+        view.rqst.target_id   = None
+        folder, msg = view.processing(folder0, view.rqst, view.msg)
+        # Витягаємо з бази щойно збережені записи і перевіряємо
+        folder_db = get_or_none(Folder, id=folder0.id)
+        self.assertEqual(folder_db, None)
+        self.assertEqual(msg.title  , folder0.name)
+        self.assertEqual(msg.type   , msgType.DeleteRow)
+        self.assertEqual(msg.message, "Теку видалено!")
+
+
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
+class AjaxReportDeleteTest(AjaxTableRowTestBase):
+
+    def setUp(self):
+        super().setUp()
+        self.cls_view = AjaxReportDelete
+        self.path = '/folders/ajax-report-delete/1/'
+        DummyUser().add_dummy_permission(self.john, 'delete_report')
+
+    def test_url_resolves_to_proper_view(self):
+        found = resolve(self.path)
+        self.assertEqual(found.func.__name__, self.cls_view.__name__)
+
+    def test_dispatch(self):
+        self.client.login(username='john', password='secret')
+        view = self.cls_view()
+        request = self.client.request()
+        request.POST = {}
+        request.user = self.john
+        request.session = {}
+        response = view.dispatch(request)
+        expected_response = view.handler(request)
+        self.assertEqual(response.__dict__, expected_response.__dict__)
+
+    def test_view_gives_response_status_code_200_user_with_permission(self):
+        self.client.login(username='john', password='secret')
+        view = self.cls_view
+        request = RequestFactory().get(self.path)
+        request.user = self.john
+        request.session = {}
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_gives_response_status_code_200_user_author(self):
+        self.client.login(username='ringo', password='secret')
+        self.report.user = self.ringo
+        self.report.save()
+        view = self.cls_view
+        request = RequestFactory().get(self.path)
+        request.user = self.ringo
+        request.session = {}
+        kwargs = {'pk': 1}
+        response = view.as_view()(request, **kwargs)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_response_raise_exception_AnonymousUser(self):
+        view = self.cls_view
+        request = RequestFactory().get(self.path)
+        request.user = AnonymousUser()
+        request.session = {}
+        kwargs = {'pk': 1}
+        with self.assertRaises(PermissionDenied):
+            view.as_view()(request, **kwargs)
+
+    def test_view_response_raise_exception_user_w_o_permission(self):
+        self.client.login(username='ringo', password='secret')
+        view = self.cls_view
+        request = RequestFactory().get(self.path)
+        request.user = self.ringo
+        request.session = {}
+        kwargs = {'pk': 1}
+        with self.assertRaises(PermissionDenied):
+            view.as_view()(request, **kwargs)
+
+    def test_processing_changes_made(self):
+        view = self.cls_view()
+        report0 = self.report
+        path0 = report0.file.path
+        view.rqst.parent_id   = '1'
+        view.rqst.model       = 'report'
+        view.rqst.id          = '1'
+        view.rqst.name        = 'file.txt'
+        view.rqst.target_id   = None
+        report, msg = view.processing(report0, view.rqst, view.msg)
+        # Витягаємо з бази щойно збережені записи і перевіряємо
+        report_db = get_or_none(Report, id=report0.id)
+        self.assertEqual(report_db, None)
+        self.assertEqual(msg.title  , report0.filename)
+        self.assertEqual(msg.type   , msgType.DeleteRow)
+        self.assertEqual(msg.message, "Файл видалено!")
+        with self.assertRaises(FileNotFoundError):
+            open(path0)
+
+
+class XHRTableRowTestBase(TestCase):
+
+    def setUp(self):
+        self.rqst = types.SimpleNamespace(
+                            parent_id   = None,
+                            model       = None,
+                            id          = None,
+                            name        = None,
+                            target_id   = None,
+                            fileName             = None,
+                            fileSize             = None,
+                            fileType             = None,
+                            fileLastModifiedDate = None,
+                            )
+        self.msg = types.SimpleNamespace(title   = "",
+                                        type    = "",
+                                        message = "",
+                                        )
+
+        DummyFolder().create_dummy_catalogue()
+        self.root = Folder.objects.get(id=1)
+        self.folder1, self.folder2 = Folder.objects.filter(parent=self.root)
+        file = SimpleUploadedFile("file.txt", b"file_content")
+        self.report = DummyFolder().create_dummy_report(self.root, id=1, file=file)
+        self.dummy_user = DummyUser().create_dummy_user()
+        self.john   = DummyUser().create_dummy_user(username='john', password='secret')
+        self.paul   = DummyUser().create_dummy_user(username='paul', password='secret')
+        self.george = DummyUser().create_dummy_user(username='george', password='secret')
+        self.ringo  = DummyUser().create_dummy_user(username='ringo', password='secret')
+        # DummyUser().add_dummy_permission(self.john, 'folders.add_folder')
+        # DummyUser().add_dummy_permission(self.john, 'folders.add_report')
+        # DummyUser().add_dummy_permission(self.john, 'folders.change_folder')
+        # DummyUser().add_dummy_permission(self.john, 'folders.change_report')
+        # DummyUser().add_dummy_permission(self.john, 'folders.delete_folder')
+        # DummyUser().add_dummy_permission(self.john, 'folders.delete_report')
+        # DummyUser().add_dummy_permission(self.john, 'folders.download_folder')
+        # DummyUser().add_dummy_permission(self.john, 'folders.download_report')
+
+    def tearDown(self):
+        self.report.file.delete()
+
+    def get_m_id_n(self, f):
+        try:
+            m = f._meta.model_name
+            if   m == 'folder': n = f.name
+            elif m == 'report': n = f.filename
+            else:               n = ""
+            id = str(f.id)
+        except:
+            m = None
+            id = None
+            n = None
+        return m, id, n
+
+    def get_kwargs_for_ajax_data_one_record(self, record):
+        model, id, name = self.get_m_id_n(record)
+        kwargs = {
+                    'browTabName' :'folders_contents',
+                    'parent_id'   :"1",
+                    'sendMail'    :"",
+                    'selRowIndex' :'0',
+                    'model'       :model,
+                    'id'          :id,
+                    'name'        :name,
+                }
+        return kwargs
+
+    def check_rqst_equal_to_ajax_kwarqs(self, rqst, kwarqs):
+        self.assertEqual(rqst.parent_id, kwarqs.get('parent_id'))
+        self.assertEqual(rqst.model    , kwarqs.get('model'))
+        self.assertEqual(rqst.id       , kwarqs.get('id'))
+        self.assertEqual(rqst.name     , kwarqs.get('name'))
+        self.assertEqual(rqst.target_id, kwarqs.get('target_id'))
+
+
+
+    def check_view_response_container_data(self,
+                                            response=None,
+                                            expected_title=None,
+                                            expected_type=None,
+                                            expected_message=None,
+                                            expected_changes=None,
+                                            expected_supplement=None
+                                           ):
+        d = server_response_decrypt(response._container)
+
+        # Чи ф-ція повертає правильний response?
+        self.assertEqual(d['title'     ], expected_title     )
+        self.assertEqual(d['type'      ], expected_type      )
+        self.assertEqual(d['message'   ], expected_message   )
+        self.assertEqual(d['changes'   ], expected_changes   )
+        self.assertEqual(d['supplement'], expected_supplement)
+        expected = {'content-type': ('Content-Type', 'application/json')}
+        self.assertEqual(response._headers, expected)
+
+    def get_elemSet(self, userSet):
+        elemSet = []
+        for user in userSet:
+            elem = {
+                    'model': 'user',
+                    'id'   : user.id,
+                    'name' : user.username,
+                    }
+            elemSet.append(elem)
+        return elemSet
+
+    def get_expected(self, record, changes_678, suppl_678):
+        # Очікувані дані з response
+        model, id, name = self.get_m_id_n(record)
+        expected_model      = model
+        expected_id         = id
+        expected_changes    = {0: {'id': id,
+                                   'name': name,
+                                   'model': model},
+                               }
+        expected_changes.update(changes_678)
+        d = {}
+        for k in suppl_678:
+            d[k] = '/static/admin/img/icon-%s.gif' % suppl_678[k]
+        expected_supplement = {'iconPath': d}
+        return expected_model, expected_id, expected_changes, expected_supplement
+
+
+    def check_view_response_cont(self, d, stringify,
+                                        expected_model,
+                                        expected_id,
+                                        expected_changes,
+                                        expected_supplement
+                                       ):
+        # Чи ф-ція повертає правильний словник?
+        if stringify: # словники мають "пройти" крізь дворазове перетворення json
+            self.assertEqual(d['model'     ], json.loads(json.dumps(expected_model     )))
+            self.assertEqual(d['id'        ], json.loads(json.dumps(expected_id        )))
+            self.assertEqual(d['changes'   ], json.loads(json.dumps(expected_changes   )))
+            self.assertEqual(d['supplement'], json.loads(json.dumps(expected_supplement)))
+        else:
+            self.assertEqual(d['model'     ], expected_model     )
+            self.assertEqual(d['id'        ], expected_id        )
+            self.assertEqual(d['changes'   ], expected_changes   )
+            self.assertEqual(d['supplement'], expected_supplement)
+
+    def get_request(self, ajax_data={}):
+        request = self.client.request()
+        request.method = "POST"
+        request.META = ajax_data
+        request.session = {}
+        return request
+
+
+class XHRTableRowViewTest(XHRTableRowTestBase):
+
+    def setUp(self):
+        super().setUp()
+        self.cls_view = XHRTableRowView
+
+    # Метод processing тестується у дочірніх класах
+
+    def test_view_model_and_attributes(self):
+        view = self.cls_view()
+        self.assertEqual(view.msg     , self.msg     )
+        dict_print(vars(view.rqst), 'view.rqst', '-'*25)
+        dict_print(vars(self.rqst), 'self.rqst', '-'*25)
+        self.assertEqual(view.rqst    , self.rqst    )
+
+    def test_get_XHR_data_folder(self):
+        view = self.cls_view
+        record = self.folder1
+        rqst = self.rqst
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        element, rqst = view().get_XHR_data(request, rqst)
+        # Чи метод повертає правильні записи?
+        self.assertEqual(element, record)
+        self.check_rqst_equal_to_ajax_kwarqs(rqst, kwargs)
+
+    def test_get_XHR_data_report(self):
+        view = self.cls_view
+        record = self.report
+        rqst = self.rqst
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        element, rqst = view().get_XHR_data(request, rqst)
+        # Чи метод повертає правильні записи?
+        self.assertEqual(element, record)
+        self.check_rqst_equal_to_ajax_kwarqs(rqst, kwargs)
+
+    def test_get_XHR_data_3_no_record(self):
+        view = self.cls_view
+        record = None
+        rqst = self.rqst
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        element, rqst = view().get_XHR_data(request, rqst)
+        # Чи метод повертає правильні записи?
+        self.assertEqual(element, None)
+        self.assertEqual(rqst, None)
+
+    def test_get_XHR_data_4_no_model(self):
+        view = self.cls_view
+        record = self.folder1
+        rqst = self.rqst
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        kwargs['model']=''
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        element, rqst = view().get_XHR_data(request, rqst)
+        # Чи метод повертає правильні записи?
+        self.assertEqual(element, None)
+        self.assertEqual(rqst, None)
+
+    def test_get_XHR_data_5_model_mismatch_table_name(self):
+        view = self.cls_view
+        record = self.folder1
+        rqst = self.rqst
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        kwargs['browTabName'] = 'users_table'
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        element, rqst = view().get_XHR_data(request, rqst)
+        # Чи метод повертає правильні записи?
+        self.assertEqual(element, None)
+        self.assertEqual(rqst, None)
+
+    def test_get_XHR_data_5_no_table_name(self):
+        view = self.cls_view
+        record = self.folder1
+        rqst = self.rqst
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        kwargs['browTabName'] = ''
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        element, rqst = view().get_XHR_data(request, rqst)
+        # Чи метод повертає правильні записи?
+        self.assertEqual(element, None)
+        self.assertEqual(rqst, None)
+
+    def test_get_XHR_data_6_unknown_table_name(self):
+        view = self.cls_view
+        record = self.folder1
+        rqst = self.rqst
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        kwargs['browTabName'] = 'FOLDER'
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        element, rqst = view().get_XHR_data(request, rqst)
+        # Чи метод повертає правильні записи?
+        self.assertEqual(element, None)
+        self.assertEqual(rqst, None)
+
+    def test_handler(self):
+        view = self.cls_view()
+        record = self.report
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        response = view.handler(request)
+        # Очікувані дані з response
+        rec = Report.objects.last()
+        expected_title      = rec.filename
+        expected_type       = "Normal"
+        expected_message    = "Файл успішно завантажено!"
+        expected_changes   = {'0': {'id': str(rec.id),
+                                    'name': rec.filename,
+                                    'model': rec._meta.model_name,
+                                    },
+                              '1': rec._meta.model_name,
+                              '2': rec.filename,
+                              '3': rec.uploaded_on.isoformat(),
+                              '4': '',
+                              }
+        expected_supplement = {
+                            'fileExt'   : '',
+                            'fileType'  : 'report',
+                            'iconPath'  : '/static/img/folder.png',
+                            }
+        self.check_view_response_container_data(response,
+            expected_title, expected_type, expected_message,
+            expected_changes, expected_supplement)
+
+    def test_handler_return_empty_response_if_no_client_request(self):
+        view = self.cls_view()
+        request = self.get_request()
+        response = view.handler(request)
+        self.assertTrue(isinstance(response, HttpResponse))
+        self.assertEqual(response._container, [b''])
+        expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
+        self.assertEqual(response._headers, expected)
+
+    def test_handler_return_empty_response_if_no_element(self):
+        view = self.cls_view()
+        record = None
+        kwargs = self.get_kwargs_for_ajax_data_one_record(record)
+        kwargs['name'] = 'Нова тека'
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.get_request(ajax_data)
+        response = view.handler(request)
+        self.assertTrue(isinstance(response, HttpResponse))
+        self.assertEqual(response._container, [b''])
+        expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
+        self.assertEqual(response._headers, expected)
+
+    def test_dispatch(self):
+        view = self.cls_view()
+        request = self.get_request()
+        response = view.dispatch(request)
+        expected_response = view.handler(request)
+        self.assertEqual(response.__dict__, expected_response.__dict__)
+
 
 

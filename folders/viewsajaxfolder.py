@@ -11,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import ListView
+from koopsite.decorators import author_or_permission_required
 from koopsite.settings import STATIC_URL
 from koopsite.functions import fileNameCheckInsert, \
                         get_namespace_from_dict, \
@@ -266,7 +267,6 @@ class AjaxTableRowViewBase(View):
             response_cont = vars(msg)
             response_cont['changes'] = changes
             response_cont['supplement'] = supplement
-            print('AjaxTableRowViewBase: processing: response_cont=', response_cont)
             # return JsonResponse(response_cont)
             return HttpResponse(json.dumps(response_cont), content_type="application/json")
         else:
@@ -486,7 +486,6 @@ class AjaxElementMove(AjaxTableRowViewBase):
                           ("Теку" if rqst.model == 'folder' else "Файл")
         return element, msg
 
-#---------------- Кінець коду, охопленого тестуванням ------------------
 
 class AjaxFolderDelete(AjaxTableRowViewBase):
     # Перейменовуємо обрану теку у відомій теці з доп. AJAX
@@ -499,7 +498,7 @@ class AjaxFolderDelete(AjaxTableRowViewBase):
         if get_subfolders(folder) or get_subreports(folder):
             msg.title   = rqst.name
             msg.type    = msgType.Forbidden
-            msg.message = "Обрана тека не порожня!. Спершу слід видалити вміст теки."
+            msg.message = "Обрана тека не порожня! Спершу слід видалити вміст теки."
         else:
             # Робимо зміни:
             folder.delete() # тека видалена з бази даних
@@ -512,25 +511,26 @@ class AjaxFolderDelete(AjaxTableRowViewBase):
 class AjaxReportDelete(AjaxTableRowViewBase):
     # Перейменовуємо обрану теку у відомій теці з доп. AJAX
 
-    @method_decorator(permission_required('folders.delete_report', raise_exception=True))
+    @method_decorator(author_or_permission_required(Report, 'folders.delete_report', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         return super(AjaxReportDelete, self).dispatch(request, *args, **kwargs)
 
     def processing(self, report, rqst, msg):
         # Умови при яких зміни не відбудуться:
-        if False: # TODO-Тут вставити перевірку на право видалення файла
+        if False: # перевірка відбувається раніше декоратором
             msg.title   = rqst.name
             msg.type    = msgType.Forbidden
-            msg.message = "У Вас немає доступу для видалення обраного документа."
+            msg.message = "У Вас немає доступу для видалення обраного файла."
         else:
             # Робимо зміни:
             report.file.delete()    # файл видалено з диска
             report.delete()         # документ видалено з бази даних
             msg.title   = rqst.name
             msg.type    = msgType.DeleteRow
-            msg.message = "Документ видалено!"
+            msg.message = "Файл видалено!"
         return None, msg
 
+#---------------- Кінець коду, охопленого тестуванням ------------------
 
 
 #################################################################
@@ -546,31 +546,39 @@ class XHRTableRowView(View):
     Метод dispatch зводиться до виклику функції handler
     """
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Простір імен для додаткових даних з запиту клієнта:
+        self.rqst = types.SimpleNamespace(
+                            parent_id   = None,
+                            model       = None,
+                            id          = None,
+                            name        = None,
+                            target_id   = None,
+                            fileName             = None,
+                            fileSize             = None,
+                            fileType             = None,
+                            fileLastModifiedDate = None,
+                            )
+
+        # Простір імен для повідомлень клієнту:
+        self.msg = types.SimpleNamespace(title   = "",
+                                    type    = "",
+                                    message = ""
+                                    )
+
+
     def dispatch(self, request, *args, **kwargs):
         return self.handler(request)
 
-    # Простір імен для додаткових даних з запиту клієнта:
-    rqst = types.SimpleNamespace(
-                        parent_id   = None,
-                        model       = None,
-                        id          = None,
-                        name        = None,
-                        target_id   = None,
-                        fileName             = None,
-                        fileSize             = None,
-                        fileType             = None,
-                        fileLastModifiedDate = None,
-                        )
-
-    # Простір імен для повідомлень клієнту:
-    msg = types.SimpleNamespace(title   = "",
-                                type    = "",
-                                message = ""
-                                )
-
     def get_XHR_data(self, request, rqst):
         # Розбираємо дані від клієнта:
-        d = parseXHRClientRequest(request.META)
+        try:
+            d = parseXHRClientRequest(request.META)
+        except ValueError as err:
+            # запит від клієнта містить невідповідні дані:
+            print('get_XHR_data:', err.args)
+            return None, None
         rqst = get_namespace_from_dict(d, rqst, True)
         # rqst.parent_id            = d.get('parent_id')
         # rqst.model                = d.get('model')
@@ -585,12 +593,19 @@ class XHRTableRowView(View):
             element = Folder.objects.get(id=rqst.id)
         elif rqst.model == "report":
             element = Report.objects.get(id=rqst.id)
-        else: element = None
+        else:
+            return None, None
+        if not element:
+            rqst = None
         return element, rqst
 
     def handler(self,request):
-        if request.method == "POST":
+        if "HTTP_X_CLIENT_REQUEST" in request.META:
             element, rqst = self.get_XHR_data(request, self.rqst)
+            if not element:
+                print("There is no element in request.META")
+                return HttpResponse()
+
             old_element = FolderContentsArray().get_row(element)
 
             element, msg, response = \
@@ -612,7 +627,7 @@ class XHRTableRowView(View):
             response['server_response'] = json_s
             return response
         else:
-            print("There is no 'client_request' in request.POST")
+            print("There is no 'HTTP_X_CLIENT_REQUEST' in request.META")
             return HttpResponse()
 
     def processing(self, request, report, rqst, msg):
@@ -624,14 +639,14 @@ class XHRTableRowView(View):
         if False: # Тут вставити перевірку на право завантаження файла
             msg.title   = rqst.name
             msg.type    = msgType.Forbidden
-            msg.message = "У Вас немає доступу для завантаження обраного документа."
+            msg.message = "У Вас немає доступу для завантаження обраного файйла."
             response = HttpResponse()
         else:
             # Downloading file:
             response = response_for_download(report)
             msg.title   = rqst.name
             msg.type    = msgType.Normal
-            msg.message = "Документ успішно завантажено!"
+            msg.message = "Файл успішно завантажено!"
         return report, msg, response
 
 #################################################################

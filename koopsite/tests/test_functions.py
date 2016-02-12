@@ -17,9 +17,9 @@ from koopsite.functions import round_up_division, AllFieldsMixin, \
     parseClientRequest, parseXHRClientRequest, get_user_full_name, \
     get_user_flat_No, get_user_is_recognized, is_staff_only, get_or_none, \
     has_group_members, has_group, add_group, remove_group, \
-    transliterate, get_thumbnail_url_path, get_flat_users, has_flat_member, dict_print
+    transliterate, get_thumbnail_url_path, get_flat_users, has_flat_member
 from koopsite.settings import MEDIA_ROOT
-from koopsite.tests.test_viewsajax import DummyAjaxRequest
+from koopsite.tests.test_viewsajax import DummyAjaxRequest, DummyXHRrequest
 
 
 class DifferentFunctionsTest(TestCase):
@@ -244,12 +244,7 @@ class ParseClientRequestTest(TestCase):
         request.POST = ajax_data
         expected = {
                     'browTabName' :'users_table',
-                    'parent_id'   :"",
-                    'sendMail'    :"",
-                    'selRowIndex' :"",
                     'model'       :'user',
-                    'id'          :"",
-                    'name'        :"",
                 }
         self.assertEqual(parseClientRequest(request.POST), expected)
 
@@ -313,12 +308,6 @@ class ParseClientRequestTest(TestCase):
         request.POST = ajax_data
         expected = {
                     'browTabName' :'users_table',
-                    'parent_id'   :"",
-                    'sendMail'    :"",
-                    'selRowIndex' :"",
-                    'model'       :'',
-                    'id'          :"",
-                    'name'        :"",
                 }
         self.assertEqual(parseClientRequest(request.POST), expected)
 
@@ -331,6 +320,100 @@ class ParseXHRClientRequestTest(TestCase):
         request.META = {'PYTHONIOENCODING': 'UTF-8', 'HTTP_X_CLIENT_REQUEST': '%7B%22browTabName%22%3A%22folders_contents%22%2C%22parent_id%22%3A%227%22%2C%22selRowIndex%22%3A%222%22%2C%22model%22%3A%22report%22%2C%22id%22%3A%22130%22%2C%22name%22%3A%22%D0%92%D1%96%D0%B4%D1%80%D1%8F%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F.tif%22%7D', }
         expected = {'model': 'report', 'browTabName': 'folders_contents', 'selRowIndex': '2', 'id': '130', 'parent_id': '7', 'name': 'Відрядження.tif'}
         self.assertEqual(parseXHRClientRequest(request.META), expected)
+
+    def test_parseXHRClientRequest_2(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'parent_id'   :None,
+                    'sendMail'    :None,
+                    'selRowIndex' :'0',
+                    'model'       :'user',
+                    'id'          :'1',
+                    'name'        :'fred',
+                }
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        expected = kwargs
+        self.assertEqual(parseXHRClientRequest(request.POST), expected)
+
+    def test_parseXHRClientRequest_not_full_data(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'model'       :'user',
+                }
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        expected = {
+                    'browTabName' :'users_table',
+                    'model'       :'user',
+                }
+        self.assertEqual(parseXHRClientRequest(request.POST), expected)
+
+    def test_parseXHRClientRequest_can_expand_d(self):
+        kwargs = {
+                    'EXTRA': 'extra',
+                    'browTabName' :'users_table',
+                    'parent_id'   :None,
+                    'sendMail'    :None,
+                    'selRowIndex' :'0',
+                    'model'       :'user',
+                    'id'          :'1',
+                    'name'        :'fred',
+                }
+
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        expected = kwargs
+        self.assertEqual(parseXHRClientRequest(request.POST), expected)
+
+    def test_parseXHRClientRequest_raise_error_if_model_table_mismatch(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                    'model'       :'folder',
+                }
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        with self.assertRaises(ValueError):
+            parseXHRClientRequest(request.POST)
+
+    def test_parseXHRClientRequest_raise_error_if_no_table(self):
+        kwargs = {
+                    'browTabName' :'',
+                    'model'       :'folder',
+                }
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        with self.assertRaises(ValueError):
+            parseXHRClientRequest(request.POST)
+
+    def test_parseXHRClientRequest_raise_error_if_unknown_table(self):
+        kwargs = {
+                    'browTabName' :'TABLE',
+                    'model'       :'folder',
+                }
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        with self.assertRaises(ValueError):
+            parseXHRClientRequest(request.POST)
+
+    def test_parseXHRClientRequest_if_no_model(self):
+        kwargs = {
+                    'browTabName' :'users_table',
+                }
+        ajax_data = DummyXHRrequest(**kwargs).ajax_data()
+        request = self.client.request()
+        request.POST = ajax_data
+        expected = {
+                    'browTabName' :'users_table',
+                }
+        self.assertEqual(parseXHRClientRequest(request.POST), expected)
+
 
 
 class Get_namespace_from_dictTest(TestCase):
@@ -671,11 +754,12 @@ class Get_thumbnail_url_path_Test(TestCase):
 
     def test_thumbnail_for_file_3(self):
         user = DummyUser().create_dummy_user()
-        picture_path="koopsite/tests/profile_image_3.jpg"
+        # picture_path="koopsite/tests/profile_image_3.jpg"
+        picture_path=os.path.join("koopsite","tests","profile_image_3.jpg")
         DummyUser().create_dummy_profile(user, picture_path=picture_path)
         picture = user.userprofile.picture
         expected_url = '/media/profile_images/1_30x24.jpg'
-        expected_path = os.path.join(MEDIA_ROOT, r"profile_images\1_30x24.jpg")
+        expected_path = os.path.join(MEDIA_ROOT, "profile_images", "1_30x24.jpg")
         mini_url, mini_path = get_thumbnail_url_path(picture)
         self.assertEqual(mini_url, expected_url)
         self.assertEqual(mini_path, expected_path)
@@ -685,6 +769,6 @@ class Get_thumbnail_url_path_Test(TestCase):
         self.assertEqual(size, (30, 16))
         image.close()
 
-        os.remove('media/profile_images/1.jpg')
-        os.remove('media/profile_images/1_30x24.jpg')
+        os.remove(os.path.join('media','profile_images','1.jpg'))
+        os.remove(os.path.join('media','profile_images','1_30x24.jpg'))
 

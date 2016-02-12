@@ -1,3 +1,4 @@
+import os
 import zipfile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
@@ -20,7 +21,11 @@ class DifferentFunctionsTest(TestCase):
         f2 = DummyFolder().create_dummy_folder(parent=root)
         f3 = DummyFolder().create_dummy_folder(parent=f2)
         report = DummyFolder().create_dummy_report(parent=f3)
-        expected = '%s\\%s\\%s\\' % (root.id, f2.id, f3.id)
+        patt = os.path.join('%s',
+                            '%s',
+                            '%s',
+                            '')
+        expected = patt % (root.id, f2.id, f3.id)
         self.assertEqual(get_recursive_path(report), expected)
 
     def test_get_parents(self):

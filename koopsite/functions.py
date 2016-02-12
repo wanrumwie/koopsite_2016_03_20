@@ -239,17 +239,8 @@ def parseClientRequest(requestPOST):
     json_s = requestPOST['client_request']
     # Розкодовуємо стрічку JSON в звичайний словник
     d = json.loads(json_s)
-    # Стандартний набір ключів:
-    keys = ['browTabName',
-            'parent_id'  ,
-            'model'      ,
-            'id'         ,
-            'selRowIndex',
-            'name'       ,
-            'sendMail'   ,
-            ]
     browTabName = d.get('browTabName')
-    model = d.get('model')
+    model       = d.get('model')
     # Перевіряємо правильність вхідних даних і при потребі
     #    активуємо помилку яку відслідкуємо у викликаючій процедурі
     # Назва таблиці повинна бути в запиті
@@ -263,9 +254,6 @@ def parseClientRequest(requestPOST):
         if model not in browTabName_models.get(browTabName):
             raise ValueError('Error data in request.POST: model name does not correspond to table name', model, browTabName)
     # Помилок у вхідних даних немає
-    # Перевіряємо наявність ключів і заповнюємо відсутні значенням None
-    for key in keys:
-        d.setdefault(key, None)
     return d
 
 def parseXHRClientRequest(requestMETA):
@@ -283,10 +271,21 @@ def parseXHRClientRequest(requestMETA):
     json_s = unquote(encoded_json_s)
     # Розкодовуємо стрічку JSON в звичайний словник
     d = json.loads(json_s)
-    # print('requestMETA =', requestMETA)
-    # print('encoded_json_s =', encoded_json_s)
-    # print('json_s =', json_s)
-    # print('parseXHRClientRequest: d=', d)
+    browTabName = d.get('browTabName')
+    model       = d.get('model')
+    # Перевіряємо правильність вхідних даних і при потребі
+    #    активуємо помилку яку відслідкуємо у викликаючій процедурі
+    # Назва таблиці повинна бути в запиті
+    if not browTabName:
+        raise ValueError('Error data in request.META: no table name', model, browTabName)
+    # Назва таблиці повинна бути в словнику browTabName_models
+    if browTabName not in browTabName_models:
+        raise ValueError('Error data in request.META: unknown table name', model, browTabName)
+    # Якщо є назва моделі, то вона повинна корелювати з назвою таблиці
+    if model:
+        if model not in browTabName_models.get(browTabName):
+            raise ValueError('Error data in request.META: model name does not correspond to table name', model, browTabName)
+    # Помилок у вхідних даних немає
     return d
 
 def get_namespace_from_dict(d, ns, extend=False):

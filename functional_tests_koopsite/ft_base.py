@@ -86,6 +86,11 @@ class FunctionalTest(StaticLiveServerTestCase): # працює з окремою
     @classmethod
     def setUpClass(cls):
         print('start class: %s' % cls.__name__, end=' >> ')
+
+        # from pyvirtualdisplay import Display
+        # display = Display(visible=0, size=(800, 600))
+        # display.start()
+
         cls.browser = webdriver.Firefox()
         cls.browser.implicitly_wait(20)
         cls.browser.set_window_position(250, 0)

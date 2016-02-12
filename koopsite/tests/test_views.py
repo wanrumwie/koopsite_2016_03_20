@@ -1,5 +1,5 @@
 import os
-from unittest.case import skip, skipIf
+from unittest.case import skipIf, skip
 from datetime import timedelta
 from django import forms
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -408,7 +408,8 @@ class UserProfileCreateTest(TestCase):
         self.unsuccess_for_invalid_data(data)
 
     def test_post_unsuccess_for_invalid_picture(self):
-        file = SimpleUploadedFile("file.txt", b"file_content")
+        # file = SimpleUploadedFile("file.txt", b"file_content")
+        file = open("example.txt", "rb")
         data = {
             'username'  : 'fred',
             'password'  : 'secret',
@@ -623,7 +624,8 @@ class UserProfilePersonDataUpdateTest(TestCase):
 
     def test_post_unsuccess_for_invalid_picture(self):
         view = self.cls_view
-        file = SimpleUploadedFile("file.txt", b"file_content")
+        # file = SimpleUploadedFile("file.txt", b"file_content")
+        file = open("example.txt", "rb")
         data = {
             'picture'    : file,
             }
@@ -1048,7 +1050,7 @@ class OwnProfileDetailShowTest(TestCase):
         self.assertIn(b'<td class="text-align-left">fred</td>', response._container[0])
 
 
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class OwnProfileUpdateTest(TestCase):
     '''
     Цим тестом одночасно перевіряється OneToOneUpdate
@@ -1062,7 +1064,7 @@ class OwnProfileUpdateTest(TestCase):
 
         self.dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret', id=1)
         self.client.login(username='fred', password='secret')
-        DummyUser().add_dummy_permission(self.dummy_user, 'change_userprofile')
+        # DummyUser().add_dummy_permission(self.dummy_user, 'change_userprofile')
         # self.dummy_prof = DummyUser().create_dummy_profile(self.dummy_user)
 
     def test_view_model_and_attributes(self):
@@ -1244,7 +1246,8 @@ class OwnProfileUpdateTest(TestCase):
 
     def test_post_unsuccess_for_invalid_picture(self):
         view = self.cls_view
-        file = SimpleUploadedFile("file.txt", b"file_content")
+        # file = SimpleUploadedFile("file.txt", b"file_content")
+        file = open("example.txt", "rb")
         data = {
             'picture'    : file,
             }
@@ -1254,6 +1257,17 @@ class OwnProfileUpdateTest(TestCase):
         request.user = self.dummy_user
         kwargs = {}
         response = view.as_view()(request, **kwargs)
+        # У цьому місці при тестуванні на pythonanywhere виникає помилка,
+        # якщо файл задано так:
+        # file = SimpleUploadedFile("file.txt", b"file_content")
+        # але тест продовжується:
+        # Traceback (most recent call last):
+        #   File "/home/wanrumwie/.virtualenvs/django18/lib/python3.4/site-packages/PIL/ImageFile.py", line 100, in __init__
+        #     self._open()
+        #   File "/home/wanrumwie/.virtualenvs/django18/lib/python3.4/site-packages/PIL/TgaImagePlugin.py", line 62, in _open
+        #     depth = i8(s[16])
+        # IndexError: index out of range
+        # Тому я замінив SimpleUploadedFile на реальний файл
 
         # Витягаємо з бази запис:
         user = view.ModelOne.objects.get(id=1)
