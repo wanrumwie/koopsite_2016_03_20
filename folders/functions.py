@@ -6,7 +6,8 @@ from django.utils.http import urlquote
 from folders.models import Report, Folder
 from koopsite.fileExtMimeTypes import mimeType
 from koopsite.functions import transliterate
-from koopsite.settings import MEDIA_ROOT
+from koopsite.settings import MEDIA_ROOT, MAX_ZIP_FILE_SIZE
+
 
 def get_recursive_path(report):
     # Отримуємо шлях, який складається з вкладених каталогів:
@@ -72,6 +73,7 @@ def response_for_download(report, cd_value='attachment'):
                     "inline" - for preview
     :return:    HttpResponse with report.file and some parameters
     """
+    path = report.file.path
     fileExt  = os.path.splitext(report.filename)[1]  # [0] returns path+filename
     ct = mimeType.get(fileExt.lower(), "application/octet-stream")
     filename = report.filename
@@ -80,14 +82,17 @@ def response_for_download(report, cd_value='attachment'):
     fns = "filename*=utf-8''%s; " % urlquote(filename)
     md = 'modification-date="%s"; ' % report.uploaded_on
     response = HttpResponse(content_type=ct)
-    content = report.file.read()
+    # content = report.file.read()
+    with open(path) as file:
+        content = file.read()   # читаємо файл незалежно від report
+                                # (інакше при тестуванні не завжди
+                                # вдається видалити тимчасовий файл)
     response.write(content)
     response['Content-Disposition'] = cdv + fn + fns + md
     response['Content-Length'] = report.file.size
-    # report.file.close()
     return response
 
-def response_for_download_zip(folder, maxFileSize = 200000000):
+def response_for_download_zip(folder, maxFileSize = MAX_ZIP_FILE_SIZE):
     """
     Preparing response for downloading zip-file,
     consist of all files in folder (without recursion!)

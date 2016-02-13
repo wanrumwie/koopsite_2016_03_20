@@ -53,4 +53,9 @@ class DummyFolder():
         return report
 
 
+def create_byte_string(length=12):
+    b = b''
+    for i in range(length):
+        b += b'Q'
+    return b
 

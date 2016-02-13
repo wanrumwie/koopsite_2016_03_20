@@ -55,6 +55,21 @@ def user_permissions_print(user):
         print('%-30s %-20s %-20s %s' % (p.name, p.content_type, p.codename, p))
     print('-'*50)
 
+
+def dict_from_json_str_or_bytes(json_str):
+    """
+    Допоміжна функція: перетворює json-стрічку в словник
+    Відтворює аналогічну процедуру, яку виконує ф-ція ajax.js
+    Використовується в тестах для перевірки правильності формування
+    відповіді сервера
+    :param json_str: json-string або byte
+    :return: d - словник
+    """
+    if isinstance(json_str, bytes):
+        json_str = json_str.decode()
+    d = json.loads(json_str)
+    return d
+
 def get_or_none(classmodel, **kwargs):
     try:
         return classmodel.objects.get(**kwargs)

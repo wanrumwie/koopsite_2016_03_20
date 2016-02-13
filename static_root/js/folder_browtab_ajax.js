@@ -211,7 +211,7 @@ function ajax_reportDelete() {
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
-    as.url = "/folders/ajax-report-delete";
+    as.url = "/folders/ajax-report-delete" + "/" + arr.id + "/";    // pk added to url as argument for decorator
     as.data = {
             client_request : json_string,
             csrfmiddlewaretoken: csrf_token

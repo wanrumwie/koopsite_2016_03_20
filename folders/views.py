@@ -254,9 +254,7 @@ def folderDownload(request, *args, **kwargs):
 def reportDownload(request, *args, **kwargs):
     report_id = kwargs.get('pk')
     report = Report.objects.get(id=report_id)
-    # print('report=', report.id, report.filename, report.file)
     response = response_for_download(report, cd_value='attachment')
-    report.file.close() # при тестуванні не вдавалося видалити файл без цього рядка
     return response
 
 

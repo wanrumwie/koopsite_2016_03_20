@@ -11,12 +11,11 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from flats.tests.test_base import DummyFlat
 from functional_tests_koopsite.ft_base import DummyUser
-from koopsite.functions import get_or_none, has_group, dict_print
+from koopsite.functions import get_or_none, has_group, dict_print, dict_from_json_str_or_bytes
 from koopsite.models import UserProfile
 from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_views import setup_view
-from koopsite.tests.test_viewsajax import DummyAjaxRequest, \
-    server_response_decrypt
+from koopsite.tests.test_viewsajax import DummyAjaxRequest
 from koopsite.viewsajax import msgType
 from koopsite.viewsajaxuser import UsersTableArray, UsersTable, \
     AjaxAccountViewBase, AjaxRecognizeAccount, AjaxDenyAccount, \
@@ -271,7 +270,7 @@ class AjaxAccountTestBase(TestCase):
                                             expected_changes=None,
                                             expected_supplement=None
                                            ):
-        d = server_response_decrypt(response._container)
+        d = dict_from_json_str_or_bytes(response._container[0])
 
         # Чи ф-ція повертає правильний response?
         self.assertEqual(d['title'     ], expected_title     )

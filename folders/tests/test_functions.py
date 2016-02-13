@@ -91,7 +91,7 @@ class Response_for_download_Test(TestCase):
 
     def test_response_for_download_gives_error_if_no_file(self):
         rep0 = DummyFolder().create_dummy_report(parent=self.root)
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             response_for_download(rep0)
 
     def test_response_for_download_gives_proper_value(self):

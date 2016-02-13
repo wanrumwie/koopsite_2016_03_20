@@ -5,17 +5,17 @@ import types
 from django.contrib.auth.decorators import permission_required
 from django.core.files.base import ContentFile
 from django.http.response import HttpResponse
-from django.shortcuts import render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import ListView
 from koopsite.decorators import author_or_permission_required
-from koopsite.settings import STATIC_URL
+from koopsite.settings import STATIC_URL, MAX_FILE_SIZE
 from koopsite.functions import fileNameCheckInsert, \
                         get_namespace_from_dict, \
-                        get_iconPathForFolder, get_iconPathByFileExt, get_or_none
+                        get_iconPathForFolder, get_iconPathByFileExt, \
+                        get_or_none
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest, \
@@ -138,11 +138,11 @@ class FolderContents(SingleObjectMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Folder.objects.all())
-        return super(FolderContents, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         # Материнська тека
-        context = super(FolderContents, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['folder'] = self.object
         context['parents'] = get_parents(self.object)
         parent_id = self.object.id
@@ -337,7 +337,7 @@ class AjaxFolderCreate(AjaxTableRowViewBase):
 
     @method_decorator(permission_required('folders.add_folder', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxFolderCreate, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, folder, rqst, msg):
         # Список існуючих імен в теці:
@@ -370,7 +370,7 @@ class AjaxFolderRename(AjaxTableRowViewBase):
 
     @method_decorator(permission_required('folders.change_folder', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxFolderRename, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, folder, rqst, msg):
         # Список існуючих імен в теці:
@@ -405,7 +405,7 @@ class AjaxReportRename(AjaxTableRowViewBase):
 
     @method_decorator(permission_required('folders.change_report', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxReportRename, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, report, rqst, msg):
         # Список існуючих імен в теці:
@@ -441,7 +441,7 @@ class AjaxElementMove(AjaxTableRowViewBase):
     @method_decorator(permission_required('folders.change_folder', raise_exception=True))
     @method_decorator(permission_required('folders.change_report', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxElementMove, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, element, rqst, msg):
         # Список існуючих імен в теці призначення:
@@ -491,7 +491,7 @@ class AjaxFolderDelete(AjaxTableRowViewBase):
     # Перейменовуємо обрану теку у відомій теці з доп. AJAX
     @method_decorator(permission_required('folders.delete_folder', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxFolderDelete, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, folder, rqst, msg):
         # Умови при яких зміни не відбудуться:
@@ -513,7 +513,7 @@ class AjaxReportDelete(AjaxTableRowViewBase):
 
     @method_decorator(author_or_permission_required(Report, 'folders.delete_report', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(AjaxReportDelete, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, report, rqst, msg):
         # Умови при яких зміни не відбудуться:
@@ -529,8 +529,6 @@ class AjaxReportDelete(AjaxTableRowViewBase):
             msg.type    = msgType.DeleteRow
             msg.message = "Файл видалено!"
         return None, msg
-
-#---------------- Кінець коду, охопленого тестуванням ------------------
 
 
 #################################################################
@@ -622,7 +620,6 @@ class XHRTableRowView(View):
             response_cont = vars(msg)
             response_cont['changes'] = changes
             response_cont['supplement'] = supplement
-            print('XHRTableRowView: procedding: response_cont=', response_cont)
             json_s = json.dumps(response_cont)
             response['server_response'] = json_s
             return response
@@ -658,21 +655,21 @@ class XHRReportDownload(XHRTableRowView):
 
     @method_decorator(permission_required('folders.download_report', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(XHRReportDownload, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, request, report, rqst, msg):
         # Умови при яких зміни не відбудуться:
         if False: # Тут вставити перевірку на право завантаження файла
             msg.title   = rqst.name
             msg.type    = msgType.Forbidden
-            msg.message = "У Вас немає доступу для завантаження обраного документа."
+            msg.message = "У Вас немає доступу для завантаження обраного файла."
             response = HttpResponse()
         else:
             # Downloading file:
             response = response_for_download(report)
             msg.title   = rqst.name
             msg.type    = msgType.Normal
-            msg.message = "Документ успішно завантажено!"
+            msg.message = "Файл успішно завантажено!"
         return report, msg, response
 
 
@@ -682,7 +679,7 @@ class XHRFolderDownload(XHRTableRowView):
     @method_decorator(permission_required('folders.download_folder', raise_exception=True))
     @method_decorator(permission_required('folders.download_report', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(XHRFolderDownload, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, request, folder, rqst, msg):
         # Умови при яких зміни не відбудуться:
@@ -696,7 +693,7 @@ class XHRFolderDownload(XHRTableRowView):
                                     response_for_download_zip(folder)
             msg.title   = zipFilename
             msg.type    = msgType.Normal
-            msg.message = msg_message or "Документ успішно завантажено!"
+            msg.message = msg_message or "Вміст теки успішно завантажено!"
         return folder, msg, response
 
 
@@ -705,13 +702,13 @@ class XHRReportUpload(XHRTableRowView):
 
     @method_decorator(permission_required('folders.add_report', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        return super(XHRReportUpload, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def processing(self, request, report, rqst, msg):
-        # Умови при яких зміни не відбудуться:
+        maxFileSize = MAX_FILE_SIZE
         report_name_list = [f.filename for f in
                             Report.objects.filter(parent_id=rqst.parent_id)]
-        maxFileSize = 200000000
+        # Умови при яких зміни не відбудуться:
         if not rqst.fileName or rqst.fileName == "":
             msg.title   = "Заладування файла"
             msg.type    = msgType.IncorrectData
@@ -719,10 +716,10 @@ class XHRReportUpload(XHRTableRowView):
         elif int(rqst.fileSize) > maxFileSize:
             msg.title   = "Заладування файла"
             msg.type    = msgType.Forbidden
-            msg.message = "Розмір файла %s " \
-                           "перевищує дозволене значення %s!" % (rqst.fileSize, maxFileSize)
+            msg.message = "Розмір файла %s перевищує дозволене значення %s!" \
+                          % (rqst.fileSize, maxFileSize)
         else:
-        # Починаємо заладування:
+            # Починаємо заладування:
             rqst.fileName = fileNameCheckInsert(rqst.fileName, report_name_list)
 
             report           = Report()
@@ -758,9 +755,8 @@ class XHRReportUpload(XHRTableRowView):
                 # Завантаження пройшло без помилок
                 report.filename  = rqst.fileName
                 fileSizeFact     = report.file.size
-                print('fileSize :', fileSizeFact, report.file.size)
 
-                if fileSizeFact == rqst.fileSize:
+                if fileSizeFact == int(rqst.fileSize):
                     # Файл завантажено повністю
                     report.uploaded_on = rqst.fileLastModifiedDate or timezone.now()
 
@@ -772,7 +768,7 @@ class XHRReportUpload(XHRTableRowView):
                     # TODO-перевірити чому filesize.js для NewRow показує розмір без одиниць виміру
                     msg.title   = rqst.fileName
                     msg.type    = msgType.NewRow
-                    msg.message = "Документ успішно заладовано на сервер!"
+                    msg.message = "Файл успішно заладовано на сервер!"
                 else:
                     # Файл завантажено частково - клієнт послав xhr.abort()
                     print('Error: fileSizeFact <> fileSize')
@@ -787,6 +783,7 @@ class XHRReportUpload(XHRTableRowView):
         response = HttpResponse()
         return report, msg, response
 
+
 #################################################################
 # jQuery ajax functions:
 #################################################################
@@ -800,5 +797,7 @@ def ajaxFoldersTreeFromBase(request):
         # return JsonResponse(response_dict)
         return HttpResponse(json.dumps(response_dict), content_type="application/json")
     else:
-        return render(request, 'folders/folder_contents.html')
+        print("There is no 'client_request' in request.POST")
+        return HttpResponse()
 
+#---------------- Кінець коду, охопленого тестуванням ------------------

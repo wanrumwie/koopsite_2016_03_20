@@ -169,8 +169,18 @@ if python_any_where:
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
 
+
+# ---------------------------------------------------------------
+# Власні глобальні параметри:
+
 # Адреса сайту, яка буде вказуватися в електронних листах:
 SITE_ADDRESS = "wanrumwie.pythonanywhere.com"
+
+# Максимальний розмір файла, який дозволяється завантажувати на сервер:
+MAX_FILE_SIZE = 20000000
+
+# Максимальний розмір zip-файла, який дозволяється завантажувати з сервера:
+MAX_ZIP_FILE_SIZE = 20000000
 
 # id сайтів в списку admin
 # 1 = production, 2 = localhost (на даний момент)
@@ -191,8 +201,8 @@ else:
 TRACE_CONDITION = False
 
 # Умова для декоратора @unittest.skipIf(SKIP_TEST)
-SKIP_TEST = True    # пропускаємо задекоровані тести
-# SKIP_TEST = False   # виконуємо всі тести
+# SKIP_TEST = True    # пропускаємо задекоровані тести
+SKIP_TEST = False   # виконуємо всі тести
 
 if SKIP_TEST:
     print('SKIP_TEST =', SKIP_TEST)

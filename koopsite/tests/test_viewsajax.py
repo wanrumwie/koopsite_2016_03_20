@@ -102,26 +102,6 @@ class DummyXHRrequest(DummyAjaxRequest):
         return data
 
 
-
-def server_response_decrypt(container, i=0):
-    """
-    Допоміжна функція: перетворює контейнер з json-стрічкою в словник
-    Відтворює аналогічну процедуру, яку виконує ф-ція ajax.js
-    Використовується в тестах для перевірки правильності формування
-    відповіді сервера
-    :param container: HttpResponse._container - список з json-string
-    :param i: порядковий номер у списку (завжди 0?)
-    :return: d - словник
-    """
-    print('container =', container)
-    json_str = container[0]
-    print('json_str =', json_str)
-    decoded = json_str.decode()
-    print('decoded =', decoded)
-    d = json.loads(json_str.decode())
-    return d
-
-
 class AjaxSelRowIndexToSessionTest(TestCase):
 
     def test_function(self):

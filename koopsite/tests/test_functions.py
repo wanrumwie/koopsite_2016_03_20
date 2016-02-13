@@ -1,3 +1,4 @@
+import json
 import os
 import types
 from PIL import Image
@@ -17,12 +18,21 @@ from koopsite.functions import round_up_division, AllFieldsMixin, \
     parseClientRequest, parseXHRClientRequest, get_user_full_name, \
     get_user_flat_No, get_user_is_recognized, is_staff_only, get_or_none, \
     has_group_members, has_group, add_group, remove_group, \
-    transliterate, get_thumbnail_url_path, get_flat_users, has_flat_member
+    transliterate, get_thumbnail_url_path, get_flat_users, has_flat_member, dict_from_json_str_or_bytes
 from koopsite.settings import MEDIA_ROOT
 from koopsite.tests.test_viewsajax import DummyAjaxRequest, DummyXHRrequest
 
 
 class DifferentFunctionsTest(TestCase):
+
+    def test_dict_from_decoded_json_str(self):
+        # json_str = {"message": "\u0424\u0430\u0439\u043b \u0443\u0441\u043f\u0456\u0448\u043d\u043e \u0437\u0430\u0432\u0430\u043d\u0442\u0430\u0436\u0435\u043d\u043e!", "changes": {"0": {"model": "report", "id": "1", "name": "file.txt"}}, "supplement": {"fileType": "report", "iconPath": "/static/img/file-icons/32px/txt.png", "fileExt": ".txt"}, "type": "Normal", "title": "file.txt"}
+        expected = {'1': 1, '2': '2', 'x': None, 'y': 'Альфа'}
+        json_str = json.dumps(expected)
+        d = dict_from_json_str_or_bytes(json_str)
+        self.assertEqual(d, expected)
+        d = dict_from_json_str_or_bytes(json_str.encode())
+        self.assertEqual(d, expected)
 
     def test_get_or_none(self):
         flat = DummyFlat().create_dummy_flat(id=1, flat_No="1")
