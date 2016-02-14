@@ -48,8 +48,6 @@ INSTALLED_APPS = (
                         # міграції моделей, описаних в koopsite.models.py
     'flats',
     'folders',
-    'lists',            # для прикладів з книги TDD with Python
-    # 'functional_tests_lists', # для функціональних тестів
 )
 
 MIDDLEWARE_CLASSES = (
@@ -201,8 +199,8 @@ else:
 TRACE_CONDITION = False
 
 # Умова для декоратора @unittest.skipIf(SKIP_TEST)
-SKIP_TEST = True    # пропускаємо задекоровані тести
-# SKIP_TEST = False   # виконуємо всі тести
+# SKIP_TEST = True    # пропускаємо задекоровані тести
+SKIP_TEST = False   # виконуємо всі тести
 
 if SKIP_TEST:
     print('SKIP_TEST =', SKIP_TEST)

@@ -13,8 +13,6 @@ urlpatterns = [
                 TemplateView.as_view(template_name='js_tests_koopsite_functions.html')),
     url(r'^koopsite/browtab/$',
                 TemplateView.as_view(template_name='js_tests_koopsite_browtab.html')),
-    url(r'^lists/$',
-                TemplateView.as_view(template_name='js_tests_lists.html')),
     url(r'^folders/$',
                 TemplateView.as_view(template_name='js_tests_folders.html')),
 ]

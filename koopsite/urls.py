@@ -87,7 +87,6 @@ urlpatterns = [
     # /flats/ та інші - під'єднуємо urls.py аплікацій
     url(r'^flats/',     include('flats.urls',   namespace='flats')),
     url(r'^folders/',   include('folders.urls', namespace='folders')),
-    url(r'^lists/',     include('lists.urls',   namespace='TDD-lists')), # для прикладів з книги TDD with Python
 
     # /admin/ - під'єднання до вбудованого admin
     url(r'^admin/',     include(admin.site.urls)),
