@@ -2,7 +2,7 @@ import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
-from koopsite.fileExtIconPath import viewable_extension_list
+from koopsite.fileExtIconPath import get_viewable_extension_list
 
 
 class Folder(models.Model):
@@ -112,7 +112,7 @@ class Report(models.Model):
             fileExt = os.path.splitext(self.filename)[1]  # [0] returns path+filename
         except:
             fileExt = ""
-        if fileExt in viewable_extension_list:
+        if fileExt in get_viewable_extension_list():
             url_name = 'folders:report-preview'
         else:
             url_name = 'folders:report-detail'

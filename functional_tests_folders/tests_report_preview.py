@@ -4,7 +4,7 @@ from unittest.case import skipIf
 from django.contrib.auth.models import AnonymousUser
 from folders.tests.test_base import DummyFolder
 from functional_tests_koopsite.ft_base import PageVisitTest
-from koopsite.fileExtIconPath import viewable_extension_list
+from koopsite.fileExtIconPath import get_viewable_extension_list
 from koopsite.settings import SKIP_TEST, SKIP_VISUAL_TEST
 
 
@@ -193,9 +193,9 @@ class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest
         fileExt = os.path.splitext(file_name)[1]
         # Чи розширення цього файла входить до списку "previewable"?
         if expected_text:
-            self.assertNotIn(fileExt, viewable_extension_list)
+            self.assertNotIn(fileExt, get_viewable_extension_list())
         else:
-            self.assertIn(fileExt, viewable_extension_list)
+            self.assertIn(fileExt, get_viewable_extension_list())
 
         # Створюємо запис з цим файлом:
         full_path = os.path.join(os.getcwd(), file_name) # повний шлях

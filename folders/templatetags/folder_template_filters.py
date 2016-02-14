@@ -4,7 +4,7 @@
 import os
 from django import template
 from folders.functions import get_full_named_path
-from koopsite.fileExtMimeTypes import mimeType
+from koopsite.fileExtMimeTypes import get_mimeType
 from koopsite.functions import get_iconPathForFolder, \
                                get_iconPathByFileExt
 
@@ -29,7 +29,7 @@ def file_media_type(f):
     # Фільтр для медіатипу файла
     try:
         e = os.path.splitext(f.filename)[1]  # [0] returns path+filename
-        mt = mimeType.get(e.lower(), "")
+        mt = get_mimeType().get(e.lower(), "")
     except: mt = ""
     return mt
 

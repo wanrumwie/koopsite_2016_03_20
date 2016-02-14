@@ -2,8 +2,10 @@ from django import forms
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required, \
+                                            permission_required
+from django.contrib.auth.forms import PasswordChangeForm, \
+                                            AuthenticationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponseRedirect

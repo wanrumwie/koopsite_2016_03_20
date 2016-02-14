@@ -8,9 +8,6 @@ from functional_tests_koopsite.ft_base import PageVisitTest
 from koopsite.forms import Human_Check
 from koopsite.models import UserProfile
 from koopsite.settings import SKIP_TEST
-
-
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
 from koopsite.tests.test_base import DummyUser
 
 
@@ -132,7 +129,9 @@ class RegisterPageVisitTest(PageVisitTest):
         self.assertEqual(profile.flat.id, 1)
 
         # Завантажено той файл?
-        file_content = profile.picture.read()
+        saved_path = profile.picture.path
+        with open(saved_path, 'rb') as saved_f:
+            file_content = saved_f.read()
         with open(full_path, 'rb') as f:
             expected_file_content = f.read()
         self.assertEqual(file_content, expected_file_content)
@@ -205,7 +204,7 @@ class RegisterPageAnonymousVisitorTest(RegisterPageVisitTest):
 
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class RegisterPageAnonymousVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -260,8 +259,6 @@ class RegisterPageAnonymousVisitorCanCreateNewAccountTest(RegisterPageVisitTest)
 
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
-
-    # @skip
     def test_error_message_if_empty_required_fields_is_cleared_on_input(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -319,7 +316,6 @@ class RegisterPageAnonymousVisitorCanCreateNewAccountTest(RegisterPageVisitTest)
 
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
-
     def test_error_message_if_not_unique_username(self):
         # Користувач відкриває сторінку
         self.browser.get('%s%s' % (self.server_url, self.this_url))
@@ -354,9 +350,7 @@ class RegisterPageAnonymousVisitorCanCreateNewAccountTest(RegisterPageVisitTest)
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
-
-
-@skipIf(SKIP_TEST, "пропущено для економії часу")
+# @skipIf(SKIP_TEST, "пропущено для економії часу")
 class RegisterPageAuthenticatedVisitorCanCreateNewAccountTest(RegisterPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -372,6 +366,11 @@ class RegisterPageAuthenticatedVisitorCanCreateNewAccountTest(RegisterPageVisitT
 
     def tearDown(self):
         Human_Check.if_view_test = False
+        try:
+            profile = UserProfile.objects.last()
+            profile.picture.delete()
+        except:
+            pass
         super().tearDown()
 
     def test_auth_visitor_can_create_account_with_minimum_needed_fields(self):
@@ -432,7 +431,7 @@ class RegisterPageAuthenticatedVisitorCanCreateNewAccountTest(RegisterPageVisitT
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class LogoutUrlTest(RegisterPageVisitTest):
     """
     Тест відвідання сторінки сайту

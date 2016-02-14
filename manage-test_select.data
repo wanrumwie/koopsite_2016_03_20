@@ -1,1 +1,1 @@
-manage.py test folders.tests.test_viewsajaxfolder 
+manage.py test functional_tests_koopsite.tests_register 

@@ -1,7 +1,7 @@
 import os
 import json
-from itertools import chain
 import types
+from itertools import chain
 from django.contrib.auth.decorators import permission_required
 from django.core.files.base import ContentFile
 from django.http.response import HttpResponse
@@ -10,22 +10,22 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import ListView
-from koopsite.decorators import author_or_permission_required
-from koopsite.settings import STATIC_URL, MAX_FILE_SIZE
-from koopsite.functions import fileNameCheckInsert, \
-                        get_namespace_from_dict, \
-                        get_iconPathForFolder, get_iconPathByFileExt, \
-                        get_or_none
-from koopsite.functions import  getSelElementFromSession, \
-                        setSelElementToSession, \
-                        parseClientRequest, \
-                        parseXHRClientRequest
-from koopsite.viewsajax import msgType, BrowseTableArray
-from folders.models import Folder, Report
 from folders.functions import response_for_download, \
                         response_for_download_zip, \
                         get_folders_tree_HTML, get_parents, \
                         get_subfolders, get_subreports
+from folders.models import Folder, Report
+from koopsite.decorators import author_or_permission_required
+from koopsite.functions import fileNameCheckInsert, \
+                        get_namespace_from_dict, \
+                        get_iconPathForFolder, get_iconPathByFileExt, \
+                        get_or_none, \
+                        getSelElementFromSession, \
+                        setSelElementToSession, \
+                        parseClientRequest, \
+                        parseXHRClientRequest
+from koopsite.settings import STATIC_URL, MAX_FILE_SIZE
+from koopsite.viewsajax import msgType, BrowseTableArray
 
 
 #################################################################

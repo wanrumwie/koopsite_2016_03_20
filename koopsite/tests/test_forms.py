@@ -1,4 +1,3 @@
-from datetime import timezone
 from unittest.case import skip
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -9,7 +8,7 @@ from flats.tests.test_base import DummyFlat
 from koopsite.forms import UserRegistrationForm, UserPersonDataForm, \
     UserPermsFullForm, UserPermsActivateForm, ProfileFullForm, \
     ProfilePermForm, ProfilePersonDataForm, Human_Check, \
-    ProfileRegistrationForm, readonly_disabled_widget_type_list
+    ProfileRegistrationForm, get_readonly_disabled_widget_type_list
 from koopsite.functions import has_group, dict_print
 from koopsite.models import UserProfile
 from koopsite.tests.test_base import DummyUser
@@ -164,7 +163,7 @@ class UserPermsFullFormTest(TestCase):
         form = self.cls_form()
         for field in form.READONLY_FIELDS:
             widget = form.fields[field].widget
-            if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+            if widget.__class__.__name__ in get_readonly_disabled_widget_type_list():
                 self.assertEqual(widget.attrs['disabled'], 'disabled')
             else:
                 self.assertEqual(widget.attrs['readonly'], 'readonly')
@@ -353,7 +352,7 @@ class ProfilePermFormTest(TestCase):
         form = self.cls_form()
         for field in form.READONLY_FIELDS:
             widget = form.fields[field].widget
-            if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+            if widget.__class__.__name__ in get_readonly_disabled_widget_type_list():
                 self.assertEqual(widget.attrs['disabled'], 'disabled')
             else:
                 self.assertEqual(widget.attrs['readonly'], 'readonly')

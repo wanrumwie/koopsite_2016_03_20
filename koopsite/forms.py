@@ -8,16 +8,20 @@ from koopsite.functions import has_group_members, \
 from koopsite.models import UserProfile
 
 
-# Список типів віджетів, які не мають властивості readonly,
-# тому їх при потребі потрібно блокувати
-# встановленням атрибуту disabled
-readonly_disabled_widget_type_list = [
-    'Select',
-    'SelectMultiple',
-    'NullBooleanSelect',
-    # 'RadioSelect',
-    'SelectDateWidget',
-    ]
+def get_readonly_disabled_widget_type_list():
+    """
+    Повертає список типів віджетів, які не мають властивості readonly,
+    тому їх при потребі потрібно блокувати
+    встановленням атрибуту disabled
+    """
+    readonly_disabled_widget_type_list = [
+        'Select',
+        'SelectMultiple',
+        'NullBooleanSelect',
+        # 'RadioSelect',
+        'SelectDateWidget',
+        ]
+    return readonly_disabled_widget_type_list
 
 def set_readonly_widget_attrs(fields, readonly_fields):
     """
@@ -30,7 +34,7 @@ def set_readonly_widget_attrs(fields, readonly_fields):
     for field in readonly_fields:
         if field in fields:
             widget = fields[field].widget
-            if widget.__class__.__name__ in readonly_disabled_widget_type_list:
+            if widget.__class__.__name__ in get_readonly_disabled_widget_type_list():
                 widget.attrs['disabled'] = 'disabled'
             else:
                 widget.attrs['readonly'] = 'readonly'

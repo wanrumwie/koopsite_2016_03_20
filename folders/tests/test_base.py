@@ -1,6 +1,5 @@
 import os
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
 from folders.models import Folder, Report
 
 

@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from math import ceil
 from PIL import Image
 from flats.models import Flat
-from koopsite.fileExtIconPath import iconPath
+from koopsite.fileExtIconPath import get_iconPath
 from koopsite.settings import EMAIL_HOST_USER, TRACE_CONDITION
 
 
@@ -93,7 +93,7 @@ def get_iconPathForFolder(openFlag=False):
     return p
 
 def get_iconPathByFileExt(ext):
-    p = iconPath.get(ext)
+    p = get_iconPath().get(ext)
     if not p: p = "_page.png"
     directory = 'img/file-icons/32px/'
     p = directory + p
@@ -139,10 +139,12 @@ def scale_width(width, height, wmax):
         height = int(height*ratio)
     return (width, height)
 
-emptyElement = {'model'       : None,
-                'id'          : None,
-                'selRowIndex' : None,
-                }
+def get_emptyElement():
+    emptyElement = {'model'       : None,
+                    'id'          : None,
+                    'selRowIndex' : None,
+                    }
+    return emptyElement
 
 def getSelections(session):
     """
@@ -196,11 +198,11 @@ def getSelElementFromSession(session, browTabName, parent_id=''):
     # Пробуємо отримати значення з сесії:
     selections = getSelections(session)
     tableSelections = selections.get(browTabName, {})
-    selElement = tableSelections.get(parent_id, emptyElement)
+    selElement = tableSelections.get(parent_id, get_emptyElement())
     return selElement
 
 def setSelElementToSession(session, browTabName, parent_id='',
-                           selElement=emptyElement):
+                           selElement=get_emptyElement()):
     """
     Запис в сесію параметрів виділеного елемента таблиці folder_content
     :param session: request.session
@@ -223,12 +225,17 @@ def setSelElementToSession(session, browTabName, parent_id='',
     # Записуємо в сесію:
     session['Selections'] = selections
 
-# Словник, який пов'язує між собою назви таблиць і моделей
-# Назва таблиці, яка надсилає ajax-запити, має корелювати з назвами моделей:
-browTabName_models = {
-        'folders_contents'  : ('folder', 'report', ),
-        'users_table'       : ('user',),
-        }
+def get_browTabName_models():
+    """
+    Повертає словник, який пов'язує між собою назви таблиць і моделей.
+    Назва таблиці, яка надсилає ajax-запити,
+    має корелювати з назвами моделей.
+    """
+    browTabName_models = {
+            'folders_contents'  : ('folder', 'report', ),
+            'users_table'       : ('user',),
+            }
+    return browTabName_models
 
 def parseClientRequest(requestPOST):
     """
@@ -262,11 +269,11 @@ def parseClientRequest(requestPOST):
     if not browTabName:
         raise ValueError('Error data in request.POST: no table name', model, browTabName)
     # Назва таблиці повинна бути в словнику browTabName_models
-    if browTabName not in browTabName_models:
+    if browTabName not in get_browTabName_models():
         raise ValueError('Error data in request.POST: unknown table name', model, browTabName)
     # Якщо є назва моделі, то вона повинна корелювати з назвою таблиці
     if model:
-        if model not in browTabName_models.get(browTabName):
+        if model not in get_browTabName_models().get(browTabName):
             raise ValueError('Error data in request.POST: model name does not correspond to table name', model, browTabName)
     # Помилок у вхідних даних немає
     return d
@@ -294,11 +301,11 @@ def parseXHRClientRequest(requestMETA):
     if not browTabName:
         raise ValueError('Error data in request.META: no table name', model, browTabName)
     # Назва таблиці повинна бути в словнику browTabName_models
-    if browTabName not in browTabName_models:
+    if browTabName not in get_browTabName_models():
         raise ValueError('Error data in request.META: unknown table name', model, browTabName)
     # Якщо є назва моделі, то вона повинна корелювати з назвою таблиці
     if model:
-        if model not in browTabName_models.get(browTabName):
+        if model not in get_browTabName_models().get(browTabName):
             raise ValueError('Error data in request.META: model name does not correspond to table name', model, browTabName)
     # Помилок у вхідних даних немає
     return d

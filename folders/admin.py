@@ -1,12 +1,8 @@
 from django.contrib import admin
 import os
 from folders.functions import get_recursive_path
-from folders.models import get_report_path
+from folders.models import get_report_path, Folder, Report
 from koopsite.settings import MEDIA_ROOT
-
-# Register your models here.
-
-from .models import Folder, Report
 
 
 class FolderAdmin(admin.ModelAdmin):

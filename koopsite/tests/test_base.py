@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Permission, Group
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.utils.timezone import now
 from flats.tests.test_base import DummyFlat
 from koopsite.functions import trace_print
 from koopsite.models import UserProfile

@@ -23,6 +23,7 @@ def get_view_from_RegexURLPattern(u):
         form_class = ''
     return module_name, func_name, templ_name, form_class
 
+
 class WalkURL():
     def __init__(self, urlpatterns, exclude_namespace=None, trace=False):
         self.urlpatterns = urlpatterns

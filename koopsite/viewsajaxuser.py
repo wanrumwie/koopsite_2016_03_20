@@ -15,7 +15,7 @@ from koopsite.functions import has_group, add_group, \
                         remove_group, is_staff_only, \
                         get_user_full_name, get_user_flat_No, \
                         get_user_is_recognized, get_or_none, \
-                        browTabName_models, dict_print
+                        get_browTabName_models
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest
@@ -588,7 +588,7 @@ class AjaxAllAccountsViewBase(View):
             for elem in elemSet:
                 model = elem.get('model')
                 if model:
-                    if model not in browTabName_models.get(browTabName):
+                    if model not in get_browTabName_models().get(browTabName):
                         print('Error data in request.POST: model name in elemSet does not correspond to table name', model, browTabName)
                         return None
                 if model == "user":

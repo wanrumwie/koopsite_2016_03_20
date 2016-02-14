@@ -1,7 +1,7 @@
-from copy import deepcopy
 import json
 import types
 from unittest.case import skipIf
+from copy import deepcopy
 from django.contrib.auth.models import User, AnonymousUser
 from django.core import mail
 from django.core.exceptions import PermissionDenied
@@ -11,7 +11,8 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from flats.tests.test_base import DummyFlat
 from functional_tests_koopsite.ft_base import DummyUser
-from koopsite.functions import get_or_none, has_group, dict_print, dict_from_json_str_or_bytes
+from koopsite.functions import get_or_none, has_group, \
+                                dict_from_json_str_or_bytes
 from koopsite.models import UserProfile
 from koopsite.settings import LOGIN_URL, SKIP_TEST
 from koopsite.tests.test_views import setup_view

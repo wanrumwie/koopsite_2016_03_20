@@ -5,7 +5,6 @@ from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from flats.views import FlatTable
 from functional_tests_koopsite.ft_base import PageVisitTest
-from koopsite.functions import round_up_division
 from koopsite.settings import SKIP_TEST
 
 

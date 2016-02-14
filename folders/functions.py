@@ -4,7 +4,7 @@ from io import BytesIO
 from django.http.response import HttpResponse
 from django.utils.http import urlquote
 from folders.models import Report, Folder
-from koopsite.fileExtMimeTypes import mimeType
+from koopsite.fileExtMimeTypes import get_mimeType
 from koopsite.functions import transliterate
 from koopsite.settings import MEDIA_ROOT, MAX_ZIP_FILE_SIZE
 
@@ -75,7 +75,7 @@ def response_for_download(report, cd_value='attachment'):
     """
     path = report.file.path
     fileExt  = os.path.splitext(report.filename)[1]  # [0] returns path+filename
-    ct = mimeType.get(fileExt.lower(), "application/octet-stream")
+    ct = get_mimeType().get(fileExt.lower(), "application/octet-stream")
     filename = report.filename
     cdv = '%s; ' % cd_value
     fn = 'filename="%s"; ' % transliterate(filename)
@@ -119,7 +119,7 @@ def response_for_download_zip(folder, maxFileSize = MAX_ZIP_FILE_SIZE):
         zipFile.write(abs_path, zipPath)            # add file to zip
     zipFile.close() # Must close zip for all contents to be written
     fileExt  = ".zip"
-    ct = mimeType.get(fileExt.lower(), "application/octet-stream")
+    ct = get_mimeType().get(fileExt.lower(), "application/octet-stream")
     fn = ' filename="%s";' % transliterate(zipFilename)
     fns = " filename*=utf-8''%s;" % urlquote(zipFilename)
     # Grab ZIP file from in-memory, make response with correct MIME-type
@@ -127,9 +127,6 @@ def response_for_download_zip(folder, maxFileSize = MAX_ZIP_FILE_SIZE):
     response['Content-Disposition'] = 'attachment' + fn + fns
     response['Content-Length'] = len(sio.getbuffer())
     return response, zipFilename, msg
-
-
-tab = ' '*4
 
 def wrap_li(folder, level=0, tab=' '*4):
     indent = tab * level

@@ -12,15 +12,18 @@ from flats.tests.test_base import DummyFlat
 from folders.models import Folder
 from functional_tests_koopsite.ft_base import DummyUser
 from koopsite.functions import round_up_division, AllFieldsMixin, \
-    get_namespace_from_dict, get_iconPathForFolder, get_iconPathByFileExt, \
+    get_namespace_from_dict, get_iconPathForFolder, \
+    get_iconPathByFileExt, \
     fileNameCheckInsert, scale_height, scale_width, \
     getSelections, getSelElementFromSession, setSelElementToSession, \
     parseClientRequest, parseXHRClientRequest, get_user_full_name, \
     get_user_flat_No, get_user_is_recognized, is_staff_only, get_or_none, \
     has_group_members, has_group, add_group, remove_group, \
-    transliterate, get_thumbnail_url_path, get_flat_users, has_flat_member, dict_from_json_str_or_bytes
+    transliterate, get_thumbnail_url_path, get_flat_users, \
+    has_flat_member, dict_from_json_str_or_bytes
 from koopsite.settings import MEDIA_ROOT
-from koopsite.tests.test_viewsajax import DummyAjaxRequest, DummyXHRrequest
+from koopsite.tests.test_viewsajax import DummyAjaxRequest, \
+    DummyXHRrequest
 
 
 class DifferentFunctionsTest(TestCase):

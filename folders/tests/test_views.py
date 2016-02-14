@@ -1,5 +1,4 @@
 from asyncio.tasks import sleep
-import inspect
 from datetime import timedelta
 from django.contrib.auth.models import AnonymousUser
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -19,7 +18,7 @@ from folders.views import FolderCreate, FolderList, FolderDetail, \
                         ReportUpload, ReportUploadInFolder, \
                         reportDownload, folderDownload, \
                         FolderParentList, FolderReportList
-from koopsite.fileExtIconPath import viewable_extension_list
+from koopsite.fileExtIconPath import get_viewable_extension_list
 from koopsite.settings import LOGIN_URL
 from koopsite.tests.test_base import DummyUser
 from koopsite.tests.test_views import setup_view
@@ -207,7 +206,7 @@ class ReportPreviewTest(TestCase):
         view = setup_view(view, request, **kwargs)
         view.model = Report
         view.object = report
-        expected = viewable_extension_list
+        expected = get_viewable_extension_list()
         context = view.get_context_data()
         self.assertEqual(context['viewable_extension_list'], expected)
 

@@ -16,7 +16,7 @@ from folders.functions import response_for_download, \
     get_full_named_path
 from folders.models import Folder, Report
 from koopsite.decorators import author_or_permission_required
-from koopsite.fileExtIconPath import viewable_extension_list
+from koopsite.fileExtIconPath import get_viewable_extension_list
 from koopsite.views import AllFieldsView
 
 
@@ -72,7 +72,7 @@ class ReportPreview(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ReportPreview, self).get_context_data(**kwargs)
         # Значення передадуться в шаблон:
-        context['viewable_extension_list'] = viewable_extension_list
+        context['viewable_extension_list'] = get_viewable_extension_list()
         return context
 
 
