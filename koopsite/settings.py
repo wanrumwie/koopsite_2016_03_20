@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    # 'django_tables2',
     'koopsite',         # "кореневий" каталог koopsite.koopsite
                         # теж оголошується аплікацією, дозволяє робити
                         # міграції моделей, описаних в koopsite.models.py

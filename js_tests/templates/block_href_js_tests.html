@@ -1,0 +1,21 @@
+{% load staticfiles %}
+<div xmlns="http://www.w3.org/1999/html">
+
+    {% block hrefs-main %}
+        Лінки до тестування javascript:<br>
+        <a href="{% url 'js_tests:js_tests' %}">KoopSite - всі тести сайту</a><br>
+    {% endblock hrefs-main %}
+
+    {% block hrefs-apps %}
+        Тести аплікацій:
+        <br>
+            koopsite:
+            <a href="{% url 'js_tests:koopsite_functions' %}">Functions</a>
+            <a href="{% url 'js_tests:koopsite_browtab' %}">BrowTab</a>
+        <br>
+            folders:
+            <a href="{% url 'js_tests:folders' %}">Folders app</a>
+        <br>
+    {% endblock hrefs-apps %}
+
+</div>

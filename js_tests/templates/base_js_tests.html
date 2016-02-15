@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+
+        {% block title %}
+        {% endblock title %}
+
+    </title>
+    {% load staticfiles %}
+
+    {% block link_qunit %}
+        <link rel="stylesheet" href="{% static 'qunit/qunit.css' %}">
+    {% endblock link_qunit %}
+
+</head>
+
+<body>
+
+    {% include "block_href_js_tests.html" %}
+
+    <div id="qunit"></div>
+
+    <div id="qunit-fixture">
+
+        {% block qunit-fixture %}
+        {% endblock qunit-fixture %}
+
+    </div>
+
+    {% block script_jquery %}
+        <script src="http://code.jquery.com/jquery.min.js"></script>
+    {% endblock script_jquery %}
+
+    {% block script_qunit %}
+        <script src="{% static 'qunit/qunit.js' %}"       ></script>
+    {% endblock script_qunit %}
+
+    {% block tested_script %}
+    {% endblock tested_script %}
+
+    {% block test_script %}
+    {% endblock test_script %}
+
+</body>
+</html>
+
