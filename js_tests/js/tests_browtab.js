@@ -13,7 +13,7 @@ Global:  QUnit (?), expect (?), getSelRowIndex (?), rowsNumber (?)
 //-----------------------------------------------------------------------------
 
 var stub, selector;
-QUnit.module( "browtab functions tests", {
+QUnit.module( "browtab listeners", {
     beforeEach: function () {
         selector = "#browtable tbody td";
 //        selector = "#browtable thead";
@@ -28,37 +28,31 @@ QUnit.module( "browtab functions tests", {
 
 //-----------------------------------------------------------------------------
 
+QUnit.test( 'onClick_func', function ( assert ) {
+    var e = {                               // e is needed as onClick argument
+        currentTarget: sinon.stub(),
+    };
+    stub = sinon.stub( window, "selectRow" );
+    var res = onClick_func( e );
+    assert.ok( stub.calledOnce, 'selectRow should be called once' );
+    assert.ok( stub.calledWith( e.currentTarget ), 'selectRow should be called with arg' );
+    assert.equal( res, false, 'onClick_func should return false' );
+});
+
+//-----------------------------------------------------------------------------
+/*  It's impossible to stub function inside on():  $( ... ).on( ..., onClick_func ) ?
 QUnit.test( '$( ... ).on( "click",... STUB onClick_func', function ( assert ) {
     stub = sinon.stub( window, "onClick_func" );
     $( selector ).trigger( 'click' );
     assert.equal( stub.calledOnce, true, 'onClick_func should be called once' );
 });
-
+*/
 //-----------------------------------------------------------------------------
 
 QUnit.test( '$( ... ).on( "click",... STUB selectRow', function ( assert ) {
     stub = sinon.stub( window, "selectRow" );
     $( selector ).trigger( 'click' );
-    assert.equal( stub.calledOnce, true, 'selectRow should be called once' );
-});
-
-QUnit.test( '$( ... ).on( "click",... STUB selectRow 2', function ( assert ) {
-    stub = sinon.stub( window, "selectRow" );
-    $( selector ).trigger( 'click' );
-    assert.equal( stub.calledOnce, true, 'selectRow should be called once' );
-});
-
-//-----------------------------------------------------------------------------
-
-QUnit.test( 'onClick_func', function ( assert ) {
-    var e = {                               // e is needed as onClick argument
-        preventDefault: sinon.stub(),
-        stopPropagation: sinon.stub()
-    };
-    stub = sinon.stub( window, "selectRow" );
-    onClick_func( e );
-    assert.equal( stub.calledOnce, true, 'selectRow should be called once' );
-    assert.equal( e.preventDefault.calledOnce, true, 'event.preventDefault should be called once' );
+    assert.ok( stub.calledOnce, 'selectRow should be called once' );
 });
 
 //-----------------------------------------------------------------------------

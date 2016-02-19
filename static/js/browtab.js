@@ -15,40 +15,23 @@ var normalStyle = "normal";
 set_browtab_listeners(); 
 
 function set_browtab_listeners(){
-    $( "#browtable tbody" ).off( "click", "td").on( "click", "td", function( event ) {
-        onClick_func( event );
-        return false;
-    });
-    $( "#browtable thead" ).off( "click").on( "click", onClick_func );
+    $( "#browtable tbody" ).off( "click", "td").on( "click", "td", onClick_func );
+    $( "#browtable tbody" ).off( "dblclick", "td").on( "dblclick", "td", onDblclick_func );
 }
-
-
 
 // on click
 function onClick_func( event ) {
-    event.preventDefault();
-    event.stopPropagation();
     selectRow( event.currentTarget );
-    return false;
+    return false; // - acts as event.preventDefault() and event.stopPropagation() both.
 }
-//$( "#browtable thead" ).on( "click", onClick_func );
-
-$( "#browtable thead" ).on( "click", function( event ) {
-console.log('#browtable thead click:', 'this=', this );
-console.log('event=',event);
-
-    onClick_func( event );
-    return false;
-});
 
 // on dblclick
-$( "#browtable tbody" ).on( "dblclick", "td", function( event ) {
-console.log('after DOUBLE click:', 'this=', this );
-    event.preventDefault( event );
+function onDblclick_func( event ) {
     selectRow( event.currentTarget );
     runhref();
     return false;
-});
+}
+
 // on keydown
 $( "#browtable tbody" ).on( "keydown", "td", function( event ) {
     event.preventDefault( event );
