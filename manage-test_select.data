@@ -1,1 +1,1 @@
-manage.py test functional_tests_koopsite.tests_index_page_visit 
+manage.py test functional_tests.flats 

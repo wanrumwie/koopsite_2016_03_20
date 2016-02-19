@@ -205,7 +205,7 @@ if __name__ == '__main__':
 
     # Заголовок
     topText='Введіть аргументи до виконання для функції execute_from_command_line'
-    # execute_from_command_line(['manage.py','test', 'functional_tests_koopsite'])
+    # execute_from_command_line(['manage.py','test', 'koopsite'])
 
     # Назви полів вводу Label
     arg1Label = 'Перший аргумент'
@@ -217,7 +217,7 @@ if __name__ == '__main__':
     # Початкові дані в Entry
     arg1 = 'manage.py'
     arg2 = 'test'
-    arg3 = 'functional_tests_koopsite'
+    arg3 = 'functional_tests.koopsite'
     arg3dot = '.'
     arg3add = ['alfa', 'beta', 'gama']
     arg3add0 = 'beta'

@@ -1,12 +1,15 @@
 import json
 from urllib.parse import quote
+
 from django.contrib.auth.models import User
 from django.http.response import HttpResponse
 from django.test import TestCase
-from functional_tests_koopsite.ft_base import DummyUser
+
+from functional_tests.koopsite.ft_base import DummyUser
 from koopsite.functions import parseClientRequest, get_or_none
 from koopsite.viewsajax import ajaxSelRowIndexToSession, \
                         ajaxStartRowIndexFromSession, BrowseTableArray
+
 
 '''
 function selElementArr(){

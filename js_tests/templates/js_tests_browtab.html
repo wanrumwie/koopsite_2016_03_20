@@ -1,0 +1,79 @@
+{% extends "base_js_tests.html" %}
+
+{% load staticfiles %}
+
+{% block title %}
+    Javascript tests - KoopSite - browtab.js
+{% endblock title %}
+
+{% block qunit-fixture %}
+    {% load koop_template_filters %}
+    {% load folder_template_filters %}
+            <table id="browtable"
+                class="scrolltable users8 transformtable khaki-theme"
+                >
+                <thead>
+                    <tr>
+                        {% for j, v in cap.items %}
+                            {% if j != 0 %}
+                                <th id="th{{ j }}"
+                                    data-column-header="{{ v }}">
+                                    <button id="button-sort-{{ j }}"
+                                         title="Сортування">{{ v }}
+                                    </button>
+                                </th>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="tablebody">
+                    <tr><td></td></tr>
+                    {% for i, row in arr.items %}
+                        <tr id="tr-{{ row.0.model }}#{{ row.0.id }}">
+                        {% for j, v in row.items %}
+                            {% if j != 0 %}
+                                <td id="td{{ j }}-{{ row.0.model }}#{{ row.0.id }}"
+                                    headers="th{{ j }}"
+                                    data-column-header="{{ cap|get_at_index:j }}">
+                                    {% if j == 1 %}
+                                        <a href="{% url 'adm-users-profile' row.0.id %}" title="{{ v }}"
+                                            class="flex-container"
+                                            >
+                                            <div class="img-box">
+                                                {% with f=object_list|get_at_index:i %}
+                                                    {% with pic=f.userprofile.picture %}
+                                                        {% if pic and pic != "False"  %}
+                                                            <img src="{% static pic|thumbnail %}"/>
+                                                        {% else %}
+                                                            <div class="instead-img"></div>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                {% endwith %}
+                                            </div>
+                                            <div class="after-img-box">{{ v }}</div>
+                                        </a>
+                                    {% elif j == 5 %}
+                                        <span>{{ v|date:"d.m.Y" }}</span>
+                                    {% elif j == 6 or j == 7 or j == 8 %}
+                                        <img class="padding-y-07"
+                                             src="{% static v|icon_yes_no_unknown %}"/>
+                                    {% else %}
+                                        <span title="{{ v }}">{{ v }}</span>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+{% endblock qunit-fixture %}
+
+{% block tested_script %}
+    <script src="{% static 'js/browtab.js' %}"          ></script>
+{% endblock tested_script %}
+
+{% block test_script %}
+    <script src="{% static 'js/tests_browtab.js' %}"></script>
+{% endblock test_script %}

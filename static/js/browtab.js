@@ -11,18 +11,43 @@ var selElement = {}; // object = selElement.model , selElement.id , selElement.n
 var selectStyle = "selected";
 var normalStyle = "normal";
 
+
+set_browtab_listeners(); 
+
+function set_browtab_listeners(){
+    $( "#browtable tbody" ).off( "click", "td").on( "click", "td", function( event ) {
+        onClick_func( event );
+        return false;
+    });
+    $( "#browtable thead" ).off( "click").on( "click", onClick_func );
+}
+
+
+
 // on click
-$( "#browtable tbody" ).on( "click", "td", function( event ) {
-    event.preventDefault( event );
-    selectRow( this );
-//    return false;
+function onClick_func( event ) {
+    event.preventDefault();
+    event.stopPropagation();
+    selectRow( event.currentTarget );
+    return false;
+}
+//$( "#browtable thead" ).on( "click", onClick_func );
+
+$( "#browtable thead" ).on( "click", function( event ) {
+console.log('#browtable thead click:', 'this=', this );
+console.log('event=',event);
+
+    onClick_func( event );
+    return false;
 });
+
 // on dblclick
 $( "#browtable tbody" ).on( "dblclick", "td", function( event ) {
+console.log('after DOUBLE click:', 'this=', this );
     event.preventDefault( event );
-    selectRow( this );
+    selectRow( event.currentTarget );
     runhref();
-//    return false;
+    return false;
 });
 // on keydown
 $( "#browtable tbody" ).on( "keydown", "td", function( event ) {
@@ -31,9 +56,12 @@ $( "#browtable tbody" ).on( "keydown", "td", function( event ) {
 //    return false;
 });
 
-// Click event doesn't trigger the event on dynamically created elements.
-// We must use on function to trigger the event on dynamically created elements.
-// This is because of $(document).ready(function() :
+/*
+Event handlers are bound only to the currently selected elements; 
+they must exist at the time your code makes the call to .on()
+Thus, Click event doesn't trigger the event on dynamically created elements.
+We must use on function with selector to refer handler as delegated to inner elements (even yet not existing).
+*/
 /*
 This not works for dynamically created elements:
 $(document).ready(function(){
@@ -111,6 +139,7 @@ function storeSelRowIndex() {
     }
 }
 function selectRow( targ ) {    // select row in case of mouse click on it
+console.log('selectRow:', 'targ=', targ );
     // targ - element clicked directly, selRow - closest TR element:
     selRow = $( targ ).closest( "tr" );
     selRowIndex = $( selRow )[0].sectionRowIndex; // within section, i.e. TBODY in this case

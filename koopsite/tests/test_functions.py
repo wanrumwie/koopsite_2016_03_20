@@ -1,16 +1,18 @@
 import json
 import os
 import types
-from PIL import Image
 from unittest.case import skip
+
+from PIL import Image
 from django.contrib.auth.models import User
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.utils import IntegrityError
 from django.test import TestCase
+
 from flats.models import Flat
 from flats.tests.test_base import DummyFlat
 from folders.models import Folder
-from functional_tests_koopsite.ft_base import DummyUser
+from functional_tests.koopsite.ft_base import DummyUser
 from koopsite.functions import round_up_division, AllFieldsMixin, \
     get_namespace_from_dict, get_iconPathForFolder, \
     get_iconPathByFileExt, \

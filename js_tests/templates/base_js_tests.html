@@ -2,16 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
     <title>
 
-        {% block title %}
-        {% endblock title %}
 
     </title>
     {% load staticfiles %}
 
     {% block link_qunit %}
-        <link rel="stylesheet" href="{% static 'qunit/qunit.css' %}">
+        <link rel="stylesheet" href="{% static 'qunit/qunit.css' %}"
+              type="text/css" media="screen">
     {% endblock link_qunit %}
 
 </head>
@@ -20,7 +20,13 @@
 
     {% include "block_href_js_tests.html" %}
 
+
+    <h1 id="qunit-header">
+        QUnit/Sinon.JS Test{% block title %}{% endblock title %}</h1>
     <div id="qunit"></div>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
 
     <div id="qunit-fixture">
 
@@ -36,6 +42,17 @@
     {% block script_qunit %}
         <script src="{% static 'qunit/qunit.js' %}"       ></script>
     {% endblock script_qunit %}
+
+    {% block script_sinon %}
+        <script src="{% static 'qunit/sinon.js' %}"       ></script>
+    {% endblock script_sinon %}
+
+    {% block script_sinon_qunit %}
+        <script src="{% static 'qunit/sinon-qunit.js' %}" ></script>
+    {% endblock script_sinon_qunit %}
+
+    {% block script_library %}
+    {% endblock script_library %}
 
     {% block tested_script %}
     {% endblock tested_script %}

@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/koopsite.iml" filepath="$PROJECT_DIR$/.idea/koopsite.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../PyRoman/py-xl/.idea/py-xl.iml" filepath="$PROJECT_DIR$/../../PyRoman/py-xl/.idea/py-xl.iml" />
     </modules>
   </component>
 </project>

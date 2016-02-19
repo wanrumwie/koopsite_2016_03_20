@@ -31,6 +31,7 @@ def exec_test(arg1, arg2, arg3):
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "koopsite.settings")
     from django.core.management import execute_from_command_line
     # execute_from_command_line(sys.argv)
+    print('execute_from_command_line([%s, %s, %s])' % (arg1, arg2, arg3))
     execute_from_command_line([arg1, arg2, arg3])
 
 def get_defaults(fname):
@@ -74,7 +75,7 @@ if __name__ == '__main__':
 
     # Заголовок
     topText='Введіть аргументи до виконання для функції execute_from_command_line'
-    # execute_from_command_line(['manage.py','test', 'functional_tests_koopsite'])
+    # execute_from_command_line(['manage.py','test', 'koopsite'])
 
     # Назви полів вводу Label
     arg1Label = 'Перший аргумент'

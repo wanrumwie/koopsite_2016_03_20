@@ -2,6 +2,7 @@ import json
 import types
 from unittest.case import skipIf
 from datetime import timedelta
+
 from django.contrib.auth.models import User, AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -10,6 +11,7 @@ from django.http.response import HttpResponse
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.timezone import now
+
 from folders.functions import response_for_download, response_for_download_zip, get_folders_tree_HTML
 from folders.models import Folder, Report
 from folders.tests.test_base import DummyFolder, create_byte_string
@@ -20,9 +22,9 @@ from folders.viewsajaxfolder import FolderContentsArray, FolderContents, \
                                     AjaxReportDelete, XHRTableRowView, \
                                     XHRReportDownload, XHRFolderDownload, \
                                     XHRReportUpload, ajaxFoldersTreeFromBase
-from functional_tests_koopsite.ft_base import DummyUser
+from functional_tests.koopsite.ft_base import DummyUser
 from koopsite.functions import get_or_none, \
-                                dict_from_json_str_or_bytes, dict_print
+                                dict_from_json_str_or_bytes
 from koopsite.settings import SKIP_TEST, MAX_FILE_SIZE
 from koopsite.tests.test_views import setup_view
 from koopsite.tests.test_viewsajax import DummyAjaxRequest, \
