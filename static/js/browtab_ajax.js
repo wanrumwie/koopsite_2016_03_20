@@ -13,10 +13,18 @@ console.log('finished ajax_startRowIndexFromSession()');
     return false;
 });
 
-$( '#selRowIndex' ).on( "change", function() {
+set_browtab_ajax_listeners(); 
+
+function set_browtab_ajax_listeners(){
+    $( '#selRowIndex'     ).off( "change"        ).on( "change",         onChange_handler );
+}
+function onChange_handler( event ) {
+console.log('onChange_handler start');
     ajax_selRowIndexToSession();                    // Sending selected row index to session
+console.log('onChange_handler finish');
     return false;
-});
+}
+
 
 /*
  *********************************************************************

@@ -11,39 +11,33 @@ var selElement = {}; // object = selElement.model , selElement.id , selElement.n
 var selectStyle = "selected";
 var normalStyle = "normal";
 
-
 set_browtab_listeners(); 
 
 function set_browtab_listeners(){
-    $( "#browtable tbody" ).off( "click", "td").on( "click", "td", onClick_func );
-    $( "#browtable tbody" ).off( "dblclick", "td").on( "dblclick", "td", onDblclick_func );
+    $( "#browtable tbody" ).off( "click",    "td").on( "click",    "td", onClick_handler );
+    $( "#browtable tbody" ).off( "dblclick", "td").on( "dblclick", "td", onDblclick_handler );
+    $( "#browtable tbody" ).off( "keydown",  "td").on( "keydown",  "td", onKeydown_handler );
 }
-
-// on click
-function onClick_func( event ) {
+function onClick_handler( event ) {
     selectRow( event.currentTarget );
     return false; // - acts as event.preventDefault() and event.stopPropagation() both.
 }
-
-// on dblclick
-function onDblclick_func( event ) {
+function onDblclick_handler( event ) {
     selectRow( event.currentTarget );
     runhref();
     return false;
 }
-
-// on keydown
-$( "#browtable tbody" ).on( "keydown", "td", function( event ) {
-    event.preventDefault( event );
+function onKeydown_handler( event ) {
     onKeyDown( event.which );
-//    return false;
-});
+    return false;
+}
+
 
 /*
 Event handlers are bound only to the currently selected elements; 
 they must exist at the time your code makes the call to .on()
 Thus, Click event doesn't trigger the event on dynamically created elements.
-We must use on function with selector to refer handler as delegated to inner elements (even yet not existing).
+We must use on() method with selector to refer handler as delegated to inner elements (even yet not existing).
 */
 /*
 This not works for dynamically created elements:
@@ -87,7 +81,7 @@ function getSelRowIndex( i ){
     return selRowIndex;
 }
 function selRowFocus(){
-    // set focus to selected row
+    // set focus to href in selected row
     $( selRow ).find( 'A' ).focus();
 }
 
@@ -97,11 +91,11 @@ function markSelRow() {
     selElement = get_m_id_n_ByIndex( selRowIndex );     // Get model, name & id of selected element
     storeSelRowIndex();                                 // Store selRowIndex in template form:
     selRowFocus();              // set focus to Anchor tag, otherwise BODY will be an active element,
-                                //and we can't activate onkeydown in template.
+                                // and we can't activate onkeydown in template.
     return false;
 }
-function runhref() {
-    location.href= $( selRow ).find( 'A' ).attr( 'href' );
+function runhref() {            // runhref can be tested by functional tests only!
+    location.href = $( selRow ).find( 'A' ).attr( 'href' );
 }
 function storeSelRowIndex() {
     var change = false;
@@ -178,6 +172,7 @@ function onKeyDown( k ) {       // select row in case of keyboard arrows pressed
             default:
                 break;
           }
+console.log('selRowIndex =', selRowIndex, ' iShift =', iShift);
           setSelRow( selRowIndex + iShift ); 
         }
     }

@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>
-
-
     </title>
     {% load staticfiles %}
 
@@ -18,11 +16,11 @@
 
 <body>
 
-    {% include "block_href_js_tests.html" %}
-
 
     <h1 id="qunit-header">
-        QUnit/Sinon.JS Test{% block title %}{% endblock title %}</h1>
+        QUnit/Sinon.JS Test --- {% block title %}{% endblock title %}
+        {% include "block_href_js_tests.html" %}
+    </h1>
     <div id="qunit"></div>
     <h2 id="qunit-banner"></h2>
     <h2 id="qunit-userAgent"></h2>
