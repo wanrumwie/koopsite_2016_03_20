@@ -164,18 +164,18 @@ function onKeyDown( k ) {       // select row in case of keyboard arrows pressed
                 }
                 break;
             case 1000:
-                iShift = rowsNumber;     // to the end of list (more then necessary)
+                iShift = rowsNumber;     // to the end of list (with stock)
                 break;
             case -1000:
-                iShift = -rowsNumber;     // to the begin of list (more then necessary)
+                iShift = -rowsNumber;     // to the begin of list (with stock)
                 break;
             default:
                 break;
           }
-console.log('onKeyDown:', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
           setSelRow( selRowIndex + iShift ); 
         }
     }
+//console.log('onKeyDown:', 'k =', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
     return false;
 }
 

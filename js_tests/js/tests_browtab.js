@@ -268,6 +268,7 @@ QUnit.test( '#4', function ( assert ) {
                 'storeSelRowIndex should store proper values to html' );
     assert.notOk( stub.auxiliary_handler.called, 'on change handler should not be called' );
 });
+
 //=============================================================================
 QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in tbody_hidden.xlsx file
     var arr = {};
@@ -357,7 +358,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -460,7 +460,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -563,7 +562,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -666,7 +664,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -769,7 +766,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -872,7 +868,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -975,7 +970,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -1078,7 +1072,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
@@ -1181,7 +1174,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
             var k   = 36;    // key pressed code
             var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
             var res = onKeyDown( k );
-//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
