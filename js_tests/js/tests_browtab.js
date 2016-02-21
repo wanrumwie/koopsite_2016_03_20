@@ -1228,3 +1228,60 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
     //-------------------------------------------------------------------------
 } );
 //=============================================================================
+
+//=============================================================================
+
+//=============================================================================
+QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    var stub;
+    var arr = {};
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+        arr.length = 55;
+        stub.get_qs_TR_arr = sinon.stub( window, "get_qs_TR_arr" );
+        stub.get_qs_TR_arr.returns( arr );
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+    } );
+    QUnit.test( "create_qs_TR_arr", function( assert ) {
+        expect( 5 );
+        var res = create_qs_TR_arr();
+        assert.ok( stub.get_qs_TR_arr.calledOnce, 'get_qs_TR_arr should be called once' );
+        assert.ok( stub.get_qs_TR_arr.calledWith( true ), 'get_qs_TR_arr should be called with arg' );
+        assert.equal( qs_TR_arr, arr, 'create_qs_TR_arr should set value to global object' );
+        assert.equal( rowsNumber, 55, 'create_qs_TR_arr should set value to global object' );
+        assert.equal( res, undefined, 'create_qs_TR_arr should return undefined' );
+        } );
+    QUnit.test( "restore_qs_TR_arr", function( assert ) {
+        expect( 5 );
+        var res = restore_qs_TR_arr();
+        assert.ok( stub.get_qs_TR_arr.calledOnce, 'get_qs_TR_arr should be called once' );
+        assert.ok( stub.get_qs_TR_arr.calledWith( false ), 'get_qs_TR_arr should be called with arg' );
+        assert.equal( qs_TR_arr, arr, 'restore_qs_TR_arr should set value to global object' );
+        assert.equal( rowsNumber, 55, 'restore_qs_TR_arr should set value to global object' );
+        assert.equal( res, undefined, 'restore_qs_TR_arr should return undefined' );
+        } );
+    QUnit.test( "getTRfromTbodyByIndex", function( assert ) {
+        expect( 1 );
+        var i = 1;
+        var res = getTRfromTbodyByIndex( i );
+        assert.equal( res[0], $( "#tr_qwerty_s" )[0], 'getTRfromTbodyByIndex should return proper value' );
+        } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#1", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 1 );
+            assert.equal( false, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+} );
+//=============================================================================

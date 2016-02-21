@@ -195,7 +195,7 @@ function restore_qs_TR_arr() {
     rowsNumber = qs_TR_arr.length;
 }
 function getTRfromTbodyByIndex( i ) {
-    TR = $( "#browtable" ).find( "tbody>tr:eq(" + i + ")" );
+    var TR = $( "#browtable" ).find( "tbody>tr:eq(" + i + ")" );
     return TR;
 }
 function get_qs_TR_arr( is_start ) {
