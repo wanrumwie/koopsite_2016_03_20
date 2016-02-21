@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/browtab.js" afterPath="$PROJECT_DIR$/static/js/browtab.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/js/example.js" afterPath="$PROJECT_DIR$/js_tests/js/example.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/js_tests_browtab.html" afterPath="$PROJECT_DIR$/js_tests/templates/js_tests_browtab.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/js/tests_browtab.js" afterPath="$PROJECT_DIR$/js_tests/js/tests_browtab.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -32,11 +33,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="browtab.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/static/js/browtab.js">
+      <file leaf-file-name="js_tests_browtab.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js_tests/templates/js_tests_browtab.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5336323" vertical-offset="4297" max-vertical-offset="12740">
-              <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.6682616" vertical-offset="595" max-vertical-offset="3458">
+              <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -108,10 +109,10 @@
         <option value="$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html" />
         <option value="$PROJECT_DIR$/js_tests/templates/base_js_tests.html" />
         <option value="$PROJECT_DIR$/js_tests/templates/js_tests.html" />
-        <option value="$PROJECT_DIR$/js_tests/templates/js_tests_browtab.html" />
-        <option value="$PROJECT_DIR$/static/js/browtab.js" />
         <option value="$PROJECT_DIR$/js_tests/js/example.js" />
         <option value="$PROJECT_DIR$/js_tests/js/tests_browtab.js" />
+        <option value="$PROJECT_DIR$/static/js/browtab.js" />
+        <option value="$PROJECT_DIR$/js_tests/templates/js_tests_browtab.html" />
       </list>
     </option>
   </component>
@@ -1179,7 +1180,11 @@
       <created>1456054923653</created>
       <updated>1456054923653</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <task id="LOCAL-00133" summary="KoopSite:  js_tests: Continue .....">
+      <created>1456058006274</created>
+      <updated>1456058006274</updated>
+    </task>
+    <option name="localTasksCounter" value="134" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1241,7 +1246,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="KoopSite:  koopsite test views - дійшов до половини" />
     <MESSAGE value="KoopSite:  koopsite test views - дійшов майже до кінця ))" />
     <MESSAGE value="KoopSite:  koopsite test views - завершив всі CBV, зробив DRY в koop_base_change,html" />
     <MESSAGE value="KoopSite:  koopsite test views - ready" />
@@ -1266,7 +1270,8 @@
     <MESSAGE value="KoopSite:  js_tests: continue ..." />
     <MESSAGE value="KoopSite:  js_tests: continue ... function onKeyDown( k )" />
     <MESSAGE value="KoopSite:  js_tests: function onKeyDown( k ) - ready. Continue the rest ..." />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  js_tests: function onKeyDown( k ) - ready. Continue the rest ..." />
+    <MESSAGE value="KoopSite:  js_tests: Continue ....." />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  js_tests: Continue ....." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1620,14 +1625,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/templates/js_tests_browtab.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6267943" vertical-offset="517" max-vertical-offset="3328">
-          <caret line="35" column="56" selection-start-line="35" selection-start-column="56" selection-end-line="35" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js_tests/js/example.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6099707" vertical-offset="0" max-vertical-offset="682">
@@ -1636,18 +1633,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/js/tests_browtab.js">
+    <entry file="file://$PROJECT_DIR$/static/js/browtab.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.038863976" vertical-offset="32110" max-vertical-offset="33618">
-          <caret line="1236" column="0" selection-start-line="1236" selection-start-column="0" selection-end-line="1236" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.76681614" vertical-offset="12175" max-vertical-offset="12844">
+          <caret line="488" column="0" selection-start-line="488" selection-start-column="0" selection-end-line="488" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/js/browtab.js">
+    <entry file="file://$PROJECT_DIR$/js_tests/js/tests_browtab.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5336323" vertical-offset="4297" max-vertical-offset="12740">
-          <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.76681614" vertical-offset="35159" max-vertical-offset="35828">
+          <caret line="1372" column="0" selection-start-line="1372" selection-start-column="0" selection-end-line="1372" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/templates/js_tests_browtab.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6682616" vertical-offset="595" max-vertical-offset="3458">
+          <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
           <folding />
         </state>
       </provider>

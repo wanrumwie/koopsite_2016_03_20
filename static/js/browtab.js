@@ -202,9 +202,9 @@ function get_qs_TR_arr( is_start ) {
     var i, j, ob, TR;
     var arr = [];   // 2D array - table
     var json_arr = $( "#json_arr" ).val();
-//consile.log('json_arr =, json_arr);
+//consile.log('json_arr =', json_arr);  // TODO-this operator terminate function!!!
     var qs_obj = JSON.parse( json_arr ); // Object not Array, because JSON parse num indexes as str
-//consile.log('qs_obj =, qs_obj);
+//consile.log('qs_obj =', qs_obj);      // TODO-this operator terminate function!!!
     for ( i in qs_obj ) {
         arr[i] = [];
         if ( is_start ) { // store TR_start for further restoring.
@@ -214,13 +214,17 @@ function get_qs_TR_arr( is_start ) {
         else { // restoring from TR_start, eg before new filter apply or filter cancel.
             TR = TR_start[i];
         }
+        /*  // old method:
         ob = {};
         ob.TR     = TR;  // add DOM TR object to array as 0th column 
         ob.model  = qs_obj[i][0].model;  
         ob.id     = qs_obj[i][0].id;
         ob.name   = qs_obj[i][0].name;
         arr[i][0] = ob;
-        for ( j = 1 ; j <= columnsNumber; j++ ) {
+        */
+        arr[i][0] = qs_obj[i][0];   // arr[i][0] = {model:..., id:..., name:...}
+        arr[i][0].TR = TR;          // add DOM TR object: {model:..., id:..., name:..., TR:...}
+        for ( j = 1 ; j <= columnsNumber; j++ ) { // simple storing from {} to []
             arr[i][j] = qs_obj[i][j];
         }
     }

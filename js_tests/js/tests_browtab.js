@@ -1228,10 +1228,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
     //-------------------------------------------------------------------------
 } );
 //=============================================================================
-
-//=============================================================================
-
-//=============================================================================
 QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test described in tbody_hidden.xlsx file
     var stub;
     var arr = {};
@@ -1271,17 +1267,106 @@ QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test de
         var res = getTRfromTbodyByIndex( i );
         assert.equal( res[0], $( "#tr_qwerty_s" )[0], 'getTRfromTbodyByIndex should return proper value' );
         } );
+} );
+
+//=============================================================================
+var columnsNumber;  // var declared in another js file, not in browtab.js 
+QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    var stub;
+    var i, j, TR;
+    var expected_arr = [];   // 2D array - table
+    var qs_obj = {};    // array stringified on server side
+    var expected_TR_start = [];
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+        qs_obj = { 
+                0: {
+                    0: {'id': '3', 'model': 'user', 'name': 'george'}, 
+                    1: 'george', 
+                    2: ''
+                    }, 
+                1: {
+                    0: {'id': '1', 'model': 'user', 'name': 'john'}, 
+                    1: 'john', 
+                    2: ''
+                    },
+                2: {
+                    0: {'id': '3', 'model': 'folder', 'name': 'fjohn'}, 
+                    1: 'fjohn', 
+                    2: ''
+                    }
+                };
+        var json_string = JSON.stringify( qs_obj ); // array stored in html by server
+        $( "#json_arr" ).val( json_string );
+        columnsNumber = 2;
+        for ( i in qs_obj ) {
+            expected_arr[i] = [];
+            TR = getTRfromTbodyByIndex( i );    // already tested function
+            TR_start[i] = TR;
+            expected_TR_start[i] = TR;
+            expected_arr[i][0] = qs_obj[i][0];
+            expected_arr[i][0].TR = TR;
+            for ( j = 1 ; j <= columnsNumber; j++ ) {
+                expected_arr[i][j] = qs_obj[i][j];
+            }
+        }
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+    } );
+    QUnit.test( "is_start=true", function( assert ) {
+        expect( 2 );
+        TR_start = []; // clear array before this test
+        var res = get_qs_TR_arr( true );
+        assert.deepEqual( TR_start, expected_TR_start, 'get_qs_TR_arr should set value to global object' );
+        assert.deepEqual( res, expected_arr, 'get_qs_TR_arr should return proper value' );
+        } );
+    QUnit.test( "is_start=false", function( assert ) {
+        expect( 2 );
+        var res = get_qs_TR_arr( false );
+        assert.deepEqual( TR_start, expected_TR_start, 'get_qs_TR_arr should set value to global object' );
+        assert.deepEqual( res, expected_arr, 'get_qs_TR_arr should return proper value' );
+        } );
     //-------------------------------------------------------------------------
-    QUnit.module( "#1", function( hooks ) {
+    QUnit.module( "Get different data from qs_TR_arr", function( hooks ) {
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            qs_TR_arr = get_qs_TR_arr( true ); // already tested function
         } );
         hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
         } );
-        QUnit.test( 'Page up', function ( assert ) {
+        QUnit.test( 'getTRbyIndex', function ( assert ) {
             expect( 1 );
-            assert.equal( false, false, 'onKeyDown should return false' );
+            qs_TR_arr[1][0].TR = 'qwerty';
+            var res = getTRbyIndex( 1 );
+            assert.equal( res, 'qwerty', 'getTRbyIndex should return proper value' );
+        });
+        QUnit.test( 'get_m_id_n_ByIndex', function ( assert ) {
+            expect( 1 );
+            var expected = {'id': '1', 'model': 'user', 'name': 'john'};
+            var res = get_m_id_n_ByIndex( 1 );
+            assert.deepEqual( res, expected, 'get_m_id_n_ByIndex should return proper value' );
+        });
+        QUnit.test( 'getRowIndexbyID', function ( assert ) {
+            expect( 5 );
+            assert.equal( getRowIndexbyID( 'user'  , 3 ), 0, 'getRowIndexbyID should return proper value' );
+            assert.equal( getRowIndexbyID( 'user'  , 1 ), 1, 'getRowIndexbyID should return proper value' );
+            assert.equal( getRowIndexbyID( 'folder', 3 ), 2, 'getRowIndexbyID should return proper value' );
+            assert.equal( getRowIndexbyID( 'report', 3 ), 0, 'getRowIndexbyID should return proper value' );
+            assert.equal( getRowIndexbyID( 'user'  , 9 ), 0, 'getRowIndexbyID should return proper value' );
+        });
+        QUnit.test( 'getTRbyID', function ( assert ) {
+            expect( 5 );
+            assert.equal( getTRbyID( 'user'  , 3 ), getTRbyIndex( 0 ), 'getTRbyID should return proper value' );
+            assert.equal( getTRbyID( 'user'  , 1 ), getTRbyIndex( 1 ), 'getTRbyID should return proper value' );
+            assert.equal( getTRbyID( 'folder', 3 ), getTRbyIndex( 2 ), 'getTRbyID should return proper value' );
+            assert.equal( getTRbyID( 'report', 3 ), undefined, 'getTRbyID should return proper value' );
+            assert.equal( getTRbyID( 'user'  , 9 ), undefined, 'getTRbyID should return proper value' );
         });
     } );
     //-------------------------------------------------------------------------
 } );
 //=============================================================================
+
