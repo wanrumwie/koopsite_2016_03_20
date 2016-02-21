@@ -269,64 +269,970 @@ QUnit.test( '#4', function ( assert ) {
     assert.notOk( stub.auxiliary_handler.called, 'on change handler should not be called' );
 });
 //=============================================================================
-
-var arr = {};
-var tbody_tr_selector;
-QUnit.module( "browtab onKeyDown", {
-    beforeEach: function () {
+QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    var arr = {};
+    var tbody_tr_selector;
+    var stub;
+    hooks.beforeEach( function( assert ) {
         stub = {};
         tbody_tr_selector = "#browtable tbody tr";
-        arr.i_top   = 19;    // index of first visible record
-        arr.i_bot   = 39;    // index of last visible record
-        selRowIndex = 29;    // selected row index 0 <= selRowIndex < rowsNumber
-        rowsNumber  = 100;  // number of all records
         stub.runhref = sinon.stub( window, "runhref" );
         stub.getVisibleIndex = sinon.stub( window, "getVisibleIndex" );
         stub.getVisibleIndex.returns( arr );
         stub.setSelRow = sinon.stub( window, "setSelRow" );
-    },
-    afterEach: function () {
+    } );
+    hooks.afterEach( function( assert ) {
         var meth;
         for ( meth in stub ) {
             stub[meth].restore();
         }
-    }
-});
-QUnit.test( '#1 13 Enter key', function ( assert ) {
-    expect( 5 );
-    var k   = 13;    // key pressed code
-    var res = onKeyDown( k );
-    assert.ok( stub.runhref.calledOnce, 'runhref should be called once' );
-    assert.ok( stub.runhref.calledWith(), 'runhref should be called with arg' );
-    assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
-    assert.notOk( stub.setSelRow.called, 'setSelRow should not be called' );
-    assert.equal( res, false, 'onKeyDown should return false' );
-});
-QUnit.test( '#1 33 Page up', function ( assert ) {
-    expect( 6 );
-    var k   = 33;    // key pressed code
-    var iShift = -10;
-    var res = onKeyDown( k );
-    assert.notOk( stub.runhref.called, 'runhref should not be called' );
-    assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-    assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
-    assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
-    assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
-    assert.equal( res, false, 'onKeyDown should return false' );
-});
-QUnit.test( '#1 34 Page down', function ( assert ) {
-    expect( 6 );
-    var k   = 34;    // key pressed code
-console.log('k =', k);    
-    var iShift = 10;
-    var res = onKeyDown( k );
-    assert.notOk( stub.runhref.called, 'runhref should not be called' );
-    assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-    assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
-    assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
-    assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
-    assert.equal( res, false, 'onKeyDown should return false' );
-});
-
+    } );
+    QUnit.test( "Enter key", function( assert ) {
+        expect( 5 );
+        var k   = 13;    // key pressed code
+        var res = onKeyDown( k );
+        assert.ok( stub.runhref.calledOnce, 'runhref should be called once' );
+        assert.ok( stub.runhref.calledWith(), 'runhref should be called with arg' );
+        assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+        assert.notOk( stub.setSelRow.called, 'setSelRow should not be called' );
+        assert.equal( res, false, 'onKeyDown should return false' );
+        } );
+    QUnit.test( "Improper key", function( assert ) {
+        expect( 4 );
+        var k   = 0;    // key pressed code
+        var res = onKeyDown( k );
+        assert.notOk( stub.runhref.called, 'runhref should not be called' );
+        assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+        assert.notOk( stub.setSelRow.called, 'setSelRow should not be called' );
+        assert.equal( res, false, 'onKeyDown should return false' );
+        } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#1", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 22;    // number of all records
+            arr.i_top   =  8;    // index of first visible record
+            arr.i_bot   = 13;    // index of last visible record
+            selRowIndex = 10;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -2; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 3; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#2", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 22;    // number of all records
+            arr.i_top   =  8;    // index of first visible record
+            arr.i_bot   = 13;    // index of last visible record
+            selRowIndex =  8;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#3", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 22;    // number of all records
+            arr.i_top   =  8;    // index of first visible record
+            arr.i_bot   = 13;    // index of last visible record
+            selRowIndex = 13;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#4", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 22;    // number of all records
+            arr.i_top   =  2;    // index of first visible record
+            arr.i_bot   =  7;    // index of last visible record
+            selRowIndex =  2;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#5", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 22;    // number of all records
+            arr.i_top   = 15;    // index of first visible record
+            arr.i_bot   = 20;    // index of last visible record
+            selRowIndex = 20;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#6", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 5;    // number of all records
+            arr.i_top   = 0;    // index of first visible record
+            arr.i_bot   = 4;    // index of last visible record
+            selRowIndex = 2;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -2; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 2; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#7", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 1;    // number of all records
+            arr.i_top   = 0;    // index of first visible record
+            arr.i_bot   = 0;    // index of last visible record
+            selRowIndex = 0;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = 0; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 0; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#8", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 22;    // number of all records
+            arr.i_top   =  8;    // index of first visible record
+            arr.i_bot   = 13;    // index of last visible record
+            selRowIndex =  6;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 7; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "#9", function( hooks ) {
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            tbody_tr_selector = "#browtable tbody tr";
+            rowsNumber  = 22;    // number of all records
+            arr.i_top   =  8;    // index of first visible record
+            arr.i_bot   = 13;    // index of last visible record
+            selRowIndex = 15;    // selected row index 0 <= selRowIndex < rowsNumber
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( 'Page up', function ( assert ) {
+            expect( 6 );
+            var k   = 33;    // key pressed code
+            var iShift = -7; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Page down', function ( assert ) {
+            expect( 6 );
+            var k   = 34;    // key pressed code
+            var iShift = 5; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
+            assert.ok( stub.getVisibleIndex.calledWith( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'End key', function ( assert ) {
+            expect( 5 );
+            var k   = 35;    // key pressed code
+            var iShift = rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Home key', function ( assert ) {
+            expect( 5 );
+            var k   = 36;    // key pressed code
+            var iShift = -rowsNumber; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+//console.log('test #1  :', 'k=', k, 'selRowIndex =', selRowIndex, ' iShift =', iShift);
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Left arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 37;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Up arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 38;    // key pressed code
+            var iShift = -1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Right arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 39;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+        QUnit.test( 'Down arrow key', function ( assert ) {
+            expect( 5 );
+            var k   = 40;    // key pressed code
+            var iShift = 1; // expected value of iShift inside onKeyDown()
+            var res = onKeyDown( k );
+            assert.notOk( stub.runhref.called, 'runhref should not be called' );
+            assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex + iShift ), 'setSelRow should be called with arg' );
+            assert.equal( res, false, 'onKeyDown should return false' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+} );
 //=============================================================================
-
