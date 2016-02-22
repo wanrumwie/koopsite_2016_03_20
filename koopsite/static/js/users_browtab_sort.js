@@ -38,7 +38,7 @@ function ordering( col ){
     qs_TR_arr = sort_table( qs_TR_arr, col, orderAsc[col] );
     display_qs_TR_arr();
 //console.log('display_qs_TR_arr: after: -------------------');
-//console.log('selRow =', selRow);
+//console.log('selTR =', selTR);
 //console.log('selRowIndex =', selRowIndex);
 //console.log('selElement =', selElement);
 //console.log('=============================================');

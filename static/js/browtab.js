@@ -5,7 +5,7 @@ var rowsNumber;
 var qs_TR_arr;       // 2D Array of queryset data from server + TR DOM object for each table row.
 var qs_TR_arr_start; // the same, obtained from view at start of loaded ppage end still unchanged.
 var TR_start = [];   // array for storing <tr> data immediately after page loaded
-var selRow;          // content of <tr>
+var selTR;           // selected <tr> DOM in <tbody>
 var selRowIndex;     // index of currently selected row
 var selElement = {}; // object = selElement.model , selElement.id , selElement.name
 var selectStyle = "selected";
@@ -63,8 +63,8 @@ function setStartRow() {    // select row with startRowIndex from template
 function setSelRow( i ){
     if ( rowsNumber > 0 ) {
         selRowIndex = getSelRowIndex( i );
-        // selRow = rowList[selRowIndex];
-        selRow = getTRbyIndex( selRowIndex );
+        // selTR = rowList[selRowIndex];
+        selTR = getTRbyIndex( selRowIndex );
         scrollToRow( selRowIndex );
         markSelRow();
     }
@@ -82,12 +82,12 @@ function getSelRowIndex( i ){
 }
 function selRowFocus(){
     // set focus to href in selected row
-    $( selRow ).find( 'A' ).focus();
+    $( selTR ).find( 'A' ).focus();
 }
 
 function markSelRow() {
     $( '.' + selectStyle ).toggleClass( selectStyle );  // set row elements to normal style
-    $( selRow ).toggleClass( selectStyle );             // change Style of all selected row children
+    $( selTR ).toggleClass( selectStyle );             // change Style of all selected row children
     selElement = get_m_id_n_ByIndex( selRowIndex );     // Get model, name & id of selected element
     storeSelRowIndex();                                 // Store selRowIndex in template form:
     selRowFocus();              // set focus to Anchor tag, otherwise BODY will be an active element,
@@ -95,7 +95,7 @@ function markSelRow() {
     return false;
 }
 function runhref() {            // runhref can be tested by functional tests only!
-    location.href = $( selRow ).find( 'A' ).attr( 'href' );
+    location.href = $( selTR ).find( 'A' ).attr( 'href' );
 }
 function storeSelRowIndex() {
     var change = false;
@@ -117,9 +117,9 @@ function storeSelRowIndex() {
 }
 function selectRow( targ ) {    // select row in case of mouse click on it
 console.log('selectRow:', 'targ=', targ );
-    // targ - element clicked directly, selRow - closest TR element:
-    selRow = $( targ ).closest( "tr" );
-    selRowIndex = $( selRow )[0].sectionRowIndex; // within section, i.e. TBODY in this case
+    // targ - element clicked directly, selTR - closest TR element:
+    selTR = $( targ ).closest( "tr" );
+    selRowIndex = $( selTR )[0].sectionRowIndex; // within section, i.e. TBODY in this case
     markSelRow();
     return false;
 }
@@ -291,7 +291,7 @@ function display_qs_TR_arr(){
         $( "#browtable tbody" ).append( TR ); 
     }
     selRowIndex = getRowIndexbyID( selElement.model, selElement.id ); // new selRowIndex by unchainged selElement model & id
-    setSelRow( selRowIndex );                           // setting new selRow & selElement for just chainged selRowIndex
+    setSelRow( selRowIndex );                           // setting new selTR & selElement for just chainged selRowIndex
     selElement = get_m_id_n_ByIndex( selRowIndex );      
     storeSelRowIndex();     // Store selRowIndex in template form:
     scrollToRow( selRowIndex );
@@ -387,7 +387,7 @@ function deleteElement() {
      // Delete selected element from html
      // and select its neighbour using selElement global value.
     qs_TR_arr.splice( selRowIndex, 1 );  // remove 1 element at index selRowIndex in qs_TR_arr  
-    $( selRow ).remove();    // remove TR and child elements. 
+    $( selTR ).remove();    // remove TR and child elements. 
     rowsNumber = qs_TR_arr.length;
     setSelRow( selRowIndex ); // former selRowIndex of deleted row will point the next (or last) element
     selRowFocus();
@@ -426,7 +426,7 @@ function changeSelElement( changes, supplement ) {
 console.log('after: changeSelElement( changes ) : ========================');
 console.log('changes=', changes);
 console.log('supplement=', supplement);
-console.log('selRow =', selRow);
+console.log('selTR =', selTR);
 console.log('selRowIndex =', selRowIndex);
 console.log('selElement =', selElement);
 console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);

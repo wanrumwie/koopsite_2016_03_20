@@ -88,7 +88,7 @@ function addNewElement( changes, supplement  ) {
 console.log('after: addNewElement( changes ) : ========================');
 console.log('changes=', changes);
 console.log('supplement=', supplement);
-console.log('selRow =', selRow);
+console.log('selTR =', selTR);
 console.log('selRowIndex =', selRowIndex);
 console.log('selElement =', selElement);
 console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
@@ -99,7 +99,7 @@ function moveElement() {
      // Remove selected element from html (after moving in another folder)
      // and select its neighbour using selElement global value.
     qs_TR_arr.splice( selRowIndex, 1);  // remove 1 element at index selRowIndex in qs_TR_arr  
-    $( selRow ).remove();    // remove TR and child elements. 
+    $( selTR ).remove();    // remove TR and child elements. 
     rowsNumber = qs_TR_arr.length;
     setSelRow( selRowIndex ); // former selRowIndex of moved row will point the next (or last) element
     selRowFocus();

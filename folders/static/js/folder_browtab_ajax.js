@@ -9,7 +9,7 @@ console.log('start loading folder_browtab_ajax.js');
 function ajaxSuccessHandler( sr ) {
 console.log('ajaxSuccessHandler(sr): ==================================');
 console.log('sr=', sr);
-console.log('selRow =', selRow);
+console.log('selTR =', selTR);
 console.log('selRowIndex =', selRowIndex);
 console.log('selElement =', selElement);
 console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
@@ -57,7 +57,7 @@ console.log('sr=', sr);
             break;
     }
 //console.log('after: xhrSuccessHandler( sr )  : ========================');
-//console.log('selRow =', selRow);
+//console.log('selTR =', selTR);
 //console.log('selRowIndex =', selRowIndex);
 //console.log('selElement =', selElement);
 //console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);

@@ -114,12 +114,10 @@ QUnit.test( 'setStartRow', function ( assert ) {
 });
 QUnit.test( 'setSelRow', function ( assert ) {
     expect( 11 );
-    stub.getSelRowIndex = sinon.stub( window, "getSelRowIndex" );
-    stub.getSelRowIndex.returns( 7 );
-    stub.getTRbyIndex = sinon.stub( window, "getTRbyIndex" );
-    stub.getTRbyIndex.returns( 9 );
-    stub.scrollToRow = sinon.stub( window, "scrollToRow" );
-    stub.markSelRow = sinon.stub( window, "markSelRow" );
+    stub.getSelRowIndex = sinon.stub( window, "getSelRowIndex" ).returns( 7 );
+    stub.getTRbyIndex   = sinon.stub( window, "getTRbyIndex" ).returns( 9 );
+    stub.scrollToRow    = sinon.stub( window, "scrollToRow" );
+    stub.markSelRow     = sinon.stub( window, "markSelRow" );
     rowsNumber = 10;
     var res = setSelRow( 5 );
     assert.equal( res, undefined, 'setSelRow should return undefined' );
@@ -134,7 +132,7 @@ QUnit.test( 'setSelRow', function ( assert ) {
     assert.ok( stub.markSelRow.calledOnce, 'markSelRow should be called once' );
     assert.ok( stub.markSelRow.calledWith(), 'markSelRow should be called with arg' );
     assert.equal( res, undefined, 'setSelRow should return undefined' );
-    assert.equal( selRow, 9, 'setSelRow should set selRow value' );
+    assert.equal( selTR, 9, 'setSelRow should set selTR value' );
 });
 QUnit.test('getSelRowIndex', function ( assert ) {
     expect( 6 );
@@ -149,8 +147,8 @@ QUnit.test('getSelRowIndex', function ( assert ) {
 });
 QUnit.test('selRowFocus', function ( assert ) {
     expect( 3 );
-    selRow = "#tr_qwerty";
-    $( selRow ).find( 'A' ).blur();
+    selTR = "#tr_qwerty";
+    $( selTR ).find( 'A' ).blur();
     assert.notOk( $( "#a_qwerty" ).is(':focus'), 'proper <a> should not be focused before selRowFocus');
     var res = selRowFocus();
     assert.equal( res, undefined, 'selRowFocus should return undefined' );
@@ -159,15 +157,14 @@ QUnit.test('selRowFocus', function ( assert ) {
 QUnit.test( 'markSelRow', function ( assert ) {
     expect( 11 );
     selElement = undefined;
-    stub.get_m_id_n_ByIndex = sinon.stub( window, "get_m_id_n_ByIndex" );
-    stub.get_m_id_n_ByIndex.returns( { id: '0'} );
-    stub.storeSelRowIndex = sinon.stub( window, "storeSelRowIndex" );
-    stub.selRowFocus = sinon.stub( window, "selRowFocus" );
-    selRow = "#tr_qwerty";
-    assert.notOk( $( selRow ).is('.'+selectStyle), 'selRow should not be not selectStyled before markSelRow');
+    stub.get_m_id_n_ByIndex = sinon.stub( window, "get_m_id_n_ByIndex" ).returns( { id: '0'} );
+    stub.storeSelRowIndex   = sinon.stub( window, "storeSelRowIndex" );
+    stub.selRowFocus        = sinon.stub( window, "selRowFocus" );
+    selTR = "#tr_qwerty";
+    assert.notOk( $( selTR ).is('.'+selectStyle), 'selTR should not be not selectStyled before markSelRow');
     var res = markSelRow();
-    assert.notOk( $( "#tr_qwerty_s" ).is('.'+selectStyle), 'previous selRow should not be not selectStyled after markSelRow');
-    assert.ok( $( selRow ).is('.'+selectStyle), 'selRow should be selectStyled after markSelRow');
+    assert.notOk( $( "#tr_qwerty_s" ).is('.'+selectStyle), 'previous selTR should not be not selectStyled after markSelRow');
+    assert.ok( $( selTR ).is('.'+selectStyle), 'selTR should be selectStyled after markSelRow');
     assert.ok( stub.get_m_id_n_ByIndex.calledOnce, 'get_m_id_n_ByIndex should be called once' );
     assert.ok( stub.get_m_id_n_ByIndex.calledWith( selRowIndex ), 'get_m_id_n_ByIndex should be called with arg' );
     assert.ok( stub.storeSelRowIndex.calledOnce, 'storeSelRowIndex should be called once' );
@@ -186,16 +183,16 @@ QUnit.test( 'selectRow', function ( assert ) {
     assert.ok( stub.markSelRow.calledWith(), 'markSelRow should be called with arg' );
     assert.equal( res, false, 'selectRow should return false' );
     assert.equal( selRowIndex, 1, 'selectRow should set selRowIndex value' );
-    assert.equal( $( selRow )[0], $( "#tr_qwerty_s" )[0], 'selectRow should set selRow value' );
+    assert.equal( $( selTR )[0], $( "#tr_qwerty_s" )[0], 'selectRow should set selTR value' );
 //
 //    all prop identical except "selector":
 //    var prop;
-//    for ( prop in $( selRow ) ) {
+//    for ( prop in $( selTR ) ) {
 //        if ( prop != "selector" ){
-//            assert.equal( $( selRow )[prop], $( "#tr_qwerty_s" )[prop], 'selectRow should set selRow value' );
+//            assert.equal( $( selTR )[prop], $( "#tr_qwerty_s" )[prop], 'selectRow should set selTR value' );
 //        }
 //    }
-//    assert.deepEqual( $( selRow ), $( "#tr_qwerty_s" ), 'selectRow should set selRow value' );
+//    assert.deepEqual( $( selTR ), $( "#tr_qwerty_s" ), 'selectRow should set selTR value' );
 });
 //=============================================================================
 
@@ -277,10 +274,9 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
     hooks.beforeEach( function( assert ) {
         stub = {};
         tbody_tr_selector = "#browtable tbody tr";
-        stub.runhref = sinon.stub( window, "runhref" );
-        stub.getVisibleIndex = sinon.stub( window, "getVisibleIndex" );
-        stub.getVisibleIndex.returns( arr );
-        stub.setSelRow = sinon.stub( window, "setSelRow" );
+        stub.runhref         = sinon.stub( window, "runhref" );
+        stub.getVisibleIndex = sinon.stub( window, "getVisibleIndex" ).returns( arr );
+        stub.setSelRow       = sinon.stub( window, "setSelRow" );
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -1234,8 +1230,7 @@ QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test de
     hooks.beforeEach( function( assert ) {
         stub = {};
         arr.length = 55;
-        stub.get_qs_TR_arr = sinon.stub( window, "get_qs_TR_arr" );
-        stub.get_qs_TR_arr.returns( arr );
+        stub.get_qs_TR_arr = sinon.stub( window, "get_qs_TR_arr" ).returns( arr );
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -1365,8 +1360,46 @@ QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test describe
             assert.equal( getTRbyID( 'report', 3 ), undefined, 'getTRbyID should return proper value' );
             assert.equal( getTRbyID( 'user'  , 9 ), undefined, 'getTRbyID should return proper value' );
         });
+        QUnit.test( 'display_qs_TR_arr', function ( assert ) {
+            rowsNumber = 3;
+            expect( 17 + rowsNumber );
+            selElement.model = 'qwerty';
+            selElement.id    = 77;
+            var tbody_selector = "#browtable tbody";
+            var TR = "<tr><th>hello!</th></tr>";
+            stub.getTRbyIndex       = sinon.stub( window, "getTRbyIndex" ).returns( TR );
+            stub.getRowIndexbyID    = sinon.stub( window, "getRowIndexbyID" ).returns( 55 );
+            stub.setSelRow          = sinon.stub( window, "setSelRow" );
+            stub.get_m_id_n_ByIndex = sinon.stub( window, "get_m_id_n_ByIndex" ).returns( {m:'mm', i:99} );
+            stub.storeSelRowIndex   = sinon.stub( window, "storeSelRowIndex" );
+            stub.scrollToRow        = sinon.stub( window, "scrollToRow" );
+            stub.selRowFocus        = sinon.stub( window, "selRowFocus" );
+
+            var res = display_qs_TR_arr();
+            
+            assert.equal( $( "td", tbody_selector ).length, 0, "old rows cleared successfully!" );
+            assert.equal( $( "th", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+
+            assert.equal( stub.getTRbyIndex.callCount, rowsNumber, 'getTRbyIndex should be called '+rowsNumber+' times' );
+            for ( i = 0 ; i < rowsNumber ; i++ ) {
+                assert.ok( stub.getTRbyIndex.calledWith( i ), 'getTRbyIndex should be called with i='+i );
+            }
+            assert.ok( stub.getRowIndexbyID.calledOnce, 'getRowIndexbyID should be called once' );
+            assert.ok( stub.getRowIndexbyID.calledWith( 'qwerty', 77 ), 'getRowIndexbyID should be called with arg' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( 55 ), 'setSelRow should be called with arg' );
+            assert.ok( stub.get_m_id_n_ByIndex.calledOnce, 'get_m_id_n_ByIndex should be called once' );
+            assert.ok( stub.get_m_id_n_ByIndex.calledWith( 55 ), 'get_m_id_n_ByIndex should be called with arg' );
+            assert.ok( stub.storeSelRowIndex.calledOnce, 'storeSelRowIndex should be called once' );
+            assert.ok( stub.storeSelRowIndex.calledWith(), 'storeSelRowIndex should be called with arg' );
+            assert.ok( stub.scrollToRow.calledOnce, 'scrollToRow should be called once' );
+            assert.ok( stub.scrollToRow.calledWith( 55 ), 'scrollToRow should be called with arg' );
+            assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
+            assert.equal( selRowIndex, 55, 'display_qs_TR_arr should set value to global selRowIndex' );
+            assert.deepEqual( selElement, {m:'mm', i:99}, 'display_qs_TR_arr should set value to global selElement' );
+            assert.equal( res, undefined, 'display_qs_TR_arr should return proper value' );
+        });
     } );
     //-------------------------------------------------------------------------
 } );
 //=============================================================================
-
