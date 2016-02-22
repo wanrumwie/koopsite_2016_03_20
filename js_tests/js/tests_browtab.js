@@ -1,25 +1,82 @@
 /*
-Global:  $ (?), QUnit (?), expect (?), getSelRowIndex (?), onClick_handler (?), onDblclick_handler (?), onKeydown_handler (?), rowsNumber (?), selector, set_browtab_listeners (?), sinon (?), stub, window (?)
+Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, columnsNumber, create_qs_TR_arr (?), display_qs_TR_arr (?), expect (?), getRowIndexbyID (?), getSelRowIndex (?), getTRbyID (?), getTRbyIndex (?), getTRfromTbodyByIndex (?), get_m_id_n_ByIndex (?), get_qs_TR_arr (?), markSelRow (?), onClick_handler (?), onDblclick_handler (?), onKeyDown (?), onKeydown_handler (?), qs_TR_arr (?), restore_qs_TR_arr (?), rowsNumber (?), selElement (?), selRowFocus (?), selRowIndex (?), selTR (?), selectRow (?), selectStyle (?), setSelRow (?), setStartRow (?), set_browtab_listeners (?), sinon (?), storeSelRowIndex (?), stub, window (?)
 */
 
 //QUnit.config.reorder = false;
 
+var stub;   // common for all tests, is set to {} before and restored after each test
+
 //=============================================================================
-var stub, selector;
-QUnit.module( "browtab listeners", {
-    beforeEach: function () {
+QUnit.module( "browtab listeners", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    var selector;
+    hooks.beforeEach( function( assert ) {
         stub = {};
         selector = "#td_qwerty";
-//        selector = "#browtable thead";
         set_browtab_listeners(); 
-    },
-    afterEach: function () {
+    } );
+    hooks.afterEach( function( assert ) {
         var meth;
         for ( meth in stub ) {
             stub[meth].restore();
         }
-    }
-});
+    } );
+    QUnit.test( 'onClick_handler', function ( assert ) {
+        expect( 3 );
+        var e = {                               // e is needed as onClick argument
+            currentTarget: sinon.stub()
+        };
+        stub.selectRow = sinon.stub( window, "selectRow" );
+        var res = onClick_handler( e );
+        assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
+        assert.ok( stub.selectRow.calledWith( e.currentTarget ), 'selectRow should be called with arg' );
+        assert.equal( res, false, 'onClick_handler should return false' );
+    });
+    QUnit.test( '$( ... ).on( "click",... STUB selectRow', function ( assert ) {
+        expect( 1 );
+        stub.selectRow = sinon.stub( window, "selectRow" );
+        $( selector ).trigger( 'click' );
+        assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
+    });
+    QUnit.test( 'onDblclick_handler', function ( assert ) {
+        expect( 5 );
+        var e = {                               // e is needed as onClick argument
+            currentTarget: sinon.stub()
+        };
+        stub.selectRow = sinon.stub( window, "selectRow" );
+        stub.runhref = sinon.stub( window, "runhref" );
+        var res = onDblclick_handler( e );
+        assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
+        assert.ok( stub.selectRow.calledWith( e.currentTarget ), 'selectRow should be called with arg' );
+        assert.ok( stub.runhref.calledOnce, 'runhref should be called once' );
+        assert.ok( stub.runhref.calledWith(), 'runhref should be called with no arg' );
+        assert.equal( res, false, 'onDblclick_handler should return false' );
+    });
+    QUnit.test( '$( ... ).on( "dblclick",... STUB called func.', function ( assert ) {
+        expect( 2 );
+        stub.selectRow = sinon.stub( window, "selectRow" );
+        stub.runhref = sinon.stub( window, "runhref" );
+        $( selector ).trigger( 'dblclick' );
+        assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
+        assert.ok( stub.runhref.calledOnce, 'runhref should be called once' );
+    });
+    QUnit.test( 'onKeydown_handler', function ( assert ) {
+        expect( 3 );
+        var e = {                               // e is needed as onClick argument
+            which: sinon.stub()
+        };
+        stub.onKeyDown = sinon.stub( window, "onKeyDown" );
+        var res = onKeydown_handler( e );
+        assert.ok( stub.onKeyDown.calledOnce, 'onKeyDown should be called once' );
+        assert.ok( stub.onKeyDown.calledWith( e.which ), 'onKeyDown should be called with arg' );
+        assert.equal( res, false, 'onKeydown_handler should return false' );
+    });
+    QUnit.test( '$( ... ).on( "keydown",... STUB onKeyDown', function ( assert ) {
+        expect( 1 );
+        stub.onKeyDown = sinon.stub( window, "onKeyDown" );
+        $( selector ).trigger( $.Event( "keydown", { keyCode: 9 } ) );
+        assert.ok( stub.onKeyDown.calledOnce, 'onKeyDown should be called once' );
+    });
+} );
 /*  It's impossible to stub function inside on():  $( ... ).on( ..., onClick_handler ) ?
 QUnit.test( '$( ... ).on( "click",... STUB onClick_handler', function ( assert ) {
     stub = sinon.stub( window, "onClick_handler" );
@@ -27,177 +84,124 @@ QUnit.test( '$( ... ).on( "click",... STUB onClick_handler', function ( assert )
     assert.equal( stub.calledOnce, true, 'onClick_handler should be called once' );
 });
 */
-QUnit.test( 'onClick_handler', function ( assert ) {
-    expect( 3 );
-    var e = {                               // e is needed as onClick argument
-        currentTarget: sinon.stub()
-    };
-    stub.selectRow = sinon.stub( window, "selectRow" );
-    var res = onClick_handler( e );
-    assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
-    assert.ok( stub.selectRow.calledWith( e.currentTarget ), 'selectRow should be called with arg' );
-    assert.equal( res, false, 'onClick_handler should return false' );
-});
-QUnit.test( '$( ... ).on( "click",... STUB selectRow', function ( assert ) {
-    expect( 1 );
-    stub.selectRow = sinon.stub( window, "selectRow" );
-    $( selector ).trigger( 'click' );
-    assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
-});
-QUnit.test( 'onDblclick_handler', function ( assert ) {
-    expect( 5 );
-    var e = {                               // e is needed as onClick argument
-        currentTarget: sinon.stub()
-    };
-    stub.selectRow = sinon.stub( window, "selectRow" );
-    stub.runhref = sinon.stub( window, "runhref" );
-    var res = onDblclick_handler( e );
-    assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
-    assert.ok( stub.selectRow.calledWith( e.currentTarget ), 'selectRow should be called with arg' );
-    assert.ok( stub.runhref.calledOnce, 'runhref should be called once' );
-    assert.ok( stub.runhref.calledWith(), 'runhref should be called with no arg' );
-    assert.equal( res, false, 'onDblclick_handler should return false' );
-});
-QUnit.test( '$( ... ).on( "dblclick",... STUB called func.', function ( assert ) {
-    expect( 2 );
-    stub.selectRow = sinon.stub( window, "selectRow" );
-    stub.runhref = sinon.stub( window, "runhref" );
-    $( selector ).trigger( 'dblclick' );
-    assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
-    assert.ok( stub.runhref.calledOnce, 'runhref should be called once' );
-});
-QUnit.test( 'onKeydown_handler', function ( assert ) {
-    expect( 3 );
-    var e = {                               // e is needed as onClick argument
-        which: sinon.stub()
-    };
-    stub.onKeyDown = sinon.stub( window, "onKeyDown" );
-    var res = onKeydown_handler( e );
-    assert.ok( stub.onKeyDown.calledOnce, 'onKeyDown should be called once' );
-    assert.ok( stub.onKeyDown.calledWith( e.which ), 'onKeyDown should be called with arg' );
-    assert.equal( res, false, 'onKeydown_handler should return false' );
-});
-QUnit.test( '$( ... ).on( "keydown",... STUB onKeyDown', function ( assert ) {
-    expect( 1 );
-    stub.onKeyDown = sinon.stub( window, "onKeyDown" );
-    $( selector ).trigger( $.Event( "keydown", { keyCode: 9 } ) );
-    assert.ok( stub.onKeyDown.calledOnce, 'onKeyDown should be called once' );
-});
 //=============================================================================
 
-QUnit.module( "browtab sel row functions", {
-    beforeEach: function () {
+QUnit.module( "browtab sel row functions", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    hooks.beforeEach( function( assert ) {
         stub = {};
-    },
-    afterEach: function () {
+    } );
+    hooks.afterEach( function( assert ) {
         var meth;
         for ( meth in stub ) {
             stub[meth].restore();
         }
-    }
-});
-QUnit.test( 'setStartRow', function ( assert ) {
-    expect( 6 );
-    stub.setSelRow = sinon.stub( window, "setSelRow" );
-    $( "#selRowIndex" ).val( 55 );
-    var res = setStartRow();
-    assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
-    assert.ok( stub.setSelRow.calledWith( 55 ), 'selectRow should be called with arg' );
-    assert.equal( res, undefined, 'setStartRow should return undefined' );
+    } );
+    QUnit.test( 'setStartRow', function ( assert ) {
+        expect( 6 );
+        stub.setSelRow = sinon.stub( window, "setSelRow" );
+        $( "#selRowIndex" ).val( 55 );
+        var res = setStartRow();
+        assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+        assert.ok( stub.setSelRow.calledWith( 55 ), 'selectRow should be called with arg' );
+        assert.equal( res, undefined, 'setStartRow should return undefined' );
 
-    stub.setSelRow.reset();
-    $( "#selRowIndex" ).val( "" );
-    res = setStartRow();
-    assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
-    assert.ok( stub.setSelRow.calledWith( 0 ), 'selectRow should be called with arg' );
-    assert.equal( res, undefined, 'setStartRow should return undefined' );
-});
-QUnit.test( 'setSelRow', function ( assert ) {
-    expect( 11 );
-    stub.getSelRowIndex = sinon.stub( window, "getSelRowIndex" ).returns( 7 );
-    stub.getTRbyIndex   = sinon.stub( window, "getTRbyIndex" ).returns( 9 );
-    stub.scrollToRow    = sinon.stub( window, "scrollToRow" );
-    stub.markSelRow     = sinon.stub( window, "markSelRow" );
-    rowsNumber = 10;
-    var res = setSelRow( 5 );
-    assert.equal( res, undefined, 'setSelRow should return undefined' );
-    rowsNumber = 0;
-    res = setSelRow( 5 );
-    assert.ok( stub.getSelRowIndex.calledOnce, 'getSelRowIndex should be called once' );
-    assert.ok( stub.getSelRowIndex.calledWith( 5 ), 'getSelRowIndex should be called with arg' );
-    assert.ok( stub.getTRbyIndex.calledOnce, 'getTRbyIndex should be called once' );
-    assert.ok( stub.getTRbyIndex.calledWith( 7 ), 'getTRbyIndex should be called with arg' );
-    assert.ok( stub.scrollToRow.calledOnce, 'scrollToRow should be called once' );
-    assert.ok( stub.scrollToRow.calledWith( 7 ), 'scrollToRow should be called with arg' );
-    assert.ok( stub.markSelRow.calledOnce, 'markSelRow should be called once' );
-    assert.ok( stub.markSelRow.calledWith(), 'markSelRow should be called with arg' );
-    assert.equal( res, undefined, 'setSelRow should return undefined' );
-    assert.equal( selTR, 9, 'setSelRow should set selTR value' );
-});
-QUnit.test('getSelRowIndex', function ( assert ) {
-    expect( 6 );
-    rowsNumber = 10;
-    assert.strictEqual( getSelRowIndex( -1 ), 0, 'sel row index min value must be 0');
-    assert.strictEqual( getSelRowIndex(  5 ), 5, 'sel row index must be = 5');
-    assert.strictEqual( getSelRowIndex( rowsNumber ), rowsNumber - 1, 'sel row index max value must be rowsNumber-1');
-    rowsNumber = 0;
-    assert.strictEqual( getSelRowIndex( -1 ), 0, 'sel row index must be 0 if rowsNumber=0');
-    assert.strictEqual( getSelRowIndex(  0 ), 0, 'sel row index must be 0 if rowsNumber=0');
-    assert.strictEqual( getSelRowIndex( 10 ), 0, 'sel row index must be 0 if rowsNumber=0');
-});
-QUnit.test('selRowFocus', function ( assert ) {
-    expect( 3 );
-    selTR = "#tr_qwerty";
-    $( selTR ).find( 'A' ).blur();
-    assert.notOk( $( "#a_qwerty" ).is(':focus'), 'proper <a> should not be focused before selRowFocus');
-    var res = selRowFocus();
-    assert.equal( res, undefined, 'selRowFocus should return undefined' );
-    assert.ok( $( "#a_qwerty" ).is(':focus'), 'proper <a> should be focused');
-});
-QUnit.test( 'markSelRow', function ( assert ) {
-    expect( 11 );
-    selElement = undefined;
-    stub.get_m_id_n_ByIndex = sinon.stub( window, "get_m_id_n_ByIndex" ).returns( { id: '0'} );
-    stub.storeSelRowIndex   = sinon.stub( window, "storeSelRowIndex" );
-    stub.selRowFocus        = sinon.stub( window, "selRowFocus" );
-    selTR = "#tr_qwerty";
-    assert.notOk( $( selTR ).is('.'+selectStyle), 'selTR should not be not selectStyled before markSelRow');
-    var res = markSelRow();
-    assert.notOk( $( "#tr_qwerty_s" ).is('.'+selectStyle), 'previous selTR should not be not selectStyled after markSelRow');
-    assert.ok( $( selTR ).is('.'+selectStyle), 'selTR should be selectStyled after markSelRow');
-    assert.ok( stub.get_m_id_n_ByIndex.calledOnce, 'get_m_id_n_ByIndex should be called once' );
-    assert.ok( stub.get_m_id_n_ByIndex.calledWith( selRowIndex ), 'get_m_id_n_ByIndex should be called with arg' );
-    assert.ok( stub.storeSelRowIndex.calledOnce, 'storeSelRowIndex should be called once' );
-    assert.ok( stub.storeSelRowIndex.calledWith(), 'storeSelRowIndex should be called with arg' );
-    assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
-    assert.ok( stub.selRowFocus.calledWith(), 'selRowFocus should be called with arg' );
-    assert.equal( res, false, 'markSelRow should return false' );
-    assert.equal( selElement.id, '0', 'markSelRow should set selElement value' );
-});
-QUnit.test( 'selectRow', function ( assert ) {
-    expect( 5 );
-    var targ = "#td_qwerty_s";
-    stub.markSelRow = sinon.stub( window, "markSelRow" );
-    var res = selectRow( targ );
-    assert.ok( stub.markSelRow.calledOnce, 'markSelRow should be called once' );
-    assert.ok( stub.markSelRow.calledWith(), 'markSelRow should be called with arg' );
-    assert.equal( res, false, 'selectRow should return false' );
-    assert.equal( selRowIndex, 1, 'selectRow should set selRowIndex value' );
-    assert.equal( $( selTR )[0], $( "#tr_qwerty_s" )[0], 'selectRow should set selTR value' );
-//
-//    all prop identical except "selector":
-//    var prop;
-//    for ( prop in $( selTR ) ) {
-//        if ( prop != "selector" ){
-//            assert.equal( $( selTR )[prop], $( "#tr_qwerty_s" )[prop], 'selectRow should set selTR value' );
-//        }
-//    }
-//    assert.deepEqual( $( selTR ), $( "#tr_qwerty_s" ), 'selectRow should set selTR value' );
-});
+        stub.setSelRow.reset();
+        $( "#selRowIndex" ).val( "" );
+        res = setStartRow();
+        assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+        assert.ok( stub.setSelRow.calledWith( 0 ), 'selectRow should be called with arg' );
+        assert.equal( res, undefined, 'setStartRow should return undefined' );
+    });
+    QUnit.test( 'setSelRow', function ( assert ) {
+        expect( 11 );
+        stub.getSelRowIndex = sinon.stub( window, "getSelRowIndex" ).returns( 7 );
+        stub.getTRbyIndex   = sinon.stub( window, "getTRbyIndex" ).returns( 9 );
+        stub.scrollToRow    = sinon.stub( window, "scrollToRow" );
+        stub.markSelRow     = sinon.stub( window, "markSelRow" );
+        rowsNumber = 10;
+        var res = setSelRow( 5 );
+        assert.equal( res, undefined, 'setSelRow should return undefined' );
+        rowsNumber = 0;
+        res = setSelRow( 5 );
+        assert.ok( stub.getSelRowIndex.calledOnce, 'getSelRowIndex should be called once' );
+        assert.ok( stub.getSelRowIndex.calledWith( 5 ), 'getSelRowIndex should be called with arg' );
+        assert.ok( stub.getTRbyIndex.calledOnce, 'getTRbyIndex should be called once' );
+        assert.ok( stub.getTRbyIndex.calledWith( 7 ), 'getTRbyIndex should be called with arg' );
+        assert.ok( stub.scrollToRow.calledOnce, 'scrollToRow should be called once' );
+        assert.ok( stub.scrollToRow.calledWith( 7 ), 'scrollToRow should be called with arg' );
+        assert.ok( stub.markSelRow.calledOnce, 'markSelRow should be called once' );
+        assert.ok( stub.markSelRow.calledWith(), 'markSelRow should be called with arg' );
+        assert.equal( res, undefined, 'setSelRow should return undefined' );
+        assert.equal( selTR, 9, 'setSelRow should set selTR value' );
+    });
+    QUnit.test('getSelRowIndex', function ( assert ) {
+        expect( 6 );
+        rowsNumber = 10;
+        assert.strictEqual( getSelRowIndex( -1 ), 0, 'sel row index min value must be 0');
+        assert.strictEqual( getSelRowIndex(  5 ), 5, 'sel row index must be = 5');
+        assert.strictEqual( getSelRowIndex( rowsNumber ), rowsNumber - 1, 'sel row index max value must be rowsNumber-1');
+        rowsNumber = 0;
+        assert.strictEqual( getSelRowIndex( -1 ), 0, 'sel row index must be 0 if rowsNumber=0');
+        assert.strictEqual( getSelRowIndex(  0 ), 0, 'sel row index must be 0 if rowsNumber=0');
+        assert.strictEqual( getSelRowIndex( 10 ), 0, 'sel row index must be 0 if rowsNumber=0');
+    });
+    QUnit.test('selRowFocus', function ( assert ) {
+        expect( 3 );
+        selTR = "#tr_qwerty";
+        $( selTR ).find( 'A' ).blur();
+        assert.notOk( $( "#a_qwerty" ).is(':focus'), 'proper <a> should not be focused before selRowFocus');
+        var res = selRowFocus();
+        assert.equal( res, undefined, 'selRowFocus should return undefined' );
+        assert.ok( $( "#a_qwerty" ).is(':focus'), 'proper <a> should be focused');
+    });
+    QUnit.test( 'markSelRow', function ( assert ) {
+        expect( 11 );
+        selElement = undefined;
+        stub.get_m_id_n_ByIndex = sinon.stub( window, "get_m_id_n_ByIndex" ).returns( { id: '0'} );
+        stub.storeSelRowIndex   = sinon.stub( window, "storeSelRowIndex" );
+        stub.selRowFocus        = sinon.stub( window, "selRowFocus" );
+        selTR = "#tr_qwerty";
+        assert.notOk( $( selTR ).is('.'+selectStyle), 'selTR should not be not selectStyled before markSelRow');
+        var res = markSelRow();
+        assert.notOk( $( "#tr_qwerty_s" ).is('.'+selectStyle), 'previous selTR should not be not selectStyled after markSelRow');
+        assert.ok( $( selTR ).is('.'+selectStyle), 'selTR should be selectStyled after markSelRow');
+        assert.ok( stub.get_m_id_n_ByIndex.calledOnce, 'get_m_id_n_ByIndex should be called once' );
+        assert.ok( stub.get_m_id_n_ByIndex.calledWith( selRowIndex ), 'get_m_id_n_ByIndex should be called with arg' );
+        assert.ok( stub.storeSelRowIndex.calledOnce, 'storeSelRowIndex should be called once' );
+        assert.ok( stub.storeSelRowIndex.calledWith(), 'storeSelRowIndex should be called with arg' );
+        assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
+        assert.ok( stub.selRowFocus.calledWith(), 'selRowFocus should be called with arg' );
+        assert.equal( res, false, 'markSelRow should return false' );
+        assert.equal( selElement.id, '0', 'markSelRow should set selElement value' );
+    });
+    QUnit.test( 'selectRow', function ( assert ) {
+        expect( 5 );
+        var targ = "#td_qwerty_s";
+        stub.markSelRow = sinon.stub( window, "markSelRow" );
+        var res = selectRow( targ );
+        assert.ok( stub.markSelRow.calledOnce, 'markSelRow should be called once' );
+        assert.ok( stub.markSelRow.calledWith(), 'markSelRow should be called with arg' );
+        assert.equal( res, false, 'selectRow should return false' );
+        assert.equal( selRowIndex, 1, 'selectRow should set selRowIndex value' );
+        assert.equal( $( selTR )[0], $( "#tr_qwerty_s" )[0], 'selectRow should set selTR value' );
+    //
+    //    All properties of $( selTR) object are identical with $( "#tr_qwerty_s" ) once except "selector":
+    //    var prop;
+    //    for ( prop in $( selTR ) ) {
+    //        if ( prop != "selector" ){
+    //            assert.equal( $( selTR )[prop], $( "#tr_qwerty_s" )[prop], 'selectRow should set selTR value' );
+    //        }
+    //    }
+    //    This not works:
+    //    assert.deepEqual( $( selTR ), $( "#tr_qwerty_s" ), 'selectRow should set selTR value' );
+    });
+} );
 //=============================================================================
 
-QUnit.module( "browtab storeSelRowIndex", {
-    beforeEach: function () {
+function auxiliary_handler(){
+}
+QUnit.module( "browtab storeSelRowIndex", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    hooks.beforeEach( function( assert ) {
         stub = {};
         $( '#selRowIndex' ).off( "change").on( "change", function() {
             auxiliary_handler();
@@ -209,68 +213,65 @@ QUnit.module( "browtab storeSelRowIndex", {
         selElement.model = 'folder';
         selElement.id = "55";
         auxiliary_set_val_to_html();
-    },
-    afterEach: function () {
+    } );
+    hooks.afterEach( function( assert ) {
         var meth;
         for ( meth in stub ) {
             stub[meth].restore();
         }
+    } );
+    function auxiliary_set_val_to_html(){
+        $( '#selRowIndex').val( selRowIndex );
+        $( '#selElementModel' ).val( selElement.model );
+        $( '#selElementID' ).val( selElement.id );
     }
-});
-function auxiliary_set_val_to_html(){
-    $( '#selRowIndex').val( selRowIndex );
-    $( '#selElementModel' ).val( selElement.model );
-    $( '#selElementID' ).val( selElement.id );
-}
-function auxiliary_get_val_from_html(){
-    var ri = $( '#selRowIndex').val();
-    var md = $( '#selElementModel' ).val();
-    var id = $( '#selElementID' ).val();
-    return [ri, md, id];
-}
-function auxiliary_handler(){
-}
-QUnit.test( '#1', function ( assert ) {
-    selRowIndex = "2";
-    var res = storeSelRowIndex();
-    assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
-    assert.deepEqual( auxiliary_get_val_from_html(), 
-                [selRowIndex, selElement.model, selElement.id], 
-                'storeSelRowIndex should store proper values to html' );
-    assert.ok( stub.auxiliary_handler.calledOnce, 'on change handler should be called once' );
-});
-QUnit.test( '#2', function ( assert ) {
-    selElement.model = 'user';
-    var res = storeSelRowIndex();
-    assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
-    assert.deepEqual( auxiliary_get_val_from_html(), 
-                [selRowIndex, selElement.model, selElement.id], 
-                'storeSelRowIndex should store proper values to html' );
-    assert.ok( stub.auxiliary_handler.calledOnce, 'on change handler should be called once' );
-});
-QUnit.test( '#3', function ( assert ) {
-    selElement.id = '77';
-    var res = storeSelRowIndex();
-    assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
-    assert.deepEqual( auxiliary_get_val_from_html(), 
-                [selRowIndex, selElement.model, selElement.id], 
-                'storeSelRowIndex should store proper values to html' );
-    assert.ok( stub.auxiliary_handler.calledOnce, 'on change handler should be called once' );
-});
-QUnit.test( '#4', function ( assert ) {
-    var res = storeSelRowIndex();
-    assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
-    assert.deepEqual( auxiliary_get_val_from_html(), 
-                [selRowIndex, selElement.model, selElement.id], 
-                'storeSelRowIndex should store proper values to html' );
-    assert.notOk( stub.auxiliary_handler.called, 'on change handler should not be called' );
-});
+    function auxiliary_get_val_from_html(){
+        var ri = $( '#selRowIndex').val();
+        var md = $( '#selElementModel' ).val();
+        var id = $( '#selElementID' ).val();
+        return [ri, md, id];
+    }
+    QUnit.test( '#1', function ( assert ) {
+        selRowIndex = "2";
+        var res = storeSelRowIndex();
+        assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
+        assert.deepEqual( auxiliary_get_val_from_html(),
+                    [selRowIndex, selElement.model, selElement.id],
+                    'storeSelRowIndex should store proper values to html' );
+        assert.ok( stub.auxiliary_handler.calledOnce, 'on change handler should be called once' );
+    });
+    QUnit.test( '#2', function ( assert ) {
+        selElement.model = 'user';
+        var res = storeSelRowIndex();
+        assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
+        assert.deepEqual( auxiliary_get_val_from_html(),
+                    [selRowIndex, selElement.model, selElement.id],
+                    'storeSelRowIndex should store proper values to html' );
+        assert.ok( stub.auxiliary_handler.calledOnce, 'on change handler should be called once' );
+    });
+    QUnit.test( '#3', function ( assert ) {
+        selElement.id = '77';
+        var res = storeSelRowIndex();
+        assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
+        assert.deepEqual( auxiliary_get_val_from_html(),
+                    [selRowIndex, selElement.model, selElement.id],
+                    'storeSelRowIndex should store proper values to html' );
+        assert.ok( stub.auxiliary_handler.calledOnce, 'on change handler should be called once' );
+    });
+    QUnit.test( '#4', function ( assert ) {
+        var res = storeSelRowIndex();
+        assert.equal( res, undefined, 'storeSelRowIndex should return undefined' );
+        assert.deepEqual( auxiliary_get_val_from_html(),
+                    [selRowIndex, selElement.model, selElement.id],
+                    'storeSelRowIndex should store proper values to html' );
+        assert.notOk( stub.auxiliary_handler.called, 'on change handler should not be called' );
+    });
+} );
 
 //=============================================================================
 QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in tbody_hidden.xlsx file
     var arr = {};
     var tbody_tr_selector;
-    var stub;
     hooks.beforeEach( function( assert ) {
         stub = {};
         tbody_tr_selector = "#browtable tbody tr";
@@ -293,7 +294,7 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
         assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
         assert.notOk( stub.setSelRow.called, 'setSelRow should not be called' );
         assert.equal( res, false, 'onKeyDown should return false' );
-        } );
+    } );
     QUnit.test( "Improper key", function( assert ) {
         expect( 4 );
         var k   = 0;    // key pressed code
@@ -302,7 +303,7 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
         assert.notOk( stub.getVisibleIndex.called, 'getVisibleIndex should not be called' );
         assert.notOk( stub.setSelRow.called, 'setSelRow should not be called' );
         assert.equal( res, false, 'onKeyDown should return false' );
-        } );
+    } );
     //-------------------------------------------------------------------------
     QUnit.module( "#1", function( hooks ) {
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
@@ -1225,7 +1226,6 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
 } );
 //=============================================================================
 QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test described in tbody_hidden.xlsx file
-    var stub;
     var arr = {};
     hooks.beforeEach( function( assert ) {
         stub = {};
@@ -1246,7 +1246,7 @@ QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test de
         assert.equal( qs_TR_arr, arr, 'create_qs_TR_arr should set value to global object' );
         assert.equal( rowsNumber, 55, 'create_qs_TR_arr should set value to global object' );
         assert.equal( res, undefined, 'create_qs_TR_arr should return undefined' );
-        } );
+    } );
     QUnit.test( "restore_qs_TR_arr", function( assert ) {
         expect( 5 );
         var res = restore_qs_TR_arr();
@@ -1255,19 +1255,18 @@ QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test de
         assert.equal( qs_TR_arr, arr, 'restore_qs_TR_arr should set value to global object' );
         assert.equal( rowsNumber, 55, 'restore_qs_TR_arr should set value to global object' );
         assert.equal( res, undefined, 'restore_qs_TR_arr should return undefined' );
-        } );
+    } );
     QUnit.test( "getTRfromTbodyByIndex", function( assert ) {
         expect( 1 );
         var i = 1;
         var res = getTRfromTbodyByIndex( i );
         assert.equal( res[0], $( "#tr_qwerty_s" )[0], 'getTRfromTbodyByIndex should return proper value' );
-        } );
+    } );
 } );
 
 //=============================================================================
 var columnsNumber;  // var declared in another js file, not in browtab.js 
 QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test described in tbody_hidden.xlsx file
-    var stub;
     var i, j, TR;
     var expected_arr = [];   // 2D array - table
     var qs_obj = {};    // array stringified on server side
@@ -1318,13 +1317,13 @@ QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test describe
         var res = get_qs_TR_arr( true );
         assert.deepEqual( TR_start, expected_TR_start, 'get_qs_TR_arr should set value to global object' );
         assert.deepEqual( res, expected_arr, 'get_qs_TR_arr should return proper value' );
-        } );
+    } );
     QUnit.test( "is_start=false", function( assert ) {
         expect( 2 );
         var res = get_qs_TR_arr( false );
         assert.deepEqual( TR_start, expected_TR_start, 'get_qs_TR_arr should set value to global object' );
         assert.deepEqual( res, expected_arr, 'get_qs_TR_arr should return proper value' );
-        } );
+    } );
     //-------------------------------------------------------------------------
     QUnit.module( "Get different data from qs_TR_arr", function( hooks ) {
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
@@ -1400,6 +1399,237 @@ QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test describe
             assert.equal( res, undefined, 'display_qs_TR_arr should return proper value' );
         });
     } );
+} );
+//=============================================================================
+QUnit.module( "Scrolling", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+    } );
+    QUnit.test( 'getSelectorTR', function ( assert ) {
+        expect( 1 );
+        var qq = 55, i = 77;
+        var s = "#browtable tbody tr:" + qq + "(" + i + ")" ;
+        var res = getSelectorTR( qq, i );
+        assert.equal( res, s, 'getSelectorTR should return proper value' );
+    });
     //-------------------------------------------------------------------------
+    QUnit.module( "getVisibleIndex", function( hooks ) {
+        var hi, tbody;
+        var tbody_selector = "#browtable tbody";
+        var tbody_tr_selector = "#browtable tbody tr";
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            rowsNumber = 20;
+            tbody = $( tbody_selector )
+            $( tbody_tr_selector ).remove(); // removing all <TR> from table
+            var i, TR;
+            for ( i = 0 ; i < rowsNumber ; i++ ) {    // adding all new <TR> to table
+                TR = "<tr><td>" + i + "</td></tr>";
+                $( tbody_selector ).append( TR ); 
+            }
+            hi = $( tbody_tr_selector ).outerHeight();   // height of i-th element
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( '#1', function ( assert ) {
+            expect( 6 );
+            var expected = {};
+            var i_top = 0;
+            var i_bot = 9;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.0;
+            h_tbody  += hi * 0.0;
+            expected.i_top = i_top + 0;
+            expected.i_bot = i_bot + 0;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+console.log('expected:', expected);            
+            assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+        QUnit.test( '#2', function ( assert ) {
+            expect( 6 );
+            var expected = {};
+            var i_top = 1;
+            var i_bot = 10;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.0;
+            h_tbody  += hi * 0.0;
+            expected.i_top = i_top + 0;
+            expected.i_bot = i_bot + 0;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+        QUnit.test( '#3', function ( assert ) {
+            expect( 6 );
+            var expected = {};
+            var i_top = 10;
+            var i_bot = 19;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.0;
+            h_tbody  += hi * 0.0;
+            expected.i_top = i_top + 0;
+            expected.i_bot = i_bot + 0;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+        QUnit.test( '#4', function ( assert ) {
+            expect( 6 );
+            var expected = {};
+            var i_top = 0;
+            var i_bot = 9;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.40;
+            h_tbody  += hi * 0.0;
+            expected.i_top = i_top + 0;
+            expected.i_bot = i_bot + 0;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+        QUnit.test( '#5', function ( assert ) {
+            expect( 6 );
+            var expected = {};
+            var i_top = 0;
+            var i_bot = 9;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.60;
+            h_tbody  -= hi * 0.40;
+            expected.i_top = i_top + 1;
+            expected.i_bot = i_bot + 0;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+        QUnit.test( '#6', function ( assert ) {
+            expect( 6 );
+            var expected = {};
+            var i_top = 1;
+            var i_bot = 9;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.000;
+            h_tbody  += hi * 0.40;
+            expected.i_top = i_top + 0;
+            expected.i_bot = i_bot + 0;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+        QUnit.test( '#7', function ( assert ) {
+            expect( 6 );
+            var expected = {};
+            var i_top = 1;
+            var i_bot = 9;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.000;
+            h_tbody  += hi * 0.60;
+            expected.i_top = i_top + 0;
+            expected.i_bot = i_bot + 1;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+        QUnit.test( '#8', function ( assert ) {
+            expect( 6 );
+            $( tbody_tr_selector ).remove(); // removing all <TR> from table
+            var expected = {};
+            var i_top = 0;
+            var i_bot = 9;
+            // size in pixels for not fractioned namber of records:
+            var h_hidden = hi * i_top;                  // hidden part above tbody in px
+            var h_tbody  = hi * (i_bot - i_top + 1);    // visible tbody height in px
+            // change sizes for some fractions of record:
+            h_hidden += hi * 0.00;
+            h_tbody  += hi * 0.00;
+            expected.i_top = undefined;
+            expected.i_bot = undefined;
+
+            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            assert.equal( $( "td", tbody_selector ).length, 0, "no rows shoild be in this test!" );
+            assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
+            assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.height.calledWith(), 'height should be called with arg' );
+            assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
+        });
+    } );
 } );
 //=============================================================================

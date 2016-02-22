@@ -308,15 +308,18 @@ function getSelectorTR( qq, i ){
     var s = "#browtable tbody tr:" + qq + "(" + i + ")" ;
     return s;
 }
-function getVisibleIndex( selector ){
+function getVisibleIndex( selector, tbody ){
     // return object arr.i_top, arr.i_bot - index of top and bottom visible rows respectively
+    if ( tbody === undefined ) {
+        tbody = $( "#browtable tbody" );
+    }
     var hi,
         top_edge_visible,
         bot_edge_visible,
         i_top, i_bot;
     var arr = {};
-    var h_hidden = $( "#browtable tbody" ).scrollTop();// hidden part above tbody in px
-    var h_tbody  = $( "#browtable tbody" ).height();    // visible tbody height in px
+    var h_hidden = tbody.scrollTop();// hidden part above tbody in px
+    var h_tbody  = tbody.height();    // visible tbody height in px
     var h = 0;
     var i = 0;
     var top_found = false;  
