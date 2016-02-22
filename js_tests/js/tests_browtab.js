@@ -6,6 +6,13 @@ Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, columnsNum
 
 var stub;   // common for all tests, is set to {} before and restored after each test
 
+QUnit.test( 'js file start assignments', function ( assert ) {
+    expect( 4 );
+    assert.deepEqual( TR_start, [], 'array for storing <tr> data immediately after page loaded');
+    assert.deepEqual( selElement, {}, 'object = selElement.model , selElement.id , selElement.name');
+    assert.equal( selectStyle, "selected", 'CSS style for selected row');
+    assert.equal( normalStyle, "normal", 'CSS style for unselected row');
+});
 //=============================================================================
 QUnit.module( "browtab listeners", function( hooks ) { // This test described in tbody_hidden.xlsx file
     var selector;
@@ -1398,6 +1405,26 @@ QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test describe
             assert.deepEqual( selElement, {m:'mm', i:99}, 'display_qs_TR_arr should set value to global selElement' );
             assert.equal( res, undefined, 'display_qs_TR_arr should return proper value' );
         });
+        QUnit.test( 'deleteElement', function ( assert ) {
+            expect( 8 );
+            selRowIndex = 1;
+            selTR = getTRbyIndex( selRowIndex );    // already tested function
+
+            stub.setSelRow          = sinon.stub( window, "setSelRow" );
+            stub.selRowFocus        = sinon.stub( window, "selRowFocus" );
+
+            assert.equal( qs_TR_arr.length, 3, 'qs_TR_arr.length before test should be equal to 3' );
+            
+            var res = deleteElement();
+            
+            assert.equal( qs_TR_arr.length, 2, 'qs_TR_arr.length after test should be equal to 2' );
+            assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
+            assert.ok( stub.setSelRow.calledWith( selRowIndex ), 'setSelRow should be called with arg' );
+            assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
+            assert.ok( stub.selRowFocus.calledWith(), 'selRowFocus should be called with arg' );
+            assert.equal( rowsNumber, 2, 'deleteElement should set value to global selRowIndex' );
+            assert.equal( res, undefined, 'deleteElement should return proper value' );
+        });
     } );
 } );
 //=============================================================================
@@ -1453,7 +1480,6 @@ QUnit.module( "Scrolling", function( hooks ) { // This test described in tbody_h
             stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
             stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
             var res = getVisibleIndex( tbody_tr_selector, tbody );
-console.log('expected:', expected);            
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1630,6 +1656,230 @@ console.log('expected:', expected);
             assert.ok( stub.height.calledWith(), 'height should be called with arg' );
             assert.deepEqual( res, expected, 'getVisibleIndex should return proper value' );
         });
+        QUnit.test( 'totalOuterHeight', function ( assert ) {
+            expect( 1 );
+            $( tbody_tr_selector ).outerHeight( 30 );
+            hi = $( tbody_tr_selector ).outerHeight();   // height of i-th element
+            var h = hi * rowsNumber;
+            var res = totalOuterHeight( tbody_tr_selector );
+            assert.equal( res, h, 'totalOuterHeight should return proper value' );
+        });
     } );
+    //-------------------------------------------------------------------------
+    QUnit.module( "scrollToRow", function( hooks ) {
+        var hi, tbody;
+        var tbody_selector = "#browtable tbody";
+        hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
+            rowsNumber = 20;
+            tbody = $( tbody_selector )
+            hi = 20;   // height of i-th element
+        } );
+        hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
+        } );
+        QUnit.test( '#0', function ( assert ) {
+            expect( 12 );
+            var i = 5;
+            var h_hidden    = 0;
+            var h_tbody     = 200;
+
+            var selectorLtI = 'lt';
+            var selectorEqI = 'eq';
+            var h_tr        = hi;
+            var h_aboveSel  = hi * i;
+            var h_uptoSel   = h_aboveSel + h_tr;                    // -//- including i-th tr height
+            // expected value calculated by formula:
+            var h_hidden_calc = h_hidden;
+            if ( h_hidden >= h_aboveSel ) {                         // i-th row is in hidden area above tbody?
+                h_hidden_calc = h_aboveSel;                              // we allow to hide this part of common height
+            } else if ( h_uptoSel >= h_hidden + h_tbody ) {         // i-th row is not visible below tbody?
+                h_hidden_calc = h_uptoSel - h_tbody;                     // we allow to hide this part of common heiight
+            }
+
+            stub.height             = sinon.stub( tbody, "height" );
+            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
+            stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
+
+            stub.height             .onCall( 0 ).returns( h_tbody );
+            stub.scrollTop          .onCall( 0 ).returns( h_hidden );
+            stub.scrollTop          .onCall( 1 ).returns();
+            stub.getSelectorTR      .onCall( 0 ).returns( selectorLtI );
+            stub.getSelectorTR      .onCall( 1 ).returns( selectorEqI );
+            stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
+            stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
+
+            var res = scrollToRow( i, tbody );
+
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );
+            assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
+            assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
+
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWith(  "lt", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWith(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.height.getCall( 0 ).calledWith(), 'height should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWith( selectorEqI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 1 ).calledWith( selectorLtI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 0 ).calledWith(), '0 scrollTop should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 1 ).calledWith( h_hidden_calc ), '1 scrollTop should be called with arg' );
+
+            assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
+        });
+        QUnit.test( '#1', function ( assert ) {
+            expect( 12 );
+            var i = 5;
+            var h_hidden    = 0;
+            var h_tbody     = 200;
+            var h_hidden_calc = 0;            // selected row is visible
+            // expected value calculated manually
+
+            var selectorLtI = 'lt';
+            var selectorEqI = 'eq';
+            var h_tr        = hi;
+            var h_aboveSel  = hi * i;
+
+            stub.height             = sinon.stub( tbody, "height" );
+            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
+            stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
+
+            stub.height             .onCall( 0 ).returns( h_tbody );
+            stub.scrollTop          .onCall( 0 ).returns( h_hidden );
+            stub.scrollTop          .onCall( 1 ).returns();
+            stub.getSelectorTR      .onCall( 0 ).returns( selectorLtI );
+            stub.getSelectorTR      .onCall( 1 ).returns( selectorEqI );
+            stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
+            stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
+
+            var res = scrollToRow( i, tbody );
+
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );
+            assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
+            assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
+
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWith(  "lt", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWith(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.height.getCall( 0 ).calledWith(), 'height should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWith( selectorEqI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 1 ).calledWith( selectorLtI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 0 ).calledWith(), '0 scrollTop should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 1 ).calledWith( h_hidden_calc ), '1 scrollTop should be called with arg' );
+
+            assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
+        });
+        QUnit.test( '#2', function ( assert ) {
+            expect( 12 );
+            var i = 2;
+            var h_hidden    = 70;
+            var h_tbody     = 200;
+            var h_hidden_calc = 40;            // selected row is hidden above the tbody
+            // expected value calculated manually
+
+            var selectorLtI = 'lt';
+            var selectorEqI = 'eq';
+            var h_tr        = hi;
+            var h_aboveSel  = hi * i;
+
+            stub.height             = sinon.stub( tbody, "height" );
+            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
+            stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
+
+            stub.height             .onCall( 0 ).returns( h_tbody );
+            stub.scrollTop          .onCall( 0 ).returns( h_hidden );
+            stub.scrollTop          .onCall( 1 ).returns();
+            stub.getSelectorTR      .onCall( 0 ).returns( selectorLtI );
+            stub.getSelectorTR      .onCall( 1 ).returns( selectorEqI );
+            stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
+            stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
+
+            var res = scrollToRow( i, tbody );
+
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );
+            assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
+            assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
+
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWith(  "lt", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWith(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.height.getCall( 0 ).calledWith(), 'height should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWith( selectorEqI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 1 ).calledWith( selectorLtI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 0 ).calledWith(), '0 scrollTop should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 1 ).calledWith( h_hidden_calc ), '1 scrollTop should be called with arg' );
+
+            assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
+        });
+        QUnit.test( '#3', function ( assert ) {
+            expect( 12 );
+            var i = 11;
+            var h_hidden    = 10;
+            var h_tbody     = 200;
+            var h_hidden_calc = 40;            // selected row is hidden below the tbody
+            // expected value calculated manually
+
+            var selectorLtI = 'lt';
+            var selectorEqI = 'eq';
+            var h_tr        = hi;
+            var h_aboveSel  = hi * i;
+
+            stub.height             = sinon.stub( tbody, "height" );
+            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
+            stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
+
+            stub.height             .onCall( 0 ).returns( h_tbody );
+            stub.scrollTop          .onCall( 0 ).returns( h_hidden );
+            stub.scrollTop          .onCall( 1 ).returns();
+            stub.getSelectorTR      .onCall( 0 ).returns( selectorLtI );
+            stub.getSelectorTR      .onCall( 1 ).returns( selectorEqI );
+            stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
+            stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
+
+            var res = scrollToRow( i, tbody );
+
+            assert.ok( stub.height.calledOnce, 'height should be called once' );
+            assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );
+            assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
+            assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
+
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWith(  "lt", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWith(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.height.getCall( 0 ).calledWith(), 'height should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWith( selectorEqI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.totalOuterHeight.getCall( 1 ).calledWith( selectorLtI ), 
+                                                                            'totalOuterHeight should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 0 ).calledWith(), '0 scrollTop should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 1 ).calledWith( h_hidden_calc ), '1 scrollTop should be called with arg' );
+
+            assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
+        });
+    } );
+    //-------------------------------------------------------------------------
+    QUnit.test( 'setValToHTMLrow', function ( assert ) {
+        expect( 4 );
+        var i = 5;
+        var j;
+        var changes = {0:'000',1:'111'};
+        var supplement = 'qwerty';
+        stub.setValToHTML = sinon.stub( window, "setValToHTML" );
+        var res = setValToHTMLrow( i, changes, supplement  );
+        assert.ok( stub.setValToHTML.calledTwice, 'setValToHTML should be called twice' );
+        assert.ok( stub.setValToHTML.getCall( 0 ).calledWith( i, '0', '000', supplement ), 
+                                                                            '0 setValToHTML should be called with arg' );
+        assert.ok( stub.setValToHTML.getCall( 1 ).calledWith( i, '1', '111', supplement ), 
+                                                                            '1 setValToHTML should be called with arg' );
+        assert.deepEqual( res, undefined, 'setValToHTML should return proper value' );  
+    });
 } );
 //=============================================================================
+function setValToHTML( i, j, val, supplement ) {    // function declared in another js file, not in browtab.js 
+}

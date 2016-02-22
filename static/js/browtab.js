@@ -308,18 +308,18 @@ function getSelectorTR( qq, i ){
     var s = "#browtable tbody tr:" + qq + "(" + i + ")" ;
     return s;
 }
-function getVisibleIndex( selector, tbody ){
+function getVisibleIndex( selector, $tbody ){
     // return object arr.i_top, arr.i_bot - index of top and bottom visible rows respectively
-    if ( tbody === undefined ) {
-        tbody = $( "#browtable tbody" );
+    if ( $tbody === undefined ) {
+        $tbody = $( "#browtable tbody" );
     }
     var hi,
         top_edge_visible,
         bot_edge_visible,
         i_top, i_bot;
     var arr = {};
-    var h_hidden = tbody.scrollTop();// hidden part above tbody in px
-    var h_tbody  = tbody.height();    // visible tbody height in px
+    var h_hidden = $tbody.scrollTop();// hidden part above tbody in px
+    var h_tbody  = $tbody.height();    // visible tbody height in px
     var h = 0;
     var i = 0;
     var top_found = false;  
@@ -363,22 +363,25 @@ function totalOuterHeight( selector ){
     });
     return h;
 }
-function scrollToRow( i ) {
+function scrollToRow( i, $tbody ) {
     // scroll tbody to row index i to be visible
+    if ( $tbody === undefined ) {
+        $tbody = $( "#browtable tbody" );
+    }
     var selectorLtI = getSelectorTR( "lt", i );
     var selectorEqI = getSelectorTR( "eq", i );
-    var h_tbody     = $( "#browtable tbody" ).height();             // visible tbody height in px
-    var h_tr        = $( selectorEqI ).outerHeight();               // i-th tr    height in px
-    var h_allTr     = totalOuterHeight( "#browtable tbody tr" );    // common height of all tr in px
+    var h_tbody     = $tbody.height();             // visible tbody height in px
+    var h_tr        = totalOuterHeight( selectorEqI );               // i-th tr    height in px
     var h_aboveSel  = totalOuterHeight( selectorLtI );      // part of common height above i-th tr
     var h_uptoSel   = h_aboveSel + h_tr;                    // -//- including i-th tr height
-    var h_hidden    = $( "#browtable tbody" ).scrollTop();  // hidden part above tbody in px
+    var h_hidden    = $tbody.scrollTop();  // hidden part above tbody in px
     if ( h_hidden >= h_aboveSel ) {                         // i-th row is in hidden area above tbody?
         h_hidden = h_aboveSel;                              // we allow to hide this part of common height
     } else if ( h_uptoSel >= h_hidden + h_tbody ) {         // i-th row is not visible below tbody?
         h_hidden = h_uptoSel - h_tbody;                     // we allow to hide this part of common heiight
     }
-    $( "#browtable tbody" ).scrollTop( h_hidden );   
+    $tbody.scrollTop( h_hidden );   
+    return h_hidden;
 }
 
 /*
