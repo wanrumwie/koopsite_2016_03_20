@@ -1,1 +1,1 @@
-manage.py test functional_tests.flats 
+manage.py test functional_tests.folders.tests_report_preview 

@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^$',
                 TemplateView.as_view(template_name='js_tests.html'), name='js_tests'),
     url(r'^koopsite/functions/$',
-                TemplateView.as_view(template_name='js_tests_koopsite_functions.html'), name='koopsite_functions'),
+                TemplateView.as_view(template_name='js_tests_functions.html'), name='koopsite_functions'),
     url(r'^koopsite/browtab/$',
                 TemplateView.as_view(template_name='js_tests_koopsite_browtab.html'), name='koopsite_browtab'),
     url(r'^folders/$',

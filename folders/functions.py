@@ -83,7 +83,7 @@ def response_for_download(report, cd_value='attachment'):
     md = 'modification-date="%s"; ' % report.uploaded_on
     response = HttpResponse(content_type=ct)
     # content = report.file.read()
-    with open(path) as file:
+    with open(path, 'rb') as file:
         content = file.read()   # читаємо файл незалежно від report
                                 # (інакше при тестуванні не завжди
                                 # вдається видалити тимчасовий файл)

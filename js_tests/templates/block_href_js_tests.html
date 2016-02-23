@@ -7,13 +7,15 @@
 {% block hrefs-apps %}
     Тести аплікацій:
     <br>
-        koopsite:
+        project koopsite:
+        <a href="{% url 'js_tests:functions' %}">functions</a>
+        <a href="{% url 'js_tests:browtab' %}">browtab</a>
         <a href="{% url 'js_tests:example' %}">EXAMPLE</a>
-        <a href="{% url 'js_tests:koopsite_functions' %}">Functions</a>
-        <a href="{% url 'js_tests:browtab' %}">BrowTab</a>
-        <a href="{% url 'js_tests:koopsite_browtab' %}">BrowTab(OLD)</a>
     <br>
-        folders:
+        app koopsite:
+        <a href="{% url 'js_tests:koopsite_users_browtab' %}">users_browtab</a>
+    <br>
+        app folders:
         <a href="{% url 'js_tests:folders' %}">Folders app</a>
     <br>
 {% endblock hrefs-apps %}

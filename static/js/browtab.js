@@ -1,6 +1,9 @@
 // JavaScript Document
 console.log('start loading browtab.js');
 
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
 var rowsNumber;
 var qs_TR_arr;       // 2D Array of queryset data from server + TR DOM object for each table row.
 var qs_TR_arr_start; // the same, obtained from view at start of loaded ppage end still unchanged.
@@ -413,22 +416,29 @@ function changeSelElement( changes, supplement ) {
     // changes - array of changed only values {j: val}, j - column, val - new value.
     // supplement - array of additional data needed for html, eg iconpath.
     var j;
-    // changing columns in selected row of 2D-array:
-    for ( j in changes ) {  // 0-column changed too
-        val = changes[j];
-        qs_TR_arr[selRowIndex][j] = val;
+    for ( j in changes ) {  // changing columns in selected row of 2D-array: 0-column changed too
+        qs_TR_arr[selRowIndex][j] = changes[j];
     }
-    // setting changes in selected row in html:
-    setValToHTMLrow( selRowIndex, changes, supplement );
-    // changing TR sub-element in selected row of 2D-array:
-    var TR = getTRfromTbodyByIndex( selRowIndex );
+
+console.log('after: qs_TR_arr[selRowIndex][j] = changes[j] : ========================');
+console.log('changes=', changes);
+console.log('supplement=', supplement);
+console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
+
+    setValToHTMLrow( selRowIndex, changes, supplement );    // setting changes in selected row in html
+    var TR = getTRfromTbodyByIndex( selRowIndex );          // changing TR sub-element in selected row of 2D-array
+    /*
+    // old method:
     ob = {};
     ob.TR     = TR;  // add DOM TR object to array as 0th column 
     ob.model  = changes[0].model;  
     ob.id     = changes[0].id;
     ob.name   = changes[0].name;
     qs_TR_arr[selRowIndex][0] = ob;
+    */
+    qs_TR_arr[selRowIndex][0].TR = TR;
     selRowFocus();
+
 console.log('after: changeSelElement( changes ) : ========================');
 console.log('changes=', changes);
 console.log('supplement=', supplement);
@@ -436,10 +446,12 @@ console.log('selTR =', selTR);
 console.log('selRowIndex =', selRowIndex);
 console.log('selElement =', selElement);
 console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
+
 }
 
-
-
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
 
 /*
  *********************************************************************

@@ -134,8 +134,7 @@ class ReportPreviewPageAuthenticatedVisitorWoPermissionTest(ReportPreviewPageVis
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
-
-# @skipIf(SKIP_TEST, "пропущено для економії часу")
+@skipIf(SKIP_TEST, "пропущено для економії часу")
 class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -188,7 +187,7 @@ class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest
 
     def tearDown(self):
         # sleep(10)
-        input()
+        input(' press Enter key')
         self.report.file.delete()
         super().tearDown()
 
@@ -220,6 +219,7 @@ class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
     def test_txt(self):
-        self.visit_page('example.txt', "На даний час неможливо переглянути файл цього типу")
+        # self.visit_page('example.txt', "На даний час неможливо переглянути файл цього типу")
+        self.visit_page('example.txt')
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 

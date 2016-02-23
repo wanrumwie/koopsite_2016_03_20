@@ -92,7 +92,6 @@ QUnit.test( '$( ... ).on( "click",... STUB onClick_handler', function ( assert )
 });
 */
 //=============================================================================
-
 QUnit.module( "browtab sel row functions", function( hooks ) { // This test described in tbody_hidden.xlsx file
     hooks.beforeEach( function( assert ) {
         stub = {};
@@ -1428,7 +1427,7 @@ QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test describe
     } );
 } );
 //=============================================================================
-QUnit.module( "Scrolling", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in tbody_hidden.xlsx file
     hooks.beforeEach( function( assert ) {
         stub = {};
     } );
@@ -1452,7 +1451,7 @@ QUnit.module( "Scrolling", function( hooks ) { // This test described in tbody_h
         var tbody_tr_selector = "#browtable tbody tr";
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
             rowsNumber = 20;
-            tbody = $( tbody_selector )
+            tbody = $( tbody_selector );
             $( tbody_tr_selector ).remove(); // removing all <TR> from table
             var i, TR;
             for ( i = 0 ; i < rowsNumber ; i++ ) {    // adding all new <TR> to table
@@ -1671,7 +1670,7 @@ QUnit.module( "Scrolling", function( hooks ) { // This test described in tbody_h
         var tbody_selector = "#browtable tbody";
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
             rowsNumber = 20;
-            tbody = $( tbody_selector )
+            tbody = $( tbody_selector );
             hi = 20;   // height of i-th element
         } );
         hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
@@ -1863,6 +1862,21 @@ QUnit.module( "Scrolling", function( hooks ) { // This test described in tbody_h
             assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
         });
     } );
+} );
+//=============================================================================
+function setValToHTML( i, j, val, supplement ) {    // function declared in another js file, not in browtab.js 
+}
+
+QUnit.module( "browtab Changing both <tbody> and qs_TR_arr", function( hooks ) { 
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+    } );
     //-------------------------------------------------------------------------
     QUnit.test( 'setValToHTMLrow', function ( assert ) {
         expect( 4 );
@@ -1877,9 +1891,43 @@ QUnit.module( "Scrolling", function( hooks ) { // This test described in tbody_h
                                                                             '0 setValToHTML should be called with arg' );
         assert.ok( stub.setValToHTML.getCall( 1 ).calledWith( i, '1', '111', supplement ), 
                                                                             '1 setValToHTML should be called with arg' );
-        assert.deepEqual( res, undefined, 'setValToHTML should return proper value' );  
+        assert.deepEqual( res, undefined, 'setValToHTMLrow should return proper value' );  
     });
+    //-------------------------------------------------------------------------
+    QUnit.test( 'changeSelElement', function ( assert ) {
+        expect( 12 );
+        selRowIndex = 1;
+        qs_TR_arr = [ [0, 0], [0, 0] ];
+        var TR = $( "#browtable tbody tr" ); 
+        var ob = {};
+        ob.model  = 'user';  
+        ob.id     = 55;
+        ob.name   = 'fred';
+        var changes = {0:ob, 1:'111'};
+        var supplement = 'qwerty';
+
+        stub.setValToHTMLrow = sinon.stub( window, "setValToHTMLrow" );
+        stub.getTRfromTbodyByIndex = sinon.stub( window, "getTRfromTbodyByIndex" ).returns( TR );
+        stub.selRowFocus = sinon.stub( window, "selRowFocus" );
+
+        var res = changeSelElement( changes, supplement );
+
+        assert.ok( stub.setValToHTMLrow.calledOnce, 'setValToHTMLrow should be called once' );
+        assert.ok( stub.setValToHTMLrow.calledWith( selRowIndex, changes, supplement ),
+                                                            'setValToHTMLrow should be called with arg' );
+        assert.ok( stub.getTRfromTbodyByIndex.calledOnce, 'getTRfromTbodyByIndex should be called once' );
+        assert.ok( stub.getTRfromTbodyByIndex.calledWith( selRowIndex ),'getTRfromTbodyByIndex should be called with arg' );
+        assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
+        assert.ok( stub.selRowFocus.calledWith(),'selRowFocus should be called with arg' );
+
+        assert.deepEqual( qs_TR_arr[selRowIndex][0].TR, TR, 'changeSelElement should set value to global var' );
+        assert.equal( qs_TR_arr[selRowIndex][0].model,  'user', 'changeSelElement should set value to global var' );
+        assert.equal( qs_TR_arr[selRowIndex][0].id,     55, 'changeSelElement should set value to global var' );
+        assert.equal( qs_TR_arr[selRowIndex][0].name,   'fred', 'changeSelElement should set value to global var' );
+        assert.equal( qs_TR_arr[selRowIndex][1],        '111', 'changeSelElement should set value to global var' );
+
+        assert.deepEqual( res, undefined, 'changeSelElement should return proper value' );  
+    });
+    //-------------------------------------------------------------------------
 } );
 //=============================================================================
-function setValToHTML( i, j, val, supplement ) {    // function declared in another js file, not in browtab.js 
-}

@@ -198,16 +198,16 @@ else:
 TRACE_CONDITION = False
 
 # Умова для декоратора @unittest.skipIf(SKIP_TEST)
-# SKIP_TEST = True    # пропускаємо задекоровані тести
-SKIP_TEST = False   # виконуємо всі тести
+SKIP_TEST = True    # пропускаємо задекоровані тести
+# SKIP_TEST = False   # виконуємо всі тести
 
 if SKIP_TEST:
     print('SKIP_TEST =', SKIP_TEST)
 
 # Умова для декоратора @unittest.skipIf(SKIP_VISUAL_TEST)
 # для тестів, які потребують візуального спостереження
-SKIP_VISUAL_TEST = True    # пропускаємо "візуальні" тести
-# SKIP_VISUAL_TEST = False   # виконуємо "візуальні" тести
+# SKIP_VISUAL_TEST = True    # пропускаємо "візуальні" тести
+SKIP_VISUAL_TEST = False   # виконуємо "візуальні" тести
 
 if not SKIP_VISUAL_TEST:
     print('SKIP_VISUAL_TEST =', SKIP_VISUAL_TEST)
