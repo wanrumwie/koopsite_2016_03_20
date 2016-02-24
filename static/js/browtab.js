@@ -14,12 +14,19 @@ var selElement = {}; // object = selElement.model , selElement.id , selElement.n
 var selectStyle = "selected";
 var normalStyle = "normal";
 
-set_browtab_listeners(); 
+$( document ).ready( browtab_document_ready_handler );
 
-function set_browtab_listeners(){
-    $( "#browtable tbody" ).off( "click",    "td").on( "click",    "td", onClick_handler );
-    $( "#browtable tbody" ).off( "dblclick", "td").on( "dblclick", "td", onDblclick_handler );
-    $( "#browtable tbody" ).off( "keydown",  "td").on( "keydown",  "td", onKeydown_handler );
+function browtab_document_ready_handler(){
+    set_browtab_listeners(); 
+}
+
+function set_browtab_listeners( $tbody ){
+    if ( $tbody === undefined ) {
+        $tbody = $( "#browtable tbody" );
+    }
+    $tbody.off( "click",    "td").on( "click",    "td", onClick_handler );
+    $tbody.off( "dblclick", "td").on( "dblclick", "td", onDblclick_handler );
+    $tbody.off( "keydown",  "td").on( "keydown",  "td", onKeydown_handler );
 }
 function onClick_handler( event ) {
     selectRow( event.currentTarget );
@@ -34,7 +41,6 @@ function onKeydown_handler( event ) {
     onKeyDown( event.which );
     return false;
 }
-
 
 /*
 Event handlers are bound only to the currently selected elements; 
@@ -102,8 +108,8 @@ function runhref() {            // runhref can be tested by functional tests onl
 }
 function storeSelRowIndex() {
     var change = false;
-    if ( $( '#selRowIndex').val() != selRowIndex ) {
-         $( '#selRowIndex').val( selRowIndex );
+    if ( $( '#selRowIndex' ).val() != selRowIndex ) {
+         $( '#selRowIndex' ).val( selRowIndex );
         change = true;
     }
     if ( $( '#selElementModel' ).val() != selElement.model ) {
@@ -115,7 +121,7 @@ function storeSelRowIndex() {
         change = true;
     }
     if ( change ) {
-        $('#selRowIndex').trigger( 'change' );  // actibation of data exchange with session
+        $( '#selRowIndex' ).trigger( 'change' );  // actibation of data exchange with session
     }
 }
 function selectRow( targ ) {    // select row in case of mouse click on it

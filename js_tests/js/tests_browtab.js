@@ -1,5 +1,5 @@
 /*
-Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, columnsNumber, create_qs_TR_arr (?), display_qs_TR_arr (?), expect (?), getRowIndexbyID (?), getSelRowIndex (?), getTRbyID (?), getTRbyIndex (?), getTRfromTbodyByIndex (?), get_m_id_n_ByIndex (?), get_qs_TR_arr (?), markSelRow (?), onClick_handler (?), onDblclick_handler (?), onKeyDown (?), onKeydown_handler (?), qs_TR_arr (?), restore_qs_TR_arr (?), rowsNumber (?), selElement (?), selRowFocus (?), selRowIndex (?), selTR (?), selectRow (?), selectStyle (?), setSelRow (?), setStartRow (?), set_browtab_listeners (?), sinon (?), storeSelRowIndex (?), stub, window (?)
+Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, browtab_document_ready_handler (?), changeSelElement (?), columnsNumber, create_qs_TR_arr (?), deleteElement (?), display_qs_TR_arr (?), expect (?), getRowIndexbyID (?), getSelRowIndex (?), getSelectorTR (?), getTRbyID (?), getTRbyIndex (?), getTRfromTbodyByIndex (?), getVisibleIndex (?), get_m_id_n_ByIndex (?), get_qs_TR_arr (?), markSelRow (?), normalStyle (?), onClick_handler (?), onDblclick_handler (?), onKeyDown (?), onKeydown_handler (?), qs_TR_arr (?), restore_qs_TR_arr (?), rowsNumber (?), scrollToRow (?), selElement (?), selRowFocus (?), selRowIndex (?), selTR (?), selectRow (?), selectStyle (?), setSelRow (?), setStartRow (?), setValToHTML, setValToHTMLrow (?), set_browtab_listeners (?), sinon (?), storeSelRowIndex (?), stub, totalOuterHeight (?), window (?)
 */
 
 //QUnit.config.reorder = false;
@@ -14,11 +14,15 @@ QUnit.test( 'js file start assignments', function ( assert ) {
     assert.equal( normalStyle, "normal", 'CSS style for unselected row');
 });
 //=============================================================================
-QUnit.module( "browtab listeners", function( hooks ) { // This test described in tbody_hidden.xlsx file
-    var selector;
+QUnit.module( "browtab document ready", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    var $tbody;
+    var tbody_selector;
+    var target_selector;
     hooks.beforeEach( function( assert ) {
         stub = {};
-        selector = "#td_qwerty";
+        target_selector = "#td_qwerty";
+        tbody_selector  = "#browtable tbody";
+        $tbody          = $( tbody_selector );
         set_browtab_listeners(); 
     } );
     hooks.afterEach( function( assert ) {
@@ -27,6 +31,36 @@ QUnit.module( "browtab listeners", function( hooks ) { // This test described in
             stub[meth].restore();
         }
     } );
+    QUnit.test( 'browtab_document_ready_handler', function ( assert ) {
+        expect( 3 );
+        stub.set_browtab_listeners = sinon.stub( window, "set_browtab_listeners" );
+        var res = browtab_document_ready_handler( );
+        assert.ok( stub.set_browtab_listeners.calledOnce, 'set_browtab_listeners should be called once' );
+        assert.ok( stub.set_browtab_listeners.calledWith( ), 'set_browtab_listeners should be called with arg' );
+        assert.equal( res, undefined, 'browtab_document_ready_handler should return false' );
+    });
+    QUnit.test( 'set_browtab_listeners', function ( assert ) {
+        // Attension! in this test stub is name for sinon.spy, not sinon,stub
+        expect( 9 );
+
+        stub.off = sinon.spy( $tbody, "off" );
+        stub.on  = sinon.spy( $tbody, "on" );
+
+        var res = set_browtab_listeners( $tbody );
+
+        assert.ok( stub.off.calledThrice, 'off should be called thrice' );
+        assert.ok( stub.on.calledThrice, 'on should be called thrice' );
+
+        assert.ok( stub.off.getCall( 0 ).calledWith( "click",    "td" ), '0 off should be called with arg' );
+        assert.ok( stub.off.getCall( 1 ).calledWith( "dblclick", "td" ), '1 off should be called with arg' );
+        assert.ok( stub.off.getCall( 2 ).calledWith( "keydown",  "td" ), '2 off should be called with arg' );
+
+        assert.ok( stub.on.getCall( 0 ).calledWith( "click",    "td", onClick_handler ), '0 on should be called with arg' );
+        assert.ok( stub.on.getCall( 1 ).calledWith( "dblclick", "td", onDblclick_handler ), '1 on should be called with arg' );
+        assert.ok( stub.on.getCall( 2 ).calledWith( "keydown",  "td", onKeydown_handler ), '2 on should be called with arg' );
+
+        assert.equal( res, undefined, 'set_browtab_listeners should return false' );
+    });
     QUnit.test( 'onClick_handler', function ( assert ) {
         expect( 3 );
         var e = {                               // e is needed as onClick argument
@@ -41,7 +75,7 @@ QUnit.module( "browtab listeners", function( hooks ) { // This test described in
     QUnit.test( '$( ... ).on( "click",... STUB selectRow', function ( assert ) {
         expect( 1 );
         stub.selectRow = sinon.stub( window, "selectRow" );
-        $( selector ).trigger( 'click' );
+        $( target_selector ).trigger( 'click' );
         assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
     });
     QUnit.test( 'onDblclick_handler', function ( assert ) {
@@ -62,7 +96,7 @@ QUnit.module( "browtab listeners", function( hooks ) { // This test described in
         expect( 2 );
         stub.selectRow = sinon.stub( window, "selectRow" );
         stub.runhref = sinon.stub( window, "runhref" );
-        $( selector ).trigger( 'dblclick' );
+        $( target_selector ).trigger( 'dblclick' );
         assert.ok( stub.selectRow.calledOnce, 'selectRow should be called once' );
         assert.ok( stub.runhref.calledOnce, 'runhref should be called once' );
     });
@@ -80,14 +114,14 @@ QUnit.module( "browtab listeners", function( hooks ) { // This test described in
     QUnit.test( '$( ... ).on( "keydown",... STUB onKeyDown', function ( assert ) {
         expect( 1 );
         stub.onKeyDown = sinon.stub( window, "onKeyDown" );
-        $( selector ).trigger( $.Event( "keydown", { keyCode: 9 } ) );
+        $( target_selector ).trigger( $.Event( "keydown", { keyCode: 9 } ) );
         assert.ok( stub.onKeyDown.calledOnce, 'onKeyDown should be called once' );
     });
 } );
 /*  It's impossible to stub function inside on():  $( ... ).on( ..., onClick_handler ) ?
 QUnit.test( '$( ... ).on( "click",... STUB onClick_handler', function ( assert ) {
     stub = sinon.stub( window, "onClick_handler" );
-    $( selector ).trigger( 'click' );
+    $( target_selector ).trigger( 'click' );
     assert.equal( stub.calledOnce, true, 'onClick_handler should be called once' );
 });
 */
@@ -1446,12 +1480,12 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
     });
     //-------------------------------------------------------------------------
     QUnit.module( "getVisibleIndex", function( hooks ) {
-        var hi, tbody;
+        var hi, $tbody;
         var tbody_selector = "#browtable tbody";
         var tbody_tr_selector = "#browtable tbody tr";
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
             rowsNumber = 20;
-            tbody = $( tbody_selector );
+            $tbody = $( tbody_selector );
             $( tbody_tr_selector ).remove(); // removing all <TR> from table
             var i, TR;
             for ( i = 0 ; i < rowsNumber ; i++ ) {    // adding all new <TR> to table
@@ -1476,9 +1510,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = i_top + 0;
             expected.i_bot = i_bot + 0;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1500,9 +1534,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = i_top + 0;
             expected.i_bot = i_bot + 0;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1524,9 +1558,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = i_top + 0;
             expected.i_bot = i_bot + 0;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1548,9 +1582,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = i_top + 0;
             expected.i_bot = i_bot + 0;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1572,9 +1606,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = i_top + 1;
             expected.i_bot = i_bot + 0;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1596,9 +1630,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = i_top + 0;
             expected.i_bot = i_bot + 0;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1620,9 +1654,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = i_top + 0;
             expected.i_bot = i_bot + 1;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, rowsNumber, "new rows added successfully!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1645,9 +1679,9 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             expected.i_top = undefined;
             expected.i_bot = undefined;
 
-            stub.scrollTop = sinon.stub( tbody, "scrollTop" ).returns( h_hidden );
-            stub.height = sinon.stub( tbody, "height" ).returns( h_tbody );
-            var res = getVisibleIndex( tbody_tr_selector, tbody );
+            stub.scrollTop = sinon.stub( $tbody, "scrollTop" ).returns( h_hidden );
+            stub.height = sinon.stub( $tbody, "height" ).returns( h_tbody );
+            var res = getVisibleIndex( tbody_tr_selector, $tbody );
             assert.equal( $( "td", tbody_selector ).length, 0, "no rows shoild be in this test!" );
             assert.ok( stub.scrollTop.calledOnce, 'scrollTop should be called once' );
             assert.ok( stub.scrollTop.calledWith(), 'scrollTop should be called with arg' );
@@ -1666,11 +1700,11 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
     } );
     //-------------------------------------------------------------------------
     QUnit.module( "scrollToRow", function( hooks ) {
-        var hi, tbody;
+        var hi, $tbody;
         var tbody_selector = "#browtable tbody";
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
             rowsNumber = 20;
-            tbody = $( tbody_selector );
+            $tbody = $( tbody_selector );
             hi = 20;   // height of i-th element
         } );
         hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
@@ -1694,8 +1728,8 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
                 h_hidden_calc = h_uptoSel - h_tbody;                     // we allow to hide this part of common heiight
             }
 
-            stub.height             = sinon.stub( tbody, "height" );
-            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.height             = sinon.stub( $tbody, "height" );
+            stub.scrollTop          = sinon.stub( $tbody, "scrollTop" );
             stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
             stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
 
@@ -1707,7 +1741,7 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
             stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
 
-            var res = scrollToRow( i, tbody );
+            var res = scrollToRow( i, $tbody );
 
             assert.ok( stub.height.calledOnce, 'height should be called once' );
             assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );
@@ -1739,8 +1773,8 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             var h_tr        = hi;
             var h_aboveSel  = hi * i;
 
-            stub.height             = sinon.stub( tbody, "height" );
-            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.height             = sinon.stub( $tbody, "height" );
+            stub.scrollTop          = sinon.stub( $tbody, "scrollTop" );
             stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
             stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
 
@@ -1752,7 +1786,7 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
             stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
 
-            var res = scrollToRow( i, tbody );
+            var res = scrollToRow( i, $tbody );
 
             assert.ok( stub.height.calledOnce, 'height should be called once' );
             assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );
@@ -1784,8 +1818,8 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             var h_tr        = hi;
             var h_aboveSel  = hi * i;
 
-            stub.height             = sinon.stub( tbody, "height" );
-            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.height             = sinon.stub( $tbody, "height" );
+            stub.scrollTop          = sinon.stub( $tbody, "scrollTop" );
             stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
             stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
 
@@ -1797,7 +1831,7 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
             stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
 
-            var res = scrollToRow( i, tbody );
+            var res = scrollToRow( i, $tbody );
 
             assert.ok( stub.height.calledOnce, 'height should be called once' );
             assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );
@@ -1829,8 +1863,8 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             var h_tr        = hi;
             var h_aboveSel  = hi * i;
 
-            stub.height             = sinon.stub( tbody, "height" );
-            stub.scrollTop          = sinon.stub( tbody, "scrollTop" );
+            stub.height             = sinon.stub( $tbody, "height" );
+            stub.scrollTop          = sinon.stub( $tbody, "scrollTop" );
             stub.getSelectorTR      = sinon.stub( window, "getSelectorTR" );
             stub.totalOuterHeight   = sinon.stub( window, "totalOuterHeight" );
 
@@ -1842,7 +1876,7 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             stub.totalOuterHeight   .onCall( 0 ).returns( h_tr );
             stub.totalOuterHeight   .onCall( 1 ).returns( h_aboveSel );
 
-            var res = scrollToRow( i, tbody );
+            var res = scrollToRow( i, $tbody );
 
             assert.ok( stub.height.calledOnce, 'height should be called once' );
             assert.ok( stub.scrollTop.calledTwice, 'scrollTop should be called twice' );

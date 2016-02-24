@@ -3,28 +3,24 @@ console.log('start loading browtab_ajax.js');
 
 var csrf_token;
 
-$( document ).ready( function() {
+$( document ).ready( browtab_ajax_document_ready_handler );
+
+function browtab_ajax_document_ready_handler(){
     create_qs_TR_arr();
-console.log('finished create_qs_TR_arr()');
     // csrf_token = $.cookie('csrftoken');             // Receiving the csrf_token value from cookie
     csrf_token = $( "#csrfmiddlewaretoken" ).val();   // Receiving the csrf_token value from template
     ajax_startRowIndexFromSession();                // Receiving start row index from session
-console.log('finished ajax_startRowIndexFromSession()');
-    return false;
-});
-
-set_browtab_ajax_listeners(); 
-
-function set_browtab_ajax_listeners(){
-    $( '#selRowIndex'     ).off( "change"        ).on( "change",         onChange_handler );
+    set_browtab_ajax_listeners(); 
 }
+function set_browtab_ajax_listeners( $selRowIndex ){
+    if ( $selRowIndex === undefined ) {
+        $selRowIndex = $( "#selRowIndex" );
+    }
+    $selRowIndex.off( "change"        ).on( "change",         onChange_handler );}
 function onChange_handler( event ) {
-console.log('onChange_handler start');
     ajax_selRowIndexToSession();                    // Sending selected row index to session
-console.log('onChange_handler finish');
     return false;
 }
-
 
 /*
  *********************************************************************

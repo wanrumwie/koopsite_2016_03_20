@@ -13,6 +13,9 @@ urlpatterns = [
     url(r'^browtab/$',
         TemplateView.as_view(template_name='js_tests_browtab.html'),
                                       name='browtab'),
+    url(r'^browtab_ajax/$',
+        TemplateView.as_view(template_name='js_tests_browtab_ajax.html'),
+                                      name='browtab_ajax'),
 
     url(r'^functions/$',
         TemplateView.as_view(template_name='js_tests_functions.html'),
