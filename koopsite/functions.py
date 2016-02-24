@@ -267,14 +267,20 @@ def parseClientRequest(requestPOST):
     #    активуємо помилку яку відслідкуємо у викликаючій процедурі
     # Назва таблиці повинна бути в запиті
     if not browTabName:
-        raise ValueError('Error data in request.POST: no table name', model, browTabName)
+        raise ValueError('\n Bad data in request.POST: no table name',
+                         '\n model=%s' % model,
+                         '\n browTabName=%s' % browTabName)
     # Назва таблиці повинна бути в словнику browTabName_models
     if browTabName not in get_browTabName_models():
-        raise ValueError('Error data in request.POST: unknown table name', model, browTabName)
+        raise ValueError('\n Bad data in request.POST: unknown table name',
+                         '\n model=%s' % model,
+                         '\n browTabName=%s' % browTabName)
     # Якщо є назва моделі, то вона повинна корелювати з назвою таблиці
     if model:
         if model not in get_browTabName_models().get(browTabName):
-            raise ValueError('Error data in request.POST: model name does not correspond to table name', model, browTabName)
+            raise ValueError('\n Bad data in request.POST: model name does not correspond to table name',
+                             '\n model=%s' % model,
+                             '\n browTabName=%s' % browTabName)
     # Помилок у вхідних даних немає
     return d
 
@@ -299,14 +305,20 @@ def parseXHRClientRequest(requestMETA):
     #    активуємо помилку яку відслідкуємо у викликаючій процедурі
     # Назва таблиці повинна бути в запиті
     if not browTabName:
-        raise ValueError('Error data in request.META: no table name', model, browTabName)
+        raise ValueError('\n Bad data in request.META: no table name',
+                         '\n model=%s' % model,
+                         '\n browTabName=%s' % browTabName)
     # Назва таблиці повинна бути в словнику browTabName_models
     if browTabName not in get_browTabName_models():
-        raise ValueError('Error data in request.META: unknown table name', model, browTabName)
+        raise ValueError('\n Bad data in request.META: unknown table name',
+                         '\n model=%s' % model,
+                         '\n browTabName=%s' % browTabName)
     # Якщо є назва моделі, то вона повинна корелювати з назвою таблиці
     if model:
         if model not in get_browTabName_models().get(browTabName):
-            raise ValueError('Error data in request.META: model name does not correspond to table name', model, browTabName)
+            raise ValueError('\n Bad data in request.META: model name does not correspond to table name',
+                             '\n model=%s' % model,
+                             '\n browTabName=%s' % browTabName)
     # Помилок у вхідних даних немає
     return d
 

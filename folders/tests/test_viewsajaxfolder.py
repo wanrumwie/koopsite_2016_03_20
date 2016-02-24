@@ -301,7 +301,6 @@ class AjaxTableRowTestBase(TestCase):
         self.assertEqual(d.get('supplement'), expected_supplement)
 
 
-
 @skipIf(SKIP_TEST, "пропущено для економії часу")
 class AjaxTableRowViewTest(AjaxTableRowTestBase):
 
@@ -1499,7 +1498,8 @@ class XHRTableRowViewTest(XHRTableRowTestBase):
         request = self.get_request()
         response = view.handler(request)
         self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        expected = [b"There is no 'HTTP_X_CLIENT_REQUEST' in request.META"]
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
@@ -1511,7 +1511,8 @@ class XHRTableRowViewTest(XHRTableRowTestBase):
         request = self.get_request(ajax_data)
         response = view.handler(request)
         self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        expected = [b'There is no element in request.META']
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
@@ -1545,7 +1546,7 @@ class XHRReportDownloadTest(XHRTableRowTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200_user_with_permission(self):
+    def test_view_gives_response_status_code_400_user_with_permission_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1553,7 +1554,7 @@ class XHRReportDownloadTest(XHRTableRowTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -1616,7 +1617,7 @@ class XHRFolderDownloadTest(XHRTableRowTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200_user_with_permission(self):
+    def test_view_gives_response_status_code_400_user_with_permission_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1624,7 +1625,7 @@ class XHRFolderDownloadTest(XHRTableRowTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -1716,7 +1717,7 @@ class XHRReportUploadTest(XHRTableRowTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200_user_with_permission(self):
+    def test_view_gives_response_status_code_400_user_with_permission_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1724,7 +1725,7 @@ class XHRReportUploadTest(XHRTableRowTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view

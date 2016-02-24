@@ -4,7 +4,7 @@ import types
 from itertools import chain
 from django.contrib.auth.decorators import permission_required
 from django.core.files.base import ContentFile
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
@@ -602,7 +602,7 @@ class XHRTableRowView(View):
             element, rqst = self.get_XHR_data(request, self.rqst)
             if not element:
                 print("There is no element in request.META")
-                return HttpResponse()
+                return HttpResponseBadRequest("There is no element in request.META")
 
             old_element = FolderContentsArray().get_row(element)
 
@@ -625,7 +625,7 @@ class XHRTableRowView(View):
             return response
         else:
             print("There is no 'HTTP_X_CLIENT_REQUEST' in request.META")
-            return HttpResponse()
+            return HttpResponseBadRequest("There is no 'HTTP_X_CLIENT_REQUEST' in request.META")
 
     def processing(self, request, report, rqst, msg):
         """

@@ -51,7 +51,8 @@
         <label for="list_length">list_length:</label>
         <input id="list_length"     type="text" value="{{ object_list|length }}">
         <label for="json_arr">json_arr:</label>
-        <input id="json_arr"        type="text" value="{{ json_arr }}">
+        <input id="json_arr"        type="text"
+               value='{"0":{"0":{"id":"3","model":"user","name":"george"},"1":"george","2":""},"1":{"0":{"id":"1","model":"user","name":"john"},"1":"john","2":""},"2":{"0":{"id":"3","model":"folder","name":"fjohn"},"1":"fjohn","2":""}}'>
 
         <!-- У ці поля view запише назву таблиці та параметри стартового
             обраного рядка (індекс рядка, id та тип елемента (ім'я моделі)).

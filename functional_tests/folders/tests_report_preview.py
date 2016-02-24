@@ -7,7 +7,7 @@ from django.contrib.auth.models import AnonymousUser
 from folders.tests.test_base import DummyFolder
 from functional_tests.koopsite.ft_base import PageVisitTest
 from koopsite.fileExtIconPath import get_viewable_extension_list
-from koopsite.settings import SKIP_TEST, SKIP_VISUAL_TEST
+from koopsite.settings import SKIP_TEST, WAIT_VISUAL_TEST
 
 
 
@@ -171,7 +171,6 @@ class ReportPreviewPageAuthenticatedVisitorNotViewableFileTest(ReportPreviewPage
         print('finished: %s' % inspect.stack()[0][3], end=' >> ')
 
 
-@skipIf(SKIP_VISUAL_TEST, "Тест потребує візуального спостереження")
 class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest):
     """
     Тест відвідання сторінки сайту
@@ -186,8 +185,8 @@ class ReportPreviewPageAuthenticatedVisitorTestVisual(ReportPreviewPageVisitTest
         self.parent = DummyFolder().create_dummy_folder()
 
     def tearDown(self):
-        # sleep(10)
-        input(' press Enter key')
+        if WAIT_VISUAL_TEST:
+            input(' press Enter key')
         self.report.file.delete()
         super().tearDown()
 

@@ -185,14 +185,25 @@ QUnit.module( "browtab sel row functions", function( hooks ) { // This test desc
         assert.strictEqual( getSelRowIndex(  0 ), 0, 'sel row index must be 0 if rowsNumber=0');
         assert.strictEqual( getSelRowIndex( 10 ), 0, 'sel row index must be 0 if rowsNumber=0');
     });
+    // TODO-selRowFocus() works, but test - not. Probably because selTR object is defined in different way?
     QUnit.test('selRowFocus', function ( assert ) {
-        expect( 3 );
-        selTR = "#tr_qwerty";
-        $( selTR ).find( 'A' ).blur();
-        assert.notOk( $( "#a_qwerty" ).is(':focus'), 'proper <a> should not be focused before selRowFocus');
+        expect( 6 );
+
+        selTR = $( "#tr_qwerty_s" );
+        selTR.find( 'A' ).blur();
+        assert.notOk( $( "#a_qwerty_s" ).is(':focus'), 'proper <a> should not be focused before selRowFocus');
+
+        stub.focus = sinon.spy( selTR.find( 'A' ), "focus" );
+        stub.find  = sinon.spy( selTR, "find" );
+
         var res = selRowFocus();
+
+        assert.equal( stub.find.callCount, 3, 'find should be called 4 times' );
+//        assert.equal( stub.focus.callCount, 1, 'focus should be called once' );
+        assert.ok( stub.find.getCall( 0 ).calledWith( "A" ), '0 off should be called with arg' );
         assert.equal( res, undefined, 'selRowFocus should return undefined' );
-        assert.ok( $( "#a_qwerty" ).is(':focus'), 'proper <a> should be focused');
+        assert.ok( selTR.find( 'A' ).is(':focus'), 'proper <a> should be focused');
+        assert.ok( $( "#tr_qwerty_s A" ).is(':focus'), 'proper <a> should be focused');
     });
     QUnit.test( 'markSelRow', function ( assert ) {
         expect( 11 );
@@ -225,7 +236,7 @@ QUnit.module( "browtab sel row functions", function( hooks ) { // This test desc
         assert.equal( selRowIndex, 1, 'selectRow should set selRowIndex value' );
         assert.equal( $( selTR )[0], $( "#tr_qwerty_s" )[0], 'selectRow should set selTR value' );
     //
-    //    All properties of $( selTR) object are identical with $( "#tr_qwerty_s" ) once except "selector":
+    //    All properties of $( selTR ) object are identical with $( "#tr_qwerty_s" ) one except "selector":
     //    var prop;
     //    for ( prop in $( selTR ) ) {
     //        if ( prop != "selector" ){

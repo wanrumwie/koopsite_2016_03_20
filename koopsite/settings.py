@@ -198,20 +198,19 @@ else:
 TRACE_CONDITION = False
 
 # Умова для декоратора @unittest.skipIf(SKIP_TEST)
-SKIP_TEST = True    # пропускаємо задекоровані тести
-# SKIP_TEST = False   # виконуємо всі тести
+# SKIP_TEST = True    # пропускаємо задекоровані тести
+SKIP_TEST = False   # виконуємо всі тести
 
 if SKIP_TEST:
     print('SKIP_TEST =', SKIP_TEST)
 
-# Умова для декоратора @unittest.skipIf(SKIP_VISUAL_TEST)
-# для тестів, які потребують візуального спостереження
-# SKIP_VISUAL_TEST = True    # пропускаємо "візуальні" тести
-SKIP_VISUAL_TEST = False   # виконуємо "візуальні" тести
+# Умова для тестів, які потребують візуального спостереження
+# WAIT_VISUAL_TEST = True    # чекати на Enter key вкінці "візуальних" тестів
+WAIT_VISUAL_TEST = False    # обходити Enter key вкінці "візуальних" тестів
 
-if not SKIP_VISUAL_TEST:
-    print('SKIP_VISUAL_TEST =', SKIP_VISUAL_TEST)
-    print('Кожен тест чекатиме на натискання ENTER в консолі')
+if WAIT_VISUAL_TEST:
+    print('WAIT_VISUAL_TEST =', WAIT_VISUAL_TEST)
+    print('Деякі "візуальні" тести чекатимуть на натискання ENTER в консолі')
 
 # Якщо запущено всі тести:
 if sys.argv == ['C:/PyPrograms/Django/koopsite/manage-test.py']\

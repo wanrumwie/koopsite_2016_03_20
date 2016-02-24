@@ -5,7 +5,7 @@ import types
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.views.generic.list import ListView
@@ -213,7 +213,7 @@ class AjaxAccountViewBase(View):
             user, profile = self.get_request_data(request)
             if not user:
                 print("There is no user in request.POST")
-                return HttpResponse()
+                return HttpResponseBadRequest("There is no user in request.POST")
             # Елемент - рядок таблиці ДО змін:
             old_element = UsersTableArray().get_row(user)
 
@@ -237,7 +237,7 @@ class AjaxAccountViewBase(View):
             return HttpResponse(json.dumps(response_cont), content_type="application/json")
         else:
             print("There is no 'client_request' in request.POST")
-            return HttpResponse()
+            return HttpResponseBadRequest("There is no 'client_request' in request.POST")
 
     def get_request_data(self, request):
         # Розбираємо дані від клієнта:

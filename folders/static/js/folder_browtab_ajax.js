@@ -67,7 +67,7 @@ console.log('sr=', sr);
  *  Defining data array for send by AJAX:
  *********************************************************************
  */
-function selElementArr(){
+function getSelElementArr(){
     var arr = {};
     arr.browTabName = $( "#browTabName" ).val(); // name of table for session dictionary
     arr.parent_id   = $( "#parent_id" ).val();   // parent folder id
@@ -85,7 +85,7 @@ function selElementArr(){
  */
 function ajax_FoldersTreeFromBase() {
     console.log("ajax_FoldersTreeFromBase()");
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -113,7 +113,7 @@ function ajax_FoldersTreeFromBase() {
  *********************************************************************
  */
 function ajax_folderCreate() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     arr.name = $( "#id_name" ).val();  // redefine: new folder name
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
@@ -132,7 +132,7 @@ function ajax_folderCreate() {
  *********************************************************************
  */
 function ajax_folderRename() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     arr.name = $( "#id_name" ).val();    // redefine: folder new name
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
@@ -151,7 +151,7 @@ function ajax_folderRename() {
  *********************************************************************
  */
 function ajax_reportRename() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     arr.name = $( "#id_name" ).val();    // redefine: report new name
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
@@ -170,7 +170,7 @@ function ajax_reportRename() {
  *********************************************************************
  */
 function ajax_elementMove( target_id ) {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     arr.target_id = target_id;                  // additional element in arr
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
@@ -189,7 +189,7 @@ function ajax_elementMove( target_id ) {
  *********************************************************************
  */
 function ajax_folderDelete() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -207,7 +207,7 @@ function ajax_folderDelete() {
  *********************************************************************
  */
 function ajax_reportDelete() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -263,14 +263,14 @@ function xhr_POST( url, encoded_json_string ) {
  *********************************************************************
  */
 function xhr_reportDownload() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     var encoded_json_string = encodeURIComponent( json_string );
     var url = "/folders/ajax-report-download";
     xhr_POST( url, encoded_json_string );
 }
 function xhr_folderDownload() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     var encoded_json_string = encodeURIComponent( json_string );
     var url = "/folders/ajax-folder-download";
@@ -289,7 +289,7 @@ function xhr_reportUpload() {
         dialogMessage( "File name empty", "Error", "File name empty title", 2000 );
         return;
     }
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     arr.fileName = file.name;
     arr.fileSize = file.size;
     arr.fileType = file.type;

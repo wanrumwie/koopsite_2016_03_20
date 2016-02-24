@@ -7,6 +7,7 @@
 {% endblock title %}
 
 {% block qunit-fixture %}
+    {% load staticfiles %}
     {% load koop_template_filters %}
     {% load folder_template_filters %}
             <table id="browtable"
@@ -21,17 +22,17 @@
                      >
                     <tr id="tr_qwerty">
                         <td id="td_qwerty">
-                            <a id="a_qwerty" href="/qwerty/"></a>
+                            <a id="a_qwerty" href="/qwerty/">link /qwerty/</a>
                         </td>
                     </tr>
                     <tr id="tr_qwerty_s" class="selected">
                         <td id="td_qwerty_s">
-                            <a id="a_qwerty_s" href="#"></a>
+                            <a id="a_qwerty_s" href="#">link #</a>
                         </td>
                     </tr>
                     <tr id="tr_qwerty_r" class="selected">
                         <td id="td_qwerty_r">
-                            <a id="a_qwerty_r" href="#"></a>
+                            <a id="a_qwerty_r" href="#">no link</a>
                         </td>
                     </tr>
 

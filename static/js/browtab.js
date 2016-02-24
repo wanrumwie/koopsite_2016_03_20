@@ -14,8 +14,7 @@ var selElement = {}; // object = selElement.model , selElement.id , selElement.n
 var selectStyle = "selected";
 var normalStyle = "normal";
 
-$( document ).ready( browtab_document_ready_handler );
-
+// document_ready_handler called from html:
 function browtab_document_ready_handler(){
     set_browtab_listeners(); 
 }
@@ -91,7 +90,10 @@ function getSelRowIndex( i ){
 }
 function selRowFocus(){
     // set focus to href in selected row
-    $( selTR ).find( 'A' ).focus();
+//    $( selTR ).find( 'A' ).focus();
+    console.log("selTR.find( 'A' ).is(':focus') before =", selTR.find( 'A' ).is(':focus'));
+    selTR.find( 'A' ).focus();
+    console.log("selTR.find( 'A' ).is(':focus') after =", selTR.find( 'A' ).is(':focus'));
 }
 
 function markSelRow() {

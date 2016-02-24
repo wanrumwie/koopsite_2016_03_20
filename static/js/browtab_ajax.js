@@ -3,8 +3,7 @@ console.log('start loading browtab_ajax.js');
 
 var csrf_token;
 
-$( document ).ready( browtab_ajax_document_ready_handler );
-
+// document_ready_handler called from html:
 function browtab_ajax_document_ready_handler(){
     create_qs_TR_arr();
     // csrf_token = $.cookie('csrftoken');             // Receiving the csrf_token value from cookie
@@ -16,7 +15,8 @@ function set_browtab_ajax_listeners( $selRowIndex ){
     if ( $selRowIndex === undefined ) {
         $selRowIndex = $( "#selRowIndex" );
     }
-    $selRowIndex.off( "change"        ).on( "change",         onChange_handler );}
+    $selRowIndex.off( "change"        ).on( "change",         onChange_handler );
+}
 function onChange_handler( event ) {
     ajax_selRowIndexToSession();                    // Sending selected row index to session
     return false;
@@ -29,29 +29,30 @@ function onChange_handler( event ) {
  */
 function xhrErrorAlert( xhr, ss ) {
     if ( ss === undefined ) { ss = ''; }
-    alert('xhrErrorAlert:' + 
+    alert('xhrErrorAlert: ' + ss +
                 '\n xhr.status='        + xhr.status + 
                 '\n xhr.statusText='    + xhr.statusText + 
                 '\n xhr.responseText='  + xhr.responseText );
 }
-function xhrErrorHandler(xhr) {
+function xhrErrorHandler( xhr ) {
+console.log('xhrErrorHandler:', 'xhr=', xhr);
     if ( xhr.status == 401 || xhr.status == 403 ) { // Redirect to login
         //window.location = xhr.responseText;
         dialogMessage( "Ви не маєте доступу до цієї операції!",
                       "Error", "Помилка доступу", 3000 );
-        $( "#dialog-box-form" ).dialog( "close" );
+        dialog_box_form_close();
     } else {
         xhrErrorAlert( xhr, 'xhrErrorHandler' ); }
 }
 function transferFailed( evt ) {
 	dialogMessage( "An error occurred while transferring the file. Probably file too long", 
                         "Error", "UPLOAD ERROR", 3000 );
-    $( "#dialog-box-form" ).dialog( "close" );
+    dialog_box_form_close();
 //  alert( "An error occurred while transferring the file." );
 }
 function transferCanceled( evt ) {
 	dialogMessage( "The transfer has been canceled by the user.", "", "UPLOAD CANCELED", 2000 );
-    $( "#dialog-box-form" ).dialog( "close" );
+    dialog_box_form_close();
     
 //  alert( "The transfer has been canceled by the user." );
 }
@@ -80,8 +81,14 @@ function ajax_settings() {
  *  AJAX sending data to session:
  *********************************************************************
  */
+function ajax_selRowIndexToSession_success_handler( json ) { // response no needed
+console.log('ajax_selRowIndexToSession_success_handler');
+}
+function ajax_selRowIndexToSession_error_handler( xhr ) {
+    xhrErrorAlert( xhr, 'ajax_selRowIndexToSession' );
+}
 function ajax_selRowIndexToSession() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -90,10 +97,8 @@ function ajax_selRowIndexToSession() {
             client_request : json_string,
             csrfmiddlewaretoken: csrf_token
         };
-    as.success = function( json ) { };            // response no needed
-    as.error = function( xhr ) {
-            xhrErrorAlert( xhr, 'ajax_selRowIndexToSession' );
-        };
+    as.success  = ajax_selRowIndexToSession_success_handler;            
+    as.error    = ajax_selRowIndexToSession_error_handler;
     $.ajax( as );
     return false;
 }
@@ -104,7 +109,7 @@ function ajax_selRowIndexToSession() {
  */
 function ajax_startRowIndexFromSession() {
     var f_name = $( "#thisfolder span" ).text();    // parent folder name
-    var arr = selElementArr();  // at this moment the only known values are: arr.browTabName & arr.parent_id. 
+    var arr = getSelElementArr();  // at this moment the only known values are: arr.browTabName & arr.parent_id. 
                                 // It is enough for start... fromSession
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:

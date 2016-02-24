@@ -93,6 +93,9 @@ function dialog_open_func_default() {
     };
     return open_func;
 }
+function dialog_box_form_close() {
+    $( "#dialog-box-form" ).dialog( "close" );
+}
 
 function defineAbortButton( xhr ){
     // Define text and function for the only button during upload file:

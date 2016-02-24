@@ -118,7 +118,6 @@ class UsersTableTest(TestCase):
         self.john.save()
         self.dummy_user = AnonymousUser()
 
-
     def test_view_model_and_attributes(self):
         view = self.cls_view()
         self.assertEqual(view.model      , User)
@@ -220,9 +219,7 @@ class UsersTableTest(TestCase):
             if j_arr[i][5]: j_arr[i][5] = j_arr[i][5].isoformat()
         json_arr = json.dumps(j_arr)
         self.assertEqual(context['json_arr'       ], json_arr)
-
         self.assertEqual(request.session['Selections'], {'users_table': {'': {'model': None, 'id': None, 'selRowIndex': 0}}})
-
 
 
 class AjaxAccountTestBase(TestCase):
@@ -271,7 +268,8 @@ class AjaxAccountTestBase(TestCase):
                                             expected_type=None,
                                             expected_message=None,
                                             expected_changes=None,
-                                            expected_supplement=None
+                                            expected_supplement=None,
+                                            expected_status_code=200
                                            ):
         d = dict_from_json_str_or_bytes(response._container[0])
 
@@ -283,6 +281,7 @@ class AjaxAccountTestBase(TestCase):
         self.assertEqual(d['supplement'], expected_supplement)
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
+        self.assertEqual(response.status_code, expected_status_code)
 
     def get_elemSet(self, userSet):
         elemSet = []
@@ -341,8 +340,6 @@ class AjaxAccountTestBase(TestCase):
             self.assertEqual(d['id'        ], expected_id        )
             self.assertEqual(d['changes'   ], expected_changes   )
             self.assertEqual(d['supplement'], expected_supplement)
-
-
 
 
 # @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -418,7 +415,6 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         self.assertEqual(user, None)
         self.assertEqual(profile, None)
 
-
     def test_get_request_data_4_no_model(self):
         view = self.cls_view
         kwargs = {
@@ -438,7 +434,6 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         # Чи метод повертає правильні записи?
         self.assertEqual(user, None)
         self.assertEqual(profile, None)
-
 
     def test_get_request_data_4_model_mismatch_table_name(self):
         view = self.cls_view
@@ -460,7 +455,6 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         self.assertEqual(user, None)
         self.assertEqual(profile, None)
 
-
     def test_get_request_data_5_no_table_name(self):
         view = self.cls_view
         kwargs = {
@@ -480,7 +474,6 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         # Чи метод повертає правильні записи?
         self.assertEqual(user, None)
         self.assertEqual(profile, None)
-
 
     def test_get_request_data_6_unknown_table_name(self):
         view = self.cls_view
@@ -502,7 +495,6 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         self.assertEqual(user, None)
         self.assertEqual(profile, None)
 
-
         # Метод processing тестується у дочірніх класах
 
     def test_send_e_mail(self):
@@ -523,23 +515,17 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         view = self.cls_view()
         view.sendMail = True
         user = self.paul
-
         e_msg_body = "Ваш акаунт на сайті підтверджено!"
         view.send_e_mail(user, e_msg_body)
-
         self.assertEqual(len(mail.outbox), 0)
-
 
     def test_send_e_mail_not_send(self):
         view = self.cls_view()
         view.sendMail = False
         user = self.freddy
-
         e_msg_body = "Ваш акаунт на сайті підтверджено!"
         view.send_e_mail(user, e_msg_body)
-
         self.assertEqual(len(mail.outbox), 0)
-
 
     def test_handler(self):
         view = self.cls_view()
@@ -580,7 +566,8 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         request.POST = {}
         response = view.handler(request)
         self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        expected = [b"There is no 'client_request' in request.POST"]
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
@@ -601,7 +588,8 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         request.session = {}
         response = view.handler(request)
         self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        expected = [b'There is no user in request.POST']
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
@@ -613,7 +601,6 @@ class AjaxAccountViewTest(AjaxAccountTestBase):
         response = view.dispatch(request)
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
-
 
 
 @skipIf(SKIP_TEST, "пропущено для економії часу")
@@ -638,7 +625,7 @@ class AjaxRecognizeAccountTest(AjaxAccountTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_400_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -646,7 +633,7 @@ class AjaxRecognizeAccountTest(AjaxAccountTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -825,7 +812,7 @@ class AjaxDenyAccountTest(AjaxAccountTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_400_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -833,7 +820,7 @@ class AjaxDenyAccountTest(AjaxAccountTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -1029,7 +1016,7 @@ class AjaxActivateAccountTest(AjaxAccountTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_400_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1037,7 +1024,7 @@ class AjaxActivateAccountTest(AjaxAccountTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -1206,7 +1193,7 @@ class AjaxDeactivateAccountTest(AjaxAccountTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_400_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1214,7 +1201,7 @@ class AjaxDeactivateAccountTest(AjaxAccountTestBase):
         # request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -1356,7 +1343,7 @@ class AjaxSetMemberAccountTest(AjaxAccountTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_400_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1364,7 +1351,7 @@ class AjaxSetMemberAccountTest(AjaxAccountTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -1528,7 +1515,7 @@ class AjaxDenyMemberAccountTest(AjaxAccountTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_400_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1536,7 +1523,7 @@ class AjaxDenyMemberAccountTest(AjaxAccountTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view
@@ -1679,7 +1666,7 @@ class AjaxDeleteAccountTest(AjaxAccountTestBase):
         expected_response = view.handler(request)
         self.assertEqual(response.__dict__, expected_response.__dict__)
 
-    def test_view_gives_response_status_code_200(self):
+    def test_view_gives_response_status_code_400_empty_request(self):
         self.client.login(username='john', password='secret')
         view = self.cls_view
         request = RequestFactory().get(self.path)
@@ -1687,7 +1674,7 @@ class AjaxDeleteAccountTest(AjaxAccountTestBase):
         request.session = {}
         kwargs = {}
         response = view.as_view()(request, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_view_response_raise_exception_AnonymousUser(self):
         view = self.cls_view

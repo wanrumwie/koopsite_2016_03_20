@@ -55,7 +55,7 @@ function xhrSuccessHandler( sr ) {
  *  Defining data array for send by AJAX:
  *********************************************************************
  */
-function selElementArr(){
+function getSelElementArr(){
     // only selected element in table
     var arr = {};
     arr.browTabName = $( "#browTabName" ).val(); // name of table for session dictionary
@@ -68,7 +68,7 @@ function selElementArr(){
 //    console.log('arr=', arr);
     return arr;
 }
-function allElementsArr(){
+function getAllElementsArr(){
     // all elements in filtered table
     /* Structure of arr:
     arr = { 'browTabName' : browTabName,
@@ -96,7 +96,7 @@ function allElementsArr(){
         elemSet[i] = elem;
     }
     arr.elemSet = elemSet;
-console.log('allElementsArr=', arr);
+console.log('getAllElementsArr=', arr);
     return arr;
 }
 /*
@@ -105,7 +105,7 @@ console.log('allElementsArr=', arr);
  *********************************************************************
  */
 function ajax_activateAllAccounts() {
-    var arr = allElementsArr();
+    var arr = getAllElementsArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -118,7 +118,7 @@ function ajax_activateAllAccounts() {
     return false;
 }
 function ajax_setMemberAllAccounts() {
-    var arr = allElementsArr();
+    var arr = getAllElementsArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -136,7 +136,7 @@ function ajax_setMemberAllAccounts() {
  *********************************************************************
  */
 function ajax_recognizeAccount() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -149,7 +149,7 @@ function ajax_recognizeAccount() {
     return false;
 }
 function ajax_denyAccount() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -162,7 +162,7 @@ function ajax_denyAccount() {
     return false;
 }
 function ajax_activateAccount() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -175,7 +175,7 @@ function ajax_activateAccount() {
     return false;
 }
 function ajax_deactivateAccount() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -188,7 +188,7 @@ function ajax_deactivateAccount() {
     return false;
 }
 function ajax_setMemberAccount() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -201,7 +201,7 @@ function ajax_setMemberAccount() {
     return false;
 }
 function ajax_denyMemberAccount() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();
@@ -214,7 +214,7 @@ function ajax_denyMemberAccount() {
     return false;
 }
 function ajax_deleteAccount() {
-    var arr = selElementArr();
+    var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
     var as = ajax_settings();

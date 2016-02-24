@@ -1,9 +1,9 @@
 import json
 import types
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from koopsite.functions import  getSelElementFromSession, \
                         setSelElementToSession, \
-                        parseClientRequest
+                        parseClientRequest, dict_print
 
 # Константа для типів повідомлення,
 # яке сервер посилає клієнту через AJAX:
@@ -33,7 +33,8 @@ def ajaxSelRowIndexToSession(request):
         except ValueError as err:
             # запит від клієнта містить невідповідні дані:
             print('ajaxSelRowIndexToSession:', err.args)
-            return HttpResponse()
+            s = 'ajaxSelRowIndexToSession: %s %s %s' % err.args
+            return HttpResponseBadRequest(s)
         browTabName = d.get('browTabName')
         parent_id   = d.get('parent_id')
         # Формуємо дані для зберігання в сесії:
@@ -51,8 +52,8 @@ def ajaxSelRowIndexToSession(request):
         # return JsonResponse(response_dict)    # дає помилку в pythonanywhere.com
         return HttpResponse(json.dumps(response_dict), content_type="application/json")
     else:
-        # return render(request, 'folders/folder_contents.html')
-        return HttpResponse()
+        return HttpResponseBadRequest("ajaxSelRowIndexToSession: "
+                                      "No 'client_request' in request.POST")
 
 def ajaxStartRowIndexFromSession(request):
     if 'client_request' in request.POST:
@@ -61,8 +62,9 @@ def ajaxStartRowIndexFromSession(request):
             d = parseClientRequest(request.POST)
         except ValueError as err:
             # запит від клієнта містить невідповідні дані:
-            print('ajaxStartRowIndexFromSession:', err.args)
-            return HttpResponse()
+            print('ajaxStartRowIndexFromSession:', err)
+            s = 'ajaxStartRowIndexFromSession: %s %s %s' % err.args
+            return HttpResponseBadRequest(s)
         browTabName = d.get('browTabName')
         parent_id   = d.get('parent_id')
         # Беремо з сесії масив параметрів виділеного елемента
@@ -75,8 +77,8 @@ def ajaxStartRowIndexFromSession(request):
         # return JsonResponse(response_dict)    # дає помилку в pythonanywhere.com
         return HttpResponse(json.dumps(response_dict), content_type="application/json")
     else:
-        return HttpResponse()
-        # return render(request, 'folders/folder_contents.html')
+        return HttpResponseBadRequest("ajaxStartRowIndexFromSession: "
+                                      "No 'client_request' in request.POST")
 
 
 

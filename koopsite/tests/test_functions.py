@@ -430,7 +430,6 @@ class ParseXHRClientRequestTest(TestCase):
         self.assertEqual(parseXHRClientRequest(request.POST), expected)
 
 
-
 class Get_namespace_from_dictTest(TestCase):
 
     def setUp(self):

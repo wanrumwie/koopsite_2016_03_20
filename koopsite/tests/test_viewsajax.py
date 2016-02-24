@@ -2,7 +2,7 @@ import json
 from urllib.parse import quote
 
 from django.contrib.auth.models import User
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.test import TestCase
 
 from functional_tests.koopsite.ft_base import DummyUser
@@ -134,7 +134,7 @@ class AjaxSelRowIndexToSessionTest(TestCase):
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
 
-    def test_function_return_empty_response_if_non_mathing_data(self):
+    def test_function_return_response_bad_request_if_non_mathing_data(self):
         kwargs = {
                     'browTabName' :'users_table',
                     'parent_id'   :"",
@@ -150,19 +150,21 @@ class AjaxSelRowIndexToSessionTest(TestCase):
         request.session = {}
         response = ajaxSelRowIndexToSession(request)
         self.assertEqual(request.session, {})
-        self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        self.assertTrue(isinstance(response, HttpResponseBadRequest))
+        expected = [b'ajaxSelRowIndexToSession: \n Bad data in request.POST: model name does not correspond to table name \n model=FOLDER \n browTabName=users_table']
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
-    def test_function_return_empty_response_if_no_client_request(self):
+    def test_function_return_response_bad_request_if_no_client_request(self):
         request = self.client.request()
         request.POST = {}
         request.session = {}
         response = ajaxSelRowIndexToSession(request)
         self.assertEqual(request.session, {})
-        self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        self.assertTrue(isinstance(response, HttpResponseBadRequest))
+        expected = [b"ajaxSelRowIndexToSession: No 'client_request' in request.POST"]
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
@@ -212,7 +214,7 @@ class AjaxStartRowIndexFromSessionTest(TestCase):
         expected = {'content-type': ('Content-Type', 'application/json')}
         self.assertEqual(response._headers, expected)
 
-    def test_function_return_empty_response_if_non_matching_data(self):
+    def test_function_return_response_bad_request_if_non_matching_data(self):
         ajax_data = DummyAjaxRequest(browTabName='folders_contents',
                                        model='USER',
                                        parent_id='1',
@@ -221,17 +223,19 @@ class AjaxStartRowIndexFromSessionTest(TestCase):
         request.POST = ajax_data
         request.session = {'Selections': {'folders_contents': {'1': {'model': "user", 'id': "1", 'selRowIndex': '0'}}}}
         response = ajaxStartRowIndexFromSession(request)
-        self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        self.assertTrue(isinstance(response, HttpResponseBadRequest))
+        expected = [b'ajaxStartRowIndexFromSession: \n Bad data in request.POST: model name does not correspond to table name \n model=USER \n browTabName=folders_contents']
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
-    def test_function_return_empty_response_if_no_client_request(self):
+    def test_function_return_response_bad_request_if_no_client_request(self):
         request = self.client.request()
         request.POST = {}
         response = ajaxStartRowIndexFromSession(request)
-        self.assertTrue(isinstance(response, HttpResponse))
-        self.assertEqual(response._container, [b''])
+        self.assertTrue(isinstance(response, HttpResponseBadRequest))
+        expected = [b"ajaxStartRowIndexFromSession: No 'client_request' in request.POST"]
+        self.assertEqual(response._container, expected)
         expected = {'content-type': ('Content-Type', 'text/html; charset=utf-8')}
         self.assertEqual(response._headers, expected)
 
