@@ -29,6 +29,7 @@ function getElementNamebyIndex( i ) {
  *********************************************************************
  */
 function setValToHTML( i, j, val, supplement ) {
+console.log('setV...: supplement=',supplement);
     // Set val to the <td> in <tr> in <tbody>. i - row (start 0), j - column(start 1).
     var d;
     var s_date;
@@ -57,7 +58,6 @@ function setValToHTML( i, j, val, supplement ) {
         case 8:
             iconpath = supplement.iconPath[j];
             $( selector ).find( 'img' ).attr( "src", iconpath );
-console.log('j=',j, 'iconpath=',iconpath);
             break;
         default:
             break;
