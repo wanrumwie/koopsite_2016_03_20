@@ -1,6 +1,10 @@
 // JavaScript Document
 console.log('start loading browtab_ajax.js');
 
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
+
 var csrf_token;
 
 // document_ready_handler called from html:
@@ -21,7 +25,6 @@ function onChange_handler( event ) {
     ajax_selRowIndexToSession();                    // Sending selected row index to session
     return false;
 }
-
 /*
  *********************************************************************
  *  Defining error and cancel handlers for xhr: 
@@ -53,8 +56,6 @@ function transferFailed( evt ) {
 function transferCanceled( evt ) {
 	dialogMessage( "The transfer has been canceled by the user.", "", "UPLOAD CANCELED", 2000 );
     dialog_box_form_close();
-    
-//  alert( "The transfer has been canceled by the user." );
 }
 /*
  *********************************************************************
@@ -142,6 +143,11 @@ function ajax_startRowIndexFromSession() {
     $.ajax( as );
     return false;
 }
+
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+
 
 
 

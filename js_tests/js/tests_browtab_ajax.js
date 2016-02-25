@@ -1,49 +1,13 @@
 /*
-Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, columnsNumber, create_qs_TR_arr (?), display_qs_TR_arr (?), expect (?), getRowIndexbyID (?), getSelRowIndex (?), getTRbyID (?), getTRbyIndex (?), getTRfromTbodyByIndex (?), get_m_id_n_ByIndex (?), get_qs_TR_arr (?), markSelRow (?), onClick_handler (?), onDblclick_handler (?), onKeyDown (?), onKeydown_handler (?), qs_TR_arr (?), restore_qs_TR_arr (?), rowsNumber (?), selElement (?), selRowFocus (?), selRowIndex (?), selTR (?), selectRow (?), selectStyle (?), setSelRow (?), setStartRow (?), set_browtab_listeners (?), sinon (?), storeSelRowIndex (?), stub, window (?)
+Global:  $ (?), JSON (?), QUnit (?), ajaxSuccessHandler, ajax_selRowIndexToSession (?), ajax_selRowIndexToSession_error_handler (?), ajax_selRowIndexToSession_success_handler (?), ajax_settings (?), ajax_startRowIndexFromSession (?), ajax_startRowIndexFromSession_error_handler (?), ajax_startRowIndexFromSession_success_handler (?), browtab_ajax_document_ready_handler (?), csrf_token (?), dialog, dialogMessage, dialog_box_form_close, expect (?), folderEmptyMessage, getSelElementArr, onChange_handler (?), rowsNumber (?), set_browtab_ajax_listeners (?), sinon (?), stub, transferCanceled (?), transferFailed (?), window (?), xhrErrorAlert (?), xhrErrorHandler (?)
 */
 
 //QUnit.config.reorder = false;
 
 var stub;   // common for all tests, is set to {} before and restored after each test
-/*
-var qs_obj = { 
-                0: {
-                    0: {'id': '3', 'model': 'user', 'name': 'george'}, 
-                    1: 'george', 
-                    2: ''
-                    }, 
-                1: {
-                    0: {'id': '1', 'model': 'user', 'name': 'john'}, 
-                    1: 'john', 
-                    2: ''
-                    },
-                2: {
-                    0: {'id': '3', 'model': 'folder', 'name': 'fjohn'}, 
-                    1: 'fjohn', 
-                    2: ''
-                    }
-                };
-var json_string = JSON.stringify( qs_obj ); // array stored in html by server
-$( "#json_arr" ).val( json_string );
-console.log('json_string=',json_string);
-*/
-/*
-        console.log('$( "#csrfmiddlewaretoken" ).val() =', $( "#csrfmiddlewaretoken" ).val());
-var columnsNumber = 2;
-function ajaxSuccessHandler( sr ) {
+function getSelElementArr(){    // function declared in another file
+    return {};
 }
-$( document ).ready( function () {
-    console.log('document ready');
-    console.log('$( "#csrfmiddlewaretoken" ).val() =', $( "#csrfmiddlewaretoken" ).val());
-    ajax_startRowIndexFromSession();                // Receiving start row index from session
-} );
-*/
-function getSelElementArr(){
-    var arr = {};
-    return arr;
-}
-
-
 //=============================================================================
 QUnit.module( "browtab_ajax document ready", function( hooks ) { // This test described in tbody_hidden.xlsx file
     var $tbody;
@@ -58,7 +22,6 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) { // This test de
         $selRowIndex          = $( selRowIndex_selector );
         set_browtab_ajax_listeners(); 
         saved_csrf_token      = $( "#csrfmiddlewaretoken" ).val();
-//        console.log('$( "#csrfmiddlewaretoken" ).val() =', $( "#csrfmiddlewaretoken" ).val());
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -85,7 +48,7 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) { // This test de
         assert.equal( res, undefined, 'browtab_ajax_document_ready_handler should return undefined' );
     });
     QUnit.test( 'set_browtab_ajax_listeners', function ( assert ) {
-        // Attension! in this test stub is name for sinon.spy, not sinon,stub
+        // Attension! in this test stub is name for sinon.spy, not sinon.stub
         expect( 5 );
 
         stub.off = sinon.spy( $selRowIndex, "off" );
@@ -340,15 +303,14 @@ function ajaxSuccessHandler(){  // function declared in another file
 }
 QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in tbody_hidden.xlsx file
     var requests = sinon.requests;
+    var done;
     hooks.beforeEach( function( assert ) {
         stub = {};
         csrf_token = $( "#csrfmiddlewaretoken" ).val();
         this.xhr = sinon.useFakeXMLHttpRequest();
         requests = [];
-        console.log('this.xhr=',this.xhr);
         this.xhr.onCreate = function ( request ) {
             requests.push( request );
-            console.log('onCreate: requests=', requests);
         };
     } );
     hooks.afterEach( function( assert ) {
@@ -358,8 +320,9 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
         }
         this.xhr.restore();
     } );
-    QUnit.asyncTest( 'ajax_selRowIndexToSession', function ( assert ) {
+    QUnit.test( 'ajax_selRowIndexToSession', function ( assert ) {
         expect( 16 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var expected_url = "/ajax-selrowindex-to-session";
         var response_status   = 200; 
@@ -370,6 +333,7 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
         var json_string = JSON.stringify( arr );
         var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
 
+        // Attension! in this place stub is name for sinon.spy, not sinon.stub
         stub.ajax               = sinon.spy( $, "ajax" );
         stub.success            = sinon.stub( window, "ajax_selRowIndexToSession_success_handler" );
         stub.error              = sinon.stub( window, "ajax_selRowIndexToSession_error_handler" );
@@ -404,12 +368,11 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
         assert.notOk( stub.error.called, 'error should not be called' );
 
         assert.equal( res, false, 'ajax_selRowIndexToSession should return false' );
-
-QUnit.start();
-
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
-    QUnit.asyncTest( 'ajax_selRowIndexToSession error', function ( assert ) {
+    QUnit.test( 'ajax_selRowIndexToSession error', function ( assert ) {
         expect( 16 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var expected_url = "/ajax-selrowindex-to-session";
         var response_status   = 400; 
@@ -420,6 +383,7 @@ QUnit.start();
         var json_string = JSON.stringify( arr );
         var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
 
+        // Attension! in this place stub is name for sinon.spy, not sinon.stub
         stub.ajax               = sinon.spy( $, "ajax" );
         stub.success            = sinon.stub( window, "ajax_selRowIndexToSession_success_handler" );
         stub.error              = sinon.stub( window, "ajax_selRowIndexToSession_error_handler" );
@@ -454,10 +418,11 @@ QUnit.start();
         assert.ok( stub.error.calledWith( ), 'error should be called with arg' );
 
         assert.equal( res, false, 'ajax_selRowIndexToSession should return false' );
-QUnit.start();
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
-    QUnit.asyncTest( 'ajax_startRowIndexFromSession', function ( assert ) {
+    QUnit.test( 'ajax_startRowIndexFromSession', function ( assert ) {
         expect( 16 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var expected_url = "/ajax-startrowindex-from-session";
         var response_status   = 200; 
@@ -468,6 +433,7 @@ QUnit.start();
         var json_string = JSON.stringify( arr );
         var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
 
+        // Attension! in this place stub is name for sinon.spy, not sinon.stub
         stub.ajax               = sinon.spy( $, "ajax" );
         stub.success            = sinon.stub( window, "ajax_startRowIndexFromSession_success_handler" );
         stub.error              = sinon.stub( window, "ajax_startRowIndexFromSession_error_handler" );
@@ -502,7 +468,57 @@ QUnit.start();
         assert.notOk( stub.error.called, 'error should not be called' );
 
         assert.equal( res, false, 'ajax_startRowIndexFromSession should return false' );
-QUnit.start();
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'ajax_startRowIndexFromSession error', function ( assert ) {
+        expect( 16 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var arr = {'id':55};
+        var expected_url = "/ajax-startrowindex-from-session";
+        var response_status   = 400; 
+        var response_headers  = { "Content-Type": "application/json" };
+        var response_body     = '[77]';
+
+        var as = ajax_settings();
+        var json_string = JSON.stringify( arr );
+        var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
+
+        // Attension! in this place stub is name for sinon.spy, not sinon.stub
+        stub.ajax               = sinon.spy( $, "ajax" );
+        stub.success            = sinon.stub( window, "ajax_startRowIndexFromSession_success_handler" );
+        stub.error              = sinon.stub( window, "ajax_startRowIndexFromSession_error_handler" );
+        stub.getSelElementArr   = sinon.stub( window, "getSelElementArr" ).returns( arr );
+        stub.ajax_settings      = sinon.stub( window, "ajax_settings" ).returns( as );
+
+        var res = ajax_startRowIndexFromSession( );
+
+        assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
+        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
+        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
+        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+
+        assert.equal( as.url, expected_url, 'function should set as.url' );
+        assert.deepEqual( as.data, {
+                                    client_request : json_string,
+                                    csrfmiddlewaretoken: csrf_token
+                                    }, 
+                                    'function should set as.data' );
+        assert.equal( as.success, ajax_startRowIndexFromSession_success_handler, 'function should set as.success' );
+        assert.equal( as.error,   ajax_startRowIndexFromSession_error_handler, 'function should set as.error' );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, expected_url, "request should have proper url" );
+		
+	    requests[0].respond( response_status, response_headers, response_body );
+
+        assert.notOk( stub.success.called, 'success should not be called once' );
+        assert.ok( stub.error.calledOnce, 'error should not be called' );
+        assert.ok( stub.error.calledWith( ), 'error should be called with arg' );
+
+        assert.equal( res, false, 'ajax_startRowIndexFromSession should return false' );
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
 } );
 //=============================================================================
