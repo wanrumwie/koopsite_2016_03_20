@@ -14,3 +14,22 @@ console.log('ev that=', that);
 console.log('last this=', this);
 }
 
+
+
+window.bar = 0;
+
+function foo(callback) {
+  setTimeout(function() {
+    window.bar++;
+    callback();
+  }, 200);
+}
+
+test("hello test", function(assert) {
+//  stop();
+  expect(1);
+  foo(function() {
+    assert.equal(window.bar, 1);
+  //  start();
+  });
+});

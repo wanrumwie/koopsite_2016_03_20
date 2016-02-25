@@ -78,15 +78,34 @@ function ajax_settings() {
 }
 /*
  *********************************************************************
- *  AJAX sending data to session:
+ *  AJAX exchanging data with session: handlers:
  *********************************************************************
  */
 function ajax_selRowIndexToSession_success_handler( json ) { // response no needed
-console.log('ajax_selRowIndexToSession_success_handler');
 }
 function ajax_selRowIndexToSession_error_handler( xhr ) {
     xhrErrorAlert( xhr, 'ajax_selRowIndexToSession' );
 }
+function ajax_startRowIndexFromSession_success_handler( json ) {
+    var f_name = $( "#thisfolder span" ).text();    // parent folder name
+    var sr = json.server_response;
+    $( "#selRowIndex" ).val( sr.selRowIndex );
+    $( "#selElementModel" ).val( sr.model );
+    $( "#selElementID" ).val( sr.id );
+    setStartRow(); // function from folder_contents.js, which load earlier
+    if ( rowsNumber === 0 ) {
+        folderEmptyMessage( f_name );
+    }
+}
+function ajax_startRowIndexFromSession_error_handler( xhr ) {
+    setStartRow(); // select row for startRowIndex from previous load of this page
+    xhrErrorAlert( xhr, 'ajax_startRowIndexFromSession' );
+}
+/*
+ *********************************************************************
+ *  AJAX sending data to session:
+ *********************************************************************
+ */
 function ajax_selRowIndexToSession() {
     var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
@@ -108,7 +127,6 @@ function ajax_selRowIndexToSession() {
  *********************************************************************
  */
 function ajax_startRowIndexFromSession() {
-    var f_name = $( "#thisfolder span" ).text();    // parent folder name
     var arr = getSelElementArr();  // at this moment the only known values are: arr.browTabName & arr.parent_id. 
                                 // It is enough for start... fromSession
     var json_string = JSON.stringify( arr );
@@ -119,20 +137,8 @@ function ajax_startRowIndexFromSession() {
             client_request : json_string,
             csrfmiddlewaretoken: csrf_token
         };
-    as.success = function( json ) {
-            var sr = json.server_response;
-            $( "#selRowIndex" ).val( sr.selRowIndex );
-            $( "#selElementModel" ).val( sr.model );
-            $( "#selElementID" ).val( sr.id );
-            setStartRow(); // function from folder_contents.js, which load earlier
-            if ( rowsNumber === 0 ) {
-                folderEmptyMessage( f_name );
-            }
-        };
-    as.error = function( xhr ) {
-            setStartRow(); // select row for startRowIndex from previous load of this page
-            xhrErrorAlert( xhr, 'ajax_startRowIndexFromSession' );
-        };
+    as.success  = ajax_startRowIndexFromSession_success_handler;            
+    as.error    = ajax_startRowIndexFromSession_error_handler;
     $.ajax( as );
     return false;
 }

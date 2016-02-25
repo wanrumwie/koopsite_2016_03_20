@@ -58,7 +58,7 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) { // This test de
         $selRowIndex          = $( selRowIndex_selector );
         set_browtab_ajax_listeners(); 
         saved_csrf_token      = $( "#csrfmiddlewaretoken" ).val();
-        console.log('$( "#csrfmiddlewaretoken" ).val() =', $( "#csrfmiddlewaretoken" ).val());
+//        console.log('$( "#csrfmiddlewaretoken" ).val() =', $( "#csrfmiddlewaretoken" ).val());
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -251,17 +251,21 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) { // This test d
     });
 } );
 //=============================================================================
-function ajaxSuccessHandler(){  // function declared in another file
+function folderEmptyMessage( f_name ) {    // This function declared in another js file.
 }
-QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in tbody_hidden.xlsx file
-    var xhr = sinon.useFakeXMLHttpRequest();
-    var requests = sinon.requests;
-    requests = [];
-    xhr.onCreate = function ( request ) {
-        requests.push(request);
-    };
+QUnit.module( "browtab_ajax session handlers", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    var xhr;
+    var sr;
+    var json;
     hooks.beforeEach( function( assert ) {
         stub = {};
+        xhr = 'qwerty';
+        sr = {};
+        sr.selRowIndex  = 55;
+        sr.model        = 'folder';
+        sr.id           = 77;
+        json = {};
+        json.server_response = sr;
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -269,26 +273,237 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
             stub[meth].restore();
         }
     } );
-    QUnit.test( 'ajax_selRowIndexToSession', function ( assert ) {
-        expect( 6 );
-        
-        stub.success = sinon.stub( window, "ajax_selRowIndexToSession_success_handler" );
-        stub.error   = sinon.stub( window, "ajax_selRowIndexToSession_error_handler" );
+    QUnit.test( 'ajax_selRowIndexToSession_error_handler', function ( assert ) {
+        expect( 3 );
+        stub.xhrErrorAlert = sinon.stub( window, "xhrErrorAlert" );
+        var res = ajax_selRowIndexToSession_error_handler( xhr );
+        assert.ok( stub.xhrErrorAlert.calledOnce, 'xhrErrorAlert should be called once' );
+        assert.ok( stub.xhrErrorAlert.calledWith( xhr, 'ajax_selRowIndexToSession' ), 
+                                                                'xhrErrorAlert should be called with arg' );
+        assert.equal( res, undefined, 'ajax_selRowIndexToSession_error_handler should return undefined' );
+    });
+    QUnit.test( 'ajax_startRowIndexFromSession_error_handler', function ( assert ) {
+        expect( 5 );
+        stub.xhrErrorAlert = sinon.stub( window, "xhrErrorAlert" );
+        stub.setStartRow = sinon.stub( window, "setStartRow" );
+        var res = ajax_startRowIndexFromSession_error_handler( xhr );
+        assert.ok( stub.xhrErrorAlert.calledOnce, 'xhrErrorAlert should be called once' );
+        assert.ok( stub.xhrErrorAlert.calledWith( xhr, 'ajax_startRowIndexFromSession' ), 
+                                                                'xhrErrorAlert should be called with arg' );
+        assert.ok( stub.setStartRow.calledOnce, 'setStartRow should be called once' );
+        assert.ok( stub.setStartRow.calledWith( ), 'setStartRow should be called with arg' );
+        assert.equal( res, undefined, 'ajax_startRowIndexFromSession_error_handler should return undefined' );
+    });
+    QUnit.test( 'ajax_startRowIndexFromSession_success_handler', function ( assert ) {
+        expect( 7 );
+        rowsNumber = 100;
 
-        var res = ajax_selRowIndexToSession( );
+        stub.setStartRow = sinon.stub( window, "setStartRow" );
+        stub.folderEmptyMessage = sinon.stub( window, "folderEmptyMessage" );
 
-        assert.equal( requests.length, 1 , "request length should be 1" );
-        assert.equal( requests[0].url, "/ajax-selrowindex-to-session", "request should have proper url" );
-		
-	    requests[0].respond( 200, { "Content-Type": "application/json" }, '[]');
+        var res = ajax_startRowIndexFromSession_success_handler( json );
 
-        assert.ok( stub.success.calledOnce, 'success should be called once' );
-        assert.ok( stub.success.calledWith( ), 'success should be called with arg' );
-        assert.notOk( stub.error.called, 'error should not be called' );
+        assert.ok( stub.setStartRow.calledOnce, 'setStartRow should be called once' );
+        assert.ok( stub.setStartRow.calledWith( ), 'setStartRow should be called with arg' );
+        assert.notOk( stub.folderEmptyMessage.called, 'folderEmptyMessage should not be called' );
 
-        assert.equal( res, false, 'ajax_selRowIndexToSession should return false' );
+        assert.equal( $( "#selRowIndex" ).val(), sr.selRowIndex, 'function set value to html' );
+        assert.equal( $( "#selElementModel" ).val(), sr.model, 'function set value to html' );
+        assert.equal( $( "#selElementID" ).val(), sr.id, 'function set value to html' );
+
+        assert.equal( res, undefined, 'ajax_startRowIndexFromSession_success_handler should return undefined' );
+    });
+    QUnit.test( 'ajax_startRowIndexFromSession_success_handler empty folder', function ( assert ) {
+        expect( 8 );
+        rowsNumber = 0;
+        var f_name = $( "#thisfolder span" ).text();    // parent folder name
+
+        stub.setStartRow = sinon.stub( window, "setStartRow" );
+        stub.folderEmptyMessage = sinon.stub( window, "folderEmptyMessage" );
+
+        var res = ajax_startRowIndexFromSession_success_handler( json );
+
+        assert.ok( stub.setStartRow.calledOnce, 'setStartRow should be called once' );
+        assert.ok( stub.setStartRow.calledWith( ), 'setStartRow should be called with arg' );
+        assert.ok( stub.folderEmptyMessage.calledOnce, 'folderEmptyMessage should be called once' );
+        assert.ok( stub.folderEmptyMessage.calledWith( f_name ), 'folderEmptyMessage should be called with arg' );
+
+        assert.equal( $( "#selRowIndex" ).val(), sr.selRowIndex, 'function set value to html' );
+        assert.equal( $( "#selElementModel" ).val(), sr.model, 'function set value to html' );
+        assert.equal( $( "#selElementID" ).val(), sr.id, 'function set value to html' );
+
+        assert.equal( res, undefined, 'ajax_startRowIndexFromSession_success_handler should return undefined' );
     });
 } );
 //=============================================================================
+function ajaxSuccessHandler(){  // function declared in another file
+}
+QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    var requests = sinon.requests;
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+        csrf_token = $( "#csrfmiddlewaretoken" ).val();
+        this.xhr = sinon.useFakeXMLHttpRequest();
+        requests = [];
+        console.log('this.xhr=',this.xhr);
+        this.xhr.onCreate = function ( request ) {
+            requests.push( request );
+            console.log('onCreate: requests=', requests);
+        };
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+        this.xhr.restore();
+    } );
+    QUnit.asyncTest( 'ajax_selRowIndexToSession', function ( assert ) {
+        expect( 16 );
+        var arr = {'id':55};
+        var expected_url = "/ajax-selrowindex-to-session";
+        var response_status   = 200; 
+        var response_headers  = { "Content-Type": "application/json" };
+        var response_body     = '[77]';
 
+        var as = ajax_settings();
+        var json_string = JSON.stringify( arr );
+        var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
+
+        stub.ajax               = sinon.spy( $, "ajax" );
+        stub.success            = sinon.stub( window, "ajax_selRowIndexToSession_success_handler" );
+        stub.error              = sinon.stub( window, "ajax_selRowIndexToSession_error_handler" );
+        stub.getSelElementArr   = sinon.stub( window, "getSelElementArr" ).returns( arr );
+        stub.ajax_settings      = sinon.stub( window, "ajax_settings" ).returns( as );
+
+        var res = ajax_selRowIndexToSession( );
+
+        assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
+        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
+        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
+        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+
+        assert.equal( as.url, expected_url, 'function should set as.url' );
+        assert.deepEqual( as.data, {
+                                    client_request : json_string,
+                                    csrfmiddlewaretoken: csrf_token
+                                    }, 
+                                    'function should set as.data' );
+        assert.equal( as.success, ajax_selRowIndexToSession_success_handler, 'function should set as.success' );
+        assert.equal( as.error,   ajax_selRowIndexToSession_error_handler, 'function should set as.error' );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, expected_url, "request should have proper url" );
+		
+	    requests[0].respond( response_status, response_headers, response_body );
+
+        assert.ok( stub.success.calledOnce, 'success should be called once' );
+        assert.ok( stub.success.calledWith( JSON.parse( response_body ) ), 'success should be called with arg' );
+        assert.notOk( stub.error.called, 'error should not be called' );
+
+        assert.equal( res, false, 'ajax_selRowIndexToSession should return false' );
+
+QUnit.start();
+
+    });
+    QUnit.asyncTest( 'ajax_selRowIndexToSession error', function ( assert ) {
+        expect( 16 );
+        var arr = {'id':55};
+        var expected_url = "/ajax-selrowindex-to-session";
+        var response_status   = 400; 
+        var response_headers  = { "Content-Type": "application/json" };
+        var response_body     = '[77]';
+
+        var as = ajax_settings();
+        var json_string = JSON.stringify( arr );
+        var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
+
+        stub.ajax               = sinon.spy( $, "ajax" );
+        stub.success            = sinon.stub( window, "ajax_selRowIndexToSession_success_handler" );
+        stub.error              = sinon.stub( window, "ajax_selRowIndexToSession_error_handler" );
+        stub.getSelElementArr   = sinon.stub( window, "getSelElementArr" ).returns( arr );
+        stub.ajax_settings      = sinon.stub( window, "ajax_settings" ).returns( as );
+
+        var res = ajax_selRowIndexToSession( );
+
+        assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
+        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
+        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
+        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+
+        assert.equal( as.url, expected_url, 'function should set as.url' );
+        assert.deepEqual( as.data, {
+                                    client_request : json_string,
+                                    csrfmiddlewaretoken: csrf_token
+                                    }, 
+                                    'function should set as.data' );
+        assert.equal( as.success, ajax_selRowIndexToSession_success_handler, 'function should set as.success' );
+        assert.equal( as.error,   ajax_selRowIndexToSession_error_handler, 'function should set as.error' );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, expected_url, "request should have proper url" );
+		
+	    requests[0].respond( response_status, response_headers, response_body );
+
+        assert.notOk( stub.success.called, 'success should not be called once' );
+        assert.ok( stub.error.calledOnce, 'error should not be called' );
+        assert.ok( stub.error.calledWith( ), 'error should be called with arg' );
+
+        assert.equal( res, false, 'ajax_selRowIndexToSession should return false' );
+QUnit.start();
+    });
+    QUnit.asyncTest( 'ajax_startRowIndexFromSession', function ( assert ) {
+        expect( 16 );
+        var arr = {'id':55};
+        var expected_url = "/ajax-startrowindex-from-session";
+        var response_status   = 200; 
+        var response_headers  = { "Content-Type": "application/json" };
+        var response_body     = '[77]';
+
+        var as = ajax_settings();
+        var json_string = JSON.stringify( arr );
+        var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
+
+        stub.ajax               = sinon.spy( $, "ajax" );
+        stub.success            = sinon.stub( window, "ajax_startRowIndexFromSession_success_handler" );
+        stub.error              = sinon.stub( window, "ajax_startRowIndexFromSession_error_handler" );
+        stub.getSelElementArr   = sinon.stub( window, "getSelElementArr" ).returns( arr );
+        stub.ajax_settings      = sinon.stub( window, "ajax_settings" ).returns( as );
+
+        var res = ajax_startRowIndexFromSession( );
+
+        assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
+        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
+        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
+        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+
+        assert.equal( as.url, expected_url, 'function should set as.url' );
+        assert.deepEqual( as.data, {
+                                    client_request : json_string,
+                                    csrfmiddlewaretoken: csrf_token
+                                    }, 
+                                    'function should set as.data' );
+        assert.equal( as.success, ajax_startRowIndexFromSession_success_handler, 'function should set as.success' );
+        assert.equal( as.error,   ajax_startRowIndexFromSession_error_handler, 'function should set as.error' );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, expected_url, "request should have proper url" );
+		
+	    requests[0].respond( response_status, response_headers, response_body );
+
+        assert.ok( stub.success.calledOnce, 'success should be called once' );
+        assert.ok( stub.success.calledWith( JSON.parse( response_body ) ), 'success should be called with arg' );
+        assert.notOk( stub.error.called, 'error should not be called' );
+
+        assert.equal( res, false, 'ajax_startRowIndexFromSession should return false' );
+QUnit.start();
+    });
+} );
+//=============================================================================
 
