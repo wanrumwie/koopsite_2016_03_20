@@ -12,7 +12,7 @@ QUnit.test( 'js file start assignments', function ( assert ) {
     assert.deepEqual( columnsNumber, 8, 'columnsNumber should be set immediately after page loaded');
 });
 //=============================================================================
-QUnit.module( "users_browtab getLoginNameFlatbyIndex", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "users_browtab getLoginNameFlatbyIndex", function( hooks ) { 
     hooks.beforeEach( function( assert ) {
         stub = {};
     } );
@@ -103,7 +103,7 @@ function auxiliary_get_html_values( sels ){
     }
     return vals;
 }
-QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "users_browtab setValToHTML", function( hooks ) { 
     var sels;
     var vals;
     hooks.beforeEach( function( assert ) {
@@ -268,7 +268,7 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
     });
 } );
 //=============================================================================
-QUnit.module( "users_browtab_ajax changeAllElements", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "users_browtab_ajax changeAllElements", function( hooks ) { 
     hooks.beforeEach( function( assert ) {
         stub = {};
     } );

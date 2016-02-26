@@ -7,53 +7,40 @@ console.log('start loading folder_browtab_ajax.js');
  *********************************************************************
  */
 function ajaxSuccessHandler( sr ) {
-console.log('ajaxSuccessHandler(sr): ==================================');
-console.log('sr=', sr);
-console.log('selTR =', selTR);
-console.log('selRowIndex =', selRowIndex);
-console.log('selElement =', selElement);
-console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
     xhrSuccessHandler( sr );
 }
 function xhrSuccessHandler( sr ) {
-console.log('sr=', sr);
     dialogMessage( sr.message, sr.type, sr.title, 2000 );
-    switch (sr.type) {
-        case 'Error': // transfer success, but server tell about error in data
-            $( "#dialog-box-form" ).dialog( "close" );
-            break;
+    switch ( sr.type ) {
         case 'IncorrectData':
             // dialog remains open, message - red
             break;
+        case 'Error': // transfer success, but server tell about error in data
         case 'Forbidden':
-            $( "#dialog-box-form" ).dialog( "close" );
-            break;
         case 'Normal':
-            $( "#dialog-box-form" ).dialog( "close" );
-            break;
         case 'NoChange':
-            $( "#dialog-box-form" ).dialog( "close" );
+            dialog_box_form_close();
             break;
         case 'NewRow':
-            $( "#dialog-box-form" ).dialog( "close" );
+            dialog_box_form_close();
             addNewElement( sr.changes, sr.supplement ); // add new element; changes has all values of new element
             break;
         case 'Rename':
-            $( "#dialog-box-form" ).dialog( "close" );
+            dialog_box_form_close();
             changeSelElement( sr.changes, sr.supplement ); // change row
             set_name_to_selElement( sr.changes[0].name ); // new name must be stored in selElement & qs_TR_arr
             break;
         case 'MoveElement':
             $.jstree.destroy();
-            $( "#dialog-box-tree" ).dialog( "close" );
+            dialog_box_form_close();
             moveElement(); // remove selected element from current folder
             break;
         case 'DeleteRow':
-            $( "#dialog-box-form" ).dialog( "close" );
+            dialog_box_form_close();
             deleteElement(); // delete selected element
             break;
         default:
-            $( "#dialog-box-form" ).dialog( "close" );
+            dialog_box_form_close();
             break;
     }
 //console.log('after: xhrSuccessHandler( sr )  : ========================');
@@ -83,8 +70,15 @@ function getSelElementArr(){
  *  AJAX receiving Folders Tree HTML code:
  *********************************************************************
  */
+function ajax_FoldersTreeFromBase_success_handler( json ) {
+    var sr = json.server_response;
+    dialogFoldersTreeHTML( sr );
+}
+function ajax_FoldersTreeFromBase_error_handler( xhr ) {
+    setStartRow(); // select row for startRowIndex from previous load of this page
+    xhrErrorAlert( xhr, 'ajax_FoldersTreeFromBase' );
+}
 function ajax_FoldersTreeFromBase() {
-    console.log("ajax_FoldersTreeFromBase()");
     var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     // Changing ajax settings:
@@ -95,15 +89,8 @@ function ajax_FoldersTreeFromBase() {
             csrfmiddlewaretoken: csrf_token
         };
     // dataType = "html";
-    as.success = function( json ) {
-            console.log( "ajax_FoldersTreeFromBase() success" );
-            var sr = json.server_response;
-            dialogFoldersTreeHTML( sr );
-        };
-    as.error = function( xhr ) {
-            setStartRow(); // select row for startRowIndex from previous load of this page
-            xhrErrorAlert( xhr, 'ajax_FoldersTreeFromBase' );
-        };
+    as.success  = ajax_FoldersTreeFromBase_success_handler;            
+    as.error    = ajax_FoldersTreeFromBase_error_handler;
     $.ajax( as );
     return false;
 }

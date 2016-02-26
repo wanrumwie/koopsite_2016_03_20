@@ -22,6 +22,10 @@ urlpatterns = [
     url(r'^folders/folder_browtab/$',
         TemplateView.as_view(template_name='folders/js_tests_folder_browtab.html'),
                                       name='folders_folder_browtab'),
+    url(r'^folders/folder_browtab_ajax/$',
+        TemplateView.as_view(template_name='folders/js_tests_folder_browtab_ajax.html'),
+                                      name='folders_folder_browtab_ajax'),
+
 
     url(r'^functions/$',
         TemplateView.as_view(template_name='js_tests_functions.html'),

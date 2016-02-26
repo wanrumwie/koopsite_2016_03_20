@@ -14,7 +14,7 @@ QUnit.test( 'js file start assignments', function ( assert ) {
     assert.equal( normalStyle, "normal", 'CSS style for unselected row');
 });
 //=============================================================================
-QUnit.module( "browtab document ready", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab document ready", function( hooks ) { 
     var $tbody;
     var tbody_selector;
     var target_selector;
@@ -40,7 +40,7 @@ QUnit.module( "browtab document ready", function( hooks ) { // This test describ
         assert.equal( res, undefined, 'browtab_document_ready_handler should return false' );
     });
     QUnit.test( 'set_browtab_listeners', function ( assert ) {
-        // Attension! in this test stub is name for sinon.spy, not sinon,stub
+        // Attention! in this test stub is name for sinon.spy, not sinon,stub
         expect( 9 );
 
         stub.off = sinon.spy( $tbody, "off" );
@@ -126,7 +126,7 @@ QUnit.test( '$( ... ).on( "click",... STUB onClick_handler', function ( assert )
 });
 */
 //=============================================================================
-QUnit.module( "browtab sel row functions", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab sel row functions", function( hooks ) { 
     hooks.beforeEach( function( assert ) {
         stub = {};
     } );
@@ -251,7 +251,7 @@ QUnit.module( "browtab sel row functions", function( hooks ) { // This test desc
 
 function auxiliary_handler(){
 }
-QUnit.module( "browtab storeSelRowIndex", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab storeSelRowIndex", function( hooks ) { 
     hooks.beforeEach( function( assert ) {
         stub = {};
         $( '#selRowIndex' ).off( "change").on( "change", function() {
@@ -320,7 +320,7 @@ QUnit.module( "browtab storeSelRowIndex", function( hooks ) { // This test descr
 } );
 
 //=============================================================================
-QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab onKeyDown", function( hooks ) { 
     var arr = {};
     var tbody_tr_selector;
     hooks.beforeEach( function( assert ) {
@@ -1276,7 +1276,7 @@ QUnit.module( "browtab onKeyDown", function( hooks ) { // This test described in
     //-------------------------------------------------------------------------
 } );
 //=============================================================================
-QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { 
     var arr = {};
     hooks.beforeEach( function( assert ) {
         stub = {};
@@ -1317,7 +1317,7 @@ QUnit.module( "browtab qs_TR_arr functions", function( hooks ) { // This test de
 
 //=============================================================================
 var columnsNumber;  // var declared in another js file, not in browtab.js 
-QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab get_qs_TR_arr", function( hooks ) { 
     var i, j, TR;
     var expected_arr = [];   // 2D array - table
     var qs_obj = {};    // array stringified on server side

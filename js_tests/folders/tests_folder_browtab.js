@@ -12,7 +12,7 @@ QUnit.test( 'js file start assignments', function ( assert ) {
     assert.deepEqual( columnsNumber, 4, 'columnsNumber should be set immediately after page loaded');
 });
 //=============================================================================
-QUnit.module( "folder_browtab setValToHTML", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "folder_browtab setValToHTML", function( hooks ) { 
     hooks.beforeEach( function( assert ) {
         stub = {};
     } );

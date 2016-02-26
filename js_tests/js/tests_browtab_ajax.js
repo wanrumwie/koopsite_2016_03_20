@@ -9,7 +9,7 @@ function getSelElementArr(){    // function declared in another file
     return {};
 }
 //=============================================================================
-QUnit.module( "browtab_ajax document ready", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab_ajax document ready", function( hooks ) { 
     var $tbody;
     var $selRowIndex;
     var selRowIndex_selector;
@@ -48,7 +48,7 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) { // This test de
         assert.equal( res, undefined, 'browtab_ajax_document_ready_handler should return undefined' );
     });
     QUnit.test( 'set_browtab_ajax_listeners', function ( assert ) {
-        // Attension! in this test stub is name for sinon.spy, not sinon.stub
+        // Attention! in this test stub is name for sinon.spy, not sinon.stub
         expect( 5 );
 
         stub.off = sinon.spy( $selRowIndex, "off" );
@@ -85,7 +85,7 @@ function dialog( a ){               // function declared in another file
 }
 function dialog_box_form_close() {  // function declared in another file
 }
-QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) { 
     var xhr = {};
     hooks.beforeEach( function( assert ) {
         stub = {};
@@ -215,7 +215,7 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) { // This test d
 //=============================================================================
 function folderEmptyMessage( f_name ) {    // This function declared in another js file.
 }
-QUnit.module( "browtab_ajax session handlers", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab_ajax session handlers", function( hooks ) { 
     var xhr;
     var sr;
     var json;
@@ -300,7 +300,7 @@ QUnit.module( "browtab_ajax session handlers", function( hooks ) { // This test 
 //=============================================================================
 function ajaxSuccessHandler(){  // function declared in another file
 }
-QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in tbody_hidden.xlsx file
+QUnit.module( "browtab_ajax ajax", function( hooks ) { 
     var requests = sinon.requests;
     var done;
     hooks.beforeEach( function( assert ) {
@@ -332,7 +332,7 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
         var json_string = JSON.stringify( arr );
         var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
 
-        // Attension! in this place stub is name for sinon.spy, not sinon.stub
+        // Attention! in this place stub is name for sinon.spy, not sinon.stub
         stub.ajax               = sinon.spy( $, "ajax" );
         stub.success            = sinon.stub( window, "ajax_selRowIndexToSession_success_handler" );
         stub.error              = sinon.stub( window, "ajax_selRowIndexToSession_error_handler" );
@@ -382,7 +382,7 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
         var json_string = JSON.stringify( arr );
         var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
 
-        // Attension! in this place stub is name for sinon.spy, not sinon.stub
+        // Attention! in this place stub is name for sinon.spy, not sinon.stub
         stub.ajax               = sinon.spy( $, "ajax" );
         stub.success            = sinon.stub( window, "ajax_selRowIndexToSession_success_handler" );
         stub.error              = sinon.stub( window, "ajax_selRowIndexToSession_error_handler" );
@@ -432,7 +432,7 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
         var json_string = JSON.stringify( arr );
         var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
 
-        // Attension! in this place stub is name for sinon.spy, not sinon.stub
+        // Attention! in this place stub is name for sinon.spy, not sinon.stub
         stub.ajax               = sinon.spy( $, "ajax" );
         stub.success            = sinon.stub( window, "ajax_startRowIndexFromSession_success_handler" );
         stub.error              = sinon.stub( window, "ajax_startRowIndexFromSession_error_handler" );
@@ -482,7 +482,7 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
         var json_string = JSON.stringify( arr );
         var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
 
-        // Attension! in this place stub is name for sinon.spy, not sinon.stub
+        // Attention! in this place stub is name for sinon.spy, not sinon.stub
         stub.ajax               = sinon.spy( $, "ajax" );
         stub.success            = sinon.stub( window, "ajax_startRowIndexFromSession_success_handler" );
         stub.error              = sinon.stub( window, "ajax_startRowIndexFromSession_error_handler" );
