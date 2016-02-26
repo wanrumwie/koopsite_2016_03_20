@@ -1,6 +1,10 @@
 // JavaScript Document
 console.log('start loading user_browtab.js');
 
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
+
 var columnsNumber   = 8;        // number of columns in table
 
 function getLoginNameFlatbyIndex( i ) { 
@@ -91,3 +95,8 @@ function changeAllElements( group ) {
     }
     selRowFocus();
 }
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+
+

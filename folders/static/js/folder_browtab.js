@@ -1,6 +1,10 @@
 // JavaScript Document
 console.log('start loading folder_browtab.js');
 
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
+
 var columnsNumber   = 4;        // number of columns in table
 
 /*
@@ -60,6 +64,7 @@ function addNewElement( changes, supplement  ) {
     // changes - array of all values of new row {j: val}, j - column, val - new value.
     // supplement - array of additional data needed for html, eg iconpath.
     // creating empty <tr> in <tbody>:
+    var j, TR;
     var f_model = changes[0].model; 
     var f_id    = changes[0].id; 
     var f_name  = changes[0].name;
@@ -71,30 +76,15 @@ function addNewElement( changes, supplement  ) {
     // fill <tr> by values:
     setValToHTMLrow( selRowIndex, changes, supplement );
     // changing columns in selected row of 2D-array:
-    var j;
     for ( j in changes ) {  // 0-column changed too
-        val = changes[j];
-        qs_TR_arr[selRowIndex][j] = val;
+        qs_TR_arr[selRowIndex][j] = changes[j];
     }
-    var TR = getTRfromTbodyByIndex( selRowIndex );
-    ob = {};
-    ob.TR     = TR;  // add DOM TR object to array as 0th column 
-    ob.model  = changes[0].model;  
-    ob.id     = changes[0].id;
-    ob.name   = changes[0].name;
-    qs_TR_arr[selRowIndex][0] = ob;
+    TR = getTRfromTbodyByIndex( selRowIndex );
+    qs_TR_arr[selRowIndex][0].TR = TR;
     setSelRow( rowsNumber );
     scrollToRow( selRowIndex );
-console.log('after: addNewElement( changes ) : ========================');
-console.log('changes=', changes);
-console.log('supplement=', supplement);
-console.log('selTR =', selTR);
-console.log('selRowIndex =', selRowIndex);
-console.log('selElement =', selElement);
-console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
     selRowFocus();
 }
-
 function moveElement() {
      // Remove selected element from html (after moving in another folder)
      // and select its neighbour using selElement global value.
@@ -104,7 +94,6 @@ function moveElement() {
     setSelRow( selRowIndex ); // former selRowIndex of moved row will point the next (or last) element
     selRowFocus();
 }
-
 function createEmptyTR( f_model, f_id, f_name ) {
     // creating blanc <tr ... >...</tr> with f_model and f_id data only :
     var s = '<tr id="tr-#" >';
@@ -125,9 +114,7 @@ function createEmptyTR( f_model, f_id, f_name ) {
     return s;
 }
 
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
 
-/*
- *********************************************************************
- * Accessory functions for output debug information:
- *********************************************************************
- */

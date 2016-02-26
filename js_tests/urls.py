@@ -19,6 +19,9 @@ urlpatterns = [
     url(r'^koopsite/users_browtab/$',
         TemplateView.as_view(template_name='koopsite/js_tests_users_browtab.html'),
                                       name='koopsite_users_browtab'),
+    url(r'^folders/folder_browtab/$',
+        TemplateView.as_view(template_name='folders/js_tests_folder_browtab.html'),
+                                      name='folders_folder_browtab'),
 
     url(r'^functions/$',
         TemplateView.as_view(template_name='js_tests_functions.html'),
