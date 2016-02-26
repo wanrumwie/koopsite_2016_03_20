@@ -21,15 +21,12 @@ function getElementNamebyIndex( i ) {
     var elName = getLoginNameFlatbyIndex( i );
     return elName;
 }
-
-
 /*
  *********************************************************************
  * Handlers of server response:
  *********************************************************************
  */
 function setValToHTML( i, j, val, supplement ) {
-console.log('setV...: supplement=',supplement);
     // Set val to the <td> in <tr> in <tbody>. i - row (start 0), j - column(start 1).
     var d;
     var s_date;
@@ -63,34 +60,29 @@ console.log('setV...: supplement=',supplement);
             break;
     }
 }
-
 function changeAllElements( group ) {
     // Changing group of elements by the new one in html
     // and store its in selElement and qs_TR_arr global parameters.
-    // group - list-array of elements data: { 'model': model, 'id': id, 'changes': changes }, 
-    // where changes - array of changed only values {j: val}, j - column, val - new value.
-    var k, obj, id, model, i, j, val, elem, TR;
+    // group - list-array of elements data: { 'model': model, 'id': id, 'changes': changes, 'supplement': supplement }, 
+    // where changes - array of changed only values {j: val}, j - column, val - new value;
+    //       supplement - additional data to display in html, e.g. iconPath - array of icons for certain TD elements.
+    var k, obj, id, model, changes, supplement, i, j, val, TR;
     for ( k in group ){ // group - 1D-array
         obj = group[k];
         model       = obj.model;
         id          = obj.id;
         changes     = obj.changes;    
         supplement  = obj.supplement;    
+
         i = getRowIndexbyID( model, id );
-console.log('id=',id);
-console.log('model=',model);
-console.log('canges=',changes);
-console.log('supplement=',supplement);
-console.log('i=',i);
 
         // setting changes in group of rows in html:
         setValToHTMLrow( i, changes, supplement ); 
 
         // changing TR sub-element in group of rows of 2D-array:
-        elem = qs_TR_arr[i][0];
         TR = getTRfromTbodyByIndex( i );
-        elem.TR = TR;
-        qs_TR_arr[i][0] = elem;
+        qs_TR_arr[i][0].TR = TR;
+
         // changing columns in selected row of 2D-array:
         for ( j in changes ) {
             val = changes[j];    
@@ -99,9 +91,3 @@ console.log('i=',i);
     }
     selRowFocus();
 }
-
-/*
- *********************************************************************
- * Accessory functions for output debug information:
- *********************************************************************
- */

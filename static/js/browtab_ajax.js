@@ -38,7 +38,6 @@ function xhrErrorAlert( xhr, ss ) {
                 '\n xhr.responseText='  + xhr.responseText );
 }
 function xhrErrorHandler( xhr ) {
-console.log('xhrErrorHandler:', 'xhr=', xhr);
     if ( xhr.status == 401 || xhr.status == 403 ) { // Redirect to login
         //window.location = xhr.responseText;
         dialogMessage( "Ви не маєте доступу до цієї операції!",
@@ -51,7 +50,6 @@ function transferFailed( evt ) {
 	dialogMessage( "An error occurred while transferring the file. Probably file too long", 
                         "Error", "UPLOAD ERROR", 3000 );
     dialog_box_form_close();
-//  alert( "An error occurred while transferring the file." );
 }
 function transferCanceled( evt ) {
 	dialogMessage( "The transfer has been canceled by the user.", "", "UPLOAD CANCELED", 2000 );

@@ -127,7 +127,6 @@ function storeSelRowIndex() {
     }
 }
 function selectRow( targ ) {    // select row in case of mouse click on it
-console.log('selectRow:', 'targ=', targ );
     // targ - element clicked directly, selTR - closest TR element:
     selTR = $( targ ).closest( "tr" );
     selRowIndex = $( selTR )[0].sectionRowIndex; // within section, i.e. TBODY in this case
@@ -427,34 +426,10 @@ function changeSelElement( changes, supplement ) {
     for ( j in changes ) {  // changing columns in selected row of 2D-array: 0-column changed too
         qs_TR_arr[selRowIndex][j] = changes[j];
     }
-
-console.log('after: qs_TR_arr[selRowIndex][j] = changes[j] : ========================');
-console.log('changes=', changes);
-console.log('supplement=', supplement);
-console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
-
     setValToHTMLrow( selRowIndex, changes, supplement );    // setting changes in selected row in html
     var TR = getTRfromTbodyByIndex( selRowIndex );          // changing TR sub-element in selected row of 2D-array
-    /*
-    // old method:
-    ob = {};
-    ob.TR     = TR;  // add DOM TR object to array as 0th column 
-    ob.model  = changes[0].model;  
-    ob.id     = changes[0].id;
-    ob.name   = changes[0].name;
-    qs_TR_arr[selRowIndex][0] = ob;
-    */
     qs_TR_arr[selRowIndex][0].TR = TR;
     selRowFocus();
-
-console.log('after: changeSelElement( changes ) : ========================');
-console.log('changes=', changes);
-console.log('supplement=', supplement);
-console.log('selTR =', selTR);
-console.log('selRowIndex =', selRowIndex);
-console.log('selElement =', selElement);
-console.log('qs_TR_arr[selRowIndex] =', qs_TR_arr[selRowIndex]);
-
 }
 
 /**********************************************************************
@@ -510,5 +485,4 @@ function test_addNewElement() {
     ne.f_size = '123456kB';
     ne.iconpath = '/static/img/word.png';
     addNewElement(ne);
-//    console.log( "test_addNewElement: document.activeElement =", document.activeElement);
 }

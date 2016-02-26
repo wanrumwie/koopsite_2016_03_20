@@ -85,7 +85,6 @@ function dialog( a ){               // function declared in another file
 }
 function dialog_box_form_close() {  // function declared in another file
 }
-
 QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) { // This test described in tbody_hidden.xlsx file
     var xhr = {};
     hooks.beforeEach( function( assert ) {
@@ -522,4 +521,3 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) { // This test described in
     });
 } );
 //=============================================================================
-

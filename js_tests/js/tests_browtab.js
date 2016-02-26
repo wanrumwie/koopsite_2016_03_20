@@ -1927,7 +1927,7 @@ QUnit.module( "browtab Changing both <tbody> and qs_TR_arr", function( hooks ) {
         expect( 4 );
         var i = 5;
         var j;
-        var changes = {0:'000',1:'111'};
+        var changes = ['000','111'];
         var supplement = 'qwerty';
         stub.setValToHTML = sinon.stub( window, "setValToHTML" );
         var res = setValToHTMLrow( i, changes, supplement  );
@@ -1948,7 +1948,7 @@ QUnit.module( "browtab Changing both <tbody> and qs_TR_arr", function( hooks ) {
         ob.model  = 'user';  
         ob.id     = 55;
         ob.name   = 'fred';
-        var changes = {0:ob, 1:'111'};
+        var changes = [ob, '111'];
         var supplement = 'qwerty';
 
         stub.setValToHTMLrow = sinon.stub( window, "setValToHTMLrow" );

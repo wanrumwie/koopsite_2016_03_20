@@ -1,12 +1,12 @@
 /*
-Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, browtab_document_ready_handler (?), changeSelElement (?), columnsNumber, create_qs_TR_arr (?), deleteElement (?), display_qs_TR_arr (?), expect (?), getRowIndexbyID (?), getSelRowIndex (?), getSelectorTR (?), getTRbyID (?), getTRbyIndex (?), getTRfromTbodyByIndex (?), getVisibleIndex (?), get_m_id_n_ByIndex (?), get_qs_TR_arr (?), markSelRow (?), normalStyle (?), onClick_handler (?), onDblclick_handler (?), onKeyDown (?), onKeydown_handler (?), qs_TR_arr (?), restore_qs_TR_arr (?), rowsNumber (?), scrollToRow (?), selElement (?), selRowFocus (?), selRowIndex (?), selTR (?), selectRow (?), selectStyle (?), setSelRow (?), setStartRow (?), setValToHTML, setValToHTMLrow (?), set_browtab_listeners (?), sinon (?), storeSelRowIndex (?), stub, totalOuterHeight (?), window (?)
+Global:  $ (?), QUnit (?), auxiliary_get_html_selectors, auxiliary_get_html_values, changeAllElements (?), columnsNumber (?), expect (?), getElementNamebyIndex (?), getLoginNameFlatbyIndex (?), qs_TR_arr (?), setValToHTML (?), sinon (?), stub, window (?)
 */
 
 //QUnit.config.reorder = false;
 
 var stub;   // common for all tests, is set to {} before and restored after each test
 
-var qs_TR_arr;  // var declared in another file
+//var qs_TR_arr;   var declared in another file
 QUnit.test( 'js file start assignments', function ( assert ) {
     expect( 1 );
     assert.deepEqual( columnsNumber, 8, 'columnsNumber should be set immediately after page loaded');
@@ -78,7 +78,7 @@ function auxiliary_get_html_values( sels ){
     var vals = [0];
     var selector;
     for ( j=1 ; j<=8 ; j++){
-        selector = sels[j]
+        selector = sels[j];
         switch ( j ) {
             case 1:
                 v = $( selector ).find( 'A' ).text();
@@ -118,11 +118,13 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
         }
     } );
     QUnit.test( '#0', function ( assert ) {
+        // checking: only proper value in html row shoild be chanded, but any other no.
+        // this test cover only j=1 case. tests #1..#8 are simplier.
         expect( 9 );
         var i = 1;
         var j = 1;
         var k;
-        var val = 'qwerty'
+        var val = 'qwerty';
         var supplement = {};
         supplement.iconPath = [];
 
@@ -136,7 +138,6 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
             else {
                 assert.equal( puts[k], vals[k], 'setValToHTML should no put value in template' );
             }
-
         }
         assert.equal( res, undefined, 'setValToHTML should return undefined value' );
     });
@@ -144,7 +145,7 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
         expect( 2 );
         var i = 1;
         var j = 1;
-        var val = 'qwerty'
+        var val = 'qwerty';
         var supplement = {};
         supplement.iconPath = [];
         var selector = "#browtable tbody tr:nth-child(" + (i+1) + ") td:nth-child(" + j + ")";
@@ -159,7 +160,7 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
         expect( 2 );
         var i = 1;
         var j = 2;
-        var val = 'qwerty'
+        var val = 'qwerty';
         var supplement = {};
         supplement.iconPath = [];
         var selector = "#browtable tbody tr:nth-child(" + (i+1) + ") td:nth-child(" + j + ")";
@@ -174,7 +175,7 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
         expect( 2 );
         var i = 1;
         var j = 3;
-        var val = 'qwerty'
+        var val = 'qwerty';
         var supplement = {};
         supplement.iconPath = [];
         var selector = "#browtable tbody tr:nth-child(" + (i+1) + ") td:nth-child(" + j + ")";
@@ -189,7 +190,7 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
         expect( 2 );
         var i = 1;
         var j = 4;
-        var val = 'qwerty'
+        var val = 'qwerty';
         var supplement = {};
         supplement.iconPath = [];
         var selector = "#browtable tbody tr:nth-child(" + (i+1) + ") td:nth-child(" + j + ")";
@@ -204,7 +205,7 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
         expect( 2 );
         var i = 1;
         var j = 5;
-        var val = '2016-01-31'
+        var val = '2016-01-31';
         var d = new Date( val );             // transform f_date (string) to js Date object
         d = d.toLocaleDateString();    // format date to dd.mm.yyyy
         var supplement = {};
@@ -266,4 +267,64 @@ QUnit.module( "users_browtab setValToHTML", function( hooks ) { // This test des
         assert.equal( res, undefined, 'setValToHTML should return undefined value' );
     });
 } );
+//=============================================================================
+QUnit.module( "users_browtab_ajax changeAllElements", function( hooks ) { // This test described in tbody_hidden.xlsx file
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+    } );
+    QUnit.test( 'changeAllElements', function ( assert ) {
+        expect( 42 );
 
+        stub.getRowIndexbyID        = sinon.stub( window, "getRowIndexbyID" );
+        stub.setValToHTMLrow        = sinon.stub( window, "setValToHTMLrow" );
+        stub.getTRfromTbodyByIndex  = sinon.stub( window, "getTRfromTbodyByIndex" );
+        stub.selRowFocus            = sinon.stub( window, "selRowFocus" );
+
+        // make fake group:
+        var group = [];
+        var obj, i, j;
+        for ( i=0 ; i<=2 ; i++ ){
+            obj = {};
+            obj.model   = 'user';
+            obj.id      = 100 + i;
+            obj.changes = {};    
+            obj.supplement = 'qwerty:' + i;
+            for ( j=1 ; j<=8 ; j++ ){
+                obj.changes[j] = 'new:' + i + ':' + j;
+            }
+            group.push( obj );
+            stub.getRowIndexbyID.onCall( i ).returns( i );
+            stub.getTRfromTbodyByIndex.onCall( i ).returns( 'TR:' + i );
+        }
+        qs_TR_arr = [ [{},1,2,3,4,5,6,7,8],[{},1,2,3,4,5,6,7,8],[{},1,2,3,4,5,6,7,8] ];
+
+        var res = changeAllElements( group );
+
+        assert.equal( stub.getRowIndexbyID.callCount, 3, 'getRowIndexbyID should be called 3 times' );
+        assert.equal( stub.setValToHTMLrow.callCount, 3, 'setValToHTMLrow should be called 3 times' );
+        assert.equal( stub.getTRfromTbodyByIndex.callCount, 3, 'getTRfromTbodyByIndex should be called 3 times' );
+        for ( i in group ){ // group - 1D-array
+            obj = group[i];
+            assert.ok( stub.getRowIndexbyID.getCall( i ).calledWith( obj.model, obj.id ), 
+                                                                i + ' getRowIndexbyID should be called with arg' );
+            assert.ok( stub.setValToHTMLrow.getCall( i ).calledWith( +i, obj.changes, obj.supplement ), 
+                                                                i + ' setValToHTMLrow should be called with arg' );
+            assert.ok( stub.getTRfromTbodyByIndex.getCall( i ).calledWith( +i ), 
+                                                                i + ' getTRfromTbodyByIndex should be called with arg' );
+            assert.equal( qs_TR_arr[i][0].TR, 'TR:' + i, i + ':' + 0 + 'changeAllElements should set proper value' );
+            for ( j in obj.changes ) {
+                assert.equal( qs_TR_arr[i][j], obj.changes[j], i + ':' + j + 'changeAllElements should set proper value' );
+            }
+        }
+        assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
+        assert.ok( stub.selRowFocus.calledWith( ), 'selRowFocus should be called with arg' );
+        assert.equal( res, undefined, 'changeAllElements should return undefined' );
+    });
+} );
+//=============================================================================
