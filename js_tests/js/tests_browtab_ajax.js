@@ -39,11 +39,11 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) {
         stub.set_browtab_ajax_listeners = sinon.stub( window, "set_browtab_ajax_listeners" );
         var res = browtab_ajax_document_ready_handler( );
         assert.ok( stub.create_qs_TR_arr.calledOnce, 'create_qs_TR_arr should be called once' );
-        assert.ok( stub.create_qs_TR_arr.calledWith( ), 'create_qs_TR_arr should be called with arg' );
+        assert.ok( stub.create_qs_TR_arr.calledWithExactly( ), 'create_qs_TR_arr should be called with arg' );
         assert.ok( stub.ajax_startRowIndexFromSession.calledOnce, 'ajax_startRowIndexFromSession should be called once' );
-        assert.ok( stub.ajax_startRowIndexFromSession.calledWith(),'ajax_startRowIndexFromSession should be called with arg');
+        assert.ok( stub.ajax_startRowIndexFromSession.calledWithExactly(),'ajax_startRowIndexFromSession should be called with arg');
         assert.ok( stub.set_browtab_ajax_listeners.calledOnce, 'set_browtab_ajax_listeners should be called once' );
-        assert.ok( stub.set_browtab_ajax_listeners.calledWith( ), 'set_browtab_ajax_listeners should be called with arg' );
+        assert.ok( stub.set_browtab_ajax_listeners.calledWithExactly( ), 'set_browtab_ajax_listeners should be called with arg' );
         assert.equal( csrf_token, 'qwerty', 'browtab_ajax_document_ready_handler should set value to global var' );
         assert.equal( res, undefined, 'browtab_ajax_document_ready_handler should return undefined' );
     });
@@ -58,8 +58,8 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) {
 
         assert.ok( stub.off.calledOnce, 'off should be called once' );
         assert.ok( stub.on.calledOnce, 'on should be called once' );
-        assert.ok( stub.off.getCall( 0 ).calledWith( "change" ), '0 off should be called with arg' );
-        assert.ok( stub.on.getCall( 0 ).calledWith( "change", onChange_handler ), '0 on should be called with arg' );
+        assert.ok( stub.off.getCall( 0 ).calledWithExactly( "change" ), '0 off should be called with arg' );
+        assert.ok( stub.on.getCall( 0 ).calledWithExactly( "change", onChange_handler ), '0 on should be called with arg' );
         assert.equal( res, undefined, 'set_browtab_ajax_listeners should return undefined' );
     });
     QUnit.test( 'onChange_handler', function ( assert ) {
@@ -67,7 +67,7 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) {
         stub.ajax_selRowIndexToSession = sinon.stub( window, "ajax_selRowIndexToSession" );
         var res = onChange_handler( );
         assert.ok( stub.ajax_selRowIndexToSession.calledOnce, 'ajax_selRowIndexToSession should be called once' );
-        assert.ok( stub.ajax_selRowIndexToSession.calledWith(  ), 'ajax_selRowIndexToSession should be called with arg' );
+        assert.ok( stub.ajax_selRowIndexToSession.calledWithExactly(  ), 'ajax_selRowIndexToSession should be called with arg' );
         assert.equal( res, false, 'onChange_handler should return false' );
     });
     QUnit.test( '$( ... ).on( "change",... STUB ajax_selRowIndexToSession', function ( assert ) {
@@ -110,7 +110,7 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         stub.alert = sinon.stub( window, "alert" );
         var res = xhrErrorAlert( xhr, ss );
         assert.ok( stub.alert.calledOnce, 'alert should be called once' );
-        assert.ok( stub.alert.calledWith( arg ), 'alert should be called with arg' );
+        assert.ok( stub.alert.calledWithExactly( arg ), 'alert should be called with arg' );
         assert.equal( res, undefined, 'xhrErrorAlert should return undefined' );
     });
     QUnit.test( 'xhrErrorAlert ss', function ( assert ) {
@@ -124,7 +124,7 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         stub.alert = sinon.stub( window, "alert" );
         var res = xhrErrorAlert( xhr, ss );
         assert.ok( stub.alert.calledOnce, 'alert should be called once' );
-        assert.ok( stub.alert.calledWith( arg ), 'alert should be called with arg' );
+        assert.ok( stub.alert.calledWithExactly( arg ), 'alert should be called with arg' );
         assert.equal( res, undefined, 'xhrErrorAlert should return undefined' );
     });
     QUnit.test( 'xhrErrorHandler 200', function ( assert ) {
@@ -138,7 +138,7 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         var res = xhrErrorHandler( xhr );
 
         assert.ok( stub.xhrErrorAlert.calledOnce, 'xhrErrorAlert should be called once' );
-        assert.ok( stub.xhrErrorAlert.calledWith( xhr, 'xhrErrorHandler' ), 'xhrErrorAlert should be called with arg' );
+        assert.ok( stub.xhrErrorAlert.calledWithExactly( xhr, 'xhrErrorHandler' ), 'xhrErrorAlert should be called with arg' );
         assert.notOk( stub.dialogMessage.called, 'dialogMessage should not be called' );
         assert.notOk( stub.dialog_box_form_close.called, 'dialog_box_form_close should not be called' );
         assert.equal( res, undefined, 'xhrErrorHandler should return undefined' );
@@ -155,10 +155,10 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
 
         assert.notOk( stub.xhrErrorAlert.called, 'xhrErrorAlert should not be called' );
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
-        assert.ok( stub.dialogMessage.calledWith( "Ви не маєте доступу до цієї операції!",
+        assert.ok( stub.dialogMessage.calledWithExactly( "Ви не маєте доступу до цієї операції!",
                       "Error", "Помилка доступу", 3000 ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
-        assert.ok( stub.dialog_box_form_close.calledWith(  ), 'dialog_box_form_close should be called with arg' );
+        assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'xhrErrorHandler should return undefined' );
     });
     QUnit.test( 'xhrErrorHandler 403', function ( assert ) {
@@ -173,10 +173,10 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
 
         assert.notOk( stub.xhrErrorAlert.called, 'xhrErrorAlert should not be called' );
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
-        assert.ok( stub.dialogMessage.calledWith( "Ви не маєте доступу до цієї операції!",
+        assert.ok( stub.dialogMessage.calledWithExactly( "Ви не маєте доступу до цієї операції!",
                       "Error", "Помилка доступу", 3000 ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
-        assert.ok( stub.dialog_box_form_close.calledWith(  ), 'dialog_box_form_close should be called with arg' );
+        assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'xhrErrorHandler should return undefined' );
     });
     QUnit.test( 'transferFailed', function ( assert ) {
@@ -189,10 +189,10 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         var res = transferFailed( evt );
 
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
-        assert.ok( stub.dialogMessage.calledWith( "An error occurred while transferring the file. Probably file too long", 
+        assert.ok( stub.dialogMessage.calledWithExactly( "An error occurred while transferring the file. Probably file too long", 
                         "Error", "UPLOAD ERROR", 3000 ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
-        assert.ok( stub.dialog_box_form_close.calledWith(  ), 'dialog_box_form_close should be called with arg' );
+        assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'transferFailed should return undefined' );
     });
     QUnit.test( 'transferCanceled', function ( assert ) {
@@ -205,10 +205,10 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         var res = transferCanceled( evt );
 
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
-        assert.ok( stub.dialogMessage.calledWith( "The transfer has been canceled by the user.", "", 
+        assert.ok( stub.dialogMessage.calledWithExactly( "The transfer has been canceled by the user.", "", 
                                             "UPLOAD CANCELED", 2000 ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
-        assert.ok( stub.dialog_box_form_close.calledWith(  ), 'dialog_box_form_close should be called with arg' );
+        assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'transferCanceled should return undefined' );
     });
 } );
@@ -240,7 +240,7 @@ QUnit.module( "browtab_ajax session handlers", function( hooks ) {
         stub.xhrErrorAlert = sinon.stub( window, "xhrErrorAlert" );
         var res = ajax_selRowIndexToSession_error_handler( xhr );
         assert.ok( stub.xhrErrorAlert.calledOnce, 'xhrErrorAlert should be called once' );
-        assert.ok( stub.xhrErrorAlert.calledWith( xhr, 'ajax_selRowIndexToSession' ), 
+        assert.ok( stub.xhrErrorAlert.calledWithExactly( xhr, 'ajax_selRowIndexToSession' ), 
                                                                 'xhrErrorAlert should be called with arg' );
         assert.equal( res, undefined, 'ajax_selRowIndexToSession_error_handler should return undefined' );
     });
@@ -250,10 +250,10 @@ QUnit.module( "browtab_ajax session handlers", function( hooks ) {
         stub.setStartRow = sinon.stub( window, "setStartRow" );
         var res = ajax_startRowIndexFromSession_error_handler( xhr );
         assert.ok( stub.xhrErrorAlert.calledOnce, 'xhrErrorAlert should be called once' );
-        assert.ok( stub.xhrErrorAlert.calledWith( xhr, 'ajax_startRowIndexFromSession' ), 
+        assert.ok( stub.xhrErrorAlert.calledWithExactly( xhr, 'ajax_startRowIndexFromSession' ), 
                                                                 'xhrErrorAlert should be called with arg' );
         assert.ok( stub.setStartRow.calledOnce, 'setStartRow should be called once' );
-        assert.ok( stub.setStartRow.calledWith( ), 'setStartRow should be called with arg' );
+        assert.ok( stub.setStartRow.calledWithExactly( ), 'setStartRow should be called with arg' );
         assert.equal( res, undefined, 'ajax_startRowIndexFromSession_error_handler should return undefined' );
     });
     QUnit.test( 'ajax_startRowIndexFromSession_success_handler', function ( assert ) {
@@ -266,7 +266,7 @@ QUnit.module( "browtab_ajax session handlers", function( hooks ) {
         var res = ajax_startRowIndexFromSession_success_handler( json );
 
         assert.ok( stub.setStartRow.calledOnce, 'setStartRow should be called once' );
-        assert.ok( stub.setStartRow.calledWith( ), 'setStartRow should be called with arg' );
+        assert.ok( stub.setStartRow.calledWithExactly( ), 'setStartRow should be called with arg' );
         assert.notOk( stub.folderEmptyMessage.called, 'folderEmptyMessage should not be called' );
 
         assert.equal( $( "#selRowIndex" ).val(), sr.selRowIndex, 'function set value to html' );
@@ -286,9 +286,9 @@ QUnit.module( "browtab_ajax session handlers", function( hooks ) {
         var res = ajax_startRowIndexFromSession_success_handler( json );
 
         assert.ok( stub.setStartRow.calledOnce, 'setStartRow should be called once' );
-        assert.ok( stub.setStartRow.calledWith( ), 'setStartRow should be called with arg' );
+        assert.ok( stub.setStartRow.calledWithExactly( ), 'setStartRow should be called with arg' );
         assert.ok( stub.folderEmptyMessage.calledOnce, 'folderEmptyMessage should be called once' );
-        assert.ok( stub.folderEmptyMessage.calledWith( f_name ), 'folderEmptyMessage should be called with arg' );
+        assert.ok( stub.folderEmptyMessage.calledWithExactly( f_name ), 'folderEmptyMessage should be called with arg' );
 
         assert.equal( $( "#selRowIndex" ).val(), sr.selRowIndex, 'function set value to html' );
         assert.equal( $( "#selElementModel" ).val(), sr.model, 'function set value to html' );
@@ -320,7 +320,7 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
         this.xhr.restore();
     } );
     QUnit.test( 'ajax_selRowIndexToSession', function ( assert ) {
-        expect( 16 );
+        expect( 15 );
         done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var expected_url = "/ajax-selrowindex-to-session";
@@ -342,11 +342,11 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
         var res = ajax_selRowIndexToSession( );
 
         assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
-        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.getSelElementArr.calledWithExactly( ), 'getSelElementArr should be called with arg' );
         assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
-        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax_settings.calledWithExactly( ), 'ajax_settings should be called with arg' );
         assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
-        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+        assert.ok( stub.ajax.calledWithExactly( as ), 'ajax should be called with arg' );
 
         assert.equal( as.url, expected_url, 'function should set as.url' );
         assert.deepEqual( as.data, {
@@ -363,14 +363,13 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
 	    requests[0].respond( response_status, response_headers, response_body );
 
         assert.ok( stub.success.calledOnce, 'success should be called once' );
-        assert.ok( stub.success.calledWith( JSON.parse( response_body ) ), 'success should be called with arg' );
         assert.notOk( stub.error.called, 'error should not be called' );
 
         assert.equal( res, false, 'ajax_selRowIndexToSession should return false' );
         done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
     QUnit.test( 'ajax_selRowIndexToSession error', function ( assert ) {
-        expect( 16 );
+        expect( 15 );
         done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var expected_url = "/ajax-selrowindex-to-session";
@@ -392,11 +391,11 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
         var res = ajax_selRowIndexToSession( );
 
         assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
-        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.getSelElementArr.calledWithExactly( ), 'getSelElementArr should be called with arg' );
         assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
-        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax_settings.calledWithExactly( ), 'ajax_settings should be called with arg' );
         assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
-        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+        assert.ok( stub.ajax.calledWithExactly( as ), 'ajax should be called with arg' );
 
         assert.equal( as.url, expected_url, 'function should set as.url' );
         assert.deepEqual( as.data, {
@@ -414,13 +413,12 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
 
         assert.notOk( stub.success.called, 'success should not be called once' );
         assert.ok( stub.error.calledOnce, 'error should not be called' );
-        assert.ok( stub.error.calledWith( ), 'error should be called with arg' );
 
         assert.equal( res, false, 'ajax_selRowIndexToSession should return false' );
         done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
     QUnit.test( 'ajax_startRowIndexFromSession', function ( assert ) {
-        expect( 16 );
+        expect( 15 );
         done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var expected_url = "/ajax-startrowindex-from-session";
@@ -442,11 +440,11 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
         var res = ajax_startRowIndexFromSession( );
 
         assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
-        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.getSelElementArr.calledWithExactly( ), 'getSelElementArr should be called with arg' );
         assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
-        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax_settings.calledWithExactly( ), 'ajax_settings should be called with arg' );
         assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
-        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+        assert.ok( stub.ajax.calledWithExactly( as ), 'ajax should be called with arg' );
 
         assert.equal( as.url, expected_url, 'function should set as.url' );
         assert.deepEqual( as.data, {
@@ -463,14 +461,13 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
 	    requests[0].respond( response_status, response_headers, response_body );
 
         assert.ok( stub.success.calledOnce, 'success should be called once' );
-        assert.ok( stub.success.calledWith( JSON.parse( response_body ) ), 'success should be called with arg' );
         assert.notOk( stub.error.called, 'error should not be called' );
 
         assert.equal( res, false, 'ajax_startRowIndexFromSession should return false' );
         done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
     QUnit.test( 'ajax_startRowIndexFromSession error', function ( assert ) {
-        expect( 16 );
+        expect( 15 );
         done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var expected_url = "/ajax-startrowindex-from-session";
@@ -492,11 +489,11 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
         var res = ajax_startRowIndexFromSession( );
 
         assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
-        assert.ok( stub.getSelElementArr.calledWith( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.getSelElementArr.calledWithExactly( ), 'getSelElementArr should be called with arg' );
         assert.ok( stub.ajax_settings.calledOnce, 'ajax_settings should be called once' );
-        assert.ok( stub.ajax_settings.calledWith( ), 'ajax_settings should be called with arg' );
+        assert.ok( stub.ajax_settings.calledWithExactly( ), 'ajax_settings should be called with arg' );
         assert.ok( stub.ajax.calledOnce, 'ajax should be called once' );
-        assert.ok( stub.ajax.calledWith( as ), 'ajax should be called with arg' );
+        assert.ok( stub.ajax.calledWithExactly( as ), 'ajax should be called with arg' );
 
         assert.equal( as.url, expected_url, 'function should set as.url' );
         assert.deepEqual( as.data, {
@@ -514,7 +511,6 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
 
         assert.notOk( stub.success.called, 'success should not be called once' );
         assert.ok( stub.error.calledOnce, 'error should not be called' );
-        assert.ok( stub.error.calledWith( ), 'error should be called with arg' );
 
         assert.equal( res, false, 'ajax_startRowIndexFromSession should return false' );
         done(); // start QUnit runner after it was keep waiting until async operations executed. 

@@ -57,7 +57,7 @@ QUnit.module( "users_browtab getLoginNameFlatbyIndex", function( hooks ) {
         stub.getLoginNameFlatbyIndex = sinon.stub( window, "getLoginNameFlatbyIndex" ).returns( expected );
         var res = getElementNamebyIndex( i );
         assert.ok( stub.getLoginNameFlatbyIndex.calledOnce, 'getLoginNameFlatbyIndex should be called once' );
-        assert.ok( stub.getLoginNameFlatbyIndex.calledWith( i ), 'getLoginNameFlatbyIndex should be called with arg' );
+        assert.ok( stub.getLoginNameFlatbyIndex.calledWithExactly( i ), 'getLoginNameFlatbyIndex should be called with arg' );
         assert.equal( res, expected, 'getLoginNameFlatbyIndex should return proper value' );
     });
 } );
@@ -311,11 +311,11 @@ QUnit.module( "users_browtab_ajax changeAllElements", function( hooks ) {
         assert.equal( stub.getTRfromTbodyByIndex.callCount, 3, 'getTRfromTbodyByIndex should be called 3 times' );
         for ( i in group ){ // group - 1D-array
             obj = group[i];
-            assert.ok( stub.getRowIndexbyID.getCall( i ).calledWith( obj.model, obj.id ), 
+            assert.ok( stub.getRowIndexbyID.getCall( i ).calledWithExactly( obj.model, obj.id ), 
                                                                 i + ' getRowIndexbyID should be called with arg' );
-            assert.ok( stub.setValToHTMLrow.getCall( i ).calledWith( +i, obj.changes, obj.supplement ), 
+            assert.ok( stub.setValToHTMLrow.getCall( i ).calledWithExactly( +i, obj.changes, obj.supplement ), 
                                                                 i + ' setValToHTMLrow should be called with arg' );
-            assert.ok( stub.getTRfromTbodyByIndex.getCall( i ).calledWith( +i ), 
+            assert.ok( stub.getTRfromTbodyByIndex.getCall( i ).calledWithExactly( +i ), 
                                                                 i + ' getTRfromTbodyByIndex should be called with arg' );
             assert.equal( qs_TR_arr[i][0].TR, 'TR:' + i, i + ':' + 0 + 'changeAllElements should set proper value' );
             for ( j in obj.changes ) {
@@ -323,7 +323,7 @@ QUnit.module( "users_browtab_ajax changeAllElements", function( hooks ) {
             }
         }
         assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
-        assert.ok( stub.selRowFocus.calledWith( ), 'selRowFocus should be called with arg' );
+        assert.ok( stub.selRowFocus.calledWithExactly( ), 'selRowFocus should be called with arg' );
         assert.equal( res, undefined, 'changeAllElements should return undefined' );
     });
 } );

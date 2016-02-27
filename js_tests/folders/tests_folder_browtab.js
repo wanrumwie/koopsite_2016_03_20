@@ -153,18 +153,20 @@ QUnit.module( "folder_browtab addNewElement", function( hooks ) {
         assert.equal( qs_TR_arr[4][0].id,  ob.id, 'addNewElement should add new row to qs_TR_arr' );
 
         assert.ok( stub.createEmptyTR.calledOnce, 'createEmptyTR should be called once' );
-        assert.ok( stub.createEmptyTR.calledWith( ob.model, ob.id, ob.name ), 'createEmptyTR should be called with arg' );
+        assert.ok( stub.createEmptyTR.calledWithExactly( ob.model, ob.id, ob.name ), 
+                                                    'createEmptyTR should be called with arg' );
         assert.ok( stub.setValToHTMLrow.calledOnce, 'setValToHTMLrow should be called once' );
-        assert.ok( stub.setValToHTMLrow.calledWith( selRowIndex, changes, supplement ),
+        assert.ok( stub.setValToHTMLrow.calledWithExactly( selRowIndex, changes, supplement ),
                                                             'setValToHTMLrow should be called with arg' );
         assert.ok( stub.getTRfromTbodyByIndex.calledOnce, 'getTRfromTbodyByIndex should be called once' );
-        assert.ok( stub.getTRfromTbodyByIndex.calledWith( selRowIndex ),'getTRfromTbodyByIndex should be called with arg' );
+        assert.ok( stub.getTRfromTbodyByIndex.calledWithExactly( selRowIndex ),
+                                                    'getTRfromTbodyByIndex should be called with arg' );
         assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
-        assert.ok( stub.setSelRow.calledWith( rowsNumber ),'setSelRow should be called with arg' );
+        assert.ok( stub.setSelRow.calledWithExactly( rowsNumber ),'setSelRow should be called with arg' );
         assert.ok( stub.scrollToRow.calledOnce, 'scrollToRow should be called once' );
-        assert.ok( stub.scrollToRow.calledWith( selRowIndex ),'scrollToRow should be called with arg' );
+        assert.ok( stub.scrollToRow.calledWithExactly( selRowIndex ),'scrollToRow should be called with arg' );
         assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
-        assert.ok( stub.selRowFocus.calledWith(),'selRowFocus should be called with arg' );
+        assert.ok( stub.selRowFocus.calledWithExactly(),'selRowFocus should be called with arg' );
 
         assert.deepEqual( rowsNumber, 5, 'addNewElement should set value to global var' );
         assert.deepEqual( selRowIndex, 4, 'addNewElement should set value to global var' );
@@ -195,9 +197,9 @@ QUnit.module( "folder_browtab addNewElement", function( hooks ) {
         assert.equal( qs_TR_arr[1][1],  21, 'addNewElement should remove proper row from qs_TR_arr' );
 
         assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
-        assert.ok( stub.setSelRow.calledWith( selRowIndex ),'setSelRow should be called with arg' );
+        assert.ok( stub.setSelRow.calledWithExactly( selRowIndex ),'setSelRow should be called with arg' );
         assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
-        assert.ok( stub.selRowFocus.calledWith(),'selRowFocus should be called with arg' );
+        assert.ok( stub.selRowFocus.calledWithExactly(),'selRowFocus should be called with arg' );
 
         assert.deepEqual( rowsNumber, 3, 'addNewElement should set value to global var' );
         assert.deepEqual( res, undefined, 'addNewElement should return proper value' );  
