@@ -38,6 +38,7 @@ function xhrErrorAlert( xhr, ss ) {
                 '\n xhr.responseText='  + xhr.responseText );
 }
 function xhrErrorHandler( xhr ) {
+console.log('xhrErrorHandler: xhr.status=',xhr.status);
     if ( xhr.status == 401 || xhr.status == 403 ) { // Redirect to login
         //window.location = xhr.responseText;
         dialogMessage( "Ви не маєте доступу до цієї операції!",

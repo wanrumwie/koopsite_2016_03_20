@@ -222,26 +222,30 @@ function xhr_POST( url, encoded_json_string ) {
     defineAbortButton( xhr );
     progressbarShow();
 
-    type = "POST";
-    xhr.open(type, url, true);
-    xhr.setRequestHeader( "X-CSRFToken", csrf_token);    // from cookie or from HTML
-    xhr.setRequestHeader( "X-client-request", encoded_json_string);
+    var type = "POST";
+    xhr.open( type, url, true );
+    xhr.setRequestHeader( "X-CSRFToken", csrf_token );    // from cookie or from HTML
+    xhr.setRequestHeader( "X-client-request", encoded_json_string );
     xhr.responseType = 'blob';
     xhr.send();
-
-    function transferSuccess() {
-        var json, sr, cd, h, fn;
-        if ( xhr.readyState == 4 && xhr.status == 200 ) {
-            h    = xhr.getAllResponseHeaders();
-            cd   = xhr.getResponseHeader( 'Content-Disposition' );
-            fn   = cd.filename;
-            json = xhr.getResponseHeader( 'server_response' );
-            sr   = JSON.parse( json );
-            download( xhr.response, sr.title );
-            xhrSuccessHandler( sr );
-        } else {
-            xhrErrorHandler( xhr );
-        }
+    return xhr;
+}
+function transferSuccess() {    
+console.log('transferSuccess: this=xhr=', this);
+    var xhr = this; // rename this
+    // "this" = obj, i.e. XMLHttpRequest, 
+    //    because transferSuccess() is called as obj.method, added to obj=XMLHttpRequest by addEventListener
+    var json, sr, cd, h, fn;
+    if ( xhr.readyState == 4 && xhr.status == 200 ) {
+        h    = xhr.getAllResponseHeaders();
+        cd   = xhr.getResponseHeader( 'Content-Disposition' );
+//        fn   = cd.filename;
+        json = xhr.getResponseHeader( 'server_response' );
+        sr   = JSON.parse( json );
+        download( xhr.response, sr.title );
+        xhrSuccessHandler( sr );
+    } else {
+        xhrErrorHandler( xhr );
     }
 }
 /*
@@ -294,7 +298,7 @@ function xhr_reportUpload() {
     defineAbortButton(xhr);
     progressbarShow();
 
-    type = "POST";
+    var type = "POST";
     url = "/folders/ajax-report-upload";
     xhr.open( type, url, true );
     xhr.setRequestHeader( "X-CSRFToken", csrf_token);    // from cookie or from HTML

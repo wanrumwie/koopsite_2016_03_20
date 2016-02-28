@@ -1,6 +1,46 @@
 // jQuery UI Document
 console.log('start loading browtab_ui.js');
 
+// document_ready_handler called from html:
+function browtab_ui_document_ready_handler(){
+    add_browtab_ui_dialogs(); 
+}
+
+// Adding UI dialog form (with common properties) to div:
+function add_browtab_ui_dialogs(){
+    $( "#dialog-box-form" ).dialog({    // main dialog
+        dialogClass:    "no-close",
+        autoOpen:       false,
+        modal:          true,
+        closeOnEscape:  true,
+        width:          dialog_width(),
+        open:           dialog_open_func_default(),
+        close:          dialog_close_func(),
+        buttons:        dialog_buttons_default()   // no comma - last item in array
+    });
+    $( "#dialog-confirm" ).dialog({     // confirm dialog
+        dialogClass:    "no-close",
+        autoOpen:       false,
+        modal:          true,
+        closeOnEscape:  true,
+    //    width:          dialog_width(),
+    //    open:           dialog_open_func_default(),
+        buttons:        confirm_dialog_buttons_default()   // no comma - last item in array
+    });
+    $( "#dialog-message" ).dialog({     // message dialog
+        dialogClass:    "no-close",
+        autoOpen: false,
+        modal: true,
+        closeOnEscape: true,
+    //    dialogClass: "ui-state-highlight",
+        buttons: {
+            Ok: function() {
+                $( this ).dialog( "close" );
+                selRowFocus();
+            }
+        }
+    });
+}
 /*
  *********************************************************************
  * Width for dialog widgets:
@@ -11,32 +51,6 @@ function dialog_width() {
     var w = ( tw > 600 ) ? 450 : tw *0.75;
     return w;
 }
-/*
- *********************************************************************
- * Adding UI dialog form (with common properties) to div:
- *********************************************************************
- */
-$( "#dialog-box-form" ).dialog({
-    dialogClass:    "no-close",
-    autoOpen:       false,
-    modal:          true,
-    closeOnEscape:  true,
-    width:          dialog_width(),
-    open:           dialog_open_func_default(),
-    close:          dialog_close_func(),
-    buttons:        dialog_buttons_default()   // no comma - last item in array
-});
-
-$( "#dialog-confirm" ).dialog({
-    dialogClass:    "no-close",
-    autoOpen:       false,
-    modal:          true,
-    closeOnEscape:  true,
-//    width:          dialog_width(),
-//    open:           dialog_open_func_default(),
-    buttons:        confirm_dialog_buttons_default()   // no comma - last item in array
-});
-
 /*
  *********************************************************************
  *  Defining functions returning default "buttons" and "open" options 
@@ -132,25 +146,6 @@ var condFormTR    = '<td>' + '</td>' +
                     '<td>' + condFormLabel + condFormInput + '</td>';
 var progressTR    = '<td>Progress:</td><td><div id="progressbar"></div></td>';
 var emptyFormTR   = '<td></td><td></td>';
-
-/*
- *********************************************************************
- * Adding UI dialog message to div:
- *********************************************************************
- */
-$( "#dialog-message" ).dialog({
-    dialogClass:    "no-close",
-    autoOpen: false,
-    modal: true,
-    closeOnEscape: true,
-//    dialogClass: "ui-state-highlight",
-    buttons: {
-        Ok: function() {
-            $( this ).dialog( "close" );
-            selRowFocus();
-        }
-    }
-});
 
 /*
  *********************************************************************

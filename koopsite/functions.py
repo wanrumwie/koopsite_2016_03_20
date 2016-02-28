@@ -30,10 +30,13 @@ def dict_print(d, name='', *args):
         try:    length = len(d)
         except: length = len(d.__dict__)
         print(name, 'len =', length, *args)
-        try:
+        try: # d - готовий словник:
             for k, v in sorted(d.items()): print('%-20s : %s' % (k, v))
         except:
-            for k, v in sorted(d.__dict__.items()): print('%-20s : %s' % (k, v))
+            try: # перетворимо d у словник:
+                for k, v in sorted(d.__dict__.items()): print('%-20s : %s' % (k, v))
+            except:
+                print('Error in dict_print() with args:', d, name, *args)
     else:
         print(name, d)
 

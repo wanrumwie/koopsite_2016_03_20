@@ -1046,3 +1046,160 @@ QUnit.module( "folder_browtab_ajax ajax", function( hooks ) {
     });
 } );
 //=============================================================================
+QUnit.module( "folder_browtab_ajax hxr", function( hooks ) { 
+    var requests = sinon.requests;
+    var done;
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+        csrf_token = $( "#csrfmiddlewaretoken" ).val();
+        this.xhr = sinon.useFakeXMLHttpRequest();
+        requests = [];
+        this.xhr.onCreate = function ( request ) {
+            requests.push( request );
+        };
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+        this.xhr.restore();
+    } );
+    QUnit.test( 'transferSuccess 200', function ( assert ) {
+        expect( 6 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var url = "/folders/ajax-report-download";
+        var sr = {};
+        sr.selRowIndex  = 77;
+        sr.model        = 'report';
+        sr.id           = 33;
+        sr.title        = 'Title';
+        var json_string_sr = JSON.stringify( sr );
+
+        stub.transferSuccess    = sinon.spy( window, "transferSuccess" );
+        stub.download           = sinon.stub( window, "download" );
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var response_status   = 200; 
+        var response_headers  = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+        var response_body     = '[77]';
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener( "load",  transferSuccess,  false );
+        xhr.open( "POST", url, true );
+
+	    requests[0].respond( response_status, response_headers, response_body );
+//        var res = transferSuccess.call( xhr );  // no need to call transferSuccess, because it is called by xhr.respond
+
+        assert.ok( stub.download.calledOnce, 'download should be called once' );
+        assert.ok( stub.download.calledWithExactly( xhr.response, sr.title ), 'download should be called with arg' );
+        assert.ok( stub.xhrSuccessHandler.calledOnce, 'xhrSuccessHandler should be called once' );
+        assert.ok( stub.xhrSuccessHandler.calledWithExactly( sr ), 'xhrSuccessHandler should be called with arg' );
+        assert.notOk( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.equal( stub.transferSuccess.returnValues[0], undefined, 'transferSuccess should return false' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'transferSuccess 400', function ( assert ) {
+        expect( 5 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var url = "/folders/ajax-report-download";
+        var sr = {};
+        sr.selRowIndex  = 77;
+        sr.model        = 'report';
+        sr.id           = 33;
+        sr.title        = 'Title';
+        var json_string_sr = JSON.stringify( sr );
+
+        var response_status   = 400; 
+        var response_headers  = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+        var response_body     = '[77]';
+
+        stub.transferSuccess    = sinon.spy( window, "transferSuccess" );
+        stub.download           = sinon.stub( window, "download" );
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener( "load",  transferSuccess,  false );
+        xhr.open( "POST", url, true );
+	    requests[0].respond( response_status, response_headers, response_body );
+
+        assert.notOk( stub.download.called, 'download should not be called' );
+        assert.notOk( stub.xhrSuccessHandler.called, 'xhrSuccessHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.calledWithExactly( xhr ), 'xhrErrorHandler should be called with arg' );
+        assert.equal( stub.transferSuccess.returnValues[0], undefined, 'transferSuccess should return false' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'xhr_reportDownload', function ( assert ) {
+        expect( 15 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var arr = {'id':55};
+        var url = "/folders/ajax-report-download";
+        var json_string = JSON.stringify( arr );
+        var encoded_json_string = encodeURIComponent( json_string );
+        var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
+
+        var sr = {};
+        sr.selRowIndex  = 77;
+        sr.model        = 'report';
+        sr.id           = 33;
+        var arr_sr = {};
+        arr_sr.server_response = sr;
+        var json_string_sr = JSON.stringify( arr_sr );
+
+        var response_status   = 200; 
+        var response_headers  = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+        var response_body     = '[77]';
+
+        // Attention! for some functions stub is name for sinon.spy, not sinon.stub
+        stub.getSelElementArr   = sinon.stub( window, "getSelElementArr" ).returns( arr );
+        stub.xhr_POST           = sinon.spy( window, "xhr_POST" );
+        // set stub or spy to functions inside xhr_POST, because it's called as spy, not stub!
+        stub.progressHandler    = sinon.stub( window, "progressHandler" );
+        stub.loadEndHandler     = sinon.stub( window, "loadEndHandler" );
+        stub.defineAbortButton  = sinon.stub( window, "defineAbortButton" );
+        stub.progressbarShow    = sinon.stub( window, "progressbarShow" );
+        stub.transferSuccess    = sinon.spy( window, "transferSuccess" );
+        stub.download           = sinon.spy( window, "download" );
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var res = xhr_reportDownload( );
+
+        assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
+        assert.ok( stub.getSelElementArr.calledWithExactly( ), 'getSelElementArr should be called with arg' );
+        assert.ok( stub.xhr_POST.calledOnce, 'xhr_POST should be called once' );
+        assert.ok( stub.xhr_POST.calledWithExactly( url, encoded_json_string ), 'xhr_POST should be called with arg' );
+/*
+        assert.equal( as.url, expected_url, 'function should set as.url' );
+        assert.deepEqual( as.data, {
+                                    client_request : json_string,
+                                    csrfmiddlewaretoken: csrf_token
+                                    }, 
+                                    'function should set as.data' );
+*/
+//        assert.equal( as.success, ajax_FoldersTreeFromBase_success_handler, 'function should set as.success' );
+//        assert.equal( as.error,   ajax_FoldersTreeFromBase_error_handler, 'function should set as.error' );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, url, "request should have proper url" );
+		
+	    requests[0].respond( response_status, response_headers, response_body );
+
+console.log('stub.xhr_POST:-------------------------');
+console.log('args =', stub.xhr_POST.args);
+console.log('returnValues', stub.xhr_POST.returnValues);
+console.log('stub.transferSuccess:-------------------------');
+console.log('args =', stub.transferSuccess.args);
+console.log('returnValues', stub.transferSuccess.returnValues);
+//        assert.ok( stub.success.calledOnce, 'success should be called once' );
+//        assert.notOk( stub.error.called, 'error should not be called' );
+
+        assert.equal( res, undefined, 'xhr_reportDownload should return false' );
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+} );
+//=============================================================================

@@ -23,7 +23,7 @@ from koopsite.functions import fileNameCheckInsert, \
                         getSelElementFromSession, \
                         setSelElementToSession, \
                         parseClientRequest, \
-                        parseXHRClientRequest
+                        parseXHRClientRequest, dict_print
 from koopsite.settings import STATIC_URL, MAX_FILE_SIZE
 from koopsite.viewsajax import msgType, BrowseTableArray
 
@@ -622,6 +622,8 @@ class XHRTableRowView(View):
             response_cont['supplement'] = supplement
             json_s = json.dumps(response_cont)
             response['server_response'] = json_s
+            print('class: %-30s %s' % (self.__class__.__name__, '-'*30))
+            dict_print(response, 'response')
             return response
         else:
             print("There is no 'HTTP_X_CLIENT_REQUEST' in request.META")
@@ -670,6 +672,7 @@ class XHRReportDownload(XHRTableRowView):
             msg.title   = rqst.name
             msg.type    = msgType.Normal
             msg.message = "Файл успішно завантажено!"
+            dict_print(response, 'XHRReportDownload: response' )
         return report, msg, response
 
 
