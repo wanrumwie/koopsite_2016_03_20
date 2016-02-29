@@ -34,8 +34,8 @@
 			var fn = strFileName || "download",
 			blob,
 			fr;
-
-
+console.log('download:', 'this=', this);
+console.log('download:', 'this=', String(this));
 		if(String(this)==="true"){ //reverse arguments, allowing download.bind(true, "text/xml", "export.xml") to act as a callback
 			x=[x, m];
 			m=x[0];

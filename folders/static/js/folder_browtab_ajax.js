@@ -208,49 +208,7 @@ function ajax_reportDelete() {
 }
 /*
  *********************************************************************
- * Common function for XMLHttpRequest file download:
- *********************************************************************
- */
-function xhr_POST( url, encoded_json_string ) {
-    var xhr = new XMLHttpRequest();
-    xhr.addEventListener( "load",  transferSuccess,  false );
-    xhr.addEventListener( "error", transferFailed,   false );       // ADD FUNCTION !!!
-    xhr.addEventListener( "abort", transferCanceled, false );       // ADD FUNCTION !!!
-
-    xhr.onprogress = progressHandler;
-    xhr.onloadend = loadEndHandler;
-    defineAbortButton( xhr );
-    progressbarShow();
-
-    var type = "POST";
-    xhr.open( type, url, true );
-    xhr.setRequestHeader( "X-CSRFToken", csrf_token );    // from cookie or from HTML
-    xhr.setRequestHeader( "X-client-request", encoded_json_string );
-    xhr.responseType = 'blob';
-    xhr.send();
-    return xhr;
-}
-function transferSuccess() {    
-console.log('transferSuccess: this=xhr=', this);
-    var xhr = this; // rename this
-    // "this" = obj, i.e. XMLHttpRequest, 
-    //    because transferSuccess() is called as obj.method, added to obj=XMLHttpRequest by addEventListener
-    var json, sr, cd, h, fn;
-    if ( xhr.readyState == 4 && xhr.status == 200 ) {
-        h    = xhr.getAllResponseHeaders();
-        cd   = xhr.getResponseHeader( 'Content-Disposition' );
-//        fn   = cd.filename;
-        json = xhr.getResponseHeader( 'server_response' );
-        sr   = JSON.parse( json );
-        download( xhr.response, sr.title );
-        xhrSuccessHandler( sr );
-    } else {
-        xhrErrorHandler( xhr );
-    }
-}
-/*
- *********************************************************************
- *  AJAX rendering file Download form:
+ *  XMLHttpRequest rendering Report and Folder Download forms:
  *********************************************************************
  */
 function xhr_reportDownload() {
@@ -258,24 +216,27 @@ function xhr_reportDownload() {
     var json_string = JSON.stringify( arr );
     var encoded_json_string = encodeURIComponent( json_string );
     var url = "/folders/ajax-report-download";
-    xhr_POST( url, encoded_json_string );
+    var listeners = listeners_setting();
+    listeners.load   = transferSuccessDownload;
+    xhr_POST( url, encoded_json_string, listeners );
 }
 function xhr_folderDownload() {
     var arr = getSelElementArr();
     var json_string = JSON.stringify( arr );
     var encoded_json_string = encodeURIComponent( json_string );
     var url = "/folders/ajax-folder-download";
-    xhr_POST( url, encoded_json_string );
+    var listeners = listeners_setting();
+    listeners.load   = transferSuccessDownload;
+    xhr_POST( url, encoded_json_string, listeners );
 }
 /*
  *********************************************************************
  *  XMLHttpRequest rendering Report Upload form:
  *********************************************************************
  */
-// TODO: DRY xhr_reportUpload:
 function xhr_reportUpload() {
-    input = document.getElementById( 'id_file' );
-    file = input.files[0];
+    var input = document.getElementById( 'id_file' );
+    var file = input.files[0];
     if ( !file ){
         dialogMessage( "File name empty", "Error", "File name empty title", 2000 );
         return;
@@ -287,32 +248,7 @@ function xhr_reportUpload() {
     arr.fileLastModifiedDate = file.lastModifiedDate;
     var json_string = JSON.stringify( arr );
     var encoded_json_string = encodeURIComponent( json_string );
-
-    var xhr = new XMLHttpRequest();
-    xhr.addEventListener( "load",  transferSuccess,  false );
-    xhr.addEventListener( "error", transferFailed,   false );       // ADD FUNCTION !!!
-    xhr.addEventListener( "abort", transferCanceled, false );       // ADD FUNCTION !!!
-
-    xhr.upload.onprogress = progressHandler;
-    xhr.onloadend = loadEndHandler;
-    defineAbortButton(xhr);
-    progressbarShow();
-
-    var type = "POST";
-    url = "/folders/ajax-report-upload";
-    xhr.open( type, url, true );
-    xhr.setRequestHeader( "X-CSRFToken", csrf_token);    // from cookie or from HTML
-    xhr.setRequestHeader( "X-client-request", encoded_json_string );
-    xhr.send( file );
-
-    function transferSuccess() {
-        var json, sr;
-        if ( xhr.readyState == 4 && xhr.status == 200 ) {
-            json = xhr.getResponseHeader( 'server_response' );
-            sr = JSON.parse( json );
-            xhrSuccessHandler( sr );
-        } else {
-            xhrErrorHandler( xhr );
-        }
-    }
+    var url = "/folders/ajax-report-upload";
+    var listeners = listeners_setting();
+    xhr_POST( url, encoded_json_string, listeners, file );
 }

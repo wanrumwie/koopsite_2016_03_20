@@ -42,18 +42,18 @@ console.log('xhrErrorHandler: xhr.status=',xhr.status);
     if ( xhr.status == 401 || xhr.status == 403 ) { // Redirect to login
         //window.location = xhr.responseText;
         dialogMessage( "Ви не маєте доступу до цієї операції!",
-                      "Error", "Помилка доступу", 3000 );
+                      "Error", "Помилка доступу" );
         dialog_box_form_close();
     } else {
         xhrErrorAlert( xhr, 'xhrErrorHandler' ); }
 }
 function transferFailed( evt ) {
 	dialogMessage( "An error occurred while transferring the file. Probably file too long", 
-                        "Error", "UPLOAD ERROR", 3000 );
+                        "Error", "UPLOAD ERROR" );
     dialog_box_form_close();
 }
 function transferCanceled( evt ) {
-	dialogMessage( "The transfer has been canceled by the user.", "", "UPLOAD CANCELED", 2000 );
+	dialogMessage( "The transfer has been canceled by the user.", "", "UPLOAD CANCELED", 5000 );
     dialog_box_form_close();
 }
 /*
@@ -142,10 +142,83 @@ function ajax_startRowIndexFromSession() {
     $.ajax( as );
     return false;
 }
+/*
+ *********************************************************************
+ * Common function for XMLHttpRequest file download and upload:
+ *********************************************************************
+ */
+function listeners_setting(){
+    var listeners = {};
+    listeners.load   = transferSuccess;
+    listeners.error  = transferFailed;
+    listeners.abort  = transferCanceled;
+    return listeners;
+}
+function transferSuccess() {    
+console.log('transferSuccess: this=xhr=', this);
+    var xhr = this; // rename this
+    // "this" = obj, i.e. XMLHttpRequest, 
+    //    because transferSuccess() is called as obj.method, added to obj=XMLHttpRequest by addEventListener
+    var json, sr, cd, h, fn;
+    if ( xhr.readyState == 4 && xhr.status == 200 ) {
+        h    = xhr.getAllResponseHeaders();
+        cd   = xhr.getResponseHeader( 'Content-Disposition' );
+//        fn   = cd.filename;
+        json = xhr.getResponseHeader( 'server_response' );
+        sr   = JSON.parse( json );
+        xhrSuccessHandler( sr );
+    } else {
+        xhrErrorHandler( xhr );
+    }
+}
+function transferSuccessDownload() {    
+console.log('transferSuccessDownload: this=xhr=', this);
+    var xhr = this; // rename this
+    // "this" = obj, i.e. XMLHttpRequest, 
+    //    because transferSuccess() is called as obj.method, added to obj=XMLHttpRequest by addEventListener
+    var json, sr, cd, h, fn;
+    if ( xhr.readyState == 4 && xhr.status == 200 ) {
+        h    = xhr.getAllResponseHeaders();
+        cd   = xhr.getResponseHeader( 'Content-Disposition' );
+//        fn   = cd.filename;
+        json = xhr.getResponseHeader( 'server_response' );
+        sr   = JSON.parse( json );
+        download( xhr.response, sr.title );
+        xhrSuccessHandler( sr );
+    } else {
+        xhrErrorHandler( xhr );
+    }
+}
 
 /**********************************************************************
  * END of the code covered by tests
  **********************************************************************/
+
+function xhr_POST( url, encoded_json_string, listeners, file ) {
+    var xhr = new XMLHttpRequest();
+    var key;
+    for ( key in listeners ){
+        xhr.addEventListener( key,  listeners[key],  false );
+    }
+    xhr.onprogress = progressHandler;
+    xhr.onloadend = loadEndHandler;
+    xhr.upload.onprogress = progressHandler;
+    defineAbortButton( xhr );
+    progressbarShow();
+
+    var type = "POST";
+    xhr.open( type, url, true );
+    xhr.setRequestHeader( "X-CSRFToken", csrf_token );    // from cookie or from HTML
+    xhr.setRequestHeader( "X-client-request", encoded_json_string );
+    xhr.responseType = 'blob';
+    if ( file === undefined ){
+        xhr.send();
+    } else {
+        xhr.send( file );
+    }
+console.log('xhr_POST:', 'xhr=', xhr);
+    return xhr;
+}
 
 
 

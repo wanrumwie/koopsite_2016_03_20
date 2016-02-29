@@ -41,9 +41,11 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) {
         assert.ok( stub.create_qs_TR_arr.calledOnce, 'create_qs_TR_arr should be called once' );
         assert.ok( stub.create_qs_TR_arr.calledWithExactly( ), 'create_qs_TR_arr should be called with arg' );
         assert.ok( stub.ajax_startRowIndexFromSession.calledOnce, 'ajax_startRowIndexFromSession should be called once' );
-        assert.ok( stub.ajax_startRowIndexFromSession.calledWithExactly(),'ajax_startRowIndexFromSession should be called with arg');
+        assert.ok( stub.ajax_startRowIndexFromSession.calledWithExactly(),
+                                                                'ajax_startRowIndexFromSession should be called with arg');
         assert.ok( stub.set_browtab_ajax_listeners.calledOnce, 'set_browtab_ajax_listeners should be called once' );
-        assert.ok( stub.set_browtab_ajax_listeners.calledWithExactly( ), 'set_browtab_ajax_listeners should be called with arg' );
+        assert.ok( stub.set_browtab_ajax_listeners.calledWithExactly( ), 
+                                                                'set_browtab_ajax_listeners should be called with arg' );
         assert.equal( csrf_token, 'qwerty', 'browtab_ajax_document_ready_handler should set value to global var' );
         assert.equal( res, undefined, 'browtab_ajax_document_ready_handler should return undefined' );
     });
@@ -67,7 +69,8 @@ QUnit.module( "browtab_ajax document ready", function( hooks ) {
         stub.ajax_selRowIndexToSession = sinon.stub( window, "ajax_selRowIndexToSession" );
         var res = onChange_handler( );
         assert.ok( stub.ajax_selRowIndexToSession.calledOnce, 'ajax_selRowIndexToSession should be called once' );
-        assert.ok( stub.ajax_selRowIndexToSession.calledWithExactly(  ), 'ajax_selRowIndexToSession should be called with arg' );
+        assert.ok( stub.ajax_selRowIndexToSession.calledWithExactly(  ), 
+                                                                'ajax_selRowIndexToSession should be called with arg' );
         assert.equal( res, false, 'onChange_handler should return false' );
     });
     QUnit.test( '$( ... ).on( "change",... STUB ajax_selRowIndexToSession', function ( assert ) {
@@ -156,7 +159,7 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         assert.notOk( stub.xhrErrorAlert.called, 'xhrErrorAlert should not be called' );
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
         assert.ok( stub.dialogMessage.calledWithExactly( "Ви не маєте доступу до цієї операції!",
-                      "Error", "Помилка доступу", 3000 ), 'dialogMessage should be called with arg' );
+                      "Error", "Помилка доступу" ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
         assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'xhrErrorHandler should return undefined' );
@@ -174,7 +177,7 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         assert.notOk( stub.xhrErrorAlert.called, 'xhrErrorAlert should not be called' );
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
         assert.ok( stub.dialogMessage.calledWithExactly( "Ви не маєте доступу до цієї операції!",
-                      "Error", "Помилка доступу", 3000 ), 'dialogMessage should be called with arg' );
+                      "Error", "Помилка доступу" ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
         assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'xhrErrorHandler should return undefined' );
@@ -189,8 +192,9 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
         var res = transferFailed( evt );
 
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
-        assert.ok( stub.dialogMessage.calledWithExactly( "An error occurred while transferring the file. Probably file too long", 
-                        "Error", "UPLOAD ERROR", 3000 ), 'dialogMessage should be called with arg' );
+        assert.ok( stub.dialogMessage.calledWithExactly( 
+                        "An error occurred while transferring the file. Probably file too long", 
+                        "Error", "UPLOAD ERROR" ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
         assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'transferFailed should return undefined' );
@@ -206,12 +210,24 @@ QUnit.module( "browtab_ajax dialogs & alert", function( hooks ) {
 
         assert.ok( stub.dialogMessage.calledOnce, 'dialogMessage should be called once' );
         assert.ok( stub.dialogMessage.calledWithExactly( "The transfer has been canceled by the user.", "", 
-                                            "UPLOAD CANCELED", 2000 ), 'dialogMessage should be called with arg' );
+                                            "UPLOAD CANCELED", 5000 ), 'dialogMessage should be called with arg' );
         assert.ok( stub.dialog_box_form_close.calledOnce, 'dialog_box_form_close should be called once' );
         assert.ok( stub.dialog_box_form_close.calledWithExactly(  ), 'dialog_box_form_close should be called with arg' );
         assert.equal( res, undefined, 'transferCanceled should return undefined' );
     });
 } );
+//=============================================================================
+QUnit.test( 'browtab_ajax ajax_settings', function ( assert ) {
+    expect( 1 );
+    var as = {
+        type    : "POST",
+        dataType: "json",
+        success : ajaxSuccessHandler,
+        error   : xhrErrorHandler
+    };
+    var res = ajax_settings( );
+    assert.deepEqual( res, as, 'ajax_settings should return proper value' );
+});
 //=============================================================================
 function folderEmptyMessage( f_name ) {    // This function declared in another js file.
 }
@@ -513,6 +529,267 @@ QUnit.module( "browtab_ajax ajax", function( hooks ) {
         assert.ok( stub.error.calledOnce, 'error should not be called' );
 
         assert.equal( res, false, 'ajax_startRowIndexFromSession should return false' );
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+} );
+//=============================================================================
+QUnit.test( 'browtab_ajax listeners_setting', function ( assert ) {
+    expect( 1 );
+    var listeners = {};
+    listeners.load   = transferSuccess;
+    listeners.error  = transferFailed;
+    listeners.abort  = transferCanceled;
+    var res = listeners_setting( );
+    assert.deepEqual( res, listeners, 'listeners_setting should return proper value' );
+});
+function xhrSuccessHandler( ) {  // function declared in another file
+}
+function progressHandler( ) {  // function declared in another file
+}
+function loadEndHandler( ) {  // function declared in another file
+}
+function defineAbortButton( ) {  // function declared in another file
+}
+function progressbarShow( ) {  // function declared in another file
+}
+//=============================================================================
+QUnit.module( "browtab_ajax hxr", function( hooks ) { 
+    var requests = sinon.requests;
+    var done;
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+        csrf_token = $( "#csrfmiddlewaretoken" ).val();
+        this.xhr = sinon.useFakeXMLHttpRequest();
+        requests = [];
+        this.xhr.onCreate = function ( request ) {
+            requests.push( request );
+        };
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+        this.xhr.restore();
+    } );
+    QUnit.test( 'transferSuccess 200', function ( assert ) {
+        expect( 4 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var sr = {};
+        sr.id           = 33;
+        var json_string_sr = JSON.stringify( sr );
+
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var xhr = new XMLHttpRequest();
+        xhr.readyState = 4;
+        xhr.status = 200;
+        xhr.responseHeaders = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+
+        var res = transferSuccess.call( xhr );  // no need to call transferSuccess, because it is called by xhr.respond
+
+        assert.ok( stub.xhrSuccessHandler.calledOnce, 'xhrSuccessHandler should be called once' );
+        assert.ok( stub.xhrSuccessHandler.calledWithExactly( sr ), 'xhrSuccessHandler should be called with arg' );
+        assert.notOk( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.equal( res, undefined, 'transferSuccess should return undefined' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'transferSuccess 200 1', function ( assert ) {
+        expect( 4 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var sr = {};
+        sr.id           = 33;
+        var json_string_sr = JSON.stringify( sr );
+
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var xhr = new XMLHttpRequest();
+        xhr.readyState = 1;
+        xhr.status = 200;
+        xhr.responseHeaders = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+
+        var res = transferSuccess.call( xhr );  // no need to call transferSuccess, because it is called by xhr.respond
+
+        assert.notOk( stub.xhrSuccessHandler.called, 'xhrSuccessHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.calledWithExactly( xhr ), 'xhrErrorHandler should be called with arg' );
+        assert.equal( res, undefined, 'transferSuccess should return undefined' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'transferSuccess 400', function ( assert ) {
+        expect( 4 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var sr = {};
+        sr.id           = 33;
+        var json_string_sr = JSON.stringify( sr );
+
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var xhr = new XMLHttpRequest();
+        xhr.readyState = 1;
+        xhr.status = 200;
+        xhr.responseHeaders = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+
+        var res = transferSuccess.call( xhr );  // no need to call transferSuccess, because it is called by xhr.respond
+
+        assert.notOk( stub.xhrSuccessHandler.called, 'xhrSuccessHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.calledWithExactly( xhr ), 'xhrErrorHandler should be called with arg' );
+        assert.equal( res, undefined, 'transferSuccess should return undefined' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'transferSuccessDownload 200', function ( assert ) {
+        expect( 6 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var sr = {};
+        sr.id           = 33;
+        var json_string_sr = JSON.stringify( sr );
+
+        stub.download           = sinon.stub( window, "download" );
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var xhr = new XMLHttpRequest();
+        xhr.readyState = 4;
+        xhr.status = 200;
+        xhr.responseHeaders = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+
+        var res = transferSuccessDownload.call( xhr );  // no need to call transferSuccess, because it is called by xhr.respond
+
+        assert.ok( stub.download.calledOnce, 'download should be called once' );
+        assert.ok( stub.download.calledWithExactly( xhr.response, sr.title ), 'download should be called with arg' );
+        assert.ok( stub.xhrSuccessHandler.calledOnce, 'xhrSuccessHandler should be called once' );
+        assert.ok( stub.xhrSuccessHandler.calledWithExactly( sr ), 'xhrSuccessHandler should be called with arg' );
+        assert.notOk( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.equal( res, undefined, 'transferSuccessDownload should return undefined' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'transferSuccessDownload 200 1', function ( assert ) {
+        expect( 5 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var sr = {};
+        sr.id           = 33;
+        var json_string_sr = JSON.stringify( sr );
+
+        stub.download           = sinon.stub( window, "download" );
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var xhr = new XMLHttpRequest();
+        xhr.readyState = 1;
+        xhr.status = 200;
+        xhr.responseHeaders = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+
+        var res = transferSuccessDownload.call( xhr );  // no need to call transferSuccess, because it is called by xhr.respond
+
+        assert.notOk( stub.download.called, 'download should not be called' );
+        assert.notOk( stub.xhrSuccessHandler.called, 'xhrSuccessHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.calledWithExactly( xhr ), 'xhrErrorHandler should be called with arg' );
+        assert.equal( res, undefined, 'transferSuccessDownload should return udefined' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'transferSuccessDownload 400', function ( assert ) {
+        expect( 5 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var sr = {};
+        sr.id           = 33;
+        var json_string_sr = JSON.stringify( sr );
+
+        stub.download           = sinon.stub( window, "download" );
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var xhr = new XMLHttpRequest();
+        xhr.readyState = 4;
+        xhr.status = 400;
+        xhr.responseHeaders = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+
+        var res = transferSuccessDownload.call( xhr );  // no need to call transferSuccess, because it is called by xhr.respond
+
+        assert.notOk( stub.download.called, 'download should not be called' );
+        assert.notOk( stub.xhrSuccessHandler.called, 'xhrSuccessHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.called, 'xhrErrorHandler should not be called' );
+        assert.ok( stub.xhrErrorHandler.calledWithExactly( xhr ), 'xhrErrorHandler should be called with arg' );
+        assert.equal( res, undefined, 'transferSuccessDownload should return udefined' );
+
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'xhr_POST', function ( assert ) {
+        expect( 15 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var arr = {'id':55};
+        var url = "/folders/ajax-report-download";
+        var json_string = JSON.stringify( arr );
+        var encoded_json_string = encodeURIComponent( json_string );
+        var expected_requestBody = "client_request=" + json_string + "+&csrfmiddlewaretoken=" + csrf_token;
+        var listeners = listeners_setting( );
+
+        var sr = {};
+        sr.selRowIndex  = 77;
+        sr.model        = 'report';
+        sr.id           = 33;
+        var arr_sr = {};
+        arr_sr.server_response = sr;
+        var json_string_sr = JSON.stringify( arr_sr );
+
+        var response_status   = 200; 
+        var response_headers  = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+        var response_body     = '[77]';
+
+        // Attention! for some functions stub is name for sinon.spy, not sinon.stub
+        stub.getSelElementArr   = sinon.stub( window, "getSelElementArr" ).returns( arr );
+        stub.xhr_POST           = sinon.spy( window, "xhr_POST" );
+        // set stub or spy to functions inside xhr_POST, because it's called as spy, not stub!
+        stub.progressHandler    = sinon.stub( window, "progressHandler" );
+        stub.loadEndHandler     = sinon.stub( window, "loadEndHandler" );
+        stub.defineAbortButton  = sinon.stub( window, "defineAbortButton" );
+        stub.progressbarShow    = sinon.stub( window, "progressbarShow" );
+        stub.transferSuccess    = sinon.spy( window, "transferSuccess" );
+        stub.download           = sinon.spy( window, "download" );
+        stub.xhrSuccessHandler  = sinon.stub( window, "xhrSuccessHandler" );
+        stub.xhrErrorHandler    = sinon.stub( window, "xhrErrorHandler" );
+
+        var res = xhr_POST( url, encoded_json_string, listeners );
+
+//        assert.ok( stub.getSelElementArr.calledOnce, 'getSelElementArr should be called once' );
+//        assert.ok( stub.getSelElementArr.calledWithExactly( ), 'getSelElementArr should be called with arg' );
+//        assert.ok( stub.xhr_POST.calledOnce, 'xhr_POST should be called once' );
+//        assert.ok( stub.xhr_POST.calledWithExactly( url, encoded_json_string ), 'xhr_POST should be called with arg' );
+/*
+        assert.equal( as.url, expected_url, 'function should set as.url' );
+        assert.deepEqual( as.data, {
+                                    client_request : json_string,
+                                    csrfmiddlewaretoken: csrf_token
+                                    }, 
+                                    'function should set as.data' );
+*/
+//        assert.equal( as.success, ajax_FoldersTreeFromBase_success_handler, 'function should set as.success' );
+//        assert.equal( as.error,   ajax_FoldersTreeFromBase_error_handler, 'function should set as.error' );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, url, "request should have proper url" );
+		
+	    requests[0].respond( response_status, response_headers, response_body );
+
+console.log('stub.xhr_POST:-------------------------');
+console.log('args =', stub.xhr_POST.args);
+console.log('returnValues', stub.xhr_POST.returnValues);
+console.log('stub.transferSuccess:-------------------------');
+console.log('args =', stub.transferSuccess.args);
+console.log('returnValues', stub.transferSuccess.returnValues);
+//        assert.ok( stub.success.calledOnce, 'success should be called once' );
+//        assert.notOk( stub.error.called, 'error should not be called' );
+
+        assert.equal( res, requests[0], 'xhr_POST should return xhr' );
         done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
 } );
