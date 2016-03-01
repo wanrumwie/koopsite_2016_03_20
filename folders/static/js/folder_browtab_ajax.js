@@ -1,6 +1,10 @@
 // JavaScript Document
 console.log('start loading folder_browtab_ajax.js');
 
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
+
 /*
  *********************************************************************
  *  Actions in case of success server responce for AJAX or XMLHttpRequest:
@@ -235,8 +239,9 @@ function xhr_folderDownload() {
  *********************************************************************
  */
 function xhr_reportUpload() {
-    var input = document.getElementById( 'id_file' );
-    var file = input.files[0];
+//    var input = document.getElementById( 'id_file' );
+    var input = $( '#id_file' );
+    var file = input[0].files[0];
     if ( !file ){
         dialogMessage( "File name empty", "Error", "File name empty title", 2000 );
         return;
@@ -252,3 +257,9 @@ function xhr_reportUpload() {
     var listeners = listeners_setting();
     xhr_POST( url, encoded_json_string, listeners, file );
 }
+
+
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+

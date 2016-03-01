@@ -174,7 +174,8 @@ if python_any_where:
 SITE_ADDRESS = "wanrumwie.pythonanywhere.com"
 
 # Максимальний розмір файла, який дозволяється завантажувати на сервер:
-MAX_FILE_SIZE = 20000000
+# MAX_FILE_SIZE = 20000000
+MAX_FILE_SIZE = 200000000
 
 # Максимальний розмір zip-файла, який дозволяється завантажувати з сервера:
 MAX_ZIP_FILE_SIZE = 20000000

@@ -48,11 +48,13 @@ console.log('xhrErrorHandler: xhr.status=',xhr.status);
         xhrErrorAlert( xhr, 'xhrErrorHandler' ); }
 }
 function transferFailed( evt ) {
+console.log('transferFailed:', 'evt=', evt);
 	dialogMessage( "An error occurred while transferring the file. Probably file too long", 
                         "Error", "UPLOAD ERROR" );
     dialog_box_form_close();
 }
 function transferCanceled( evt ) {
+console.log('transferCanceled:', 'evt=', evt);
 	dialogMessage( "The transfer has been canceled by the user.", "", "UPLOAD CANCELED", 5000 );
     dialog_box_form_close();
 }
@@ -189,11 +191,6 @@ console.log('transferSuccessDownload: this=xhr=', this);
         xhrErrorHandler( xhr );
     }
 }
-
-/**********************************************************************
- * END of the code covered by tests
- **********************************************************************/
-
 function xhr_POST( url, encoded_json_string, listeners, file ) {
     var xhr = new XMLHttpRequest();
     var key;
@@ -211,14 +208,18 @@ function xhr_POST( url, encoded_json_string, listeners, file ) {
     xhr.setRequestHeader( "X-CSRFToken", csrf_token );    // from cookie or from HTML
     xhr.setRequestHeader( "X-client-request", encoded_json_string );
     xhr.responseType = 'blob';
+console.log('xhr_POST before send:', 'xhr=', xhr);
     if ( file === undefined ){
         xhr.send();
     } else {
         xhr.send( file );
     }
-console.log('xhr_POST:', 'xhr=', xhr);
-    return xhr;
 }
+
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+
 
 
 

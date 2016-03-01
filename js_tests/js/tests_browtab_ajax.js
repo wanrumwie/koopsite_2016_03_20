@@ -1,5 +1,5 @@
 /*
-Global:  $ (?), JSON (?), QUnit (?), ajaxSuccessHandler, ajax_selRowIndexToSession (?), ajax_selRowIndexToSession_error_handler (?), ajax_selRowIndexToSession_success_handler (?), ajax_settings (?), ajax_startRowIndexFromSession (?), ajax_startRowIndexFromSession_error_handler (?), ajax_startRowIndexFromSession_success_handler (?), browtab_ajax_document_ready_handler (?), csrf_token (?), dialog, dialogMessage, dialog_box_form_close, expect (?), folderEmptyMessage, getSelElementArr, onChange_handler (?), rowsNumber (?), set_browtab_ajax_listeners (?), sinon (?), stub, transferCanceled (?), transferFailed (?), window (?), xhrErrorAlert (?), xhrErrorHandler (?)
+Global:  $ (?), JSON (?), QUnit (?), XMLHttpRequest (?), ajaxSuccessHandler, ajax_selRowIndexToSession (?), ajax_selRowIndexToSession_error_handler (?), ajax_selRowIndexToSession_success_handler (?), ajax_settings (?), ajax_startRowIndexFromSession (?), ajax_startRowIndexFromSession_error_handler (?), ajax_startRowIndexFromSession_success_handler (?), browtab_ajax_document_ready_handler (?), console (?), csrf_token (?), defineAbortButton, dialog, dialogMessage, dialog_box_form_close, expect (?), folderEmptyMessage, getSelElementArr, listeners_setting (?), loadEndHandler, onChange_handler (?), progressHandler, progressbarShow, rowsNumber (?), set_browtab_ajax_listeners (?), sinon (?), stub, transferCanceled (?), transferFailed (?), transferSuccess (?), transferSuccessDownload (?), window (?), xhrErrorAlert (?), xhrErrorHandler (?), xhrSuccessHandler, xhr_POST (?)
 */
 
 //QUnit.config.reorder = false;
@@ -724,6 +724,127 @@ QUnit.module( "browtab_ajax hxr", function( hooks ) {
         done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
     QUnit.test( 'xhr_POST', function ( assert ) {
+        expect( 17 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var arr = {'id':55};
+        var url = "/folders/ajax-report-download";
+        var json_string = JSON.stringify( arr );
+        var encoded_json_string = encodeURIComponent( json_string );
+        var expected_requestHeaders = {
+                "Content-Type"      : "text/plain;charset=utf-8",
+                "X-CSRFToken"       : csrf_token,
+                "X-client-request"  : encoded_json_string
+                };
+        var expected_requestBody = undefined;
+
+        var sr = {};
+        sr.selRowIndex  = 77;
+        sr.model        = 'report';
+        sr.id           = 33;
+        var arr_sr = {};
+        arr_sr.server_response = sr;
+        var json_string_sr = JSON.stringify( arr_sr );
+
+        var response_status   = 200; 
+        var response_headers  = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+        var response_body     = '[77]';
+
+        stub.transferSuccess    = sinon.stub( window, "transferSuccess" );
+        stub.transferFailed     = sinon.stub( window, "transferFailed" );
+        stub.transferCanceled   = sinon.stub( window, "transferCanceled" );
+        stub.progressHandler    = sinon.stub( window, "progressHandler" );
+        stub.loadEndHandler     = sinon.stub( window, "loadEndHandler" );
+        stub.defineAbortButton  = sinon.stub( window, "defineAbortButton" );
+        stub.progressbarShow    = sinon.stub( window, "progressbarShow" );
+
+        var listeners = listeners_setting( );
+        var res = xhr_POST( url, encoded_json_string, listeners );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, url, "request should have proper url" );
+        assert.equal( requests[0].method, "POST", "request should have proper method" );
+        assert.equal( requests[0].async, true, "request should have proper async" );
+        assert.equal( requests[0].responseType, 'blob', "request should have proper responseType" );
+        assert.deepEqual( requests[0].onprogress, progressHandler, "request should have proper onprogress" );
+        assert.deepEqual( requests[0].onloadend, loadEndHandler, "request should have proper onloadend" );
+        assert.deepEqual( requests[0].upload.onprogress, progressHandler, "request should have proper upload.onprogress" );
+        assert.deepEqual( requests[0].eventListeners.load[1], transferSuccess, "request should have proper on load" );
+        assert.deepEqual( requests[0].eventListeners.error[0], transferFailed, "request should have proper on error" );
+        assert.deepEqual( requests[0].eventListeners.abort[1], transferCanceled, "request should have proper on abort" );
+        assert.deepEqual( requests[0].requestHeaders, expected_requestHeaders, "request should have proper requestHeaders" );
+        assert.equal( requests[0].requestBody, expected_requestBody, "request should have proper requestBody" );
+
+	    requests[0].respond( response_status, response_headers, response_body );
+
+        assert.equal( stub.transferSuccess.callCount,  1, 'transferSuccess should be called' );
+        assert.equal( stub.transferFailed.callCount,   0, 'transferFailed should not be called' );
+        assert.equal( stub.transferCanceled.callCount, 0, 'transferCanceled should not be called' );
+
+        assert.equal( res, undefined, 'xhr_POST should return undefined' );
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'xhr_POST file', function ( assert ) {
+        expect( 17 );
+        done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
+        var file = "file_content";
+        var arr = {'id':55};
+        var url = "/folders/ajax-report-upload";
+        var json_string = JSON.stringify( arr );
+        var encoded_json_string = encodeURIComponent( json_string );
+        var expected_requestHeaders = {
+                "Content-Type"      : "text/plain;charset=utf-8",
+                "X-CSRFToken"       : csrf_token,
+                "X-client-request"  : encoded_json_string
+                };
+        var expected_requestBody = file;
+
+        var sr = {};
+        sr.selRowIndex  = 77;
+        sr.model        = 'report';
+        sr.id           = 33;
+        var arr_sr = {};
+        arr_sr.server_response = sr;
+        var json_string_sr = JSON.stringify( arr_sr );
+
+        var response_status   = 200; 
+        var response_headers  = { "Content-Type": "application/json" , 'server_response': json_string_sr };
+        var response_body     = '[77]';
+
+        stub.transferSuccess    = sinon.stub( window, "transferSuccess" );
+        stub.transferFailed     = sinon.stub( window, "transferFailed" );
+        stub.transferCanceled   = sinon.stub( window, "transferCanceled" );
+        stub.progressHandler    = sinon.stub( window, "progressHandler" );
+        stub.loadEndHandler     = sinon.stub( window, "loadEndHandler" );
+        stub.defineAbortButton  = sinon.stub( window, "defineAbortButton" );
+        stub.progressbarShow    = sinon.stub( window, "progressbarShow" );
+
+        var listeners = listeners_setting( );
+        var res = xhr_POST( url, encoded_json_string, listeners, file );
+
+        assert.equal( requests.length, 1 , "requests length should be 1" );
+        assert.equal( requests[0].url, url, "request should have proper url" );
+        assert.equal( requests[0].method, "POST", "request should have proper method" );
+        assert.equal( requests[0].async, true, "request should have proper async" );
+        assert.equal( requests[0].responseType, 'blob', "request should have proper responseType" );
+        assert.deepEqual( requests[0].onprogress, progressHandler, "request should have proper onprogress" );
+        assert.deepEqual( requests[0].onloadend, loadEndHandler, "request should have proper onloadend" );
+        assert.deepEqual( requests[0].upload.onprogress, progressHandler, "request should have proper upload.onprogress" );
+        assert.deepEqual( requests[0].eventListeners.load[1], transferSuccess, "request should have proper on load" );
+        assert.deepEqual( requests[0].eventListeners.error[0], transferFailed, "request should have proper on error" );
+        assert.deepEqual( requests[0].eventListeners.abort[1], transferCanceled, "request should have proper on abort" );
+        assert.deepEqual( requests[0].requestHeaders, expected_requestHeaders, "request should have proper requestHeaders" );
+        assert.equal( requests[0].requestBody, expected_requestBody, "request should have proper requestBody" );
+
+	    requests[0].respond( response_status, response_headers, response_body );
+
+        assert.equal( stub.transferSuccess.callCount,  1, 'transferSuccess should be called' );
+        assert.equal( stub.transferFailed.callCount,   0, 'transferFailed should not be called' );
+        assert.equal( stub.transferCanceled.callCount, 0, 'transferCanceled should not be called' );
+
+        assert.equal( res, undefined, 'xhr_POST should return undefined' );
+        done(); // start QUnit runner after it was keep waiting until async operations executed. 
+    });
+    QUnit.test( 'xhr_POST integral', function ( assert ) {
         expect( 15 );
         done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
@@ -789,7 +910,7 @@ console.log('returnValues', stub.transferSuccess.returnValues);
 //        assert.ok( stub.success.calledOnce, 'success should be called once' );
 //        assert.notOk( stub.error.called, 'error should not be called' );
 
-        assert.equal( res, requests[0], 'xhr_POST should return xhr' );
+        assert.equal( res, undefined, 'xhr_POST should return undefined' );
         done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
 } );
