@@ -844,8 +844,9 @@ QUnit.module( "browtab_ajax hxr", function( hooks ) {
         assert.equal( res, undefined, 'xhr_POST should return undefined' );
         done(); // start QUnit runner after it was keep waiting until async operations executed. 
     });
+    // TODO-Make integral test for xhr_POST() to check all listeners
     QUnit.test( 'xhr_POST integral', function ( assert ) {
-        expect( 15 );
+        expect( 3 );
         done = assert.async();  // Instruct QUnit to wait for an asynchronous operation. 
         var arr = {'id':55};
         var url = "/folders/ajax-report-download";

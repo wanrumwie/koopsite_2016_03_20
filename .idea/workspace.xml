@@ -4,14 +4,16 @@
     <bookmark url="file://$PROJECT_DIR$/koopsite/tests/test_viewsajaxuser.py" line="214" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
+    <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="KoopSite:  js_tests: ready for users_browtab_ajax !">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ajax.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js_tests/koopsite/tests_users_browtab_ajax.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/browtab_ajax.js" afterPath="$PROJECT_DIR$/static/js/browtab_ajax.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/static/js/folder_browtab_ajax.js" afterPath="$PROJECT_DIR$/folders/static/js/folder_browtab_ajax.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab_ajax.html" afterPath="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab_ajax.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/settings.py" afterPath="$PROJECT_DIR$/koopsite/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html" afterPath="$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/templates/folders/folder_contents.html" afterPath="$PROJECT_DIR$/folders/templates/folders/folder_contents.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html" afterPath="$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/js/tests_browtab_ajax.js" afterPath="$PROJECT_DIR$/js_tests/js/tests_browtab_ajax.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/folders/tests_folder_browtab_ajax.js" afterPath="$PROJECT_DIR$/js_tests/folders/tests_folder_browtab_ajax.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/urls.py" afterPath="$PROJECT_DIR$/js_tests/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/static/js/users_browtab_ajax.js" afterPath="$PROJECT_DIR$/koopsite/static/js/users_browtab_ajax.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="koopsite.iws" />
@@ -36,11 +38,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="js_tests_folder_browtab_ajax.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab_ajax.html">
+      <file leaf-file-name="koop_adm_users_table.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.79266346" vertical-offset="4105" max-vertical-offset="5616">
-              <caret line="177" column="47" selection-start-line="177" selection-start-column="47" selection-end-line="177" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.53907496" vertical-offset="1794" max-vertical-offset="6370">
+              <caret line="82" column="81" selection-start-line="82" selection-start-column="62" selection-end-line="82" selection-end-column="81" />
               <folding />
             </state>
           </provider>
@@ -65,7 +67,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/koopsite/views.py" />
         <option value="$PROJECT_DIR$/functional_tests_koopsite/tests_register.py" />
         <option value="$PROJECT_DIR$/koopsite/templates/koop_index.html" />
         <option value="$PROJECT_DIR$/koopsite/tests/test_content_types.py" />
@@ -106,16 +107,17 @@
         <option value="$PROJECT_DIR$/html_in.html" />
         <option value="$PROJECT_DIR$/html_prettify.py" />
         <option value="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab.html" />
-        <option value="$PROJECT_DIR$/js_tests/urls.py" />
-        <option value="$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html" />
         <option value="$PROJECT_DIR$/js_tests/folders/tests_folder_browtab_ajax.js" />
-        <option value="$PROJECT_DIR$/folders/templates/folders/folder_contents.html" />
-        <option value="$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html" />
         <option value="$PROJECT_DIR$/koopsite/functions.py" />
         <option value="$PROJECT_DIR$/folders/viewsajaxfolder.py" />
         <option value="$PROJECT_DIR$/js_tests/templates/js_tests_browtab_ajax.html" />
         <option value="$PROJECT_DIR$/koopsite/settings.py" />
         <option value="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab_ajax.html" />
+        <option value="$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html" />
+        <option value="$PROJECT_DIR$/folders/templates/folders/folder_contents.html" />
+        <option value="$PROJECT_DIR$/js_tests/urls.py" />
+        <option value="$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html" />
+        <option value="$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ajax.html" />
       </list>
     </option>
   </component>
@@ -427,11 +429,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\PyPrograms\Django\koopsite\js_tests\templates\koopsite" />
+      <recent name="C:\PyPrograms\Django\koopsite\js_tests\koopsite" />
       <recent name="C:\PyPrograms\Django\koopsite\js_tests\templates\folders" />
       <recent name="C:\PyPrograms\Django\koopsite\js_tests\folders" />
       <recent name="C:\PyPrograms\Django\koopsite" />
-      <recent name="C:\PyPrograms\Django\koopsite\js_tests\koopsite" />
-      <recent name="C:\PyPrograms\Django\koopsite\js_tests\templates\koopsite" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\PyPrograms\Django\koopsite\js_tests\templates" />
@@ -1313,10 +1315,14 @@
       <created>1456772626742</created>
       <updated>1456772626742</updated>
     </task>
-    <option name="localTasksCounter" value="150" />
+    <task id="LOCAL-00150" summary="KoopSite:  js_tests: ready for folder_browtab_ajax.js and  browtab_ajax.">
+      <created>1456858694889</created>
+      <updated>1456858694889</updated>
+    </task>
+    <option name="localTasksCounter" value="151" />
     <servers />
   </component>
-  <component name="TodoView" selected-index="0">
+  <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
       <are-packages-shown value="false" />
       <are-modules-shown value="false" />
@@ -1352,12 +1358,12 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4172767" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1375,8 +1381,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="KoopSite:  Завершено всі UT для *.py" />
-    <MESSAGE value="KoopSite:  Перенесено superlists в окремий проект" />
     <MESSAGE value="KoopSite:  Почав упорядковувати js_tests" />
     <MESSAGE value="KoopSite:  Упорядкував js_tests" />
     <MESSAGE value="KoopSite:  js_tests: on click handler test bug fixed!" />
@@ -1400,7 +1404,9 @@
     <MESSAGE value="KoopSite:  js_tests for folder_browtab_ajax.js:  all ajax functions ready! Now xhr...." />
     <MESSAGE value="KoopSite:  js_tests for folder_browtab_ajax.js:   xhr: transferSuccess ready. ..." />
     <MESSAGE value="KoopSite:  js_tests: &#10;move som functions from folder_browtab_ajax.js to  browtab_ajax" />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  js_tests: &#10;move som functions from folder_browtab_ajax.js to  browtab_ajax" />
+    <MESSAGE value="KoopSite:  js_tests: ready for folder_browtab_ajax.js and  browtab_ajax." />
+    <MESSAGE value="KoopSite:  js_tests: ready for users_browtab_ajax !" />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  js_tests: ready for users_browtab_ajax !" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1425,41 +1431,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js_tests/qunit/sinon-qunit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61136025" vertical-offset="995" max-vertical-offset="1768">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/js/tests_example.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49560118" vertical-offset="0" max-vertical-offset="936">
-          <caret line="13" column="18" selection-start-line="13" selection-start-column="18" selection-end-line="13" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/koopsite/templates/block_ajax_browtab.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8755981" vertical-offset="257" max-vertical-offset="988">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/templates/base_js_tests.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75625" vertical-offset="296" max-vertical-offset="1794">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/js/browtab.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76681614" vertical-offset="12175" max-vertical-offset="12844">
-          <caret line="488" column="0" selection-start-line="488" selection-start-column="0" selection-end-line="488" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js_tests/templates/js_tests.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.203125" vertical-offset="0" max-vertical-offset="640">
@@ -1623,13 +1594,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20733653" vertical-offset="0" max-vertical-offset="5902">
-          <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/example-beautiful-soup.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1838565" vertical-offset="267" max-vertical-offset="1066">
@@ -1665,27 +1629,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.25358853" vertical-offset="1089" max-vertical-offset="4316">
-          <caret line="48" column="27" selection-start-line="48" selection-start-column="27" selection-end-line="48" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/folders/test_folders.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1846">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8293461" vertical-offset="0" max-vertical-offset="806">
-          <caret line="20" column="86" selection-start-line="20" selection-start-column="86" selection-end-line="20" selection-end-column="86" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js_tests/js/tests_browtab.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.038863976" vertical-offset="43134" max-vertical-offset="51584">
@@ -1707,27 +1650,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js_tests/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49476832" vertical-offset="319" max-vertical-offset="1170">
-          <caret line="26" column="71" selection-start-line="25" selection-start-column="71" selection-end-line="25" selection-end-column="71" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/folders/templates/folders/folder_contents.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.50239235" vertical-offset="4807" max-vertical-offset="5460">
-          <caret line="197" column="12" selection-start-line="197" selection-start-column="12" selection-end-line="197" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6682616" vertical-offset="5483" max-vertical-offset="6136">
-          <caret line="227" column="0" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/koopsite/tests/test_viewsajax.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1554559" vertical-offset="5772" max-vertical-offset="8684">
@@ -1746,7 +1668,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.76681614" vertical-offset="5675" max-vertical-offset="6344">
           <caret line="243" column="0" selection-start-line="238" selection-start-column="0" selection-end-line="238" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1754,7 +1675,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.58532697" vertical-offset="1791" max-vertical-offset="2444">
           <caret line="83" column="28" selection-start-line="83" selection-start-column="28" selection-end-line="83" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1762,7 +1682,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.07772795" vertical-offset="4524" max-vertical-offset="5928">
           <caret line="177" column="21" selection-start-line="176" selection-start-column="21" selection-end-line="176" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1770,22 +1689,117 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.07772795" vertical-offset="17706" max-vertical-offset="20410">
           <caret line="710" column="28" selection-start-line="683" selection-start-column="28" selection-end-line="683" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/folders/templates/folders/base_folder_change.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.08293461" vertical-offset="0" max-vertical-offset="2574">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/folders/templates/folders/base_folder_contents.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1404">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/folders/templates/folders/folder_contents.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.50239235" vertical-offset="2883" max-vertical-offset="5668">
+          <caret line="123" column="8" selection-start-line="123" selection-start-column="8" selection-end-line="123" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/folders/test_folders.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.88340807" vertical-offset="1073" max-vertical-offset="1846">
+          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/koopsite/tests_users_browtab_ajax.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="30862">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41945773" vertical-offset="4391" max-vertical-offset="5902">
+          <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21212122" vertical-offset="1089" max-vertical-offset="4316">
+          <caret line="47" column="10" selection-start-line="47" selection-start-column="10" selection-end-line="47" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="182">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6218236" vertical-offset="104" max-vertical-offset="1248">
+          <caret line="21" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7097289" vertical-offset="179" max-vertical-offset="884">
+          <caret line="24" column="46" selection-start-line="24" selection-start-column="46" selection-end-line="24" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/koopsite/templates/block_popup.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.040625" vertical-offset="494" max-vertical-offset="2262">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.390625" vertical-offset="894" max-vertical-offset="2262">
+          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab_ajax.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79266346" vertical-offset="4105" max-vertical-offset="5616">
-          <caret line="177" column="47" selection-start-line="177" selection-start-column="47" selection-end-line="177" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.50239235" vertical-offset="4729" max-vertical-offset="5616">
+          <caret line="194" column="0" selection-start-line="150" selection-start-column="0" selection-end-line="194" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ajax.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49760765" vertical-offset="4186" max-vertical-offset="7358">
+          <caret line="173" column="61" selection-start-line="173" selection-start-column="29" selection-end-line="173" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.53907496" vertical-offset="1794" max-vertical-offset="6370">
+          <caret line="82" column="81" selection-start-line="82" selection-start-column="62" selection-end-line="82" selection-end-column="81" />
           <folding />
         </state>
       </provider>

@@ -77,7 +77,7 @@
                                             <div class="after-img-box">{{ v }}</div>
                                         </a>
                                     {% elif j == 5 %}
-                                        <span>{{ v|date:"d.m.Y" }}</span>
+                                        <span title="{{ v|date:'d.m.Y' }}">{{ v|date:'d.m.Y' }}</span>
                                     {% elif j == 6 or j == 7 or j == 8 %}
                                         <img class="padding-y-07"
                                              src="{% static v|icon_yes_no_unknown %}"/>
@@ -96,20 +96,29 @@
         <div class="aside aside-1 align-flex-start">
             <ul class="buttons-y color-negative">
                 <li>ДІЇ НАД ВСІМА АКАУНТАМИ:</li>
-                <li><button id="button-activate-all">Активувати акаунти</button></li>
-                <li><button id="button-set-member-all">Надати доступ</button></li>
+                <li><button id="button-activate-all"
+                        title="Активація всіх акаунтів. Застосуйте фільтр!">Активувати акаунти</button></li>
+                <li><button id="button-set-member-all"
+                        title="Надання всім акаунтам права доступу члена кооперативу. Застосуйте фільтр!">Надати доступ</button></li>
                 <li><br>ДІЇ НАД ОБРАНИМ АКАУНТОМ:</li>
                 <li>Підтвердження акаунта:</li>
-                <li><button id="button-recognize-account">Підтвердити</button></li>
-                <li><button id="button-deny-account">Відмовити</button></li>
+                <li><button id="button-recognize-account"
+                        title="Підтвердження достовірності даних, наданих власником акаунта">Підтвердити</button></li>
+                <li><button id="button-deny-account"
+                        title="Відмова в реєстрації через невідповідність даних, наданих власником акаунта">Відмовити</button></li>
                 <li>Активація акаунта:</li>
-                <li><button id="button-activate-account">Активувати</button></li>
-                <li><button id="button-deactivate-account">Деактивувати</button></li>
+                <li><button id="button-activate-account"
+                        title="Активація акаунта: користувач зможе входити на сайт під своїм логіном">Активувати</button></li>
+                <li><button id="button-deactivate-account"
+                        title="Деактивація акаунта: вхід під цим логіном буде неможливим">Деактивувати</button></li>
                 <li>Права доступу: член кооперативу:</li>
-                <li><button id="button-set-member-account">Встановити</button></li>
-                <li><button id="button-deny-member-account">Вилучити</button></li>
+                <li><button id="button-set-member-account"
+                        title="Встановлення для акаунта прав доступу члена кооперативу">Встановити</button></li>
+                <li><button id="button-deny-member-account"
+                        title="Вилучення з акаунта прав доступу члена кооперативу">Вилучити</button></li>
                 <li><br></li>
-                <li><button id="button-delete-account">Видалити акаунт</button></li>
+                <li><button id="button-delete-account"
+                        title="Видалення акаунта. Може краще деактивувати?">Видалити</button></li>
             </ul>
         </div>
         <div class="aside aside-2 align-flex-start text-align-left">

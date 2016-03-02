@@ -16,7 +16,7 @@
 <!---------------------------------------->
     <div class="padding-y-05">
         <h3>
-        ТЕКИ З ДОКУМЕНТАМИ
+        КАРТОТЕКА ФАЙЛІВ
         </h3>
     </div>
     <div class="wrapper">
@@ -60,7 +60,7 @@
                                     <th id="th{{ 1 }}"
                                         data-column-header="{{ v }}">
                                         <button id="button-sort-{{ 1 }}"
-                                            title="Групування (теки-документи) при сортуванні">
+                                            title="Групування (теки-файли) при сортуванні">
                                             {{ v }}
                                         </button>
                                     </th>
@@ -95,19 +95,21 @@
                                 >
                                 {% if f|model_name == 'folder' %}
                                     <a id="folder#{{ f.id }}"
-                                       href="{% url 'folders:folder-contents' f.id %}">{{ f }}</a>
+                                       href="{% url 'folders:folder-contents' f.id %}"
+                                       title="{{ f }}">{{ f }}</a>
                                 {% else %}
                                     <a id="report#{{ f.id }}"
-                                       href="{% url 'folders:report-view' f.id %}">{{ f }}</a>
+                                       href="{% url 'folders:report-view' f.id %}"
+                                       title="{{ f }}">{{ f }}</a>
                                 {% endif %}
                             </td>
                             <td id="td3-{{ f|model_name }}#{{ f.id }}"
                                 data-column-header="Дата"
                                 >
                                 {% if f|model_name == 'folder' %}
-                                    <span>{{ f.created_on|date:"d.m.Y" }}</span>
+                                    <span title="{{ f.created_on|date:'d.m.Y' }}">{{ f.created_on|date:'d.m.Y' }}</span>
                                 {% elif f.file %}
-                                    <span>{{ f.uploaded_on|date:"d.m.Y" }}</span>
+                                    <span title="{{ f.uploaded_on|date:'d.m.Y' }}">{{ f.uploaded_on|date:'d.m.Y' }}</span>
                                 {% else %}
                                     <span> </span>
                                 {% endif %}
@@ -118,7 +120,7 @@
                                 {% if f|model_name == 'folder' %}
                                     <span> </span>
                                 {% elif f.file %}
-                                    <span>{{ f.file.size|filesizeformat }}</span>
+                                    <span title="{{ f.file.size|filesizeformat }}">{{ f.file.size|filesizeformat }}</span>
                                 {% else %}
                                     <span> </span>
                                 {% endif %}
@@ -133,13 +135,19 @@
         <!-- button onclick визначене в файлах *.js -->
             <ul class="buttons-y color-negative">
                 <li>Дії у відкритій теці:</li>
-                <li><button id="button-create-folder">Створити тут нову теку</button></li>
-                <li><button id="button-upload-report">Заладувати сюди новий документ</button></li>
+                <li><button id="button-create-folder"
+                        title="Створення нової теки всередині відкритої теки">Нова тека</button></li>
+                <li><button id="button-upload-report"
+                        title="Заладування нового файла з мого комп'ютера у відкриту теку">Новий файл</button></li>
                 <li>Дії над обраним елементом:</li>
-                <li><button id="button-rename-element">Перейменувати елемент</button></li>
-                <li><button id="button-move-element">Перемістити елемент</button></li>
-                <li><button id="button-download-element">Завантажити документ/теку</button></li>
-                <li><button id="button-delete-element">Видалити елемент</button></li>
+                <li><button id="button-download-element"
+                        title="Завантаження файла/теки на мій комп'ютер">Завантажити</button></li>
+                <li><button id="button-rename-element"
+                        title="Перейменування файла/теки">Перейменувати</button></li>
+                <li><button id="button-move-element"
+                        title="Переміщення файла/теки в іншу теку">Перемістити</button></li>
+                <li><button id="button-delete-element"
+                        title="Видалення файла/теки">Видалити</button></li>
             </ul>
         </div>
         <div class="aside aside-2 align-flex-start aside-empty">
