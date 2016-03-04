@@ -92,6 +92,7 @@ QUnit.module( "folder_browtab setValToHTML", function( hooks ) {
 //=============================================================================
 QUnit.test( 'folder_browtab set_name_to_selElement', function ( assert ) {
     expect( 3 );
+	browtab_document_ready_handler();
     var newName = 'qwerty';
     selRowIndex = 1;
     qs_TR_arr = [ [{},1,2,3,4],[{},1,2,3,4],[{},1,2,3,4] ];
@@ -113,6 +114,7 @@ QUnit.test( 'folder_browtab createEmptyTR', function ( assert ) {
 QUnit.module( "folder_browtab addNewElement", function( hooks ) { 
     hooks.beforeEach( function( assert ) {
         stub = {};
+		browtab_document_ready_handler();
     } );
     hooks.afterEach( function( assert ) {
         var meth;

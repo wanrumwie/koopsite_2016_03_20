@@ -34,8 +34,12 @@
     </div>
 
     {% block script_jquery %}
-        <script src="http://code.jquery.com/jquery.min.js"></script>
+        {% include "block_js_jquery.html" %}
     {% endblock script_jquery %}
+
+    {% block script_jquery_ui %}
+        {% include "block_js_jquery_ui.html" %}
+    {% endblock script_jquery_ui %}
 
     {% block script_qunit %}
         <script src="{% static 'qunit/qunit.js' %}"       ></script>

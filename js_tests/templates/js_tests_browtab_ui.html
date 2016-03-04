@@ -3,16 +3,13 @@
 {% load staticfiles %}
 
 {% block title %}
-    KoopSite - browtab_ajax.js
+    KoopSite - browtab_ui.js
 {% endblock title %}
 
 {% block qunit-fixture %}
+    {% load staticfiles %}
     {% load koop_template_filters %}
     {% load folder_template_filters %}
-    <div id="thisfolder"
-         class="padding-u-05">
-         <span>СПИСОК АКАУНТІВ ЗАРЕЄСТРОВАНИХ КОРИСТУВАЧІВ</span>
-    </div>
             <table id="browtable"
                 class="scrolltable users8 transformtable khaki-theme"
                 >
@@ -25,17 +22,17 @@
                      >
                     <tr id="tr_qwerty">
                         <td id="td_qwerty">
-                            <a id="a_qwerty" href="/qwerty/"></a>
+                            <a id="a_qwerty" href="/qwerty/">link /qwerty/</a>
                         </td>
                     </tr>
                     <tr id="tr_qwerty_s" class="selected">
                         <td id="td_qwerty_s">
-                            <a id="a_qwerty_s" href="#"></a>
+                            <a id="a_qwerty_s" href="#">link #</a>
                         </td>
                     </tr>
                     <tr id="tr_qwerty_r" class="selected">
                         <td id="td_qwerty_r">
-                            <a id="a_qwerty_r" href="#"></a>
+                            <a id="a_qwerty_r" href="#">no link</a>
                         </td>
                     </tr>
 
@@ -55,8 +52,7 @@
         <label for="list_length">list_length:</label>
         <input id="list_length"     type="text" value="{{ object_list|length }}">
         <label for="json_arr">json_arr:</label>
-        <input id="json_arr"        type="text"
-               value='{"0":{"0":{"id":"3","model":"user","name":"george"},"1":"george","2":""},"1":{"0":{"id":"1","model":"user","name":"john"},"1":"john","2":""},"2":{"0":{"id":"3","model":"folder","name":"fjohn"},"1":"fjohn","2":""}}'>
+        <input id="json_arr"        type="text" value="{{ json_arr }}">
 
         <!-- У ці поля view запише назву таблиці та параметри стартового
             обраного рядка (індекс рядка, id та тип елемента (ім'я моделі)).
@@ -75,17 +71,16 @@
         <input id="button"      type="button" value="send to server">
     </form>
 
+    {% include "block_popup.html" %}
+
 {% endblock qunit-fixture %}
 
-{% block script_library %}
-    <script src="{% static 'js/download.js' %}"          ></script>
-{% endblock script_library %}
 
 {% block tested_script %}
     <script src="{% static 'js/browtab.js' %}"          ></script>
-    <script src="{% static 'js/browtab_ajax.js' %}"          ></script>
+    <script src="{% static 'js/browtab_ui.js' %}"          ></script>
 {% endblock tested_script %}
 
 {% block test_script %}
-    <script src="{% static 'js/tests_browtab_ajax.js' %}"></script>
+    <script src="{% static 'js/tests_browtab_ui.js' %}"></script>
 {% endblock test_script %}

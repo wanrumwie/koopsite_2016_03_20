@@ -1,44 +1,50 @@
 // jQuery UI Document
 console.log('start loading browtab_ui.js');
 
+var $dialog_box_form;
+var $dialog_confirm;
+var $dialog_message;
+//var $progressbar;
+
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
+
 // document_ready_handler called from html:
 function browtab_ui_document_ready_handler(){
+    $dialog_box_form = $( "#dialog-box-form" );
+    $dialog_confirm  = $( "#dialog-confirm" );
+    $dialog_message  = $( "#dialog-message" );
+//    $progressbar     = $( "#progressbar" );
     add_browtab_ui_dialogs(); 
 }
-
 // Adding UI dialog form (with common properties) to div:
 function add_browtab_ui_dialogs(){
-    $( "#dialog-box-form" ).dialog({    // main dialog
+    $dialog_box_form.dialog({    // main dialog
         dialogClass:    "no-close",
         autoOpen:       false,
         modal:          true,
         closeOnEscape:  true,
         width:          dialog_width(),
-        open:           dialog_open_func_default(),
-        close:          dialog_close_func(),
-        buttons:        dialog_buttons_default()   // no comma - last item in array
+        open:           set_Ok_button_on_Enter,
+        close:          selRowFocus,
+        buttons:        get_dialog_default_buttons()   // no comma - last item in array
     });
-    $( "#dialog-confirm" ).dialog({     // confirm dialog
+    $dialog_confirm.dialog({     // confirm dialog
         dialogClass:    "no-close",
         autoOpen:       false,
         modal:          true,
         closeOnEscape:  true,
-    //    width:          dialog_width(),
-    //    open:           dialog_open_func_default(),
-        buttons:        confirm_dialog_buttons_default()   // no comma - last item in array
+        width:          0.8 * dialog_width(),
+        buttons:        get_confirm_dialog_default_buttons()   // no comma - last item in array
     });
-    $( "#dialog-message" ).dialog({     // message dialog
+    $dialog_message.dialog({     // message dialog
         dialogClass:    "no-close",
-        autoOpen: false,
-        modal: true,
-        closeOnEscape: true,
-    //    dialogClass: "ui-state-highlight",
-        buttons: {
-            Ok: function() {
-                $( this ).dialog( "close" );
-                selRowFocus();
-            }
-        }
+        autoOpen:       false,
+        modal:          true,
+        closeOnEscape:  true,
+        close:          selRowFocus,
+        buttons:        { Ok: dialog_close }   // no comma - last item in array
     });
 }
 /*
@@ -47,7 +53,7 @@ function add_browtab_ui_dialogs(){
  *********************************************************************
  */
 function dialog_width() {
-    var tw = $( "#browtable tbody" ).width();
+    var tw = $tbody.width();
     var w = ( tw > 600 ) ? 450 : tw *0.75;
     return w;
 }
@@ -57,76 +63,61 @@ function dialog_width() {
  *  common for all UI dialog calls. 
  *********************************************************************
  */
-function dialog_buttons_default() {
-    var buttons = [
-        {
-            text: "Ok",
-            click: function() { } // buttons[0].click will be redefined when dialog open
-        },
-        {
-            text: "Cancel",
-            click: function() {
-                $( this ).dialog( "close" );
-                selRowFocus();
-            }
-        }
-    ];
-    return buttons;
-}
-function confirm_dialog_buttons_default() {
-    var buttons = [
-        {
-            text: "Ok",
-            click: function() { } // buttons[0].click will be redefined when dialog open
-        },
-        {
-            text: "Cancel",
-            click: function() {
-                $( this ).dialog( "close" );
-                selRowFocus();
-            }
-        }
-    ];
-    return buttons;
-}
-function dialog_close_func( event, ui ) {
-    var close_func = function( event, ui ) { 
-        selRowFocus(); 
-        };
-    return close_func;
-}
-function dialog_open_func_default() {
-    var open_func = function() {
-            $( "#dialog-box-form" ).dialog( "option", "width", dialog_width() );
-            $( this ).keypress( function( e ) {
-                if ( e.keyCode == $.ui.keyCode.ENTER ) {
-                    e.preventDefault();
-                    $( this ).parent().find( "button:contains('Ok')" ).trigger( "click" );
-                }
-            });
-    };
-    return open_func;
+function dialog_close() {
+    $( this ).dialog( "close" );
 }
 function dialog_box_form_close() {
-    $( "#dialog-box-form" ).dialog( "close" );
+    $dialog_box_form.dialog( "close" );
 }
-
+function get_dialog_default_buttons() {
+    var buttons = [
+        {
+            text: "Ok",
+            click: undefined // buttons[0].click will be redefined when dialog open
+        },
+        {
+            text: "Cancel",
+            click: dialog_close
+        }
+    ];
+    return buttons;
+}
+function get_confirm_dialog_default_buttons() {
+    var buttons = [
+        {
+            text: "Ok",
+            click: undefined // buttons[0].click will be redefined when dialog open
+        },
+        {
+            text: "Cancel",
+            click: dialog_close
+        }
+    ];
+    return buttons;
+}
+function click_Ok_button_on_Enter( e ) {
+    if ( e.keyCode == $.ui.keyCode.ENTER ) {
+        $( this ).parent().find( "button:contains('Ok')" ).trigger( "click" );
+        return false;
+    }
+}
+function set_Ok_button_on_Enter() {
+    $( this ).keypress( click_Ok_button_on_Enter );
+}
 function defineAbortButton( xhr ){
     // Define text and function for the only button during upload file:
     var buttons = [
         {
             text  : "Abort loading",
             click : function( e ) {
-                        e.preventDefault();
-                        $( this ).dialog( "close" );
-                        selRowFocus();
+                        dialog_box_form_close();
                         xhr.abort();
+                        return false;
             }
         }
     ];
-    $( "#dialog-box-form" ).dialog( "option", "buttons", buttons );
+    $dialog_box_form.dialog( "option", "buttons", buttons );
 }
-
 /*
  *********************************************************************
  * HTML for dynamically created dialogs:
@@ -146,18 +137,25 @@ var condFormTR    = '<td>' + '</td>' +
                     '<td>' + condFormLabel + condFormInput + '</td>';
 var progressTR    = '<td>Progress:</td><td><div id="progressbar"></div></td>';
 var emptyFormTR   = '<td></td><td></td>';
-
 /*
  *********************************************************************
  * Progress bar
  *********************************************************************
  */
 function progressbarShow(){
-    $( "#dialog-box-form tr:nth-child(2)" ).html(progressTR);
-    $( "#progressbar" ).progressbar({ value: 0 });
+    $dialog_box_form.find( "tr:nth-child(2)" ).html( progressTR );
+    $( "#progressbar" ).progressbar( { value: 0 } );
 }
-
 function setProgress( x, max ){
+    var pmax = $( "#progressbar" ).progressbar( "option", "max" );
+    if ( pmax === undefined ) { pmax = 100; }
+    if ( max === undefined ) { max = pmax; }
+    $( "#progressbar" ).progressbar({ 
+        value:  x,
+        max:    max         
+    });
+}
+function setProgress__TimeOut( x, max ){
     setTimeout( function(){
         var pmax = $( "#progressbar" ).progressbar( "option", "max" );
         if ( pmax === undefined ) { pmax = 100; }
@@ -166,29 +164,22 @@ function setProgress( x, max ){
                 value:  x,
                 max:    max         
                 });
-    },1000); // delay for test purpose
+    }, 1000 ); // delay for test purpose
 //    alert('progress: x =' + x + '   max =' + max);
 }
 function progressHandler( pe ) {
-console.log( 'lengthComputable =', pe.lengthComputable );
-    if ( pe.lengthComputable ) {
-console.log('total =', pe.total, '   loaded =', pe.loaded );
-        setProgress( pe.loaded, pe.total );
-    } else { setProgress( false ); }
+    if ( pe.lengthComputable )  { setProgress( pe.loaded, pe.total ); } 
+    else                        { setProgress( false ); }
 }
 function loadEndHandler( pe ) {
-console.log('end:', '   loaded =', pe.loaded );
     setProgress( pe.loaded );
 }
-
-
 /*
  *********************************************************************
  * Messages
  *********************************************************************
  */
-function dialogMessage( msg, type, title, time ) {
-    // Open message dialog of given type
+function get_dlgClass( type ){
     var dlgClass = "";
     switch ( type ) {
         case "IncorrectData":   dlgClass = "ui-state-error";        break;
@@ -198,22 +189,21 @@ function dialogMessage( msg, type, title, time ) {
         default:                dlgClass = "ui-state-highlight";    break;
     }
     dlgClass = "no-close" + " " + dlgClass;
-    $( "#dialog-message" ).dialog( "option", "dialogClass", dlgClass );
-	$( "#dialog-message" ).dialog( "open" );
-//	$( "#dialog-message" ).text( msg );
-	$( "#dialog-message" ).html( msg );
+    return dlgClass;
+}
+function dialogMessage( msg, type, title, time ) {
+    // Open message dialog of given type
+    var dlgClass = get_dlgClass( type );
+    $dialog_message.dialog( "option", "dialogClass", dlgClass );
+	$dialog_message.dialog( "open" );
+	$dialog_message.html( msg );
     if ( title !== undefined ) {
-        $( "#dialog-message" ).dialog( "option", "title", title );
+        $dialog_message.dialog( "option", "title", title );
     }
     if ( time !== undefined && time > 0 ) {
-        setTimeout( function(){ 
-            $( "#dialog-message" ).dialog( "close" ); 
-            selRowFocus();
-            }, 
-            time );
+        setTimeout( function(){ $dialog_message.dialog( "close" ); }, time );
     }
 }
-
 function folderEmptyMessage( f_name ) {
     // This function called from ...ajax.js
 	dialogMessage( "Ця тека порожня.", "", f_name, 1000 );
@@ -226,14 +216,19 @@ function functionOnDevelopeMessage() {
 	dialogMessage( "Ця процедура ще розробляється...", "", "", 2000 );
 }
 
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+
+
 
 // Temporary buttons to open widgets for test purposes
 
 $( "#button-service" ).text("Check Focus");
 $( "#button-service" ).on( "click", function() {
-    $( "#dialog-box-form" ).dialog( "open" );
-    $( "#dialog-box-form" ).dialog( "option", "Check Focus" );
-    var buttons = dialog_buttons_default();
+    $dialog_box_form.dialog( "open" );
+    $dialog_box_form.dialog( "option", "Check Focus" );
+    var buttons = get_dialog_default_buttons();
     // Redefine function on click for button nr 0:
     buttons[0].click =
         function(e) {
@@ -241,7 +236,7 @@ $( "#button-service" ).on( "click", function() {
             $( this ).dialog( "close" );
             selRowFocus();
         };
-    $( "#dialog-box-form" ).dialog( "option", "buttons", buttons );
+    $dialog_box_form.dialog( "option", "buttons", buttons );
 });
 
 

@@ -13,7 +13,7 @@ console.log('start loading user_browtab_ui.js');
  */
 $( "#button-activate-all" ).button({
     icons: {
-        primary:    "ui-icon-check",
+        primary:    "ui-icon-unlocked",
         secondary:  "ui-icon-folder-collapsed"
     }
 });
@@ -86,36 +86,37 @@ function buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInp
     if ( condVal        === undefined ) { condVal       = false; }
     if ( confirmTitle   === undefined ) { confirmTitle  = ""; }
     if ( confirmMsg     === undefined ) { confirmMsg    = ""; }
-    var buttons = dialog_buttons_default();
-    var confirm_buttons = confirm_dialog_buttons_default();
+    var buttons = get_dialog_default_buttons();
+    var confirm_buttons = get_confirm_dialog_default_buttons();
     if ( selRowIndex >= 0 && selRowIndex < rowsNumber ) {
-        $( "#dialog-box-form tr:nth-child(1)" ).html( nameFormTR );
+        // $( "#dialog-box-form tr:nth-child(1)" ).html( nameFormTR );
+        $dialog_box_form.find( "tr:nth-child(1)" ).html( nameFormTR );
         $( "#id_name" ).prop( "disabled", disabledInput );          // input field disabled or not
         $( "#id_name" ).val( inputVal );
         $( "label[for='id_name']" ).text( inputLabel );
         if ( condLabel ){
-            $( "#dialog-box-form tr:nth-child(2)" ).html( condFormTR );
+            $dialog_box_form.find( "tr:nth-child(2)" ).html( condFormTR );
             $( "#id_cond" ).prop('checked', condVal );
             $( "label[for='id_cond']" ).text( condLabel );
         }
         else {
-            $( "#dialog-box-form tr:nth-child(2)" ).html( emptyFormTR );
+            $dialog_box_form.find( "tr:nth-child(2)" ).html( emptyFormTR );
         }
-        $( "#dialog-box-form" ).dialog( "open" );
-        $( "#dialog-box-form" ).dialog( "option", "title", dialogTitle );
+        $dialog_box_form.dialog( "open" );
+        $dialog_box_form.dialog( "option", "title", dialogTitle );
         if ( confirmTitle ){                                        // confirmation dialog needed
             buttons[0].click = function( e ) {
                 e.preventDefault();
-                $( "#dialog-confirm" ).dialog( "open" );
-                $( "#dialog-confirm" ).dialog( "option", "title", confirmTitle );
-                $( "#dialog-confirm" ).html( confirmMsg );
+                $dialog_confirm.dialog( "open" );
+                $dialog_confirm.dialog( "option", "title", confirmTitle );
+                $dialog_confirm.html( confirmMsg );
                 confirm_buttons[0].click = function( e ) {
-                    $( "#dialog-confirm" ).dialog( "close" );
+                    $dialog_confirm.dialog( "close" );
                     e.preventDefault();
                     ajax_Function();
                 };
-                $( "#dialog-confirm" ).dialog( "option", "buttons", confirm_buttons );      // new confirm_buttons
-                $( "#dialog-confirm" ).siblings().find( "button:eq(0)" ).focus(); 
+                $dialog_confirm.dialog( "option", "buttons", confirm_buttons );      // new confirm_buttons
+                $dialog_confirm.siblings().find( "button:eq(0)" ).focus(); 
             };
         }
         else {                                                      // run ajax without confirmation
@@ -124,9 +125,9 @@ function buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInp
                 ajax_Function();
             };
         }
-        $( "#dialog-box-form" ).dialog( "option", "buttons", buttons );     // new buttons
+        $dialog_box_form.dialog( "option", "buttons", buttons );     // new buttons
         if ( disabledInput ) {                                              // because input field disabled
-            $( "#dialog-box-form" ).siblings().find( "button:eq(0)" ).focus(); 
+            $dialog_box_form.siblings().find( "button:eq(0)" ).focus(); 
         }
     }
     else {
@@ -257,3 +258,5 @@ $( "#button-delete-account" ).on( "click", function() {
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
                                                 condLabel, condVal, confirmTitle, confirmMsg );
 });
+
+console.log('$( "#button-set-member-all" )=', $( "#button-set-member-all" ));

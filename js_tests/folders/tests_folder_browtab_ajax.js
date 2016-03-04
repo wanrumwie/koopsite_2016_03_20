@@ -273,6 +273,7 @@ QUnit.module( "folder_browtab_ajax handlers", function( hooks ) {
 } );
 QUnit.test( 'getSelElementArr', function ( assert ) {
     expect( 1 );
+    browtab_document_ready_handler();
     selElement.model = 'report';
     selElement.id    = 55;
     selElement.name  = 'name';

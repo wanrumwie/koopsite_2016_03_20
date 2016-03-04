@@ -194,9 +194,11 @@
 
 {% endblock qunit-fixture %}
 
-{% block tested_script %}
-    <script src="{% static 'js/jstree/jstree.js' %}"        ></script>
+{% block script_library %}
+    {% include "block_js_jstree.html" %}
+{% endblock script_library %}
 
+{% block tested_script %}
     <script src="{% static 'js/browtab.js' %}"          ></script>
     <script src="{% static 'js/browtab_ajax.js' %}"          ></script>
     <script src="{% static 'js/browtab_ui.js' %}"          ></script>

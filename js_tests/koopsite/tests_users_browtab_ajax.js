@@ -236,6 +236,7 @@ QUnit.module( "users_browtab_ajax handlers", function( hooks ) {
 } );
 //=============================================================================
 QUnit.test( 'getSelElementArr', function ( assert ) {
+    browtab_document_ready_handler();
     expect( 1 );
     selElement.model = 'users';
     selElement.id    = 55;

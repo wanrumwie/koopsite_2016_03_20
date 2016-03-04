@@ -4,25 +4,29 @@ console.log('start loading browtab.js');
 /**********************************************************************
  * START of the code covered by tests
  **********************************************************************/
+
 var rowsNumber;
 var qs_TR_arr;       // 2D Array of queryset data from server + TR DOM object for each table row.
 var qs_TR_arr_start; // the same, obtained from view at start of loaded ppage end still unchanged.
-var TR_start = [];   // array for storing <tr> data immediately after page loaded
+var TR_start;   	 // array for storing <tr> data immediately after page loaded
 var selTR;           // selected <tr> DOM in <tbody>
 var selRowIndex;     // index of currently selected row
-var selElement = {}; // object = selElement.model , selElement.id , selElement.name
-var selectStyle = "selected";
-var normalStyle = "normal";
+var selElement; 	 // object = selElement.model , selElement.id , selElement.name
+var selectStyle;
+var normalStyle;
+var $tbody;
 
 // document_ready_handler called from html:
 function browtab_document_ready_handler(){
+	TR_start = [];   // array for storing <tr> data immediately after page loaded
+	selElement = {}; // object = selElement.model , selElement.id , selElement.name
+	selectStyle = "selected";
+	normalStyle = "normal";
+	$tbody = $( "#browtable tbody" );
     set_browtab_listeners(); 
 }
 
-function set_browtab_listeners( $tbody ){
-    if ( $tbody === undefined ) {
-        $tbody = $( "#browtable tbody" );
-    }
+function set_browtab_listeners( ){
     $tbody.off( "click",    "td").on( "click",    "td", onClick_handler );
     $tbody.off( "dblclick", "td").on( "dblclick", "td", onDblclick_handler );
     $tbody.off( "keydown",  "td").on( "keydown",  "td", onKeydown_handler );
@@ -90,10 +94,10 @@ function getSelRowIndex( i ){
 }
 function selRowFocus(){
     // set focus to href in selected row
-//    $( selTR ).find( 'A' ).focus();
-    console.log("selTR.find( 'A' ).is(':focus') before =", selTR.find( 'A' ).is(':focus'));
-    selTR.find( 'A' ).focus();
-    console.log("selTR.find( 'A' ).is(':focus') after =", selTR.find( 'A' ).is(':focus'));
+	if ( selTR !== undefined ) {
+		selTR.find( 'A' ).focus();
+console.log("selTR.find( 'A' ).is(':focus') after =", selTR.find( 'A' ).is(':focus'));
+	}
 }
 
 function markSelRow() {
@@ -298,7 +302,7 @@ function display_qs_TR_arr(){
     // adding all new <TR> to table
     for ( i = 0 ; i < rowsNumber ; i++ ) {
         TR = getTRbyIndex( i );
-        $( "#browtable tbody" ).append( TR ); 
+        $tbody.append( TR ); 
     }
     selRowIndex = getRowIndexbyID( selElement.model, selElement.id ); // new selRowIndex by unchainged selElement model & id
     setSelRow( selRowIndex );                           // setting new selTR & selElement for just chainged selRowIndex
@@ -318,11 +322,8 @@ function getSelectorTR( qq, i ){
     var s = "#browtable tbody tr:" + qq + "(" + i + ")" ;
     return s;
 }
-function getVisibleIndex( selector, $tbody ){
+function getVisibleIndex( selector ){
     // return object arr.i_top, arr.i_bot - index of top and bottom visible rows respectively
-    if ( $tbody === undefined ) {
-        $tbody = $( "#browtable tbody" );
-    }
     var hi,
         top_edge_visible,
         bot_edge_visible,
@@ -373,11 +374,8 @@ function totalOuterHeight( selector ){
     });
     return h;
 }
-function scrollToRow( i, $tbody ) {
+function scrollToRow( i ) {
     // scroll tbody to row index i to be visible
-    if ( $tbody === undefined ) {
-        $tbody = $( "#browtable tbody" );
-    }
     var selectorLtI = getSelectorTR( "lt", i );
     var selectorEqI = getSelectorTR( "eq", i );
     var h_tbody     = $tbody.height();             // visible tbody height in px

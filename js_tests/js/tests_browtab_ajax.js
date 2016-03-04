@@ -10,13 +10,15 @@ function getSelElementArr(){    // function declared in another file
 }
 //=============================================================================
 QUnit.module( "browtab_ajax document ready", function( hooks ) { 
-    var $tbody;
+//    var $tbody;
     var $selRowIndex;
     var selRowIndex_selector;
     var target_selector;
     var saved_csrf_token;
     hooks.beforeEach( function( assert ) {
         stub = {};
+        browtab_document_ready_handler();
+        
         target_selector       = "#td_qwerty";
         selRowIndex_selector  = "#selRowIndex";
         $selRowIndex          = $( selRowIndex_selector );

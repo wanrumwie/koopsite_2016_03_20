@@ -6,6 +6,7 @@ Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, browtab_do
 
 var stub;   // common for all tests, is set to {} before and restored after each test
 
+/*
 QUnit.test( 'js file start assignments', function ( assert ) {
     expect( 4 );
     assert.deepEqual( TR_start, [], 'array for storing <tr> data immediately after page loaded');
@@ -13,17 +14,18 @@ QUnit.test( 'js file start assignments', function ( assert ) {
     assert.equal( selectStyle, "selected", 'CSS style for selected row');
     assert.equal( normalStyle, "normal", 'CSS style for unselected row');
 });
+*/
 //=============================================================================
 QUnit.module( "browtab document ready", function( hooks ) { 
-    var $tbody;
     var tbody_selector;
     var target_selector;
     hooks.beforeEach( function( assert ) {
         stub = {};
         target_selector = "#td_qwerty";
         tbody_selector  = "#browtable tbody";
-        $tbody          = $( tbody_selector );
-        set_browtab_listeners(); 
+        // $tbody          = $( tbody_selector );
+		browtab_document_ready_handler( );
+        // set_browtab_listeners(); 
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -32,11 +34,17 @@ QUnit.module( "browtab document ready", function( hooks ) {
         }
     } );
     QUnit.test( 'browtab_document_ready_handler', function ( assert ) {
-        expect( 3 );
+        expect( 7 );
         stub.set_browtab_listeners = sinon.stub( window, "set_browtab_listeners" );
         var res = browtab_document_ready_handler( );
         assert.ok( stub.set_browtab_listeners.calledOnce, 'set_browtab_listeners should be called once' );
         assert.ok( stub.set_browtab_listeners.calledWithExactly( ), 'set_browtab_listeners should be called with arg' );
+
+		assert.deepEqual( TR_start, [], 'array for storing <tr> data immediately after page loaded');
+		assert.deepEqual( selElement, {}, 'object = selElement.model , selElement.id , selElement.name');
+		assert.equal( selectStyle, "selected", 'CSS style for selected row');
+		assert.equal( normalStyle, "normal", 'CSS style for unselected row');
+
         assert.equal( res, undefined, 'browtab_document_ready_handler should return false' );
     });
     QUnit.test( 'set_browtab_listeners', function ( assert ) {
@@ -129,6 +137,7 @@ QUnit.test( '$( ... ).on( "click",... STUB onClick_handler', function ( assert )
 QUnit.module( "browtab sel row functions", function( hooks ) { 
     hooks.beforeEach( function( assert ) {
         stub = {};
+		browtab_document_ready_handler( );
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -198,12 +207,23 @@ QUnit.module( "browtab sel row functions", function( hooks ) {
 
         var res = selRowFocus();
 
-        assert.equal( stub.find.callCount, 3, 'find should be called 4 times' );
-//        assert.equal( stub.focus.callCount, 1, 'focus should be called once' );
-        assert.ok( stub.find.getCall( 0 ).calledWithExactly( "A" ), '0 off should be called with arg' );
+        assert.equal( stub.find.callCount, 2, 'find should be called 2 times' );
+    //    assert.equal( stub.focus.callCount, 1, 'focus should be called once' );
+        assert.ok( stub.find.getCall( 0 ).calledWithExactly( "A" ), 'find should be called with arg' );
         assert.equal( res, undefined, 'selRowFocus should return undefined' );
         assert.ok( selTR.find( 'A' ).is(':focus'), 'proper <a> should be focused');
         assert.ok( $( "#tr_qwerty_s A" ).is(':focus'), 'proper <a> should be focused');
+    });
+    QUnit.test('selRowFocus selTR==undefined', function ( assert ) {
+        expect( 3 );
+
+        selTR = undefined;
+        assert.notOk( $( "#a_qwerty_s" ).is(':focus'), 'proper <a> should not be focused before selRowFocus');
+
+        var res = selRowFocus();
+
+        assert.equal( res, undefined, 'selRowFocus should return undefined' );
+        assert.notOk( $( "#tr_qwerty_s A" ).is(':focus'), 'nothing should be focused');
     });
     QUnit.test( 'markSelRow', function ( assert ) {
         expect( 11 );
@@ -1378,7 +1398,8 @@ QUnit.module( "browtab get_qs_TR_arr", function( hooks ) {
     //-------------------------------------------------------------------------
     QUnit.module( "Get different data from qs_TR_arr", function( hooks ) {
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
-            qs_TR_arr = get_qs_TR_arr( true ); // already tested function
+		browtab_document_ready_handler();
+		qs_TR_arr = get_qs_TR_arr( true ); // already tested function
         } );
         hooks.afterEach( function( assert ) {  // This will run before the parent module's afterEach
         } );
@@ -1475,6 +1496,7 @@ QUnit.module( "browtab get_qs_TR_arr", function( hooks ) {
 QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in tbody_hidden.xlsx file
     hooks.beforeEach( function( assert ) {
         stub = {};
+		browtab_document_ready_handler();
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -1491,12 +1513,13 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
     });
     //-------------------------------------------------------------------------
     QUnit.module( "getVisibleIndex", function( hooks ) {
-        var hi, $tbody;
+        var hi;
         var tbody_selector = "#browtable tbody";
         var tbody_tr_selector = "#browtable tbody tr";
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
             rowsNumber = 20;
-            $tbody = $( tbody_selector );
+			browtab_document_ready_handler();
+            // $tbody = $( tbody_selector );
             $( tbody_tr_selector ).remove(); // removing all <TR> from table
             var i, TR;
             for ( i = 0 ; i < rowsNumber ; i++ ) {    // adding all new <TR> to table
@@ -1711,7 +1734,7 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
     } );
     //-------------------------------------------------------------------------
     QUnit.module( "scrollToRow", function( hooks ) {
-        var hi, $tbody;
+        var hi;
         var tbody_selector = "#browtable tbody";
         hooks.beforeEach( function( assert ) { // This will run after the parent module's beforeEach hook
             rowsNumber = 20;

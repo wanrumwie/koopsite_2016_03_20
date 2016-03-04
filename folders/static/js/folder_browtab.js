@@ -69,7 +69,7 @@ function addNewElement( changes, supplement  ) {
     var f_id    = changes[0].id; 
     var f_name  = changes[0].name;
     var tr_pattern = createEmptyTR( f_model, f_id, f_name);
-    $( "#browtable tbody" ).append( tr_pattern );
+    $tbody.append( tr_pattern );
     qs_TR_arr.splice( rowsNumber, 0, [] );  // add 1 element at the end of qs_TR_arr  
     rowsNumber = qs_TR_arr.length;          // new number of rows
     selRowIndex = rowsNumber - 1; // start - 0
