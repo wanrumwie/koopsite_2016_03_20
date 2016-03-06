@@ -67,75 +67,6 @@ $( "#button-delete-account" ).button({
 });
 /*
  *********************************************************************
- * Common body function for opening dialogs
- *********************************************************************
- */
-//console.log('ajax_Function=', ajax_Function);
-//console.log('typeof ajax_Function=', typeof ajax_Function);
-//console.log('dialogTitle=', dialogTitle);
-//console.log('inputLabel=', inputLabel);
-//console.log('disabledInput=', disabledInput);
-
-function buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg ) {
-    if ( dialogTitle    === undefined ) { dialogTitle   = ""; }
-    if ( inputLabel     === undefined ) { inputLabel    = ""; }
-    if ( disabledInput  === undefined ) { disabledInput = false; }
-    if ( inputVal       === undefined ) { inputVal      = ""; }
-    if ( condLabel      === undefined ) { condLabel     = ""; }
-    if ( condVal        === undefined ) { condVal       = false; }
-    if ( confirmTitle   === undefined ) { confirmTitle  = ""; }
-    if ( confirmMsg     === undefined ) { confirmMsg    = ""; }
-    var buttons = get_dialog_default_buttons();
-    var confirm_buttons = get_confirm_dialog_default_buttons();
-    if ( selRowIndex >= 0 && selRowIndex < rowsNumber ) {
-        // $( "#dialog-box-form tr:nth-child(1)" ).html( nameFormTR );
-        $dialog_box_form.find( "tr:nth-child(1)" ).html( nameFormTR );
-        $( "#id_name" ).prop( "disabled", disabledInput );          // input field disabled or not
-        $( "#id_name" ).val( inputVal );
-        $( "label[for='id_name']" ).text( inputLabel );
-        if ( condLabel ){
-            $dialog_box_form.find( "tr:nth-child(2)" ).html( condFormTR );
-            $( "#id_cond" ).prop('checked', condVal );
-            $( "label[for='id_cond']" ).text( condLabel );
-        }
-        else {
-            $dialog_box_form.find( "tr:nth-child(2)" ).html( emptyFormTR );
-        }
-        $dialog_box_form.dialog( "open" );
-        $dialog_box_form.dialog( "option", "title", dialogTitle );
-        if ( confirmTitle ){                                        // confirmation dialog needed
-            buttons[0].click = function( e ) {
-                e.preventDefault();
-                $dialog_confirm.dialog( "open" );
-                $dialog_confirm.dialog( "option", "title", confirmTitle );
-                $dialog_confirm.html( confirmMsg );
-                confirm_buttons[0].click = function( e ) {
-                    $dialog_confirm.dialog( "close" );
-                    e.preventDefault();
-                    ajax_Function();
-                };
-                $dialog_confirm.dialog( "option", "buttons", confirm_buttons );      // new confirm_buttons
-                $dialog_confirm.siblings().find( "button:eq(0)" ).focus(); 
-            };
-        }
-        else {                                                      // run ajax without confirmation
-            buttons[0].click = function( e ) {
-                e.preventDefault();
-                ajax_Function();
-            };
-        }
-        $dialog_box_form.dialog( "option", "buttons", buttons );     // new buttons
-        if ( disabledInput ) {                                              // because input field disabled
-            $dialog_box_form.siblings().find( "button:eq(0)" ).focus(); 
-        }
-    }
-    else {
-        noSelectionMessage("Users Table");
-    }
-}
-/*
- *********************************************************************
  * Opening dialogs
  *********************************************************************
  */
@@ -150,12 +81,14 @@ $( "#button-activate-all" ).on( "click", function() {
     var confirmTitle    = "Групова дія";
     var confirmMsg      = "Ви намагаєтеся активувати одразу " + 
                                     rowsNumber + " акаунтів. Ви впевнені?";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-set-member-all" ).on( "click", function() {
     var ajax_Function   = ajax_setMemberAllAccounts; 
-    var dialogTitle     = "Прова доступу члена кооперативу для ВСІХ обраних акаунтів";
+    var dialogTitle     = 
+        "Прова доступу члена кооперативу для ВСІХ обраних акаунтів";
     var inputLabel      = "Надати";
     var disabledInput   = true;
     var inputVal        = rowsNumber + " акаунтів";
@@ -164,8 +97,9 @@ $( "#button-set-member-all" ).on( "click", function() {
     var confirmTitle    = "Групова дія";
     var confirmMsg      = "Ви намагаєтеся надати права доступу одразу " + 
                                     rowsNumber + " акаунтів. Ви впевнені?";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-recognize-account" ).on( "click", function() {
     var ajax_Function   = ajax_recognizeAccount; 
@@ -177,8 +111,9 @@ $( "#button-recognize-account" ).on( "click", function() {
     var condVal         = false;
     var confirmTitle    = "";
     var confirmMsg      = "";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-deny-account" ).on( "click", function() {
     var ajax_Function   = ajax_denyAccount; 
@@ -190,8 +125,9 @@ $( "#button-deny-account" ).on( "click", function() {
     var condVal         = false;
     var confirmTitle    = "";
     var confirmMsg      = "";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-activate-account" ).on( "click", function() {
     var ajax_Function   = ajax_activateAccount; 
@@ -203,8 +139,9 @@ $( "#button-activate-account" ).on( "click", function() {
     var condVal         = true;
     var confirmTitle    = "";
     var confirmMsg      = "";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-deactivate-account" ).on( "click", function() {
     var ajax_Function   = ajax_deactivateAccount; 
@@ -216,8 +153,9 @@ $( "#button-deactivate-account" ).on( "click", function() {
     var condVal         = true;
     var confirmTitle    = "";
     var confirmMsg      = "";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-set-member-account" ).on( "click", function() {
     var ajax_Function   = ajax_setMemberAccount; 
@@ -229,8 +167,9 @@ $( "#button-set-member-account" ).on( "click", function() {
     var condVal         = true;
     var confirmTitle    = "";
     var confirmMsg      = "";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-deny-member-account" ).on( "click", function() {
     var ajax_Function   = ajax_denyMemberAccount; 
@@ -242,8 +181,9 @@ $( "#button-deny-member-account" ).on( "click", function() {
     var condVal         = false;
     var confirmTitle    = "";
     var confirmMsg      = "";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 $( "#button-delete-account" ).on( "click", function() {
     var ajax_Function   = ajax_deleteAccount; 
@@ -255,8 +195,9 @@ $( "#button-delete-account" ).on( "click", function() {
     var condVal         = false;
     var confirmTitle    = "Видалення акаунту";
     var confirmMsg      = "Замість видалення акаунт краще деактивувати. Ви наполягаєте на видаленні?";
+    var selectionCheck  = check_selRowIndex_range();
     buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg );
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
 });
 
-console.log('$( "#button-set-member-all" )=', $( "#button-set-member-all" ));
+console.log('users_browtab_ui is loaded' );

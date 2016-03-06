@@ -92,14 +92,20 @@ function getSelRowIndex( i ){
     }
     return selRowIndex;
 }
+function check_selRowIndex_range(){
+    var bool = selRowIndex >= 0 && selRowIndex < rowsNumber;
+	return bool;
+}
+function get_thisfolder_name(){
+    var f_name = $( "#thisfolder span" ).text();    // name of parent folder or users table
+	return f_name;
+}
 function selRowFocus(){
     // set focus to href in selected row
 	if ( selTR !== undefined ) {
 		selTR.find( 'A' ).focus();
-console.log("selTR.find( 'A' ).is(':focus') after =", selTR.find( 'A' ).is(':focus'));
 	}
 }
-
 function markSelRow() {
     $( '.' + selectStyle ).toggleClass( selectStyle );  // set row elements to normal style
     $( selTR ).toggleClass( selectStyle );             // change Style of all selected row children

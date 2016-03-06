@@ -63,9 +63,12 @@ QUnit.module( "browtab document ready", function( hooks ) {
         assert.ok( stub.off.getCall( 1 ).calledWithExactly( "dblclick", "td" ), '1 off should be called with arg' );
         assert.ok( stub.off.getCall( 2 ).calledWithExactly( "keydown",  "td" ), '2 off should be called with arg' );
 
-        assert.ok( stub.on.getCall( 0 ).calledWithExactly( "click",    "td", onClick_handler ), '0 on should be called with arg' );
-        assert.ok( stub.on.getCall( 1 ).calledWithExactly( "dblclick", "td", onDblclick_handler ), '1 on should be called with arg' );
-        assert.ok( stub.on.getCall( 2 ).calledWithExactly( "keydown",  "td", onKeydown_handler ), '2 on should be called with arg' );
+        assert.ok( stub.on.getCall( 0 ).calledWithExactly( "click",    "td", onClick_handler ), 
+                                                                                '0 on should be called with arg' );
+        assert.ok( stub.on.getCall( 1 ).calledWithExactly( "dblclick", "td", onDblclick_handler ), 
+                                                                                '1 on should be called with arg' );
+        assert.ok( stub.on.getCall( 2 ).calledWithExactly( "keydown",  "td", onKeydown_handler ), 
+                                                                                '2 on should be called with arg' );
 
         assert.equal( res, undefined, 'set_browtab_listeners should return false' );
     });
@@ -194,25 +197,71 @@ QUnit.module( "browtab sel row functions", function( hooks ) {
         assert.strictEqual( getSelRowIndex(  0 ), 0, 'sel row index must be 0 if rowsNumber=0');
         assert.strictEqual( getSelRowIndex( 10 ), 0, 'sel row index must be 0 if rowsNumber=0');
     });
-    // TODO-selRowFocus() works, but test - not. Probably because selTR object is defined in different way?
-    QUnit.test('selRowFocus', function ( assert ) {
+    QUnit.test('check_selRowIndex_range', function ( assert ) {
+        expect( 8 );
+        rowsNumber = 10;
+        selRowIndex = 0;
+        assert.strictEqual( check_selRowIndex_range( ), true, 'sel row index should be in range of 0.. rowsNumber');
+        selRowIndex = rowsNumber - 1;
+        assert.strictEqual( check_selRowIndex_range( ), true, 'sel row index should be in range of 0.. rowsNumber');
+        selRowIndex = rowsNumber;
+        assert.strictEqual( check_selRowIndex_range( ), false, 'sel row index should be in range of 0.. rowsNumber');
+        selRowIndex = -1;
+        assert.strictEqual( check_selRowIndex_range( ), false, 'sel row index should be in range of 0.. rowsNumber');
+        selRowIndex = undefined;
+        assert.strictEqual( check_selRowIndex_range( ), false, 'sel row index should be in range of 0.. rowsNumber');
+        rowsNumber = 0;
+        selRowIndex = rowsNumber;
+        assert.strictEqual( check_selRowIndex_range( ), false, 'sel row index should be in range of 0.. rowsNumber');
+        selRowIndex = -1;
+        assert.strictEqual( check_selRowIndex_range( ), false, 'sel row index should be in range of 0.. rowsNumber');
+        selRowIndex = undefined;
+        assert.strictEqual( check_selRowIndex_range( ), false, 'sel row index should be in range of 0.. rowsNumber');
+    });
+    QUnit.test( 'get_thisfolder_name', function ( assert ) {
+        expect( 4 );
+
+        stub.text   = sinon.stub( jQuery.prototype, "text" ).returns('f_name');
+
+        var res = get_thisfolder_name();
+
+        assert.deepEqual( stub.text.thisValues[0], $( "#thisfolder span" ), 'text called as method of proper this' );
+        assert.equal( stub.text.callCount, 1, 'text should be called once' );
+        assert.ok( stub.text.calledWithExactly( ), 'text should be called with arg' );
+        assert.equal( res, 'f_name', 'get_thisfolder_name should return proper value' );
+    });
+    QUnit.test('selRowFocus functional', function ( assert ) {
         expect( 6 );
 
         selTR = $( "#tr_qwerty_s" );
         selTR.find( 'A' ).blur();
         assert.notOk( $( "#a_qwerty_s" ).is(':focus'), 'proper <a> should not be focused before selRowFocus');
 
-        stub.focus = sinon.spy( selTR.find( 'A' ), "focus" );
         stub.find  = sinon.spy( selTR, "find" );
 
         var res = selRowFocus();
 
-        assert.equal( stub.find.callCount, 2, 'find should be called 2 times' );
-    //    assert.equal( stub.focus.callCount, 1, 'focus should be called once' );
-        assert.ok( stub.find.getCall( 0 ).calledWithExactly( "A" ), 'find should be called with arg' );
+        assert.equal( stub.find.callCount, 1, 'find should be called once' );
+        assert.ok( stub.find.calledWithExactly( "A" ), 'find should be called with arg' );
         assert.equal( res, undefined, 'selRowFocus should return undefined' );
         assert.ok( selTR.find( 'A' ).is(':focus'), 'proper <a> should be focused');
         assert.ok( $( "#tr_qwerty_s A" ).is(':focus'), 'proper <a> should be focused');
+    });
+    QUnit.test( 'selRowFocus', function ( assert ) {
+        expect( 6 );
+        selTR = $( "#tr_qwerty_s" );
+
+        stub.find   = sinon.spy( jQuery.prototype, "find" );
+        stub.focus  = sinon.spy( jQuery.prototype, "focus" );
+
+        var res = selRowFocus();
+
+        assert.deepEqual( stub.find.thisValues[0], $( selTR ), 'find called as method of proper this' );
+        assert.equal( stub.find.callCount, 1, 'find should be called once' );
+        assert.ok( stub.find.calledWithExactly( "A" ), 'find should be called with arg' );
+        assert.equal( stub.focus.callCount, 1, 'focus should be called once' );
+        assert.ok( stub.focus.calledWithExactly( ), 'focus should be called with arg' );
+        assert.equal( res, undefined, 'selRowFocus should return undefined' );
     });
     QUnit.test('selRowFocus selTR==undefined', function ( assert ) {
         expect( 3 );
@@ -234,7 +283,8 @@ QUnit.module( "browtab sel row functions", function( hooks ) {
         selTR = "#tr_qwerty";
         assert.notOk( $( selTR ).is('.'+selectStyle), 'selTR should not be not selectStyled before markSelRow');
         var res = markSelRow();
-        assert.notOk( $( "#tr_qwerty_s" ).is('.'+selectStyle), 'previous selTR should not be not selectStyled after markSelRow');
+        assert.notOk( $( "#tr_qwerty_s" ).is('.'+selectStyle), 
+                                                        'previous selTR should not be not selectStyled after markSelRow');
         assert.ok( $( selTR ).is('.'+selectStyle), 'selTR should be selectStyled after markSelRow');
         assert.ok( stub.get_m_id_n_ByIndex.calledOnce, 'get_m_id_n_ByIndex should be called once' );
         assert.ok( stub.get_m_id_n_ByIndex.calledWithExactly( selRowIndex ), 'get_m_id_n_ByIndex should be called with arg' );
@@ -393,7 +443,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -405,7 +456,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -495,7 +547,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -507,7 +560,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -597,7 +651,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -609,7 +664,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -699,7 +755,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -711,7 +768,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -801,7 +859,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -813,7 +872,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -903,7 +963,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -915,7 +976,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -1005,7 +1067,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -1017,7 +1080,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -1107,7 +1171,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -1119,7 +1184,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -1209,7 +1275,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -1221,7 +1288,8 @@ QUnit.module( "browtab onKeyDown", function( hooks ) {
             var res = onKeyDown( k );
             assert.notOk( stub.runhref.called, 'runhref should not be called' );
             assert.ok( stub.getVisibleIndex.calledOnce, 'getVisibleIndex should be called once' );
-            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 'getVisibleIndex should be called with arg' );
+            assert.ok( stub.getVisibleIndex.calledWithExactly( tbody_tr_selector ), 
+                                                                            'getVisibleIndex should be called with arg' );
             assert.ok( stub.setSelRow.calledOnce, 'setSelRow should be called once' );
             assert.ok( stub.setSelRow.calledWithExactly( selRowIndex + iShift ), 'setSelRow should be called with arg' );
             assert.equal( res, false, 'onKeyDown should return false' );
@@ -1782,15 +1850,18 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
             assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
 
-            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 'getSelectorTR should be called with arg' );
-            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
             assert.ok( stub.height.getCall( 0 ).calledWithExactly(), 'height should be called with arg' );
             assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWithExactly( selectorEqI ), 
                                                                             'totalOuterHeight should be called with arg' );
             assert.ok( stub.totalOuterHeight.getCall( 1 ).calledWithExactly( selectorLtI ), 
                                                                             'totalOuterHeight should be called with arg' );
             assert.ok( stub.scrollTop.getCall( 0 ).calledWithExactly(), '0 scrollTop should be called with arg' );
-            assert.ok( stub.scrollTop.getCall( 1 ).calledWithExactly( h_hidden_calc ), '1 scrollTop should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 1 ).calledWithExactly( h_hidden_calc ), 
+                                                                            '1 scrollTop should be called with arg' );
 
             assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
         });
@@ -1827,15 +1898,18 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
             assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
 
-            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 'getSelectorTR should be called with arg' );
-            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
             assert.ok( stub.height.getCall( 0 ).calledWithExactly(), 'height should be called with arg' );
             assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWithExactly( selectorEqI ), 
                                                                             'totalOuterHeight should be called with arg' );
             assert.ok( stub.totalOuterHeight.getCall( 1 ).calledWithExactly( selectorLtI ), 
                                                                             'totalOuterHeight should be called with arg' );
             assert.ok( stub.scrollTop.getCall( 0 ).calledWithExactly(), '0 scrollTop should be called with arg' );
-            assert.ok( stub.scrollTop.getCall( 1 ).calledWithExactly( h_hidden_calc ), '1 scrollTop should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 1 ).calledWithExactly( h_hidden_calc ), 
+                                                                            '1 scrollTop should be called with arg' );
 
             assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
         });
@@ -1872,8 +1946,10 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
             assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
 
-            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 'getSelectorTR should be called with arg' );
-            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
             assert.ok( stub.height.getCall( 0 ).calledWithExactly(), 'height should be called with arg' );
             assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWithExactly( selectorEqI ), 
                                                                             'totalOuterHeight should be called with arg' );
@@ -1917,15 +1993,18 @@ QUnit.module( "browtab Scrolling", function( hooks ) { // This test described in
             assert.ok( stub.getSelectorTR.calledTwice, 'getSelectorTR should be called twice' );
             assert.ok( stub.totalOuterHeight.calledTwice, 'totalOuterHeight should be called twice' );
 
-            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 'getSelectorTR should be called with arg' );
-            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 0 ).calledWithExactly(  "lt", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
+            assert.ok( stub.getSelectorTR.getCall( 1 ).calledWithExactly(  "eq", i  ), 
+                                                                            'getSelectorTR should be called with arg' );
             assert.ok( stub.height.getCall( 0 ).calledWithExactly(), 'height should be called with arg' );
             assert.ok( stub.totalOuterHeight.getCall( 0 ).calledWithExactly( selectorEqI ), 
                                                                             'totalOuterHeight should be called with arg' );
             assert.ok( stub.totalOuterHeight.getCall( 1 ).calledWithExactly( selectorLtI ), 
                                                                             'totalOuterHeight should be called with arg' );
             assert.ok( stub.scrollTop.getCall( 0 ).calledWithExactly(), '0 scrollTop should be called with arg' );
-            assert.ok( stub.scrollTop.getCall( 1 ).calledWithExactly( h_hidden_calc ), '1 scrollTop should be called with arg' );
+            assert.ok( stub.scrollTop.getCall( 1 ).calledWithExactly( h_hidden_calc ), 
+                                                                            '1 scrollTop should be called with arg' );
 
             assert.equal( res, h_hidden_calc, 'scrollToRow should return proper value' );
         });
@@ -1984,7 +2063,8 @@ QUnit.module( "browtab Changing both <tbody> and qs_TR_arr", function( hooks ) {
         assert.ok( stub.setValToHTMLrow.calledWithExactly( selRowIndex, changes, supplement ),
                                                             'setValToHTMLrow should be called with arg' );
         assert.ok( stub.getTRfromTbodyByIndex.calledOnce, 'getTRfromTbodyByIndex should be called once' );
-        assert.ok( stub.getTRfromTbodyByIndex.calledWithExactly( selRowIndex ),'getTRfromTbodyByIndex should be called with arg' );
+        assert.ok( stub.getTRfromTbodyByIndex.calledWithExactly( selRowIndex ),
+                                                            'getTRfromTbodyByIndex should be called with arg' );
         assert.ok( stub.selRowFocus.calledOnce, 'selRowFocus should be called once' );
         assert.ok( stub.selRowFocus.calledWithExactly(),'selRowFocus should be called with arg' );
 

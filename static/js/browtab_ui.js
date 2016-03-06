@@ -4,7 +4,6 @@ console.log('start loading browtab_ui.js');
 var $dialog_box_form;
 var $dialog_confirm;
 var $dialog_message;
-//var $progressbar;
 
 /**********************************************************************
  * START of the code covered by tests
@@ -15,7 +14,6 @@ function browtab_ui_document_ready_handler(){
     $dialog_box_form = $( "#dialog-box-form" );
     $dialog_confirm  = $( "#dialog-confirm" );
     $dialog_message  = $( "#dialog-message" );
-//    $progressbar     = $( "#progressbar" );
     add_browtab_ui_dialogs(); 
 }
 // Adding UI dialog form (with common properties) to div:
@@ -35,8 +33,8 @@ function add_browtab_ui_dialogs(){
         autoOpen:       false,
         modal:          true,
         closeOnEscape:  true,
-        width:          0.8 * dialog_width(),
-        buttons:        get_confirm_dialog_default_buttons()   // no comma - last item in array
+        width:          0.8 * dialog_width()
+        // buttons:        get_confirm_dialog_default_buttons()   // no comma - last item in array
     });
     $dialog_message.dialog({     // message dialog
         dialogClass:    "no-close",
@@ -118,6 +116,33 @@ function defineAbortButton( xhr ){
     ];
     $dialog_box_form.dialog( "option", "buttons", buttons );
 }
+function defineConfirmButtons( ajax_Function ){
+    // Define text and function for the confirm dialog buttons in the case of ajax_Function needs confirmation:
+    var confirm_buttons = [
+        {
+            text: "Ok",
+            click: function( e ) {
+                    $dialog_confirm.dialog( "close" );
+                    ajax_Function();
+                    return false;
+            }
+        },
+        {
+            text: "Cancel",
+            click: dialog_close
+        }
+    ];
+    $dialog_confirm.dialog( "option", "buttons", confirm_buttons );      // new confirm_buttons
+}
+// TODO-change confirm_dialog() by decorator for ajax_Function
+function confirm_dialog( ajax_Function, confirmTitle, confirmMsg ){
+    $dialog_confirm.dialog( "open" );
+    $dialog_confirm.dialog( "option", "title", confirmTitle );
+    $dialog_confirm.html( confirmMsg );
+    defineConfirmButtons( ajax_Function );
+    $dialog_confirm.siblings().find( "button:eq(0)" ).focus(); 
+}
+
 /*
  *********************************************************************
  * HTML for dynamically created dialogs:
@@ -215,11 +240,57 @@ function noSelectionMessage( f_name ) {
 function functionOnDevelopeMessage() {
 	dialogMessage( "Ця процедура ще розробляється...", "", "", 2000 );
 }
+/*
+ *********************************************************************
+ * Common body function for opening dialogs
+ *********************************************************************
+ */
+function buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck ) {
+    var buttons = get_dialog_default_buttons();
+    var f_name;
+    if ( selectionCheck ) {
+        $dialog_box_form.find( "tr:nth-child(1)" ).html( nameFormTR );
+        $( "#id_name" ).prop( "disabled", disabledInput );          // input field disabled or not
+        $( "#id_name" ).val( inputVal );
+        $( "label[for='id_name']" ).text( inputLabel );
+        if ( condLabel ){
+            $dialog_box_form.find( "tr:nth-child(2)" ).html( condFormTR );
+            $( "#id_cond" ).prop('checked', condVal );
+            $( "label[for='id_cond']" ).text( condLabel );
+        }
+        else {
+            $dialog_box_form.find( "tr:nth-child(2)" ).html( emptyFormTR );
+        }
+        $dialog_box_form.dialog( "open" );
+        $dialog_box_form.dialog( "option", "title", dialogTitle );
+        if ( confirmTitle ){                                        // confirmation dialog needed
+            buttons[0].click = function( e ) {  // ajax "decorated" by confirm_dialog 
+                confirm_dialog( ajax_Function, confirmTitle, confirmMsg );
+                return false;
+            };
+        }
+        else {                                                      // run ajax without confirmation
+            buttons[0].click = function( e ) {
+                ajax_Function();
+                return false;
+            };
+        }
+        $dialog_box_form.dialog( "option", "buttons", buttons );     // new buttons
+        if ( disabledInput ) {                                              // because input field disabled
+            $dialog_box_form.siblings().find( "button:eq(0)" ).focus(); 
+        }
+    }
+    else {
+        f_name = get_thisfolder_name();    // name of parent folder or users table
+        noSelectionMessage( f_name );
+    }
+}
+
 
 /**********************************************************************
  * END of the code covered by tests
  **********************************************************************/
-
 
 
 // Temporary buttons to open widgets for test purposes
@@ -232,9 +303,9 @@ $( "#button-service" ).on( "click", function() {
     // Redefine function on click for button nr 0:
     buttons[0].click =
         function(e) {
-            e.preventDefault();
             $( this ).dialog( "close" );
             selRowFocus();
+            return false;
         };
     $dialog_box_form.dialog( "option", "buttons", buttons );
 });
@@ -277,3 +348,5 @@ function supportAjaxUploadWithProgress() {
         alert( "AjaxUploadWithProgress is NOT supported in this browser" );
     }
 */
+
+console.log('browtab_ui is loaded' );

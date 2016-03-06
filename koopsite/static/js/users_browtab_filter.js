@@ -6,6 +6,7 @@ appendFilterListeners();
 appendDateFields();
 appendDateFieldsListeners();
 
+//TODO-bug detected: nonfiltered data are displayed after page refresh, but filter flags remain it's valuea.
 
 /*
  *********************************************************************

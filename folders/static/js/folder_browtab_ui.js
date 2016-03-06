@@ -89,8 +89,8 @@ $( "#button-create-folder" ).on( "click", function() {
     // Redefine function on click for button nr 0:
     buttons[0].click =
         function(e) {
-            e.preventDefault();
             ajax_folderCreate();
+            return false;
         };
     $dialog_box_form.dialog( "option", "buttons", buttons );
 });
@@ -105,8 +105,8 @@ $( "#button-upload-report" ).on( "click", function() {
     // Redefine function on click for button nr 0:
     buttons[0].click =
         function(e) {
-            e.preventDefault();
             xhr_reportUpload();
+            return false;
         };
     $dialog_box_form.dialog( "option", "buttons", buttons );
 });
@@ -114,23 +114,18 @@ $( "#button-upload-report" ).on( "click", function() {
 $( "#button-rename-element" ).on( "click", function() {
     var buttons = get_dialog_default_buttons();
     var f_name = $( "#thisfolder span" ).text();    // parent folder name
-console.log('$( "#button-rename-element" ).on( "click",');
-	var isOpen  = $dialog_box_form.dialog( "isOpen" );
-console.log('isOpen=',isOpen);
     if ( selElement.id > 0) {
         $dialog_box_form.find( "tr:nth-child(1)" ).html( nameFormTR );
         $dialog_box_form.find( "tr:nth-child(2)" ).html( emptyFormTR );
         $dialog_box_form.dialog( "open" );
-	isOpen  = $dialog_box_form.dialog( "isOpen" );
-console.log('after: isOpen=',isOpen);
         $( "#id_name" ).val( selElement.name );
         if ( selElement.model == "folder" ) {
             $dialog_box_form.dialog( "option", "title", "Перейменування теки" );
             $( "label[for='id_name']" ).text( "Нова назва" );
             // Redefine function on click for button nr 0:
             buttons[0].click = function( e ) {
-                e.preventDefault();
                 ajax_folderRename();
+                return false;
             };
         }
         else if ( selElement.model == "report" ) {
@@ -138,8 +133,8 @@ console.log('after: isOpen=',isOpen);
             $( "label[for='id_name']" ).text( "Нова назва" );
             // Redefine function on click for button nr 0:
             buttons[0].click = function( e ) {
-                e.preventDefault();
                 ajax_reportRename();
+                return false;
             };
         }
         $dialog_box_form.dialog( "option", "buttons", buttons ); // new buttons
@@ -178,13 +173,14 @@ function dialogFoldersTreeHTML( sr ) {    // callse by ajax_FoldersTreeFromBase(
     $( "#dialog-box-tree" ).dialog( "option", "title", "Перемістити елемент до теки..." );
     // Redefine function on click for button nr 0:
     buttons[0].click = function( e ) {
-        e.preventDefault();
         ajax_elementMove( target_id );
+        return false;
     };
     buttons[1].click = function() {
         $( this ).dialog( "close" );
         selRowFocus();
         $.jstree.destroy();
+        return false;
     };
     $( "#dialog-box-tree" ).dialog( "option", "buttons", buttons ); // new buttons
 }
@@ -202,16 +198,16 @@ $( "#button-delete-element" ).on( "click", function() {
             $dialog_box_form.dialog( "option", "title", "Видалення теки" );
             $( "label[for='id_name']" ).text( "Видалити" );
             buttons[0].click = function( e ) {
-                e.preventDefault();
                 ajax_folderDelete();
+                return false;
             };
         }
         else if ( selElement.model == "report" ) {
             $dialog_box_form.dialog( "option", "title", "Видалення документа" );
             $( "label[for='id_name']" ).text( "Видалити" );
             buttons[0].click = function( e ) {
-                e.preventDefault();
                 ajax_reportDelete();
+                return false;
             };
         }
         $dialog_box_form.dialog( "option", "buttons", buttons ); // new buttons
@@ -235,15 +231,14 @@ $( "#button-download-element" ).on( "click", function() {
             $dialog_box_form.dialog( "option", "title", "Завантаження теки" );
             $( "label[for='id_name']" ).text( "Завантажити" );
             buttons[0].click = function( e ) {
-                e.preventDefault();
                 xhr_folderDownload();
+                return false;
             };
         }
         else if ( selElement.model == "report" ) {
             $dialog_box_form.dialog( "option", "title", "Завантаження документа" );
             $( "label[for='id_name']" ).text( "Завантажити" );
             buttons[0].click = function( e ) {
-                e.preventDefault();
                 xhr_reportDownload();
             };
         }
@@ -255,4 +250,3 @@ $( "#button-download-element" ).on( "click", function() {
     }
 });
 
-console.log('$( "#button-rename-element" )=', $( "#button-rename-element" ));
