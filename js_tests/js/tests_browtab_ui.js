@@ -1,5 +1,5 @@
 /*
-Global:  $ (?), JSON (?), QUnit (?), TR_start (?), auxiliary_handler, browtab_document_ready_handler (?), changeSelElement (?), columnsNumber, create_qs_TR_arr (?), deleteElement (?), display_qs_TR_arr (?), expect (?), getRowIndexbyID (?), getSelRowIndex (?), getSelectorTR (?), getTRbyID (?), getTRbyIndex (?), getTRfromTbodyByIndex (?), getVisibleIndex (?), get_m_id_n_ByIndex (?), get_qs_TR_arr (?), markSelRow (?), normalStyle (?), onClick_handler (?), onDblclick_handler (?), onKeyDown (?), onKeydown_handler (?), qs_TR_arr (?), restore_qs_TR_arr (?), rowsNumber (?), scrollToRow (?), selElement (?), selRowFocus (?), selRowIndex (?), selTR (?), selectRow (?), selectStyle (?), setSelRow (?), setStartRow (?), setValToHTML, setValToHTMLrow (?), set_browtab_listeners (?), sinon (?), storeSelRowIndex (?), stub, totalOuterHeight (?), window (?)
+ $ (?), $dialog_box_form (?), $dialog_confirm (?), $dialog_message (?), $tbody (?), QUnit (?), XMLHttpRequest (?), add_browtab_ui_dialogs (?), browtab_document_ready_handler (?), browtab_ui_document_ready_handler (?), buttonClickHandler (?), click_Ok_button_on_Enter (?), condFormInput (?), condFormLabel (?), condFormTR (?), confirm_dialog (?), defineAbortButton (?), defineConfirmButtons (?), dialogMessage (?), dialog_box_form_close (?), dialog_close (?), dialog_width (?), emptyFormTR (?), expect (?), fileFormInput (?), fileFormLabel (?), fileFormTR (?), folderEmptyMessage (?), functionOnDevelopeMessage (?), get_confirm_dialog_default_buttons (?), get_dialog_default_buttons (?), get_dlgClass (?), jQuery (?), loadEndHandler (?), nameFormInput (?), nameFormLabel (?), nameFormTR (?), noSelectionMessage (?), progressHandler (?), progressTR (?), progressbarShow (?), selRowFocus (?), setProgress (?), set_Ok_button_on_Enter (?), sinon (?), stub, trim_all_spaces, window (?) 
 */
 
 //QUnit.config.reorder = false;
@@ -8,9 +8,6 @@ var stub;   // common for all tests, is set to {} before and restored after each
 
 //=============================================================================
 QUnit.module( "browtab_ui document ready", function( hooks ) { 
-//    var $tbody;
-//    var tbody_selector;
-//    var target_selector;
     hooks.beforeEach( function( assert ) {
         stub = {};
         browtab_document_ready_handler( );
@@ -87,10 +84,6 @@ QUnit.module( "browtab_ui document ready", function( hooks ) {
         assert.ok( stub.get_dialog_default_buttons.calledOnce, 'get_dialog_default_buttons should be called once' );
         assert.ok( stub.get_dialog_default_buttons.calledWithExactly( ), 
                                                                 'get_dialog_default_buttons should be called with arg' );
-//        assert.ok( stub.get_confirm_dialog_default_buttons.calledOnce, 
-//                                                                'get_confirm_dialog_default_buttons should be called once' );
-//        assert.ok( stub.get_confirm_dialog_default_buttons.calledWithExactly( ), 
-//                                                            'get_confirm_dialog_default_buttons should be called with arg' );
 
         assert.equal( res, undefined, 'add_browtab_ui_dialogs should return false' );
     });

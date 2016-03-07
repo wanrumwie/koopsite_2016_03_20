@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block title %}
-    KoopSite - browtab_ui.js
+    KoopSite - users_browtab_ui.js
 {% endblock title %}
 
 {% block qunit-fixture %}
@@ -78,12 +78,15 @@
 
 {% block script_library %}
     <script src="{% static 'js/browtab.js' %}"          ></script>
+    <script src="{% static 'js/browtab_ui.js' %}"          ></script>
+    <script src="{% static 'js/users_browtab.js' %}"          ></script>
+    <script src="{% static 'js/users_browtab_ajax.js' %}"          ></script>
 {% endblock script_library %}
 
 {% block tested_script %}
-    <script src="{% static 'js/browtab_ui.js' %}"          ></script>
+    <script src="{% static 'js/users_browtab_ui.js' %}"          ></script>
 {% endblock tested_script %}
 
 {% block test_script %}
-    <script src="{% static 'js/tests_browtab_ui.js' %}"></script>
+    <script src="{% static 'koopsite/tests_users_browtab_ui.js' %}"></script>
 {% endblock test_script %}

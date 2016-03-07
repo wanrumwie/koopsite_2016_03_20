@@ -11,12 +11,6 @@ function folder_browtab_ui_document_ready_handler(){
  * Adding UI buttons (only icons) to <button>:
  *********************************************************************
  */
-
-/*
- *********************************************************************
- * Main functions buttons:
- *********************************************************************
- */
 function add_folder_browtab_ui_buttons(){
     $( "#button-create-folder" ).button({
         icons: {
@@ -55,7 +49,6 @@ function add_folder_browtab_ui_buttons(){
         }
     });
 }
-console.log('1 loading folder_browtab_ui.js');
 /*
  *********************************************************************
  * Adding UI dialog form (with common properties) to div:
@@ -249,4 +242,3 @@ $( "#button-download-element" ).on( "click", function() {
         noSelectionMessage( f_name );
     }
 });
-

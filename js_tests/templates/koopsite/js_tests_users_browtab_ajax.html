@@ -264,11 +264,14 @@
 
 {% endblock qunit-fixture %}
 
-{% block tested_script %}
+{% block script_library %}
     <script src="{% static 'js/browtab.js' %}"          ></script>
     <script src="{% static 'js/browtab_ajax.js' %}"          ></script>
     <script src="{% static 'js/browtab_ui.js' %}"          ></script>
     <script src="{% static 'js/users_browtab.js' %}"          ></script>
+{% endblock script_library %}
+
+{% block tested_script %}
     <script src="{% static 'js/users_browtab_ajax.js' %}"          ></script>
 {% endblock tested_script %}
 
