@@ -5,20 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6a7824a-5729-4316-8075-18bce779bc56" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ui.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js_tests/koopsite/tests_users_browtab_ui.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html" afterPath="$PROJECT_DIR$/js_tests/templates/block_href_js_tests.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folders/static/js/folder_browtab_ui.js" afterPath="$PROJECT_DIR$/folders/static/js/folder_browtab_ui.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/js_tests_browtab_ajax.html" afterPath="$PROJECT_DIR$/js_tests/templates/js_tests_browtab_ajax.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/js_tests_browtab_ui.html" afterPath="$PROJECT_DIR$/js_tests/templates/js_tests_browtab_ui.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab.html" afterPath="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab_ajax.html" afterPath="$PROJECT_DIR$/js_tests/templates/folders/js_tests_folder_browtab_ajax.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab.html" afterPath="$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ajax.html" afterPath="$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ajax.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html" afterPath="$PROJECT_DIR$/koopsite/templates/koop_adm_users_table.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/js/tests_browtab_ui.js" afterPath="$PROJECT_DIR$/js_tests/js/tests_browtab_ui.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/urls.py" afterPath="$PROJECT_DIR$/js_tests/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js_tests/koopsite/tests_users_browtab_ui.js" afterPath="$PROJECT_DIR$/js_tests/koopsite/tests_users_browtab_ui.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/koopsite/static/js/users_browtab_ui.js" afterPath="$PROJECT_DIR$/koopsite/static/js/users_browtab_ui.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -47,8 +34,8 @@
       <file leaf-file-name="js_tests_users_browtab_ui.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ui.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61084527" vertical-offset="1749" max-vertical-offset="2548">
-              <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.8877193" vertical-offset="1749" max-vertical-offset="2548">
+              <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -1413,7 +1400,11 @@
       <created>1457284816581</created>
       <updated>1457284816581</updated>
     </task>
-    <option name="localTasksCounter" value="154" />
+    <task id="LOCAL-00154" summary="KoopSite:  js_tests: ready for users_browtab_ui">
+      <created>1457344315308</created>
+      <updated>1457344315308</updated>
+    </task>
+    <option name="localTasksCounter" value="155" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1438,26 +1429,26 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7862372" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.9648609" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.56661785" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19765739" sideWeight="0.49926794" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22767204" sideWeight="0.4966216" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22767204" sideWeight="0.4966216" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20790629" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.50073206" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.50073206" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-3" y="122" width="1366" height="510" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4172767" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4172767" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329429" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1475,7 +1466,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="KoopSite:  js_tests: on click handler test bug fixed!" />
     <MESSAGE value="KoopSite:  js_tests: continue ..." />
     <MESSAGE value="KoopSite:  js_tests: continue ... function onKeyDown( k )" />
     <MESSAGE value="KoopSite:  js_tests: function onKeyDown( k ) - ready. Continue the rest ..." />
@@ -1500,7 +1490,8 @@
     <MESSAGE value="KoopSite:  js_tests: ready for users_browtab_ajax !" />
     <MESSAGE value="KoopSite:  js_tests: ready for browtab_ui" />
     <MESSAGE value="KoopSite:  js_tests: ready for browtab_ui, including buttonClickHandler()" />
-    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  js_tests: ready for browtab_ui, including buttonClickHandler()" />
+    <MESSAGE value="KoopSite:  js_tests: ready for users_browtab_ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="KoopSite:  js_tests: ready for users_browtab_ui" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1858,7 +1849,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.922272" vertical-offset="5545" max-vertical-offset="6318">
           <caret line="237" column="0" selection-start-line="237" selection-start-column="0" selection-end-line="237" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1866,7 +1856,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.26606876" vertical-offset="9598" max-vertical-offset="10426">
           <caret line="376" column="20" selection-start-line="376" selection-start-column="20" selection-end-line="376" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1874,14 +1863,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.50239235" vertical-offset="6731" max-vertical-offset="7436">
           <caret line="271" column="0" selection-start-line="270" selection-start-column="0" selection-end-line="271" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js_tests/templates/koopsite/js_tests_users_browtab_ui.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61084527" vertical-offset="1749" max-vertical-offset="2548">
-          <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.8877193" vertical-offset="1749" max-vertical-offset="2548">
+          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
           <folding />
         </state>
       </provider>

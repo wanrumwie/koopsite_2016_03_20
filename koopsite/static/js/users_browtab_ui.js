@@ -10,11 +10,6 @@ function users_browtab_ui_document_ready_handler(){
     add_users_browtab_ui_buttons();
     set_users_browtab_ui_buttons_listeners();
 }
-
-/**********************************************************************
- * END of the code covered by tests
- **********************************************************************/
-
 // Adding UI buttons (only icons) to <button>:
 function add_users_browtab_ui_buttons(){
     $( "#button-activate-all" ).button({
@@ -72,11 +67,6 @@ function add_users_browtab_ui_buttons(){
         }
     });
 }
-
-/**********************************************************************
- * START of the code covered by tests
- **********************************************************************/
-
 // Opening dialogs
 function set_users_browtab_ui_buttons_listeners( ){
     $( "#button-activate-all"       ).off( "click" ).on( "click", button_activate_all_handler );
@@ -105,11 +95,6 @@ function button_activate_all_handler() {
                                                 condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
     return false;
 }
-
-/**********************************************************************
- * END of the code covered by tests
- **********************************************************************/
-
 function button_set_member_all_handler() {
     var ajax_Function   = ajax_setMemberAllAccounts; 
     var dialogTitle     = 
@@ -233,5 +218,10 @@ function button_delete_account_handler() {
                                                 condLabel, condVal, confirmTitle, confirmMsg, selectionCheck );
     return false;
 }
+
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+
 
 console.log('users_browtab_ui is loaded' );
