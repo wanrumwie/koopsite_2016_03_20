@@ -112,6 +112,14 @@ QUnit.module( "browtab_ui functions", function( hooks ) {
         assert.ok( stub.width.calledWithExactly( ), 'width should be called with arg' );
         assert.equal( res, 400 * 0.75, 'width should return proper value' );
     });
+    QUnit.test( 'dialog_width 399px', function ( assert ) {
+        expect( 3 );
+        stub.width = sinon.stub( $tbody, "width" ).returns( 400.5 );
+        var res = dialog_width();
+        assert.ok( stub.width.calledOnce, 'width should be called once' );
+        assert.ok( stub.width.calledWithExactly( ), 'width should be called with arg' );
+        assert.equal( res, 400 * 0.75, 'width should return proper value' );
+    });
     QUnit.test( 'dialog_width 600px', function ( assert ) {
         expect( 3 );
         stub.width = sinon.stub( $tbody, "width" ).returns( 600 );
@@ -904,6 +912,7 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
     var confirmTitle;
     var confirmMsg;
     var selectionCheck;
+    var inputType;
     var buttons;
     hooks.beforeEach( function( assert ) {
         stub = {};
@@ -949,7 +958,7 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         condLabel       = "condLabel";
         confirmTitle    = "confirmTitle";
         disabledInput   = true;
-        
+        inputType       = undefined;
     } );
     hooks.afterEach( function( assert ) {
         var meth;
@@ -1305,6 +1314,174 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.deepEqual( stub.dialog.args[2][2], buttons, 'dialog should be called with args' );
 
         // if ( disabledInput ) {                                              // because input field disabled
+        //    }
+        // }
+        // else {
+
+        assert.equal( res, undefined, 'dialogMessage should return undefined' );
+    });
+    QUnit.test( '#6: all true inputType=text', function ( assert ) {
+        expect( 44 );
+        inputType = 'qwerty';
+
+        var res = buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck, 
+                                                inputType );
+
+        assert.equal( stub.dialog.callCount, 3, 'dialog should be called 3 times' );
+        assert.equal( stub.siblings.callCount, 1, 'siblings should be called 1 times' );
+        assert.equal( stub.find.callCount, 5, 'find should be called 5 times' );
+        assert.equal( stub.focus.callCount, 1, 'focus should be called 1 times' );
+        assert.equal( stub.prop.callCount, 2, 'prop should be called 2 times' );
+        assert.equal( stub.val.callCount, 1, 'val should be called 1 times' );
+        assert.equal( stub.text.callCount, 2, 'text should be called 2 times' );
+        assert.equal( stub.html.callCount, 2, 'html should be called 2 times' );
+        assert.equal( ajax_Function.callCount, 0, 'ajax_Function should be called 0 times' );
+        assert.equal( stub.get_dialog_default_buttons.callCount, 1, 'get_dialog_default_buttons should be called once' );
+        assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
+        assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
+
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
+
+        // if ( selectionCheck ) {
+
+        assert.deepEqual( stub.find.thisValues[0], $dialog_box_form, 'find called as method of proper this' );
+        assert.deepEqual( stub.find.args[0], [ "tr:nth-child(1)" ], 'find should be called with args' );
+        assert.deepEqual( stub.html.args[0], [ nameFormTR ], 'html should be called with args' );
+
+        assert.deepEqual( stub.prop.thisValues[0], $( "#id_name" ), 'prop called as method of proper this' );
+        assert.deepEqual( stub.prop.args[0], [ "disabled", disabledInput ], 'prop should be called with args' );
+
+        assert.deepEqual( stub.val.thisValues[0], $( "#id_name" ), 'val called as method of proper this' );
+        assert.deepEqual( stub.val.args[0], [ inputVal ], 'val should be called with args' );
+
+        assert.deepEqual( stub.text.thisValues[0], $( "label[for='id_name']" ), 'text called as method of proper this' );
+        assert.deepEqual( stub.find.args[1], [ "label[for='id_name']" ], 'find should be called with args implicitly' );
+        assert.deepEqual( stub.text.args[0], [ inputLabel ], 'text should be called with args' );
+
+        // if ( condLabel ){
+
+        assert.deepEqual( stub.find.thisValues[2], $dialog_box_form, 'find called as method of proper this' );
+        assert.deepEqual( stub.find.args[2], [ "tr:nth-child(2)" ], 'find should be called with args' );
+        assert.deepEqual( stub.html.args[1], [ condFormTR ], 'html should be called with args' );
+
+        assert.deepEqual( stub.prop.thisValues[1], $( "#id_cond" ), 'prop called as method of proper this' );
+        assert.deepEqual( stub.prop.args[1], [ 'checked', condVal ], 'prop should be called with args' );
+
+        assert.deepEqual( stub.text.thisValues[1], $( "label[for='id_cond']" ), 'text called as method of proper this' );
+        assert.deepEqual( stub.find.args[3], [ "label[for='id_cond']" ], 'find should be called with args implicitly' );
+        assert.deepEqual( stub.text.args[1], [ condLabel ], 'text should be called with args' );
+
+        // else {
+        // }
+
+        assert.deepEqual( stub.dialog.thisValues[0], $dialog_box_form, 'dialog called as method of proper this' );
+        assert.deepEqual( stub.dialog.args[0], [ "open" ], 'dialog should be called with args' );
+
+        assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
+        assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
+
+        // if ( confirmTitle ){                                        // confirmation dialog needed
+        // else {
+        // }
+
+        assert.deepEqual( stub.dialog.thisValues[2], $dialog_box_form, 'dialog called as method of proper this' );
+        assert.deepEqual( stub.dialog.args[2][0], "option", 'dialog should be called with args' );
+        assert.deepEqual( stub.dialog.args[2][1], "buttons", 'dialog should be called with args' );
+        assert.deepEqual( stub.dialog.args[2][2], buttons, 'dialog should be called with args' );
+
+        // if ( disabledInput ) {                                              // because input field disabled
+
+        assert.deepEqual( stub.siblings.thisValues[0], $dialog_box_form, 'siblings called as method of proper this' );
+        assert.deepEqual( stub.siblings.args[0], [ ], 'siblings should be called with args' );
+        assert.deepEqual( stub.find.args[4], [ "button:eq(0)" ], 'find should be called with args' );
+        assert.deepEqual( stub.focus.args[0], [ ], 'focus should be called with args' );
+
+        //    }
+        // }
+        // else {
+
+        assert.equal( res, undefined, 'dialogMessage should return undefined' );
+    });
+    QUnit.test( '#7: all true inputType=file', function ( assert ) {
+        expect( 41 );
+        inputType = 'file';
+
+        var res = buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck, 
+                                                inputType );
+
+        assert.equal( stub.dialog.callCount, 3, 'dialog should be called 3 times' );
+        assert.equal( stub.siblings.callCount, 1, 'siblings should be called 1 times' );
+        assert.equal( stub.find.callCount, 5, 'find should be called 5 times' );
+        assert.equal( stub.focus.callCount, 1, 'focus should be called 1 times' );
+        assert.equal( stub.prop.callCount, 2, 'prop should be called 2 times' );
+//        assert.equal( stub.val.callCount, 1, 'val should be called 1 times' );
+        assert.equal( stub.text.callCount, 2, 'text should be called 2 times' );
+        assert.equal( stub.html.callCount, 2, 'html should be called 2 times' );
+        assert.equal( ajax_Function.callCount, 0, 'ajax_Function should be called 0 times' );
+        assert.equal( stub.get_dialog_default_buttons.callCount, 1, 'get_dialog_default_buttons should be called once' );
+        assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
+        assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
+
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
+
+        // if ( selectionCheck ) {
+
+        assert.deepEqual( stub.find.thisValues[0], $dialog_box_form, 'find called as method of proper this' );
+        assert.deepEqual( stub.find.args[0], [ "tr:nth-child(1)" ], 'find should be called with args' );
+        assert.deepEqual( stub.html.args[0], [ fileFormTR ], 'html should be called with args' );
+
+        assert.deepEqual( stub.prop.thisValues[0], $( "#id_file" ), 'prop called as method of proper this' );
+        assert.deepEqual( stub.prop.args[0], [ "disabled", disabledInput ], 'prop should be called with args' );
+
+//        assert.deepEqual( stub.val.thisValues[0], $( "#id_file" ), 'val called as method of proper this' );
+//        assert.deepEqual( stub.val.args[0], [ inputVal ], 'val should be called with args' );
+
+        assert.deepEqual( stub.text.thisValues[0], $( "label[for='id_file']" ), 'text called as method of proper this' );
+        assert.deepEqual( stub.find.args[1], [ "label[for='id_file']" ], 'find should be called with args implicitly' );
+        assert.deepEqual( stub.text.args[0], [ inputLabel ], 'text should be called with args' );
+
+        // if ( condLabel ){
+
+        assert.deepEqual( stub.find.thisValues[2], $dialog_box_form, 'find called as method of proper this' );
+        assert.deepEqual( stub.find.args[2], [ "tr:nth-child(2)" ], 'find should be called with args' );
+        assert.deepEqual( stub.html.args[1], [ condFormTR ], 'html should be called with args' );
+
+        assert.deepEqual( stub.prop.thisValues[1], $( "#id_cond" ), 'prop called as method of proper this' );
+        assert.deepEqual( stub.prop.args[1], [ 'checked', condVal ], 'prop should be called with args' );
+
+        assert.deepEqual( stub.text.thisValues[1], $( "label[for='id_cond']" ), 'text called as method of proper this' );
+        assert.deepEqual( stub.find.args[3], [ "label[for='id_cond']" ], 'find should be called with args implicitly' );
+        assert.deepEqual( stub.text.args[1], [ condLabel ], 'text should be called with args' );
+
+        // else {
+        // }
+
+        assert.deepEqual( stub.dialog.thisValues[0], $dialog_box_form, 'dialog called as method of proper this' );
+        assert.deepEqual( stub.dialog.args[0], [ "open" ], 'dialog should be called with args' );
+
+        assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
+        assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
+
+        // if ( confirmTitle ){                                        // confirmation dialog needed
+        // else {
+        // }
+
+        assert.deepEqual( stub.dialog.thisValues[2], $dialog_box_form, 'dialog called as method of proper this' );
+        assert.deepEqual( stub.dialog.args[2][0], "option", 'dialog should be called with args' );
+        assert.deepEqual( stub.dialog.args[2][1], "buttons", 'dialog should be called with args' );
+        assert.deepEqual( stub.dialog.args[2][2], buttons, 'dialog should be called with args' );
+
+        // if ( disabledInput ) {                                              // because input field disabled
+
+        assert.deepEqual( stub.siblings.thisValues[0], $dialog_box_form, 'siblings called as method of proper this' );
+        assert.deepEqual( stub.siblings.args[0], [ ], 'siblings should be called with args' );
+        assert.deepEqual( stub.find.args[4], [ "button:eq(0)" ], 'find should be called with args' );
+        assert.deepEqual( stub.focus.args[0], [ ], 'focus should be called with args' );
+
         //    }
         // }
         // else {

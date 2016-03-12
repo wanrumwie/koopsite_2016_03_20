@@ -153,8 +153,8 @@ class ReportModelTest(TestCase):
         self.assertEqual(report.get_absolute_url(), expected)
 
     def test_Meta(self):
-        self.assertEqual(Report._meta.verbose_name, ('документ'))
-        self.assertEqual(Report._meta.verbose_name_plural, ('документи'))
+        self.assertEqual(Report._meta.verbose_name, ('файл'))
+        self.assertEqual(Report._meta.verbose_name_plural, ('файли'))
         self.assertEqual(Report._meta.permissions, (
                         ('view_report', 'Can view report'),
                         ('download_report', 'Can download report'),

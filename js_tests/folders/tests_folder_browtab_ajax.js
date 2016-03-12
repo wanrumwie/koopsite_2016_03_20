@@ -273,13 +273,16 @@ QUnit.module( "folder_browtab_ajax handlers", function( hooks ) {
 } );
 QUnit.test( 'getSelElementArr', function ( assert ) {
     expect( 1 );
+    document.getElementById("browTabName").value = "browTabName";
+    document.getElementById("parent_id").value = 77;
+    document.getElementById("selRowIndex").value = "selRowIndex";
     browtab_document_ready_handler();
     selElement.model = 'report';
     selElement.id    = 55;
     selElement.name  = 'name';
     var arr = {};
     arr.browTabName = "browTabName";
-    arr.parent_id   = "parent.id";
+    arr.parent_id   = "77";
     arr.selRowIndex = "selRowIndex";
     arr.model       = 'report';
     arr.id          = 55;
@@ -349,6 +352,10 @@ QUnit.module( "folder_browtab_ajax ajax", function( hooks ) {
         this.xhr.onCreate = function ( request ) {
             requests.push( request );
         };
+        document.getElementById("browTabName").value = "browTabName";
+        document.getElementById("parent_id").value = "parent.id";
+        document.getElementById("selRowIndex").value = "selRowIndex";
+        document.getElementById("id_name").value = "New name";
     } );
     hooks.afterEach( function( assert ) {
         var meth;

@@ -236,8 +236,11 @@ QUnit.module( "users_browtab_ajax handlers", function( hooks ) {
 } );
 //=============================================================================
 QUnit.test( 'getSelElementArr', function ( assert ) {
-    browtab_document_ready_handler();
     expect( 1 );
+    // set fake values to fixture:
+    document.getElementById("browTabName").value = "browTabName";
+    document.getElementById("selRowIndex").value = "selRowIndex";
+    browtab_document_ready_handler();
     selElement.model = 'users';
     selElement.id    = 55;
     selElement.name  = 'name';
@@ -245,7 +248,7 @@ QUnit.test( 'getSelElementArr', function ( assert ) {
     arr.browTabName = "browTabName";
     arr.parent_id   = "";
     arr.selRowIndex = "selRowIndex";
-    arr.sendMail    = false;
+    arr.sendMail    = undefined;
     arr.model       = 'users';
     arr.id          = 55;
     arr.name        = 'name';
@@ -300,13 +303,16 @@ QUnit.test('self test: set sample values to qs_TR_arr[i][0] objects', function (
 /********************************************************************/
 QUnit.test( 'getAllElementsArr', function ( assert ) {
     expect( 1 );
+    // set fake values to fixture:
+    document.getElementById("browTabName").value = "browTabName";
+    document.getElementById("selRowIndex").value = "selRowIndex";
     var arr = {};
     var elemSet = [];
     var elem = {};
     arr.browTabName = "browTabName";
     arr.parent_id   = "";
     arr.selRowIndex = "selRowIndex";
-    arr.sendMail    = false;
+    arr.sendMail    = undefined;
     var i;
     for ( i=0 ; i<10; i++ ) {
         elem = {};

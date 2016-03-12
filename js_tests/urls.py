@@ -37,6 +37,9 @@ urlpatterns = [
     url(r'^folders/folder_browtab_ajax/$',
         TemplateView.as_view(template_name='folders/js_tests_folder_browtab_ajax.html'),
                                       name='folders_folder_browtab_ajax'),
+    url(r'^folders/folder_browtab_ui/$',
+        TemplateView.as_view(template_name='folders/js_tests_folder_browtab_ui.html'),
+                                      name='folders_folder_browtab_ui'),
 
 
     url(r'^functions/$',

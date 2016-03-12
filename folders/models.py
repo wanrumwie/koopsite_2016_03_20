@@ -120,8 +120,8 @@ class Report(models.Model):
         # return reverse('folders:folder-list-all')
 
     class Meta:
-        verbose_name = ('документ')
-        verbose_name_plural = ('документи')
+        verbose_name = ('файл')
+        verbose_name_plural = ('файли')
         permissions = (
                         ('view_report', 'Can view report'),
                         ('download_report', 'Can download report'),

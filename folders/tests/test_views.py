@@ -543,7 +543,7 @@ class FolderDeleteTest(TestCase):
         dummy_user =  DummyUser().create_dummy_user(username='fred', password='secret')
         self.client.login(username='fred', password='secret')
         DummyUser().add_dummy_permission(dummy_user, 'delete_folder')
-        # Створюємо документ в теці, яку хочемо видалити
+        # Створюємо файл в теці, яку хочемо видалити
         DummyFolder().create_dummy_report(parent=self.root)
         request = RequestFactory().post(self.path)
         request.user = dummy_user
@@ -669,7 +669,7 @@ class ReportDeleteTest(TestCase):
         # Перевіряємо чи видалено з бази запис
         ff = self.cls_view.model.objects.all()
         # Перевіряємо поля:
-        self.assertEqual(len(ff), 1) # залишився один документ
+        self.assertEqual(len(ff), 1) # залишився один файл
         report.file.delete()
 
 

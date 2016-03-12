@@ -53,6 +53,7 @@ function add_browtab_ui_dialogs(){
 function dialog_width() {
     var tw = $tbody.width();
     var w = ( tw > 600 ) ? 450 : tw *0.75;
+	w = Math.round( w );
     return w;
 }
 /*
@@ -246,14 +247,24 @@ function functionOnDevelopeMessage() {
  *********************************************************************
  */
 function buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
-                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck ) {
+                                                condLabel, condVal, confirmTitle, confirmMsg, selectionCheck,
+												inputType='text' ) {
     var buttons = get_dialog_default_buttons();
-    var f_name;
+    var f_name, inputFormTR, inputID;
     if ( selectionCheck ) {
-        $dialog_box_form.find( "tr:nth-child(1)" ).html( nameFormTR );
-        $( "#id_name" ).prop( "disabled", disabledInput );          // input field disabled or not
-        $( "#id_name" ).val( inputVal );
-        $( "label[for='id_name']" ).text( inputLabel );
+		if ( inputType == "file" ) {
+			inputFormTR = fileFormTR;
+			inputID = 'id_file';
+		} else {
+			inputFormTR = nameFormTR;
+			inputID = 'id_name';
+		}
+		$dialog_box_form.find( "tr:nth-child(1)" ).html( inputFormTR );
+		$( "label[for='"+inputID+"']" ).text( inputLabel );
+		$( "#"+inputID ).prop( "disabled", disabledInput );          // input field disabled or not
+		if ( inputType != "file" ) {
+			$( "#"+inputID ).val( inputVal );
+		}
         if ( condLabel ){
             $dialog_box_form.find( "tr:nth-child(2)" ).html( condFormTR );
             $( "#id_cond" ).prop('checked', condVal );

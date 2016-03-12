@@ -82,7 +82,7 @@ class DifferentFunctionsTest(TestCase):
 class Response_for_download_Test(TestCase):
 
     def setUp(self):
-        self.root = DummyFolder().create_dummy_root_folder("Тека документів")
+        self.root = DummyFolder().create_dummy_root_folder("Тека файлів")
         self.file = SimpleUploadedFile("Текстовий файл.txt", b"file_content")
         self.report = DummyFolder().create_dummy_report(self.root, file=self.file)
 
@@ -119,7 +119,7 @@ class Response_for_download_Test(TestCase):
 class Response_for_download_zip_Test(TestCase):
 
     def setUp(self):
-        self.root = DummyFolder().create_dummy_root_folder("Тека документів")
+        self.root = DummyFolder().create_dummy_root_folder("Тека файлів")
         self.file = SimpleUploadedFile("Текстовий файл.txt", b"file_content")
         self.report = DummyFolder().create_dummy_report(self.root, file=self.file)
 
@@ -139,12 +139,12 @@ class Response_for_download_zip_Test(TestCase):
 
         resp, zipFilename, msg = response_for_download_zip(self.root)
 
-        self.assertEqual(zipFilename, 'Тека документів.zip')
+        self.assertEqual(zipFilename, 'Тека файлів.zip')
         self.assertEqual(msg, "")
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
         self.assertEqual(resp.get('Content-Length'), '232')
         self.assertEqual(resp.get('Content-Type'), 'application/zip')
-        expected_namelist = ['Тека документів/Текстовий файл.txt']
+        expected_namelist = ['Тека файлів/Текстовий файл.txt']
         bio = BytesIO()  # Open ByteIO to grab in-memory file
         bio.write(resp.content)         # записуємо вміст у "файл"
         zipFile = zipfile.ZipFile(bio)  # "файл" як zipfile
@@ -162,7 +162,7 @@ class Response_for_download_zip_Test(TestCase):
 
         resp, zipFilename, msg = response_for_download_zip(self.root)
 
-        self.assertEqual(zipFilename, 'Тека документів.zip')
+        self.assertEqual(zipFilename, 'Тека файлів.zip')
         self.assertEqual(msg, "")
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
         self.assertEqual(resp.get('Content-Length'), '398')
@@ -183,7 +183,7 @@ class Response_for_download_zip_Test(TestCase):
 
         resp, zipFilename, msg = response_for_download_zip(self.root, 15)
 
-        self.assertEqual(zipFilename, 'Тека документів.zip')
+        self.assertEqual(zipFilename, 'Тека файлів.zip')
         self.assertEqual(msg, 'Завеликий zip. Решту файлів відкинуто')
         self.assertEqual(resp.get('Content-Disposition'), expected_content_disposition)
         self.assertEqual(resp.get('Content-Length'), '232')

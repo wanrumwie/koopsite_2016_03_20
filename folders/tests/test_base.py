@@ -44,7 +44,7 @@ class DummyFolder():
                 file_content = f.read()
             filename = filename or os.path.basename(path)
             file = SimpleUploadedFile(filename, file_content)
-        # створюємо документ:
+        # створюємо файл:
         report = Report(parent=parent, id=id, file=file, user=user,
                         filename=filename, uploaded_on=uploaded_on)
         report.save()

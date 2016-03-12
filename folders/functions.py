@@ -26,7 +26,7 @@ def get_recursive_path(report):
 
 def get_parents(folder_or_report):
     # Отримуємо список - ланцюжок тек,
-    # батьківських відносно теки folder або документа report
+    # батьківських відносно теки folder або файла report
     parents_list = []
     # цикл починається з теки, безпосередньо материнської до folder_or_report
     parent = folder_or_report.parent

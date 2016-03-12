@@ -524,7 +524,7 @@ class AjaxReportDelete(AjaxTableRowViewBase):
         else:
             # Робимо зміни:
             report.file.delete()    # файл видалено з диска
-            report.delete()         # документ видалено з бази даних
+            report.delete()         # файл видалено з бази даних
             msg.title   = rqst.name
             msg.type    = msgType.DeleteRow
             msg.message = "Файл видалено!"
@@ -742,13 +742,13 @@ class XHRReportUpload(XHRTableRowView):
             except:
                 # Помилка збереження, найімовірніше - файл завеликий
                 print('Saving error. Probably file too large')
-                # Видаляємо з бази і з диска недозбережений документ:
+                # Видаляємо з бази і з диска недозбережений файл:
                 try:
                     report.file.delete()    # файл видалено з диска
                     print('file deleted')
                 except:
                     print('file was not saved')
-                report.delete()         # документ видалено з бази даних
+                report.delete()         # файл видалено з бази даних
                 print('report deleted')
                 msg.title   = rqst.fileName
                 msg.type    = msgType.Error
@@ -775,10 +775,10 @@ class XHRReportUpload(XHRTableRowView):
                 else:
                     # Файл завантажено частково - клієнт послав xhr.abort()
                     print('Error: fileSizeFact <> fileSize')
-                    # Видаляємо з бази і з диска недозбережений документ:
+                    # Видаляємо з бази і з диска недозбережений файл:
                     report.file.delete()    # файл видалено з диска
                     print('file deleted')
-                    report.delete()         # документ видалено з бази даних
+                    report.delete()         # файл видалено з бази даних
                     print('report deleted')
                     msg.title   = rqst.fileName
                     msg.type    = msgType.Error

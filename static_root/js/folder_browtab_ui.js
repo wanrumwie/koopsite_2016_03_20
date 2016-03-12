@@ -120,7 +120,7 @@ $( "#button-rename-element" ).on( "click", function() {
             };
         }
         else if ( selElement.model == "report" ) {
-            $( "#dialog-box-form" ).dialog( "option", "title", "Перейменування документа" );
+            $( "#dialog-box-form" ).dialog( "option", "title", "Перейменування файла" );
             $( "label[for='id_name']" ).text( "Нова назва" );
             // Redefine function on click for button nr 0:
             buttons[0].click = function( e ) {
@@ -193,7 +193,7 @@ $( "#button-delete-element" ).on( "click", function() {
             };
         }
         else if ( selElement.model == "report" ) {
-            $( "#dialog-box-form" ).dialog( "option", "title", "Видалення документа" );
+            $( "#dialog-box-form" ).dialog( "option", "title", "Видалення файла" );
             $( "label[for='id_name']" ).text( "Видалити" );
             buttons[0].click = function( e ) {
                 e.preventDefault();
@@ -226,7 +226,7 @@ $( "#button-download-element" ).on( "click", function() {
             };
         }
         else if ( selElement.model == "report" ) {
-            $( "#dialog-box-form" ).dialog( "option", "title", "Завантаження документа" );
+            $( "#dialog-box-form" ).dialog( "option", "title", "Завантаження файла" );
             $( "label[for='id_name']" ).text( "Завантажити" );
             buttons[0].click = function( e ) {
                 e.preventDefault();
