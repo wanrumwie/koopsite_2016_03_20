@@ -91,3 +91,376 @@ QUnit.module( "folder_browtab_sort document ready", function( hooks ) {
     });
 } );
 //=============================================================================
+QUnit.module( "folder_browtab_sort functions", function( hooks ) { 
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+    } );
+    QUnit.test( 'grouping orderAsc=[0, 0, 0, 0, 0]', function ( assert ) {
+        expect( 8 );
+
+        var col = 1;
+        var qsTRarr = [ 'qsTRarr' ];
+        qs_TR_arr = [ 'qs_TR_arr' ];
+
+        orderAsc        = [0, 0, 0, 0, 0];
+        var ordered_col = -1;
+        
+        stub.changeOrderGroupIcon   = sinon.stub( window, "changeOrderGroupIcon" );
+        stub.sort_table             = sinon.stub( window, "sort_table" ).returns( qsTRarr );
+        stub.display_qs_TR_arr      = sinon.stub( window, "display_qs_TR_arr" );
+
+        var res = grouping( col );
+
+        assert.ok( stub.changeOrderGroupIcon.calledOnce, 'changeOrderGroupIcon should be called once' );
+        assert.ok( stub.changeOrderGroupIcon.calledWithExactly( col ), 'changeOrderGroupIcon should be called with arg' );
+        assert.ok( stub.sort_table.calledOnce, 'sort_table should be called once' );
+        assert.ok( stub.sort_table.calledWithExactly( [ 'qs_TR_arr' ], ordered_col, orderAsc[ordered_col] ), 
+                                                        'sort_table should be called with arg' );
+        assert.ok( stub.display_qs_TR_arr.calledOnce, 'display_qs_TR_arr should be called once' );
+        assert.ok( stub.display_qs_TR_arr.calledWithExactly( ), 'display_qs_TR_arr should be called with arg' );
+
+        assert.deepEqual( qs_TR_arr, qsTRarr, 'grouping should set proper value to global var' );
+
+        assert.equal( res, undefined, 'grouping should return undefined' );
+    });
+    QUnit.test( 'grouping orderAsc=[0, 1, 0, 0, 0]', function ( assert ) {
+        expect( 8 );
+
+        var col = 1;
+        var qsTRarr = [ 'qsTRarr' ];
+        qs_TR_arr = [ 'qs_TR_arr' ];
+
+        orderAsc        = [0, 1, 0, 0, 0];
+        var ordered_col = 1;
+        
+        stub.changeOrderGroupIcon   = sinon.stub( window, "changeOrderGroupIcon" );
+        stub.sort_table             = sinon.stub( window, "sort_table" ).returns( qsTRarr );
+        stub.display_qs_TR_arr      = sinon.stub( window, "display_qs_TR_arr" );
+
+        var res = grouping( col );
+
+        assert.ok( stub.changeOrderGroupIcon.calledOnce, 'changeOrderGroupIcon should be called once' );
+        assert.ok( stub.changeOrderGroupIcon.calledWithExactly( col ), 'changeOrderGroupIcon should be called with arg' );
+        assert.ok( stub.sort_table.calledOnce, 'sort_table should be called once' );
+        assert.ok( stub.sort_table.calledWithExactly( [ 'qs_TR_arr' ], ordered_col, orderAsc[ordered_col] ), 
+                                                        'sort_table should be called with arg' );
+        assert.ok( stub.display_qs_TR_arr.calledOnce, 'display_qs_TR_arr should be called once' );
+        assert.ok( stub.display_qs_TR_arr.calledWithExactly( ), 'display_qs_TR_arr should be called with arg' );
+
+        assert.deepEqual( qs_TR_arr, qsTRarr, 'grouping should set proper value to global var' );
+
+        assert.equal( res, undefined, 'grouping should return undefined' );
+    });
+    QUnit.test( 'grouping orderAsc=[0, -1, 0, 0, 0]', function ( assert ) {
+        expect( 8 );
+
+        var col = 1;
+        var qsTRarr = [ 'qsTRarr' ];
+        qs_TR_arr = [ 'qs_TR_arr' ];
+
+        orderAsc        = [0, -1, 0, 0, 0];
+        var ordered_col = 1;
+        
+        stub.changeOrderGroupIcon   = sinon.stub( window, "changeOrderGroupIcon" );
+        stub.sort_table             = sinon.stub( window, "sort_table" ).returns( qsTRarr );
+        stub.display_qs_TR_arr      = sinon.stub( window, "display_qs_TR_arr" );
+
+        var res = grouping( col );
+
+        assert.ok( stub.changeOrderGroupIcon.calledOnce, 'changeOrderGroupIcon should be called once' );
+        assert.ok( stub.changeOrderGroupIcon.calledWithExactly( col ), 'changeOrderGroupIcon should be called with arg' );
+        assert.ok( stub.sort_table.calledOnce, 'sort_table should be called once' );
+        assert.ok( stub.sort_table.calledWithExactly( [ 'qs_TR_arr' ], ordered_col, orderAsc[ordered_col] ), 
+                                                        'sort_table should be called with arg' );
+        assert.ok( stub.display_qs_TR_arr.calledOnce, 'display_qs_TR_arr should be called once' );
+        assert.ok( stub.display_qs_TR_arr.calledWithExactly( ), 'display_qs_TR_arr should be called with arg' );
+
+        assert.deepEqual( qs_TR_arr, qsTRarr, 'grouping should set proper value to global var' );
+
+        assert.equal( res, undefined, 'grouping should return undefined' );
+    });
+    QUnit.test( 'ordering', function ( assert ) {
+        expect( 8 );
+
+        var col = 1;
+        columnsNumber = 4;
+        var qsTRarr = [ 'qsTRarr' ];
+        qs_TR_arr = [ 'qs_TR_arr' ];
+
+        orderAsc        = [0, 0, 0, 0, 0];
+
+        stub.changeOrderIcon    = sinon.stub( window, "changeOrderIcon" );
+        stub.sort_table         = sinon.stub( window, "sort_table" ).returns( qsTRarr );
+        stub.display_qs_TR_arr  = sinon.stub( window, "display_qs_TR_arr" );
+
+        var res = ordering( col );
+
+        assert.ok( stub.changeOrderIcon.calledOnce, 'changeOrderIcon should be called once' );
+        assert.ok( stub.changeOrderIcon.calledWithExactly( col, 2, columnsNumber ), 
+                                                                'changeOrderIcon should be called with arg' );
+        assert.ok( stub.sort_table.calledOnce, 'sort_table should be called once' );
+        assert.ok( stub.sort_table.calledWithExactly( [ 'qs_TR_arr' ], col, orderAsc[col] ), 
+                                                        'sort_table should be called with arg' );
+        assert.ok( stub.display_qs_TR_arr.calledOnce, 'display_qs_TR_arr should be called once' );
+        assert.ok( stub.display_qs_TR_arr.calledWithExactly( ), 'display_qs_TR_arr should be called with arg' );
+
+        assert.deepEqual( qs_TR_arr, qsTRarr, 'ordering should set proper value to global var' );
+
+        assert.equal( res, undefined, 'ordering should return undefined' );
+    });
+} );
+//=============================================================================
+QUnit.module( "sort_table functions", function( hooks ) { 
+    var arr;
+    hooks.beforeEach( function( assert ) {
+        stub = {};
+        arr = [
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10],
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300] 
+        ];
+    } );
+    hooks.afterEach( function( assert ) {
+        var meth;
+        for ( meth in stub ) {
+            stub[meth].restore();
+        }
+    } );
+    //-----------------------------------------------------------------
+    QUnit.test( 'col=1, asc=1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 1;
+        var asc     = 1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300],
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=1, asc=1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 1;
+        var asc     = 1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300],
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=1, asc=-1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 1;
+        var asc     = -1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10],
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300] 
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=1, asc=-1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 1;
+        var asc     = -1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300],
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    //-----------------------------------------------------------------
+    QUnit.test( 'col=2, asc=1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 2;
+        var asc     = 1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{0:0},'r','abc','2015',100],
+                [{2:2},'f','aBc','2017',20],
+                [{1:1},'r','bbc','2014',10],
+                [{3:3},'f','bBc','2018',300]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=2, asc=1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 2;
+        var asc     = 1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300],
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=2, asc=-1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 2;
+        var asc     = -1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{1:1},'r','bbc','2014',10],
+                [{3:3},'f','bBc','2018',300],
+                [{0:0},'r','abc','2015',100],
+                [{2:2},'f','aBc','2017',20]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=2, asc=-1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 2;
+        var asc     = -1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{3:3},'f','bBc','2018',300],
+                [{2:2},'f','aBc','2017',20],
+                [{1:1},'r','bbc','2014',10],
+                [{0:0},'r','abc','2015',100]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    //-----------------------------------------------------------------
+    QUnit.test( 'col=3, asc=1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 3;
+        var asc     = 1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{1:1},'r','bbc','2014',10],
+                [{0:0},'r','abc','2015',100],
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=3, asc=1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 3;
+        var asc     = 1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300],
+                [{1:1},'r','bbc','2014',10],
+                [{0:0},'r','abc','2015',100]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=3, asc=-1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 3;
+        var asc     = -1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{3:3},'f','bBc','2018',300],
+                [{2:2},'f','aBc','2017',20],
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=3, asc=-1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 3;
+        var asc     = -1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{3:3},'f','bBc','2018',300],
+                [{2:2},'f','aBc','2017',20],
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    //-----------------------------------------------------------------
+    QUnit.test( 'col=4, asc=1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 4;
+        var asc     = 1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{1:1},'r','bbc','2014',10],
+                [{2:2},'f','aBc','2017',20],
+                [{0:0},'r','abc','2015',100],
+                [{3:3},'f','bBc','2018',300]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=4, asc=1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 4;
+        var asc     = 1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{2:2},'f','aBc','2017',20],
+                [{3:3},'f','bBc','2018',300],
+                [{1:1},'r','bbc','2014',10],
+                [{0:0},'r','abc','2015',100]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=4, asc=-1, orderGroup=false', function ( assert ) {
+        expect( 1 );
+        var col     = 4;
+        var asc     = -1;
+        orderGroup  = false;
+        var expected_arr = [
+                [{3:3},'f','bBc','2018',300],
+                [{0:0},'r','abc','2015',100],
+                [{2:2},'f','aBc','2017',20],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    QUnit.test( 'col=4, asc=-1, orderGroup=true', function ( assert ) {
+        expect( 1 );
+        var col     = 4;
+        var asc     = -1;
+        orderGroup  = true;
+        var expected_arr = [
+                [{3:3},'f','bBc','2018',300],
+                [{2:2},'f','aBc','2017',20],
+                [{0:0},'r','abc','2015',100],
+                [{1:1},'r','bbc','2014',10]
+        ];
+        var res = sort_table(arr, col, asc);
+        assert.deepEqual( res, expected_arr, 'sort_table should return proper value' );
+    });
+    //-----------------------------------------------------------------
+} );
+

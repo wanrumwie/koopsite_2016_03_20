@@ -13,19 +13,19 @@ function folder_browtab_sort_document_ready_handler(){
 }
 // Set listener for ordering buttons:
 function set_folder_browtab_sort_buttons_listeners( ){
-	$( "#button-sort-1" ).off( "click" ).on( "click", function() { grouping( 1 ); });
-	$( "#button-sort-2" ).off( "click" ).on( "click", function() { ordering( 2 ); });
-	$( "#button-sort-3" ).off( "click" ).on( "click", function() { ordering( 3 ); });
-	$( "#button-sort-4" ).off( "click" ).on( "click", function() { ordering( 4 ); });
+    var selector, i;
+    for ( i = 1 ; i <= columnsNumber ; i++ ) {
+        selector = "#button-sort-" + i;
+        $( selector ).off( "click" ).on( "click", function() {
+			var s = 'button-sort-';
+			var len = s.length;
+			var col = this.id.slice( len );
+			col = parseInt( col, 10 );
+			if ( col == 1 ) { grouping( col ); }
+			else 			{ ordering( col ); }
+		});
+    }
 }
-
-
-/**********************************************************************
- * END of the code covered by tests
- **********************************************************************/
-
- 
-
 function grouping( col ){
     changeOrderGroupIcon( col );
     // searching ordered column:
@@ -40,12 +40,7 @@ function ordering( col ){
     qs_TR_arr = sort_table( qs_TR_arr, col, orderAsc[col] );
     display_qs_TR_arr();
 }
-
-/*
- *********************************************************************
- * Sort 2D-array: queryset data + <TR> object:
- *********************************************************************
- */
+// Sort 2D-array: queryset data + <TR> object:
 function sort_table(arr, col, asc){
     var x, y, dif;
     // sort the array by the specified column number (col) and order (asc)
@@ -79,3 +74,9 @@ function sort_table(arr, col, asc){
     return arr;
 }
  
+
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+
+
