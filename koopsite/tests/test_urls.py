@@ -25,7 +25,7 @@ def get_view_from_RegexURLPattern(u):
 
 
 class WalkURL():
-    def __init__(self, urlpatterns, exclude_namespace=None, trace=False):
+    def __init__(self, urlpatterns, exclude_namespace=None, only_namespace=None, trace=False):
         self.urlpatterns = urlpatterns
         self.trace = trace
         if exclude_namespace:
@@ -35,8 +35,16 @@ class WalkURL():
                 self.exclude_namespace = [exclude_namespace]
         else:
             self.exclude_namespace = []
+        if only_namespace:
+            if isinstance(only_namespace, list):
+                self.only_namespace = only_namespace
+            else:
+                self.only_namespace = [only_namespace]
+        else:
+            self.only_namespace = []
         if self.trace:
             print("WalkURL(exclude_namespace =", self.exclude_namespace)
+            print("WalkURL(   only_namespace =", self.only_namespace)
         self.all_url_names = []
         self.get_all_url_names()
 
@@ -48,7 +56,11 @@ class WalkURL():
                 s = prefix + s.lstrip('^')
                 ns = ('%s:' % namespace) if namespace else ''
                 ns_name = '%s%s' % (ns, u.name)
-                self.all_url_names.append((s, ns_name))
+                flag = True
+                if self.only_namespace:
+                    flag = flag and namespace and namespace in self.only_namespace
+                if flag:
+                    self.all_url_names.append((s, ns_name))
                 # x = get_view_from_name(ns_name)
                 if self.trace:
                     module_name, func_name, templ_name, form_class = \
@@ -59,8 +71,17 @@ class WalkURL():
                      (s, ns, u.name, module_name, func_name, templ_name, form_class))
             if type(u) == RegexURLResolver:
                 ns = u.namespace or '--'
-                if ns not in self.exclude_namespace:
-                    self.url_walk(u.url_patterns, prefix=u.regex.pattern, namespace=u.namespace)
+                flag = True
+                if self.exclude_namespace:
+                    flag = flag and ns not in self.exclude_namespace
+                if self.only_namespace:
+                    flag = flag and ns and ns in self.only_namespace
+                if self.trace:
+                    print('%10s %s' % (flag ,ns))
+                if flag:
+                    self.url_walk(u.url_patterns,
+                                  prefix=u.regex.pattern,
+                                  namespace=u.namespace)
 
     def get_all_url_names(self):
         self.url_walk(self.urlpatterns, prefix='^', namespace=None)
@@ -83,18 +104,18 @@ def get_duplicates_in_tuple_list(lst):
         if n_list.count(n) > 1: dn.append((u, n))
     return du, dn
 
+if_trace = False
 
 class UrlNameSpaceTest(TestCase):
 
     def test_no_duplicate_urls(self):
         all_url = WalkURL(urlpatterns,
-                          # trace=True,
+                          trace=if_trace,
                           exclude_namespace=['js_tests']).all_url_names
-        # print('all_urls:')
+        # print('all_urls exclude js:')
         # for u, n in sorted(all_url):
         #     print('%-60s %s' % (u, n))
         # print('-'*50)
-
         dupl_in_urls, dupl_in_name = get_duplicates_in_tuple_list(all_url)
         if dupl_in_urls:
             print('urls duplicates:')
@@ -113,5 +134,25 @@ class UrlNameSpaceTest(TestCase):
         found1 = resolve('/')
         found2 = resolve('/index/')
         self.assertEqual(found1.func, found2.func)
+
+    def test_no_duplicate_urls_js(self):
+        all_url = WalkURL(urlpatterns,
+                          trace=if_trace,
+                          only_namespace=['js_tests']).all_url_names
+        # print('urls js_tests:')
+        # for u, n in sorted(all_url):
+            # print('%-60s %s' % (u, n))
+        # print('-'*50)
+        dupl_in_urls, dupl_in_name = get_duplicates_in_tuple_list(all_url)
+        if dupl_in_urls:
+            print('urls duplicates:')
+            for u, n in dupl_in_urls:
+                print('%-50s %s' % (u, n))
+        if dupl_in_name:
+            print('name duplicates:')
+            for u, n in dupl_in_name:
+                print('%-50s %s' % (u, n))
+        self.assertEqual(len(dupl_in_name), 0, 'Виявлено дублікати в назвах url')
+        self.assertEqual(len(dupl_in_urls), 0, 'Виявлено дублікати в шаблонах url')
 
 

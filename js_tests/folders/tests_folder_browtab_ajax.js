@@ -1183,7 +1183,7 @@ QUnit.module( "folder_browtab_ajax xhr", function( hooks ) {
         assert.ok( stub.dialogMessage.calledWithExactly( "File name empty", "Error", "File name empty title", 2000 ), 
                                                     'dialogMessage should be called with arg' );
 
-        assert.equal( res, undefined, 'xhr_reportUpload should return false' );
+        assert.equal( res, undefined, 'xhr_reportUpload should return undefined' );
     });
 } );
 //=============================================================================

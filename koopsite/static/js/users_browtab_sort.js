@@ -6,8 +6,6 @@ console.log('start loading user_browtab_sort.js');
  * Order buttons:
  *********************************************************************
  */
-var orderAsc        = [];       // set of values: ascending (+1) or decsendind (-1) order for columns  
-var orderGroup      = false;    // if true - ordering with Folders first, otherwise - mixed
 appendOrderButtons( 1, columnsNumber );
 changeOrderIcon( 1, 1, columnsNumber );
 /*changeOrderGroupIcon( 1 );*/

@@ -985,9 +985,6 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
         assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
 
-        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
-                                                                'get_dialog_default_buttons should be called with args' );
-
         // if ( selectionCheck ) {
 
         assert.deepEqual( stub.find.thisValues[0], $dialog_box_form, 'find called as method of proper this' );
@@ -1026,6 +1023,9 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
         assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
 
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
+
         // if ( confirmTitle ){                                        // confirmation dialog needed
         // else {
         // }
@@ -1034,6 +1034,8 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.deepEqual( stub.dialog.args[2][0], "option", 'dialog should be called with args' );
         assert.deepEqual( stub.dialog.args[2][1], "buttons", 'dialog should be called with args' );
         assert.deepEqual( stub.dialog.args[2][2], buttons, 'dialog should be called with args' );
+console.log('stub.dialog.args[2][2]=', stub.dialog.args[2][2]);
+console.log('               buttons=', buttons);
 
         // if ( disabledInput ) {                                              // because input field disabled
 
@@ -1049,7 +1051,7 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( res, undefined, 'dialogMessage should return undefined' );
     });
     QUnit.test( '#2: selectionCheck = false', function ( assert ) {
-        expect( 16 );
+        expect( 15 );
         selectionCheck  = false;
         
         var res = buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
@@ -1064,12 +1066,9 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( stub.text.callCount, 0, 'text should be called 0 times' );
         assert.equal( stub.html.callCount, 0, 'html should be called 0 times' );
         assert.equal( ajax_Function.callCount, 0, 'ajax_Function should be called once' );
-        assert.equal( stub.get_dialog_default_buttons.callCount, 1, 'get_dialog_default_buttons should be called once' );
+        assert.equal( stub.get_dialog_default_buttons.callCount, 0, 'get_dialog_default_buttons should not be called' );
         assert.equal( stub.get_thisfolder_name.callCount, 1, 'get_thisfolder_name should be called once' );
         assert.equal( stub.noSelectionMessage.callCount, 1, 'noSelectionMessage should be called once' );
-
-        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
-                                                                'get_dialog_default_buttons should be called with args' );
 
         // if ( selectionCheck ) {
         // else {
@@ -1098,9 +1097,6 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( stub.get_dialog_default_buttons.callCount, 1, 'get_dialog_default_buttons should be called once' );
         assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
         assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
-
-        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
-                                                                'get_dialog_default_buttons should be called with args' );
 
         // if ( selectionCheck ) {
 
@@ -1132,6 +1128,9 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
 
         assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
         assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
+
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
 
         // if ( confirmTitle ){                                        // confirmation dialog needed
         // else {
@@ -1180,9 +1179,6 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
         assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
 
-        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
-                                                                'get_dialog_default_buttons should be called with args' );
-
         // if ( selectionCheck ) {
 
         assert.deepEqual( stub.find.thisValues[0], $dialog_box_form, 'find called as method of proper this' );
@@ -1220,6 +1216,9 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
 
         assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
         assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
+
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
 
         // if ( confirmTitle ){                                        // confirmation dialog needed
         // else {
@@ -1263,9 +1262,6 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
         assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
 
-        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
-                                                                'get_dialog_default_buttons should be called with args' );
-
         // if ( selectionCheck ) {
 
         assert.deepEqual( stub.find.thisValues[0], $dialog_box_form, 'find called as method of proper this' );
@@ -1303,6 +1299,9 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
 
         assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
         assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
+
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
 
         // if ( confirmTitle ){                                        // confirmation dialog needed
         // else {
@@ -1341,9 +1340,6 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
         assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
 
-        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
-                                                                'get_dialog_default_buttons should be called with args' );
-
         // if ( selectionCheck ) {
 
         assert.deepEqual( stub.find.thisValues[0], $dialog_box_form, 'find called as method of proper this' );
@@ -1381,6 +1377,9 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
 
         assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
         assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
+
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
 
         // if ( confirmTitle ){                                        // confirmation dialog needed
         // else {
@@ -1425,9 +1424,6 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
         assert.equal( stub.get_thisfolder_name.callCount, 0, 'get_thisfolder_name should be called 0 times' );
         assert.equal( stub.noSelectionMessage.callCount, 0, 'noSelectionMessage should be called 0 times' );
 
-        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
-                                                                'get_dialog_default_buttons should be called with args' );
-
         // if ( selectionCheck ) {
 
         assert.deepEqual( stub.find.thisValues[0], $dialog_box_form, 'find called as method of proper this' );
@@ -1465,6 +1461,9 @@ QUnit.module( "browtab_ui buttonClickHandler", function( hooks ) {
 
         assert.deepEqual( stub.dialog.thisValues[1], $dialog_box_form, 'dialog called as method of proper this' );
         assert.deepEqual( stub.dialog.args[1], [ "option", "title", dialogTitle ], 'dialog should be called with args' );
+
+        assert.deepEqual( stub.get_dialog_default_buttons.args[0], [ ], 
+                                                                'get_dialog_default_buttons should be called with args' );
 
         // if ( confirmTitle ){                                        // confirmation dialog needed
         // else {

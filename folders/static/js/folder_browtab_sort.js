@@ -1,27 +1,30 @@
 // JavaScript Document
 console.log('start loading folder_browtab_sort.js');
 
-/*
- *********************************************************************
- * Order buttons:
- *********************************************************************
- */
-var orderAsc = [];        // set of values: ascending (+1) or decsendind (-1) order for columns  
-var orderGroup = false;   // if true - ordering with Folders first, otherwise - mixed
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
+// document_ready_handler called from html:
+function folder_browtab_sort_document_ready_handler(){
+	appendOrderButtons( 1, columnsNumber );
+	changeOrderIcon( 2, 2, columnsNumber );
+	changeOrderGroupIcon( 1 );
+	set_folder_browtab_sort_buttons_listeners();
+}
+// Set listener for ordering buttons:
+function set_folder_browtab_sort_buttons_listeners( ){
+	$( "#button-sort-1" ).off( "click" ).on( "click", function() { grouping( 1 ); });
+	$( "#button-sort-2" ).off( "click" ).on( "click", function() { ordering( 2 ); });
+	$( "#button-sort-3" ).off( "click" ).on( "click", function() { ordering( 3 ); });
+	$( "#button-sort-4" ).off( "click" ).on( "click", function() { ordering( 4 ); });
+}
 
-appendOrderButtons( 1, columnsNumber );
-changeOrderIcon( 2, 2, columnsNumber );
-changeOrderGroupIcon( 1 );
 
-/*
- *********************************************************************
- * Set listener for ordering buttons:
- *********************************************************************
- */
-$( "#button-sort-1" ).on( "click", function() { grouping( 1 ); });
-$( "#button-sort-2" ).on( "click", function() { ordering( 2 ); });
-$( "#button-sort-3" ).on( "click", function() { ordering( 3 ); });
-$( "#button-sort-4" ).on( "click", function() { ordering( 4 ); });
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
+
+ 
 
 function grouping( col ){
     changeOrderGroupIcon( col );

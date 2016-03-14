@@ -1,1 +1,1 @@
-manage.py test koopsite.tests.test_viewsajax 
+manage.py test js_tests.tests_all_js_by_selenium 

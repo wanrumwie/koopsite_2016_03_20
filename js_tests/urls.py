@@ -20,6 +20,9 @@ urlpatterns = [
     url(r'^browtab_ui/$',
         TemplateView.as_view(template_name='js_tests_browtab_ui.html'),
                                       name='browtab_ui'),
+    url(r'^browtab_sort/$',
+        TemplateView.as_view(template_name='js_tests_browtab_sort.html'),
+                                      name='browtab_sort'),
 
     url(r'^koopsite/users_browtab/$',
         TemplateView.as_view(template_name='koopsite/js_tests_users_browtab.html'),
@@ -40,6 +43,9 @@ urlpatterns = [
     url(r'^folders/folder_browtab_ui/$',
         TemplateView.as_view(template_name='folders/js_tests_folder_browtab_ui.html'),
                                       name='folders_folder_browtab_ui'),
+    url(r'^folders/folder_browtab_sort/$',
+        TemplateView.as_view(template_name='folders/js_tests_folder_browtab_sort.html'),
+                                      name='folders_folder_browtab_sort'),
 
 
     url(r'^functions/$',

@@ -249,7 +249,6 @@ function functionOnDevelopeMessage() {
 function buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInput, inputVal, 
                                                 condLabel, condVal, confirmTitle, confirmMsg, selectionCheck,
 												inputType='text' ) {
-    var buttons = get_dialog_default_buttons();
     var f_name, inputFormTR, inputID;
     if ( selectionCheck ) {
 		if ( inputType == "file" ) {
@@ -275,6 +274,7 @@ function buttonClickHandler( ajax_Function, dialogTitle, inputLabel, disabledInp
         }
         $dialog_box_form.dialog( "open" );
         $dialog_box_form.dialog( "option", "title", dialogTitle );
+		var buttons = get_dialog_default_buttons();
         if ( confirmTitle ){                                        // confirmation dialog needed
             buttons[0].click = function( e ) {  // ajax "decorated" by confirm_dialog 
                 confirm_dialog( ajax_Function, confirmTitle, confirmMsg );

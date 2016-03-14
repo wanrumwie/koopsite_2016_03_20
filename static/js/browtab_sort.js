@@ -1,11 +1,14 @@
 // JavaScript Document
 console.log('start loading browtab_sort.js');
 
-/*
- *********************************************************************
- * Order buttons:
- *********************************************************************
- */
+/**********************************************************************
+ * START of the code covered by tests
+ **********************************************************************/
+
+var orderAsc = [];        // set of values: ascending (+1) or decsendind (-1) order for columns  
+var orderGroup = false;   // if true - ordering with Folders first, otherwise - mixed
+
+// Order buttons:
 function appendOrderButtons( ifirst, ilast ){
     var col, s;
     for ( col = ifirst ; col <= ilast ; col++ ){
@@ -17,7 +20,7 @@ function appendOrderButtons( ifirst, ilast ){
 function clearOrderIcons( ifirst, ilast ){
     var col, s;
     var img = "ui-icon-blank";
-    for ( col = ifirst ; col < ilast ; col++ ){
+    for ( col = ifirst ; col <= ilast ; col++ ){
         s = "#button-sort-" + col;
         $( s ).button( "option", "icons", { secondary: img } );
         orderAsc[col] = 0;
@@ -38,7 +41,6 @@ function changeOrderIcon( col, ifirst, ilast ){
     var s = "#button-sort-" + col;
     $( s ).button( "option", "icons", { secondary: img } );
     orderAsc[col] = asc;
-    var opt = $( s ).button( "option", "icons" );
 }
 function changeOrderGroupIcon( col ){
     orderGroup = !orderGroup;
@@ -46,5 +48,10 @@ function changeOrderGroupIcon( col ){
     var s = "#button-sort-" + col;
     $( s ).button( "option", "icons", { secondary: img } );
 }
+
+
+/**********************************************************************
+ * END of the code covered by tests
+ **********************************************************************/
 
  
